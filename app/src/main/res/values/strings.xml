@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">ESAN</string>
+
+    <string name="usuario">Usuario</string>
+    <string name="clave">Contraseña</string>
+    <string name="iniciar_invitado">Iniciar como invitado</string>
+
+    <string name="m_tab_horario">Horario</string>
+    <string name="m_tab_cursos">Cursos</string>
+    <string name="m_tab_programas">Programas</string>
+    <string name="m_tab_secciones">Secciones</string>
+    <string name="m_tab_pagos">Pagos Pendientes</string>
+    <string name="m_tab_comedores">Comedores</string>
+    <string name="m_tab_puntosreunion">Puntos de Reunión</string>
+    <string name="m_tab_salas_estudio">Salas de Estudio</string>
+    <string name="m_tab_mas">Más</string>
+
+    <string name="m_t_horario">Horario</string>
+    <string name="m_t_cursos">Cursos</string>
+    <string name="m_t_programas">Programas</string>
+    <string name="m_t_secciones">Secciones</string>
+    <string name="m_t_pagos">Pagos</string>
+    <string name="m_t_comedores">Comedores</string>
+    <string name="m_t_puntosreunion">P. Reunión</string>
+    <string name="m_t_salas_estudio">S. Estudio</string>
+    <string name="m_t_mas">Más</string>
+
+    <string name="confirmar">Confirmar?</string>
+    <string name="error">Error!</string>
+    <string name="exito">Éxito!</string>
+    <string name="error_clave_vacio">Debe ingresar una contraseña.</string>
+    <string name="error_usuario_vacio">Debe ingresar un usuario.</string>
+    <string name="error_no_internet">No hay conexión a Internet.</string>
+    <string name="advertencia_nosesiones">No se encuentran sesiones programadas</string>
+    <string name="error_respuesta_server">Error en la respuesta del servidor, vuelva a intentarlo en unos minutos
+    </string>
+    <string name="error_no_conexion">Error en la conexión con el servidor, vuelva a intentarlo en unos minutos.</string>
+    <string name="error_login_uno">Usuario y/o contraseña son incorrectos.</string>
+    <string name="error_encriptar">No se puede encriptar la información.</string>
+    <string name="error_desencriptar">No se puede desencriptar la información.</string>
+    <string name="advertencia_eliminar_alumno_grupo">No se puede eliminar el alumno del grupo.</string>
+    <string name="advertencia_no_registro_encuesta">No se puede registrar la encuesta, vuelva a intentarlo más tarde
+    </string>
+    <string name="error_login_tres">Inconsistencia en la información.</string>
+    <string name="mensaje_encuesta_completada">Encuesta(s) completada(s)</string>
+    <string name="error_login_huella">No podrá acceder con su Huella, hasta que cierre la aplicación por completo
+    </string>
+    <string name="exito_elimino_grupo">Se eliminó el grupo</string>
+    <string name="exito_alumno_eliminado">Alumno eliminado</string>
+    <string name="advertencia_nocargaacademica">No cuenta con carga académica, para la fecha seleccionada</string>
+    <string name="advertencia_nocuenta_conmensajes">No cuenta con mensajes</string>
+    <string name="error_no_marco_asistencia">No se pudo registrar su asistencia</string>
+    <string name="error_no_marco_asistencia_alumnos">No se pudo registrar la asistencia de los alumnos</string>
+    <string name="info_si_asistencia_registrada">Asistencia registrada</string>
+
+    <string name="error_sensores_ra">No cuenta con los sensores adecuados para esta funcionalidad</string>
+    <string name="error_permiso_camara">Debe permitir el uso de la Cámara de su dispositivo</string>
+    <string name="error_permiso_gps">Debe permitir el uso del GPS de su dispositivo</string>
+
+    <string name="advertencia_no_existe_menu">No existe menú para esta semana</string>
+    <string name="advertencia_no_agregar_alumnos_grupo">No se agregó al alumno en el grupo.</string>
+    <string name="advertencia_no_eliminar_alumnos_grupo">No se eliminar al alumno en el grupo.</string>
+    <string name="advertencia_maximo_alumnos_grupo">Superó el máximo permitido de participantes por grupo.</string>
+    <string name="info_no_alumnos_sin_grupo">No existen alumnos sin grupo.</string>
+    <string name="info_noalumnosmatriculados">No existen alumnos matriculados</string>
+    <string name="info_seleccionahoras">Por lo menos debe seleccionar una hora para continuar</string>
+    <string name="codigo">Código</string>
+    <string name="correo">Correo</string>
+    <string name="enviar_correo">Enviar Correo</string>
+
+
+    <!--
+    <string name="elegir_facultar">¿A que facultad desea ingresar?</string>
+    <string name="elegir_perfil">¿A que perfil desea ingresar?</string>
+     -->
+
+    <string name="elegir_facultar">Seleccione facultad:</string>
+    <string name="elegir_perfil">Seleccione su perfil:</string>
+
+    <string name="consultar_">Consultar:</string>
+    <string name="info_seleccionesclientecorreo">Seleccione su cliente de correo</string>
+
+    <string name="no_existe_resultado_encuesta">Aún no existe resultado de encuestas</string>
+
+    <string name="format_paginacion" translatable="false">(%1$d/%2$d)</string>
+    <string name="semana">Semana</string>
+    <string name="semana_actual">Semana Actual</string>
+
+    <string name="cargando_puntos_seguidos">Cargando &#8230;</string>
+
+    <string name="KeyEncripter" translatable="false">ESAN2018ESAN2018</string>
+
+    <string name="asistencia">Asistencia</string>
+    <string name="tardanza">Tardanza</string>
+    <string name="falta">Falta</string>
+    <string name="retirado">Retirado</string>
+
+    <string name="asistencia_cant_porc">Asistencias</string>
+    <string name="tardanza_cant_porc">Tardanzas</string>
+    <string name="falta_cant_porc">Faltas</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hoy">Hoy</string>
+
+    <string name="error_horario_no">No existe horario para esta semana</string>
+    <string name="error_curso_no">No existen cursos programados</string>
+    <string name="error_seccion_no">No tiene secciones registradas</string>
+    <string name="error_programa_no">No tiene programas registrados</string>
+    <string name="error_pago_no">No tiene pagos pendientes</string>
+
+    <string name="sesiones">Sesiones</string>
+    <string name="sesiones_">Sesiones: %.2f</string>
+    <string name="concepto">Concepto</string>
+    <string name="monto">Monto</string>
+    <string name="vencimiento">Vencimiento</string>
+    <string name="matricula_">Matrícula %1$s</string>
+
+    <string name="recibopago">Recibo de Pago</string>
+    <string name="carga_meses_uno">Enero - %1$s, %2$s</string>
+    <string name="carga_meses_dos" translatable="false">%1$s, %2$s</string>
+
+    <string name="mensaje">Mensaje</string>
+    <string name="mensajes">Notificaciones</string>
+    <string name="mensajes_detalle">Mensajes y avisos</string>
+    <string name="ra">Realidad Aumentada</string>
+    <string name="ra_detalle">Puntos importantes de ESAN</string>
+    <string name="comedor_detalle">Comedores de ESAN</string>
+    <string name="link_interes">Links de Interés</string>
+    <string name="link_interes_detalle">Links importantes de ESAN</string>
+    <string name="configuracion">Configuración</string>
+    <string name="configuracion_detalle">Huella digital</string>
+    <string name="huella_digital">Huella Digital</string>
+    <string name="carga_academica">Carga Académica</string>
+    <string name="carga_academica_detalle">Académica y extraordinaria</string>
+    <string name="malla_curricular">Malla Curricular</string>
+    <string name="malla_curricular_detalle">Mi avance curricular</string>
+
+    <string name="tomar_asistencia">Tomar Asistencia</string>
+    <string name="charlotte" translatable="false">Charlotte</string>
+    <string name="delisabores" translatable="false">Deli Sabores</string>
+    <string name="invitado">Invitado</string>
+    <string name="alumnopre">Alumno Pregrado</string>
+    <string name="alumnopos">Alumno Posgrado</string>
+    <string name="pregrado_titulo">Pregrado</string>
+    <string name="posgrado_titulo">Posgrado</string>
+    <string name="alumno">Alumno</string>
+    <string name="alumnos">Alumnos</string>
+    <string name="profesor">Docente</string>
+    <string name="encuestar">Encuestar</string>
+    <string name="encuesta">Encuesta</string>
+    <string name="respuesta">Respuesta</string>
+
+    <string name="curso">Curso</string>
+    <string name="promedio_final">Promedio Final</string>
+    <string name="cursos">Cursos</string>
+    <string name="ver_lista">Ver Lista</string>
+    <string name="modulo_">Módulo %1$d</string>
+    <string name="error_intentelo_mas_tarde">Error intentelo más tarde</string>
+    <string name="error_ingreso">Ingrese nuevamente a la aplicación</string>
+    <string name="error_valores">No se encontró la información correcta</string>
+    <string name="advertencia_no_informacion">No se encontró información</string>
+
+    <string name="advertencia_completar_asistencia">Debe completar toda la lista de asistencias antes de enviar</string>
+    <string name="advertencia_completar_encuesta">Debe contestar todas las preguntas para poder enviar la encuesta
+    </string>
+    <string name="advertencia_no_enviar">No puede enviar en este momento</string>
+    <string name="mensaje_confirmar_asistencia">%1$s\nSección: %2$s\nAsistencias: %3$d\nTardanzas: %4$d\nFaltas: %5$d
+    </string>
+
+    <string name="carne">Carné</string>
+    <string name="carne_virtual">Carné Virtual</string>
+    <string name="nombres">Nombres</string>
+    <string name="apellidos">Apellidos</string>
+
+    <string name="curso_">Curso:</string>
+    <string name="aula_">Aula:</string>
+    <string name="profesor_">Profesor:</string>
+
+    <string name="sesion_n_">Sesión Nº: %1$s</string>
+    <string name="seccion_">Sección: %1$s</string>
+    <string name="asistencia_tomada">Asistencia tomada</string>
+    <string name="asistencia_notomada">No tomó asistencia</string>
+    <string name="asistencia_tomar">Tomar Asistencia</string>
+    <string name="asistencia_modificar">Modificar Asistencia</string>
+
+    <string name="asistencias_postgrado_curso">Asistencias\n%1$d (%2$.1f%%)</string>
+    <string name="tardanzas_postgrado_curso">Tardanzas\n%1$d (%2$.1f%%)</string>
+    <string name="faltas_postgrado_curso">Faltas\n%1$d (%2$.1f%%)</string>
+
+    <string name="error_no_asistencia">No se puede enviar la asistencia</string>
+
+    <string name="preguntar_reg_asistencia">¿Desea registrar su asistencia a %1$s?</string>
+
+    <string name="si">Si</string>
+    <string name="no">No</string>
+    <string name="ok" translatable="false">Ok</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="cancelar">Cancelar</string>
+
+    <string name="programa">Programa</string>
+    <string name="tipo_grupo">Tipo Grupo</string>
+
+    <string name="error_permiso_opcion">No tiene permiso para esta opción</string>
+    <string name="advertencia_pr_notienegrupo">No se encuentra registrado en ningún grupo de trabajo</string>
+
+    <string name="reservar">Reservar</string>
+    <string name="confirmar_reserva">Confirmar</string>
+    <string name="comedor">Comedores</string>
+    <string name="mis_reservas">Mis Reservas</string>
+    <string name="grupos">Grupos</string>
+    <string name="migrupo">Mi Grupo</string>
+
+    <string name="sub_reservar">Reserva de puntos de reunión</string>
+    <string name="sub_confirmar_reserva">Confirma las reservas realizadas</string>
+    <string name="sub_mis_reservas">Lista tus últimas reservas</string>
+    <string name="sub_grupos">Crea grupos de trabajo</string>
+
+    <string name="grupo">Grupo</string>
+    <string name="max_dias_anticipa">Días\nAnticipación</string>
+    <string name="max_horas_reserva">Max. Hrs.\nReserva</string>
+    <string name="horas_disponible">Hrs. Disponible\nReserva</string>
+
+    <string name="fecha_reserva">Fecha Reserva</string>
+    <string name="ddmmyyyy" translatable="false">dd/mm/yyyy</string>
+    <string name="horario">Horario</string>
+    <string name="consultar_disponibilidad">Consultar Disponibilidad</string>
+    <string name="consultar">Consultar</string>
+
+    <string name="_dias">%1$s Días</string>
+    <string name="_horas">%1$s Horas</string>
+
+    <string name="error_prhoraconsecutiva">Las Horas reservadas deben ser consecutivas</string>
+    <string name="error_prsuperohoras">Superó el máximo de horas de reserva por día</string>
+    <string name="error_prhoracentar">No se puede desactivar la hora central</string>
+    <string name="error_cargaqr">No se pudo cargar el código QR</string>
+
+    <string name="detalle">Detalle</string>
+    <string name="reservado_por">Reservado por</string>
+    <string name="fecha">Fecha</string>
+    <string name="hora_s_">Hora(s)</string>
+    <string name="disponible">Disponible</string>
+    <string name="no_disponible">No disponible</string>
+
+    <string name="mensajeconfirmacion_cambiohora">Desea cambiar su reserva al horario de:\n%1$s a %2$s</string>
+
+    <string name="otros_horarios_disponibles">Otros Horarios Disponibles</string>
+    <string name="mensaje_confirmar_qr">Para confirmar, tus compañeros deben escanear con su smartphone el siguiente
+        código QR.
+    </string>
+    <string name="mensaje_confirmar_porqr">Puedes confirmar la reserva de un compañero escaneando el código QR de su
+        reserva.
+    </string>
+
+    <string name="crear">Crear</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="hecho">Hecho</string>
+    <string name="lenguaje" translatable="false">en</string>
+    <string name="pais" translatable="false">ES</string>
+    <string name="scan_qr">Escanear código QR</string>
+
+    <string name="ap_porcentaje" translatable="false">AP: %.2f%%</string>
+    <string name="dp_porcentaje" translatable="false">DP: %.2f%%</string>
+    <string name="avg_porcentaje" translatable="false">AVG: %.2f%%</string>
+
+    <string name="val_procentaje" translatable="false">%.2f%%</string>
+
+    <string name="valor_porcentaje" translatable="false">%d (%.2f%%)</string>
+
+    <string name="ciclo_">Ciclo %1$s</string>
+    <string name="electivos">Electivos</string>
+    <string name="cred_">Cred.: %1$s</string>
+    <string name="convalidado">Convalidado</string>
+
+    <string name="marcar_todos">Marcar Todos</string>
+    <string name="enviar">Enviar</string>
+    <string name="advertencia">Advertencia</string>
+    <string name="mensaje_salir_sin_enviar_asistencia">¿Desea salir sin enviar?, cualquier cambio realizado se
+        perderán
+    </string>
+
+    <string name="historico_notas">Histórico de Notas</string>
+
+    <string name="salir">Salir</string>
+    <string name="cerrar_sesion">Cerrar Sesión</string>
+
+    <string name="resultado_encuesta">Resultado Encuesta</string>
+    <string name="historial_asistencia">Historial de asistencias</string>
+    <string name="seguimiento_alumno">Seguimiento de alumnos</string>
+    <string name="directorio_alumno">Directorio de alumnos</string>
+    <string name="directorio">Directorio</string>
+    <string name="sesiones_totales">Sesiones Totales</string>
+    <string name="simarcoasistencia">Si marcó asistencia</string>
+    <string name="nomarcoasistencia">No marcó asistencia</string>
+    <string name="proximassesiones">Próximas sesiones</string>
+    <string name="no_mayor_detalle">No se encuentra mayor detalle</string>
+    <string name="decimal" translatable="false">%.2f</string>
+    <string name="inasistencias_">Inasistencias:\u00A0</string>
+
+    <string name="resumen">Resumen</string>
+
+    <string name="no__marco">No\nMarcó</string>
+    <string name="asis_marcada">Asis. Marcada</string>
+    <string name="proxima__sesion">Próxima Sesión</string>
+
+    <string name="promedio">Promedio</string>
+    <string name="participaron">Participaron</string>
+
+    <string name="texto_huella_dactilar">La función de Huella Digital permite ingresar a la APP de ESAN sin necesidad de
+        colocar sus credenciales.
+    </string>
+
+    <string name="huella_error_lector">No se pudo reconocer su Huella, debe cerrar la aplicación por completo, para
+        volver a intentarlo nuevamente.
+    </string>
+    <string name="huella_no_permiso">No cuenta con permiso para el uso de Huella Digital</string>
+    <string name="huella_no_reconocida">Huella Digital no reconocida</string>
+    <string name="huella_configure_una_huella">Registre al menos una huella digita; para ello, vaya a "Ajustes ->
+        Seguridad -> Huella Digital"
+    </string>
+    <string name="huella_configure_bloqueo">No se ha configurado la pantalla de Bloqueo.\nVaya a "Ajustes -> Seguridad
+        -> Huella Digital" y configure su huella digital
+    </string>
+    <string name="huella_no_reconocimiento">Su dispositivo no cuenta con reconocimiento por Huella Digital</string>
+
+    <string name="fecha_vencimiento">Fecha Vencimiento</string>
+    <string name="dias_vencidos">Días Vencidos</string>
+    <string name="importe">Importe</string>
+    <string name="penalidad">Penalidad</string>
+    <string name="intereses">Intereses</string>
+    <string name="total_pago">Total a Pagar</string>
+
+    <string name="promedio_general">Promedio General</string>
+    <string name="creditos">Créditos</string>
+
+    <string name="creado_por">Creado por</string>
+
+    <string name="agregar_integrante_">Agregar Integrante (%1$d)</string>
+
+    <string name="entrada_">Entrada:</string>
+    <string name="platos_fondo_">Platos de Fondo:</string>
+    <string name="postres_">Postres:</string>
+    <string name="refresco_">Refresco:</string>
+    <string name="precio_">Precio:</string>
+
+    <string name="ra_descripcion" translatable="false">La Realidad Aumentada, a partir de ahora RA, es una tecnología
+        que superpone a una imagen real obtenida a través de una pantalla imágenes, modelos 3D u otro tipo de
+        informaciones generados por ordenador\u00B9.\n\nPara poder disfrutar de esta nueva funcionalidad en la
+        aplicación de ESAN, tu smartphone debe contar los siguientes sensores: \u0022GPS\u0022,
+        \u0022Aceler\u00F3metro\u0022 y \u0022Br\u00FAjula\u0022. Los cuales son indispensables para esta funci\u00F3n.
+    </string>
+    <string name="ra_referencia" translatable="false">\u00B9Espinosa, C. P. (2015). REALIDAD AUMENTADA Y EDUCACIÓN:
+        ANÁLISIS DE EXPERIENCIAS PRÁCTICAS. Pixel&#8211;Bit, Revista De Medios Y Educacion, (46), 187&#8211;203.
+        doi:10.12795/pixelbit.2015.i46.12
+    </string>
+    <string name="ra_no_mostrar">No volver a mostrar</string>
+
+    <string name="ra_d_nombre">Nombre: %1$s</string>
+    <string name="ra_d_detalle">Detalle: %1$s</string>
+    <string name="ra_d_ubicacion">Ubicaci\u00F3n: %1$s</string>
+    <string name="connection_error_dialog">Activa una fuente de ubicación en la configuración de la app</string>
+    <string name="connection_error_dialog_button1">Reintentar</string>
+    <string name="connection_error_dialog_button2">Configuración</string>
+    <string name="connection_error_dialog_button3">Regresar</string>
+
+    <string name="mensaje_prsin_reservas">No cuenta con reservas realizadas</string>
+
+    <string name="dia_hora">Día\nHora</string>
+    <string name="visualizar_todo">Visualizar Todos</string>
+    <string name="description_imagen_generic">Imagen generica del aplicativo</string>
+    <string name="partner">Compañeros</string>
+
+    <string name="error_default">Intentalo nuevamente</string>
+
+    <string-array name="perfiles">
+        <item>Alumno</item>
+        <item>Docente</item>
+    </string-array>
+
+    <string-array name="facultad">
+        <item>Pregrado</item>
+        <item>Posgrado</item>
+    </string-array>
+
+    <string-array name="tipo_notas_mostrar">
+        <item>Tarea Académica</item>
+        <item>Examen Parcial</item>
+        <item>Examen Final</item>
+    </string-array>
+
+    <string-array name="codigo_notas">
+        <item>TA</item>
+        <item>EP</item>
+        <item>EF</item>
+    </string-array>
+
+    <string-array name="dias_semana">
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Mi\u00E9rcoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+        <item>S\u00E1bado</item>
+        <item>Domingo</item>
+    </string-array>
+
+    <string-array name="dias_semana_min">
+        <item>Lun</item>
+        <item>Mar</item>
+        <item>Mi\u00E9</item>
+        <item>Jue</item>
+        <item>Vie</item>
+        <item>S\u00E1b</item>
+        <item>Dom</item>
+    </string-array>
+
+    <string-array name="meses">
+        <item>Enero</item>
+        <item>Febrero</item>
+        <item>Marzo</item>
+        <item>Abril</item>
+        <item>Mayo</item>
+        <item>Junio</item>
+        <item>Julio</item>
+        <item>Agosto</item>
+        <item>Septiembre</item>
+        <item>Octubre</item>
+        <item>Noviembre</item>
+        <item>Diciembre</item>
+    </string-array>
+
+    <string name="loading">Cargando ...</string>
+    <string name="text_description">Una imagen</string>
+    <string name="update">Actualizar</string>
+    <string name="update_description">Existe una nueva versión de la App ESAN. Por favor actualice la aplicación para
+        poder continuar.
+    </string>
+
+    <!-- Title for app booton bar -->
+
+
+    <!--VUFORIA-->
+
+    <string name="mensaje_error_servidor">Hay un problema con el servidor en estos momentos, por favor inténtelo más
+        tarde.
+    </string>
+
+    <string name="ingresa_codigos_grupo_prereserva_text">Ingrese los códigos de su grupo de pre-reserva</string>
+    <string name="codigo_primer_alumno_text">Código Primer Alumno</string>
+    <string name="codigo_segundo_alumno_text">Código Segundo Alumno</string>
+    <string name="borrar_codigos_button_text">Limpiar códigos</string>
+    <string name="registro_de_prereserva_title">Registro de Pre-reserva</string>
+    <string name="horario_para_prereserva_title">Horario para Pre-reserva</string>
+    <string name="fecha_de_prereserva_text">Fecha de Pre-reserva: %1$s</string>
+    <string name="prereserva_efectuada_title">Pre-reserva Efectuada</string>
+    <string name="solicitante_text">Solicitante:</string>
+    <string name="horas_text">Horas:</string>
+    <string name="sin_confirmar_text">Sin confirmar</string>
+    <string name="fecha_text">Fecha:</string>
+    <string name="estado_text">Estado:</string>
+    <string name="confirmacion_de_prereservas_title">Confirmación de Pre-reserva</string>
+    <string name="historial_de_prereservas_title">Historial de Pre-reservas</string>
+    <string name="no_existe_registro_de_prereservas_text">No existe registro de pre-reservas</string>
+    <string name="cubiculo_text">Sala de estudio:</string>
+    <string name="ubicacion_text">Ubicación:</string>
+    <string name="error_servidor_extraccion_datos">Hubo un error en la extracción de datos desde el servidor,
+        reinténtelo más tarde.
+    </string>
+
+    <string name="ingrese_codigos_mensaje">Debe ingresar dos códigos de alumno</string>
+    <string name="ingrese_codigos_ocho_digitos_mensaje">Los códigos ingresados deben tener 8 dígitos</string>
+    <string name="ingrese_codigos_diferentes_mensaje">Los códigos ingresados deben ser diferentes</string>
+    <string name="ingrese_codigos_diferentes_usuario_sesion">Los códigos ingresados deben ser diferentes del usuario de
+        sesión
+    </string>
+    <string name="puntos_de_reunion_title">Puntos de Reunión</string>
+    <string name="salas_de_estudio_title">Salas de Estudio</string>
+    <string name="debe_seleccionar_cantidad_horas_minima_mensaje">Debe seleccionar por lo menos una hora para realizar
+        la pre-reserva
+    </string>
+    <string name="promocion_mensaje">"Promoción: %1$s"</string>
+    <string name="direccion_mensaje">"Dirección: %1$s"</string>
+    <string name="usted_no_tiene_permiso_mensaje">Usted no tiene permiso para efectuar esta operación</string>
+    <string name="usted_alcanzo_maximo_numero_horas_mensaje">Usted alcanzó el máximo número de horas permitidas</string>
+    <string name="deben_seleccionarse_horas_continuas_mensaje">Deben seleccionarse horas continuas</string>
+    <string name="pre_reservar_text">Pre-reserva</string>
+    <string name="confirmar_text">Confirmar</string>
+    <string name="genera_tu_pre_reserva_text">Genera tu pre-reserva</string>
+    <string name="confirma_tus_pre_reservas_text">Confirma tu pre-reserva</string>
+    <string name="historial_text">Historial</string>
+    <string name="ver_historial_de_pre_reservas_text">Historial de pre-reservas</string>
+    <string name="no_camera_and_no_gps_usage_message">No se podrá hacer uso de la Cámara y GPS</string>
+
+    <string name="mensaje_horario_uso_y_disponibilidad">%1$s\n\nHoras disponibles para el grupo: %2$d</string>
+    <string name="cancelar_accion">Cancelar Acción</string>
+
+    <string name="hours_select_software_text">Horas de pre-reserva: %1$s - %2$s</string>
+    <string name="encuentra_tu_programa_hint">Buscar software</string>
+
+    <string name="version_app">v.%1$s</string>
+    <string name="huella_digital_habilitada">La opción de Huella Digital se encuentra encendida.</string>
+    <string name="huella_digital_deshabilitada">La opción de Huella Digital se encuentra apagada.</string>
+    <string name="prereservar_laboratorio_text">Pre-reservar</string>
+    <string name="confirmar_prereservas_text">Confirmar</string>
+    <string name="historial_de_pre_reservas_text">Historial</string>
+    <string name="no_hay_labs_disponibles">No hay laboratorios disponibles para el horario seleccionado</string>
+    <string name="labs_disponibles_title">Software Disponibles</string>
+    <string name="horario_prereserva_title">Horario de Pre-reserva</string>
+    <string name="laboratorios_title">Laboratorios</string>
+    <string name="laboratorios_detalle">Pre-reserva de laboratorios</string>
+    <string name="debe_seleccionarse_un_lab_mensaje">Debe seleccionarse por lo menos un software</string>
+    <string name="no_respuesta_desde_servidor">No hay respuesta desde el servidor</string>
+    <string name="error_recuperacion_datos">Error en la recuperación de datos</string>
+    <string name="realizar_prereserva_laboratorio_button">Pre-reservar</string>
+    <string name="seleccione_el_programa_prereserva_text">Seleccione los software que desea utilizar o marque la casilla
+        \"Internet y Ofimática\"
+    </string>
+    <string name="maquina_lab_text">Computadora:</string>
+    <string name="confirmada_text">Confirmada</string>
+    <string name="perdida_text">Perdida</string>
+    <string name="seleccione_horario_para_iniciar_prereserva">Seleccione el horario para iniciar la pre-reserva</string>
+    <string name="consultando_disponibilidad_message">Consultando disponibilidad</string>
+    <string name="horas_usadas_text">Horas pre-reservadas:</string>
+    <string name="horas_disponibles_text">Horas disponibles:</string>
+    <string name="carrera_text">Carrera</string>
+    <string name="carne_virtual_title">Carné Virtual</string>
+    <string name="generar_carne_virtual_subtitle">Generar carné virtual</string>
+    <string name="consultar_disponibilidad_laboratorios_button">Consultar disponibilidad</string>
+    <string name="volver_menu_principal_button">Volver al menú principal</string>
+    <string name="max_cantidad_programas_x_alumno">Solo pueden seleccionarse %1$d software por pre-reserva</string>
+    <string name="solo_internet_text">Internet y Ofimática</string>
+    <string name="terminos_y_condiciones">Términos y Condiciones</string>
+    <string name="ver_terminos_y_condiciones">Ver términos y condiciones de uso</string>
+    <string name="acepto_tyc_checkbox_text_href">Acepto &lt;a href=%1$s&gt;términos y condiciones de uso&lt;/a&gt;</string>
+    <string name="acepto_politicas_uso_checkbox_text_href">Acepto &lt;a href=%1$s&gt;políticas de uso&lt;/a&gt;</string>
+    <string name="cancelar_dialog_text">Cancelar</string>
+    <string name="aceptar_dialog_text">Aceptar</string>
+    <string name="acepta_tyc_dialog_title">Pre-reserva de Laboratorios</string>
+    <string name="acepta_tyc_dialog_pr_title">Pre-reserva de Salas de Estudio</string>
+    <string name="mensaje_tyc_dialog">Debe aceptar los términos y condiciones de uso. De lo contrario no podrá continuar con la pre-reserva.</string>
+    <string name="mensaje_politicas_uso_dialog">Debe aceptar las políticas de uso. De lo contrario no podrá continuar con la pre-reserva.</string>
+    <string name="debe_aceptar_tyc">Debe aceptar los términos y condiciones de uso para ingresar a esta opción</string>
+    <string name="debe_aceptar_politicas_uso">Debe aceptar las políticas de uso para ingresar a esta opción</string>
+    <string name="politicas_uso_aceptadas_correctamente">Los términos y condiciones de uso fueron aceptados correctamente</string>
+    <string name="politicas_uso_aceptadas_mensaje">Las políticas de uso fueron aceptadas correctamente</string>
+    <string name="sopa">Sopa:</string>
+    <string name="confirma_con_tu_huella_para_continuar">Toca el sensor de huella digital para continuar</string>
+    <string name="huella_digital_content_description">Huella</string>
+    <string name="sensor_de_huella">Sensor de huella</string>
+    <string name="huella_reconocida">Huella Reconocida</string>
+    <string name="huella_no_reconocida_trate_nuevamente">Huella no reconocida, trate nuevamente</string>
+    <string name="valida_huella_title">Validar Huella</string>
+    <string name="login_huella_title">Huella Digital Habilitada</string>
+    <string name="utiliza_huella_digital">Utiliza tu huella digital para iniciar sesión</string>
+    <string name="porfavor_registre_huella_digital_en_dispositivo">Por favor registre una huella digital en el
+        dispositivo para habilitar está opción.
+    </string>
+    <string name="alerta_title">Alerta</string>
+    <string name="huella_configurada_previamente_mensaje">Ya se configuró el reconocimiento de huella digital para otro
+        usuario.
+    </string>
+    <string name="opcion_huella_digital_conf_correct">La opción de huella digital ha sido configurada correctamente.
+    </string>
+    <string name="ocurrio_error_sensor_huella_digital">Ocurrió un error al detectar el sensor de huella digital, por
+        favor inténtelo nuevamente.
+    </string>
+    <string name="cmude" translatable="false">Cmude</string>
+    <string name="international_week_content_description" translatable="false">International Week</string>
+    <string name="login_button_content_description" translatable="false">login button</string>
+    <string name="esan_logo_content_description" translatable="false">esan logo</string>
+    <string name="version_template" translatable="false">v.5.0.30</string>
+    <string name="recordatorio_select_software">Recuerde que solo puede seleccionar tres software como máximo por
+        pre-reserva. Asimismo no olvidar que la pre-reserva de laboratorios es individual. Solo el alumno que realizó la
+        pre-reserva podrá hacer uso de la computadora respectiva.
+    </string>
+    <string name="recordatorio_registro_prereserva">Recuerde que debe ingresar dos códigos de alumno para realizar la
+        pre-reserva. Asimismo no olvidar que cualquier integrante del grupo de estudio podrá confirmar la pre-reserva
+        dentro del rango permitido.
+    </string>
+    <string name="indicaciones_de_uso">Indicaciones de Uso</string>
+    <string name="positive_dialog" translatable="false">OK</string>
+    <string name="verificar_codigos">Verificar códigos</string>
+    <string name="ver_integrantes_del_grupo_text">Ver integrantes del grupo</string>
+
+    <string name="codigo_alumno_pre_et" translatable="false">Código Alumno Pre</string>
+    <string name="no_dentro_de_rango_prereserva">No se encuentra dentro del horario permitido de pre-reserva</string>
+    <string name="alumno_retirado_del_curso">El alumno se encuentra retirado del presente curso</string>
+    <string name="detalle_de_prereserva">Detalle de Pre-reserva</string>
+    <string name="creador_text_for_historial">Solicitante</string>
+    <string name="integrantes_cub">Integrantes</string>
+    <string name="advertencia_huella_digital_version_android">Debe contar con la versión de Android 6.0 o superior para acceder a esta opción</string>
+
+    <string name="menu_horario">Horario</string>
+    <string name="menu_cursos">Cursos</string>
+    <string name="menu_pagos">Pagos</string>
+    <string name="menu_puntos_reunion">Puntos de Reunión</string>
+    <string name="menu_notificaciones">Notificaciones</string>
+    <string name="menu_curriculum">Malla Curricular</string>
+    <string name="menu_laboratorios">Laboratorios</string>
+    <string name="menu_carne_virtual">Carné Virtual</string>
+    <string name="menu_configuracion">Configuración</string>
+    <string name="menu_realidad_aumentada">Realidad Aumentada</string>
+    <string name="menu_comedores">Comedores</string>
+    <string name="menu_links_interes">Links de Interés</string>
+    <string name="ver_ubicacion_en_mapa">Ver ubicación en mapa</string>
+    <string name="foto_en_carne_virtual" translatable="false">foto en carné</string>
+    <string name="cafeteria_la_lupe" translatable="false">Cafetería La Lupe</string>
+    <string name="responsable_text">Responsable</string>
+    <string name="integrantes_salas_estudio">Integrantes</string>
+    <string name="mensaje_no_matriculado">Usted no se encuentra matriculado en el presente ciclo</string>
+    <string name="mensaje_alumno_retirado_carnet">Usted se ha retirado del presente ciclo en curso</string>
+    <string name="usuario_en_sesion_hint">Usuario en sesión</string>
+    <string name="cargando_mensaje_progress_bar">Cargando</string>
+    <string name="cargando_integrantes_text_historial">Cargando Integrantes</string>
+    <string name="no_participaron">No Participaron</string>
+    <string name="generacion_codigo_qr">Generación Código QR</string>
+    <string name="genera_tu_codigo_qr">Genera tu código QR</string>
+    <string name="qr_code_instrucciones">Utiliza tu código QR en cualquier food truck</string>
+    <string name="leer_codigo_qr">Leer Código QR</string>
+    <string name="lectura_codigo_qr">Lectura Código QR</string>
+</resources>

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:background="@color/md_white_1000">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/md_grey_80"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:paddingRight="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/lblHoraInicio_ahorarioalumnodetalle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="18:00"
+            android:textColor="@color/md_grey_800"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="-"
+            android:textStyle="bold"
+            android:textColor="@color/md_grey_800"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/lblHoraFin_ahorarioalumnodetalle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20:00"
+            android:textColor="@color/md_grey_800"
+            android:textSize="18sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/lblSCurso_ahorarioalumnodetalle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/curso_"
+        android:textSize="15sp"
+        android:textColor="@color/esan_rojo"
+        app:layout_constraintBottom_toBottomOf="@+id/lblCurso_ahorarioalumnodetalle"
+        app:layout_constraintStart_toEndOf="@+id/view12"
+        app:layout_constraintTop_toTopOf="@+id/lblCurso_ahorarioalumnodetalle" />
+
+    <TextView
+        android:id="@+id/lblCurso_ahorarioalumnodetalle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/lblAula_ahorarioalumnodetalle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioalumnodetalle"
+        app:layout_constraintStart_toEndOf="@+id/lblSProfesor_ahorarioalumnodetalle"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <TextView
+        android:id="@+id/lblAula_ahorarioalumnodetalle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="Valor"
+        app:layout_constraintBottom_toTopOf="@+id/lblProfesor_ahorarioalumnodetalle"
+        app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioalumnodetalle"
+        app:layout_constraintStart_toEndOf="@+id/lblSProfesor_ahorarioalumnodetalle"
+        app:layout_constraintTop_toBottomOf="@+id/lblCurso_ahorarioalumnodetalle" />
+
+    <TextView
+        android:id="@+id/lblSAula_ahorarioalumnodetalle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/aula_"
+        android:textColor="@color/esan_rojo"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblAula_ahorarioalumnodetalle"
+        app:layout_constraintStart_toEndOf="@+id/view12"
+        app:layout_constraintTop_toTopOf="@+id/lblAula_ahorarioalumnodetalle" />
+
+    <TextView
+        android:id="@+id/lblSProfesor_ahorarioalumnodetalle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/profesor_"
+        android:textSize="15sp"
+        android:textColor="@color/esan_rojo"
+        app:layout_constraintBottom_toBottomOf="@+id/lblProfesor_ahorarioalumnodetalle"
+        app:layout_constraintStart_toEndOf="@+id/view12"
+        app:layout_constraintTop_toTopOf="@+id/lblProfesor_ahorarioalumnodetalle" />
+
+    <TextView
+        android:id="@+id/lblProfesor_ahorarioalumnodetalle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/view11"
+        app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioalumnodetalle"
+        app:layout_constraintStart_toEndOf="@+id/lblSProfesor_ahorarioalumnodetalle"
+        app:layout_constraintTop_toBottomOf="@+id/lblAula_ahorarioalumnodetalle" />
+
+    <ImageView
+        android:id="@+id/imgBtnRA_ahorarioalumnodetalle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/lblProfesor_ahorarioalumnodetalle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lblCurso_ahorarioalumnodetalle"
+        app:srcCompat="@drawable/raglass" />
+
+    <View
+        android:id="@+id/view12"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/s1"
+        app:layout_constraintBottom_toBottomOf="@+id/lblSProfesor_ahorarioalumnodetalle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lblSCurso_ahorarioalumnodetalle" />
+
+    <View
+        android:id="@+id/view11"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/esan_rojo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

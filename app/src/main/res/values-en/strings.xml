@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="usuario">User</string>
+    <string name="clave">Password</string>
+    <string name="iniciar_invitado">Start as a guest</string>
+    <string name="m_tab_horario">Schedule</string>
+    <string name="m_tab_cursos">Courses</string>
+    <string name="m_tab_programas">Programs</string>
+    <string name="m_tab_secciones">Sections</string>
+    <string name="m_tab_pagos">Pending payments</string>
+    <string name="m_tab_comedores">Dining rooms</string>
+    <string name="m_tab_puntosreunion">Meeting Points</string>
+    <string name="m_tab_mas">More</string>
+    <string name="m_t_horario">Schedule</string>
+    <string name="m_t_cursos">Courses</string>
+    <string name="m_t_programas">Programs</string>
+    <string name="m_t_secciones">Sections</string>
+    <string name="m_t_pagos">Payments</string>
+    <string name="m_t_comedores">Dining rooms</string>
+    <string name="m_t_puntosreunion">Meeting P.</string>
+    <string name="m_t_mas">More</string>
+    <string name="confirmar">Confirm?</string>
+    <string name="error">Error!</string>
+    <string name="exito">Success!</string>
+    <string name="error_clave_vacio">You must enter a password.</string>
+    <string name="error_usuario_vacio">You must enter a user.</string>
+    <string name="error_no_internet">There is no Internet connection.</string>
+    <string name="advertencia_nosesiones">No scheduled sessions are found</string>
+    <string name="error_respuesta_server">Error in server response, try again in a few minutes</string>
+    <string name="error_no_conexion">Error in the connection with the server, try again in a few minutes.</string>
+    <string name="error_login_uno">Username and/or password are incorrect.</string>
+    <string name="error_encriptar">Unable to encrypt information.</string>
+    <string name="error_desencriptar">The information can not be decrypted.</string>
+    <string name="advertencia_eliminar_alumno_grupo">The student can not be removed from the group.</string>
+    <string name="advertencia_no_registro_encuesta">You can not register the survey, try again later</string>
+    <string name="error_login_tres">Inconsistency in information.</string>
+    <string name="mensaje_encuesta_completada">Survey(s) completed</string>
+    <string name="error_login_huella">You can not access with your Fingerprint, until you close the application completely</string>
+    <string name="exito_elimino_grupo">The group was removed</string>
+    <string name="exito_alumno_eliminado">Student removed</string>
+    <string name="advertencia_nocargaacademica">You do not have academic load for the selected date</string>
+    <string name="advertencia_nocuenta_conmensajes">You do not have messages</string>
+    <string name="error_no_marco_asistencia">Your attendance could not be registered</string>
+    <string name="error_no_marco_asistencia_alumnos">Student attendance could not be registered</string>
+    <string name="info_si_asistencia_registrada">Registered attendance</string>
+    <string name="error_sensores_ra">Your device does not have the right sensors for this functionality</string>
+    <string name="error_permiso_camara">You must allow the use of the Camera of your device</string>
+    <string name="error_permiso_gps">You must allow the use of GPS of your device</string>
+    <string name="advertencia_no_existe_menu">There is no menu for this week</string>
+    <string name="advertencia_no_agregar_alumnos_grupo">The student was not added to the group.</string>
+    <string name="advertencia_no_eliminar_alumnos_grupo">The student in the group can not be eliminated.</string>
+    <string name="advertencia_maximo_alumnos_grupo">It exceeded the maximum number of participants per group.</string>
+    <string name="info_no_alumnos_sin_grupo">There are no students without a group.</string>
+    <string name="info_noalumnosmatriculados">There are no students enrolled</string>
+    <string name="info_seleccionahoras">You must select at least one hour to continue</string>
+    <string name="codigo">Code</string>
+    <string name="correo">Email</string>
+    <string name="enviar_correo">Send email</string>
+    <string name="elegir_facultar">What faculty do you want to enter?</string>
+    <string name="elegir_perfil">What profile do you want to enter?</string>
+    <string name="consultar_">Consult:</string>
+    <string name="info_seleccionesclientecorreo">Select your mail client</string>
+    <string name="no_existe_resultado_encuesta">No survey results are available</string>
+    <string name="semana">Week</string>
+    <string name="semana_actual">Current Week</string>
+    <string name="cargando_puntos_seguidos">Loading &#8230;</string>
+    <string name="asistencia">Attendance</string>
+    <string name="tardanza">Delay</string>
+    <string name="falta">Absence</string>
+    <string name="retirado">Retired</string>
+    <string name="asistencia_cant_porc">Attendance </string>
+    <string name="tardanza_cant_porc">Delay</string>
+    <string name="falta_cant_porc">Absences</string>
+    <string name="hoy">Today</string>
+    <string name="error_horario_no">There is no schedule for this week</string>
+    <string name="error_curso_no">There are no scheduled courses</string>
+    <string name="error_seccion_no">You do not have registered sections</string>
+    <string name="error_programa_no">You do not have registered programs</string>
+    <string name="error_pago_no">You do not have pending payments</string>
+    <string name="sesiones">Sessions</string>
+    <string name="sesiones_">Sessions: %.2f</string>
+    <string name="concepto">Concept</string>
+    <string name="monto">Amount</string>
+    <string name="vencimiento">Expiration</string>
+    <string name="matricula_">Enrollment %1$s</string>
+    <string name="recibopago">Voucher</string>
+    <string name="carga_meses_uno">January - %1$s, %2$s</string>
+    <string name="mensaje">Message</string>
+    <string name="mensajes">Notifications</string>
+    <string name="mensajes_detalle">Messages and notices</string>
+    <string name="ra">Augmented reality</string>
+    <string name="ra_detalle">Important points of ESAN</string>
+    <string name="link_interes">Links of Interest</string>
+    <string name="link_interes_detalle">Important websites of ESAN</string>
+    <string name="configuracion">Configuration</string>
+    <string name="configuracion_detalle">Fingerprint</string>
+    <string name="huella_digital">Fingerprint</string>
+    <string name="carga_academica">Academic charge</string>
+    <string name="carga_academica_detalle">Academic and extraordinary</string>
+    <string name="malla_curricular">Curriculum</string>
+    <string name="malla_curricular_detalle">My curricular advance</string>
+    <string name="tomar_asistencia">Verify Attendance</string>
+    <string name="invitado">Guest</string>
+    <string name="alumnopre">Undergraduate Student</string>
+    <string name="alumnopos">Postgraduate Student</string>
+    <string name ="pregrado_titulo">Undergraduate</string>
+    <string name ="posgrado_titulo">Postgraduate</string>
+    <string name="alumno">Student</string>
+    <string name="alumnos">Students</string>
+    <string name="profesor">Lecturer</string>
+    <string name="encuesta">Survey</string>
+    <string name="encuestar">To Survey</string>
+    <string name="respuesta">Answer</string>
+    <string name="curso">Course</string>
+    <string name="promedio_final">Final average</string>
+    <string name="cursos">Courses</string>
+    <string name="ver_lista">See list</string>
+    <string name="modulo_">Module %1$d</string>
+    <string name="error_intentelo_mas_tarde">Error, please try again later</string>
+    <string name="error_ingreso">Enter the application again</string>
+    <string name="error_valores">The correct information was not found</string>
+    <string name="advertencia_no_informacion">No information found</string>
+    <string name="advertencia_completar_asistencia">You must complete the entire attendance list before submitting</string>
+    <string name="advertencia_completar_encuesta">You must answer all the questions to be able to send the survey</string>
+    <string name="advertencia_no_enviar">You can not send at this time</string>
+    <string name="mensaje_confirmar_asistencia">%1$s\nSection: %2$s\nAttendance: %3$d\nDelay: %4$d\nAbsences: %5$d</string>
+    <string name="carne">Identity Card</string>
+    <string name="carne_virtual">Virtual Identity Card</string>
+    <string name="nombres">Names</string>
+    <string name="apellidos">Surnames</string>
+    <string name="curso_">Course:</string>
+    <string name="aula_">Classroom:</string>
+    <string name="profesor_">Lecturer:</string>
+    <string name="sesion_n_">Seccion No.: %1$s</string>
+    <string name="seccion_">Section: %1$s</string>
+    <string name="asistencia_tomada">Attendance taken</string>
+    <string name="asistencia_notomada">He did not take attendance</string>
+    <string name="asistencia_tomar">Take Attendance</string>
+    <string name="asistencia_modificar">Modify Attendance</string>
+    <string name="error_no_asistencia">Unable to send attendance</string>
+    <string name="preguntar_reg_asistencia">Do you want to register your attendance at %1$s?</string>
+    <string name="si">Yes</string>
+    <string name="no">Not</string>
+    <string name="aceptar">Accept</string>
+    <string name="cancelar">Cancel</string>
+    <string name="programa">Program</string>
+    <string name="tipo_grupo">Type Group</string>
+    <string name="error_permiso_opcion">You do not have permission for this option</string>
+    <string name="advertencia_pr_notienegrupo">Not registered in any work group</string>
+    <string name="reservar">Reserve</string>
+    <string name="confirmar_reserva">Confirm</string>
+    <string name="comedor">Dinning rooms</string>
+    <string name="mis_reservas">My Reservations</string>
+    <string name="grupos">Groups</string>
+    <string name="migrupo">My Group</string>
+    <string name="sub_reservar">Reservation of meeting points</string>
+    <string name="sub_confirmar_reserva">Confirm the reservations made</string>
+    <string name="sub_mis_reservas">List your last reservations</string>
+    <string name="sub_grupos">Create work groups</string>
+    <string name="grupo">Group</string>
+    <string name="max_dias_anticipa">Anticipation\nDays</string>
+    <string name="max_horas_reserva">Max. Booking\nHours</string>
+    <string name="horas_disponible">Hrs. Available\nBooking</string>
+    <string name="fecha_reserva">Reserve Date</string>
+    <string name="horario">Schedule</string>
+    <string name="consultar_disponibilidad">Check Availability</string>
+    <string name="consultar">Consult</string>
+    <string name="_dias">%1$s Days</string>
+    <string name="_horas">%1$s Hours</string>
+    <string name="error_prhoraconsecutiva">Reserved hours must be consecutive</string>
+    <string name="error_prsuperohoras">You exceeded maximum booking hours per day</string>
+    <string name="error_prhoracentar">Central hour can not be deselect</string>
+    <string name="error_cargaqr">QR code could not be loaded</string>
+    <string name="detalle">Detail</string>
+    <string name="reservado_por">Reserved by</string>
+    <string name="fecha">Date</string>
+    <string name="hora_s_">Hour(s)</string>
+    <string name="disponible">Available</string>
+    <string name="no_disponible">Not available</string>
+    <string name="mensajeconfirmacion_cambiohora">You want to change your reservation to the schedule of:\n%1$s to %2$s</string>
+    <string name="otros_horarios_disponibles">Other Available Hours</string>
+    <string name="mensaje_confirmar_qr">To confirm, your colleagues must scan the following QR code with their smartphone.</string>
+    <string name="mensaje_confirmar_porqr">You can confirm the reservation of a partner by scanning the QR code of your reservation.</string>
+    <string name="crear">Create</string>
+    <string name="eliminar">Delete</string>
+    <string name="hecho">Done</string>
+    <string name="scan_qr">Scan QR code</string>
+    <string name="ciclo_">Period %1$s</string>
+    <string name="electivos">Electives</string>
+    <string name="cred_">Cred.: %1$s</string>
+    <string name="convalidado">Validated</string>
+    <string name="marcar_todos">Mark All</string>
+    <string name="enviar">Send</string>
+    <string name="advertencia">Warning</string>
+    <string name="mensaje_salir_sin_enviar_asistencia">Do you want to leave without sending?, Any changes made will be lost</string>
+    <string name="historico_notas">Grades Report</string>
+    <string name="salir">Exit</string>
+    <string name="cerrar_sesion">Logout</string>
+    <string name="resultado_encuesta">Survey Result</string>
+    <string name="historial_asistencia">Attendance Report</string>
+    <string name="seguimiento_alumno">Tracking of students</string>
+    <string name="directorio_alumno">Directory of students</string>
+    <string name="directorio">Directory</string>
+    <string name="sesiones_totales">Total Sessions</string>
+    <string name="simarcoasistencia">You marked attendance</string>
+    <string name="nomarcoasistencia">"You did not mark attendance "</string>
+    <string name="proximassesiones">Next sessions</string>
+    <string name="no_mayor_detalle">No further detail found</string>
+    <string name="inasistencias_">Absences:\u00A0</string>
+    <string name="resumen">Summary</string>
+    <string name="asis_marcada">Assis. Marked</string>
+    <string name="promedio">Average</string>
+    <string name="proxima__sesion">Next\nSession</string>
+    <string name="no__marco">Not\nMarked</string>
+    <string name="participaron">Participated</string>
+    <string name="texto_huella_dactilar">The Fingerprint feature allows you to enter the ESAN App without having to enter your credentials.</string>
+    <string name="huella_error_lector">Your Fingerprint could not be recognized, you must close the application completely and try again.</string>
+    <string name="huella_no_permiso">Do not have permission to use Fingerprint</string>
+    <string name="huella_configure_una_huella">Register at least one fingerprint; To do this, go to Settings -> Security -> Fingerprint</string>
+    <string name="huella_configure_bloqueo">The Lock screen has not been configured.\nGo to "Settings -> Security -> Fingerprint" and configure your fingerprint</string>
+    <string name="huella_no_reconocimiento">Your device does not have recognition by Fingerprint</string>
+    <string name="fecha_vencimiento">Expiration Date</string>
+    <string name="dias_vencidos">Expired Days</string>
+    <string name="importe">Amount</string>
+    <string name="penalidad">Penalty</string>
+    <string name="intereses">Interests</string>
+    <string name="total_pago">Amount to Pay</string>
+    <string name="promedio_general">General Average</string>
+    <string name="creditos">Credits</string>
+    <string name="creado_por">Created by</string>
+    <string name="agregar_integrante_">Add Member (%1$d)</string>
+    <string name="entrada_">Appetizer:</string>
+    <string name="platos_fondo_">Main Courses:</string>
+    <string name="postres_">Desserts:</string>
+    <string name="refresco_">Beverage:</string>
+    <string name="precio_">Price:</string>
+    <string name="ra_no_mostrar">Do not show again</string>
+    <string name="ra_d_nombre">Name: %1$s</string>
+    <string name="ra_d_detalle">Detail: %1$s</string>
+    <string name="ra_d_ubicacion">Location: %1$s</string>
+    <string name="connection_error_dialog">Activate a location source in the app settings</string>
+    <string name="connection_error_dialog_button1">Retry</string>
+    <string name="connection_error_dialog_button2">Configuration</string>
+    <string name="connection_error_dialog_button3">Go back</string>
+    <string name="dia_hora">Day\nHour</string>
+    <string name="visualizar_todo">Show All</string>
+    <string name="mensaje_prsin_reservas">You do not have reservations made</string>
+
+    <string name="description_imagen_generic">Generic image of the application</string>
+
+
+    <string-array name="perfiles">
+        <item>Student</item>
+        <item>Lecturer</item>
+    </string-array>
+
+    <string-array name="facultad">
+        <item>Undergraduate</item>
+        <item>Postgraduate</item>
+    </string-array>
+
+    <string-array name="tipo_notas_mostrar">
+        <item>Tarea Académica</item>
+        <item>Examen Parcial</item>
+        <item>Examen Final</item>
+    </string-array>
+
+    <string-array name="codigo_notas">
+        <item>TA</item>
+        <item>EP</item>
+        <item>EF</item>
+    </string-array>
+
+    <string-array name="dias_semana">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+
+    <string-array name="dias_semana_min">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
+
+    <string-array name="meses">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+    <string name="comedor_detalle">ESAN dining rooms</string>
+    <string name="partner">Classmates</string>
+    <string name="error_default">Try again!</string>
+    <string name="loading">Loading ...</string>
+    <string name="text_description">An image</string>
+    <string name="update">Update</string>
+    <string name="update_description">There is a new version of the App ESAN. Please update the application to continue.</string>
+
+    <!-- Title for app button bar -->
+
+
+    <!--VUFORIA-->
+
+
+    <string name="deben_seleccionarse_horas_continuas_mensaje">Selected hours must be consecutive</string>
+    <string name="usted_alcanzo_maximo_numero_horas_mensaje">You reached the maximum amount of allowed hours</string>
+    <string name="usted_no_tiene_permiso_mensaje">You do not have permission for this option</string>
+    <string name="mensaje_error_servidor">There is a problem with the server right now, please try again later.</string>
+    <string name="ingresa_codigos_grupo_prereserva_text">Enter two student codes to create your study group</string>
+    <string name="codigo_primer_alumno_text">First Student Code</string>
+    <string name="codigo_segundo_alumno_text">Second Student Code</string>
+    <string name="borrar_codigos_button_text">Remove codes</string>
+    <string name="registro_de_prereserva_title">Pre-reservation Registration</string>
+    <string name="horario_para_prereserva_title">Pre-reservation Hours</string>
+    <string name="fecha_de_prereserva_text">Pre-reservation Date: %1$s</string>
+    <string name="prereserva_efectuada_title">Pre-reservation Ready</string>
+    <string name="solicitante_text">Requestor:</string>
+    <string name="horas_text">Hours:</string>
+    <string name="sin_confirmar_text">Pending Confirmation</string>
+    <string name="fecha_text">Date:</string>
+    <string name="confirmacion_de_prereservas_title">Pre-reservation Confirmation</string>
+    <string name="historial_de_prereservas_title">Pre-reservations Record</string>
+    <string name="no_existe_registro_de_prereservas_text">There are not any pre-reservations made</string>
+    <string name="cubiculo_text">Study Room:</string>
+    <string name="ubicacion_text">Location:</string>
+    <string name="error_servidor_extraccion_datos">There was an error during data extraction, please try again later.</string>
+    <string name="ingrese_codigos_mensaje">Enter two student codes</string>
+    <string name="ingrese_codigos_ocho_digitos_mensaje">The entered codes must be 8 digit long</string>
+    <string name="ingrese_codigos_diferentes_mensaje">The entered codes must be different</string>
+    <string name="ingrese_codigos_diferentes_usuario_sesion">The entered codes must be different from the logged-in user</string>
+    <string name="puntos_de_reunion_title">Meeting Points</string>
+    <string name="debe_seleccionar_cantidad_horas_minima_mensaje">You must select at least one hour to proceed with the pre-reservation process</string>
+    <string name="estado_text">Status:</string>
+    <string name="promocion_mensaje">Class: %1$s</string>
+    <string name="direccion_mensaje">Unit: %1$s</string>
+    <string name="pre_reservar_text">Pre-reservation</string>
+    <string name="confirmar_text">Confirm</string>
+    <string name="genera_tu_pre_reserva_text">Generate your pre-reservation</string>
+    <string name="confirma_tus_pre_reservas_text">Confirm your pre-reservation</string>
+    <string name="historial_text">Record</string>
+    <string name="ver_historial_de_pre_reservas_text">Pre-reservations record</string>
+    <string name="no_camera_and_no_gps_usage_message">The camera and the gps will not be used</string>
+    <string name="mensaje_horario_uso_y_disponibilidad">%1$s\n\nAvailable hours for the group: %2$d</string>
+    <string name="cancelar_accion">Cancel Action</string>
+    <string name="hours_select_software_text">Pre-reservation Hours: %1$s - %2$s</string>
+    <string name="encuentra_tu_programa_hint">Find your program</string>
+    <string name="version_app">v.%1$s</string>
+    <string name="huella_digital_habilitada">The option of Fingerprint is on.</string>
+    <string name="huella_digital_deshabilitada">The option of Fingerprint is off.</string>
+    <string name="confirmar_prereservas_text">Confirm</string>
+    <string name="historial_de_pre_reservas_text">Record</string>
+    <string name="prereservar_laboratorio_text">Pre-reserve</string>
+    <string name="no_hay_labs_disponibles">There are no laboratories available for the selected hours</string>
+    <string name="labs_disponibles_title">Software Availability</string>
+    <string name="horario_prereserva_title">Pre-reservation Hours</string>
+    <string name="laboratorios_title">Laboratories</string>
+    <string name="debe_seleccionarse_un_lab_mensaje">At least one software must be selected</string>
+    <string name="no_respuesta_desde_servidor">There is no response from the server</string>
+    <string name="error_recuperacion_datos">There was an error during data retrieval</string>
+    <string name="seleccione_el_programa_prereserva_text">Select the necessary software for the pre-reservation or check the box \"Internet and Office\"</string>
+    <string name="realizar_prereserva_laboratorio_button">Complete Pre-reservation</string>
+    <string name="perdida_text">Lost</string>
+    <string name="maquina_lab_text">Machine:</string>
+    <string name="confirmada_text">Confirmed</string>
+    <string name="seleccione_horario_para_iniciar_prereserva">Select the hours to start the pre-reservation</string>
+    <string name="consultando_disponibilidad_message">Checking availability</string>
+    <string name="horas_disponibles_text">Available Hours:</string>
+    <string name="horas_usadas_text">Pre-reserved Hours:</string>
+    <string name="carrera_text">Career</string>
+    <string name="carne_virtual_title">Virtual Identity Card</string>
+    <string name="generar_carne_virtual_subtitle">Generate virtual identity card</string>
+    <string name="volver_menu_principal_button">Back to main screen</string>
+    <string name="consultar_disponibilidad_laboratorios_button">Check availability</string>
+    <string name="huella_no_reconocida">Fingerprint not recognized</string>
+    <string name="max_cantidad_programas_x_alumno">Only %1$d programs can be selected per pre-reservation</string>
+    <string name="solo_internet_text">Internet and Office</string>
+    <string name="terminos_y_condiciones">Terms and Conditions</string>
+    <string name="ver_terminos_y_condiciones">Review terms and conditions</string>
+    <string name="politicas_uso_aceptadas_correctamente">The terms and conditions of use were accepted successfully</string>
+    <string name="politicas_uso_aceptadas_mensaje">The terms and conditions of use were accepted successfully</string>
+    <string name="mensaje_tyc_dialog">You must accept the terms and conditions of use. Otherwise you will not be able to proceed.</string>
+    <string name="mensaje_politicas_uso_dialog">You must accept the terms and conditions of use. Otherwise you will not be able to proceed.</string>
+    <string name="debe_aceptar_tyc">You must accept the terms and conditions of use to enter this option</string>
+    <string name="debe_aceptar_politicas_uso">You must accept the terms and conditions of use to enter this option</string>
+    <string name="acepta_tyc_dialog_title">Pre-reservation of Laboratories</string>
+    <string name="aceptar_dialog_text">Accept</string>
+    <string name="acepto_tyc_checkbox_text_href">I accept &lt;a href=%1$s&gt;terms and conditions of use&lt;/a&gt;</string>
+    <string name="acepto_politicas_uso_checkbox_text_href">I accept &lt;a href=%1$s&gt;terms and conditions of use&lt;/a&gt;</string>
+    <string name="cancelar_dialog_text">Cancel</string>
+    <string name="sopa">Soup:</string>
+    <string name="confirma_con_tu_huella_para_continuar">Confirm with your fingerprint to continue</string>
+    <string name="huella_digital_content_description">Fingerprint</string>
+    <string name="huella_no_reconocida_trate_nuevamente">Fingerprint was not recognized, please try again</string>
+    <string name="huella_reconocida">Fingerprint Recognized</string>
+    <string name="sensor_de_huella">Fingerprint sensor</string>
+    <string name="valida_huella_title">Validate Fingerprint</string>
+    <string name="login_huella_title">Fingerprint Enabled</string>
+    <string name="utiliza_huella_digital">Use your fingerprint to log in</string>
+    <string name="porfavor_registre_huella_digital_en_dispositivo">Please enroll a fingerprint in the device to enable this option.</string>
+    <string name="alerta_title">Alert</string>
+    <string name="huella_configurada_previamente_mensaje">The fingerprint feature has been already configured for another user.</string>
+    <string name="opcion_huella_digital_conf_correct">The fingerprint feature has been configured successfully.</string>
+    <string name="ocurrio_error_sensor_huella_digital">An occurred while detecting your fingerprint sensor, please try again.</string>
+    <string name="recordatorio_select_software">Remember that you can select a maximum of three software per pre-reservation. The pre-reservation is personal. Only the student that made the pre-reservation can use the corresponding machine(s).</string>
+    <string name="indicaciones_de_uso">Use Guidelines</string>
+    <string name="verificar_codigos">Verify codes</string>
+    <string name="recordatorio_registro_prereserva">Remember that you must enter two student codes to proceed with the pre-reservation. Any member of the group can confirm the pre-reservation within the allowed time range.</string>
+    <string name="ver_integrantes_del_grupo_text">View group members</string>
+    <string name="acepta_tyc_dialog_pr_title">Pre-reservation of Study Rooms</string>
+    <string name="laboratorios_detalle">Pre-reservation of laboratories</string>
+    <string name="no_dentro_de_rango_prereserva">You are not within the allowed hours for pre-reservation</string>
+    <string name="alumno_retirado_del_curso">The student is retired from this course</string>
+    <string name="detalle_de_prereserva">Pre-reservation Details</string>
+    <string name="creador_text_for_historial">Requestor</string>
+    <string name="integrantes_cub">Group Members</string>
+    <string name="advertencia_huella_digital_version_android">Your device must have Android 6.0 or later to access this option</string>
+    <string name="asistencias_postgrado_curso">Attendance\n%1$d (%2$.1f%%)</string>
+    <string name="faltas_postgrado_curso">Absence\n%1$d (%2$.1f%%)</string>
+    <string name="tardanzas_postgrado_curso">Delay\n%1$d (%2$.1f%%)</string>
+    <string name="menu_carne_virtual">Virtual Identity Card</string>
+    <string name="menu_comedores">Dining Rooms</string>
+    <string name="menu_configuracion">Settings</string>
+    <string name="menu_curriculum">Curriculum</string>
+    <string name="menu_cursos">Courses</string>
+    <string name="menu_horario">Schedule</string>
+    <string name="menu_laboratorios">Laboratories</string>
+    <string name="menu_links_interes">Interest Links</string>
+    <string name="menu_notificaciones">Notifications</string>
+    <string name="menu_pagos">Payments</string>
+    <string name="menu_puntos_reunion">Meeting Points</string>
+    <string name="menu_realidad_aumentada">Augmented Reality</string>
+    <string name="ver_ubicacion_en_mapa">View location in map</string>
+    <string name="m_t_salas_estudio">Study R.</string>
+    <string name="m_tab_salas_estudio">Study Rooms</string>
+    <string name="salas_de_estudio_title">Study Rooms</string>
+    <string name="responsable_text">Responsible</string>
+    <string name="integrantes_salas_estudio">Group Members</string>
+    <string name="mensaje_no_matriculado">You are not enrolled in the current semester</string>
+    <string name="mensaje_alumno_retirado_carnet">You are retired from the current semester</string>
+    <string name="usuario_en_sesion_hint">Logged-in user</string>
+    <string name="cargando_mensaje_progress_bar">Loading</string>
+    <string name="cargando_integrantes_text_historial">Loading Group Members</string>
+    <string name="no_participaron">Did not participated</string>
+    <string name="generacion_codigo_qr">Code QR Generation</string>
+    <string name="genera_tu_codigo_qr">Generate your QR code</string>
+    <string name="qr_code_instrucciones">Use your QR code in any food truck</string>
+    <string name="leer_codigo_qr">Scan QR Code</string>
+    <string name="lectura_codigo_qr">Code QR Scanning</string>
+</resources>

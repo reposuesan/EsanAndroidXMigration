@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/lblPregunta_encuestapreguntauno"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <pe.edu.esan.appostgrado.util.SegmentedGroup
+        android:id="@+id/sgRespuesta_encuestapreguntauno"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblPregunta_encuestapreguntauno"
+        segmentedgroup:sc_border_width="1dp"
+        segmentedgroup:sc_checked_text_color="@color/md_white_1000"
+        segmentedgroup:sc_corner_radius="10dp"
+        segmentedgroup:sc_tint_color="@color/esan_rojo"
+        segmentedgroup:sc_unchecked_tint_color="@color/md_white_1000">
+
+        <RadioButton
+            android:id="@+id/ck_rpta1"
+            style="@style/RadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="1" />
+
+        <RadioButton
+            android:id="@+id/ck_rpta2"
+            style="@style/RadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="2" />
+
+        <RadioButton
+            android:id="@+id/ck_rpta3"
+            style="@style/RadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="3" />
+
+        <RadioButton
+            android:id="@+id/ck_rpta4"
+            style="@style/RadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="4" />
+
+        <RadioButton
+            android:id="@+id/ck_default"
+            style="@style/RadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:visibility="gone" />
+
+        <RadioButton
+            android:id="@+id/ck_rpta5"
+            style="@style/RadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="5" />
+
+    </pe.edu.esan.appostgrado.util.SegmentedGroup>
+</androidx.constraintlayout.widget.ConstraintLayout>

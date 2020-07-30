@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="pe.edu.esan.appostgrado.view.mas.laboratorios.PregradoLabsHistorialActivity">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar_historial_lab"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"/>
+
+    <TextView
+            android:text="@string/historial_de_prereservas_title"
+            android:layout_marginTop="36dp"
+            android:layout_marginLeft="36dp"
+            android:layout_marginRight="36dp"
+            android:layout_marginBottom="24dp"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:textColor="@color/green"
+            android:textStyle="bold|italic"
+            android:layout_marginLeft="90dp"
+            android:id="@+id/tv_direccion_historial_lab"
+            tools:text="Dirección: Pregrado Matrícula"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:textColor="@color/green"
+            android:textStyle="bold|italic"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="90dp"
+            android:id="@+id/tv_promocion_historial_lab"
+            tools:text="Promoción: 2019-1"
+            android:textSize="16sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+                tools:listitem="@layout/itemview_pregrado_pr_lab_historial"
+                android:scrollbars="vertical"
+                android:clipToPadding="false"
+                android:id="@+id/recycler_view_historial_lab"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        <TextView
+                android:text="@string/no_existe_registro_de_prereservas_text"
+                android:textSize="28sp"
+                android:paddingLeft="62dp"
+                android:paddingRight="62dp"
+                android:gravity="center"
+                android:textColor="@color/esan_red"
+                android:fontFamily="sans-serif-light"
+                android:textStyle="bold"
+                android:id="@+id/tv_empty_historial_lab"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        <ProgressBar
+                android:id="@+id/progress_bar_historial_lab"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+</LinearLayout>

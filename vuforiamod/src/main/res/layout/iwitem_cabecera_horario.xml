@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="#FFF"
+    android:paddingLeft="25dp">
+
+    <TextView
+        android:id="@+id/lblHorario_itemhorariocabeceraiw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        android:textColor="#000"
+        android:padding="5dp"
+        android:text="S1A"/>
+
+    <TextView
+        android:id="@+id/lblDescripcion_itemhorariocabeceraiw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textSize="14sp"
+        android:textColor="#686868"
+        android:text="dasdasd"/>
+
+</LinearLayout>

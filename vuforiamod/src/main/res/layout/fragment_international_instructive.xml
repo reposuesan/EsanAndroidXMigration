@@ -1,0 +1,27 @@
+<FrameLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:tools="http://schemas.android.com/tools"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     tools:context="com.example.vuforiamod.international.activities.InternationalInstructiveActivity$PlaceholderFragment">
+
+    <ImageView
+            android:id="@+id/imgInstructive"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            tools:src="@drawable/instructivo_1_2020_1"
+            android:adjustViewBounds="true"/>
+
+    <ImageView
+            android:layout_gravity="end"
+            android:src="@drawable/ico_error"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/img_intenational_close"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"/>
+
+</FrameLayout>

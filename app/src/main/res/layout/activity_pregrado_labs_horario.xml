@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="pe.edu.esan.appostgrado.view.mas.laboratorios.PregradoLabsHorarioActivity">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar_horario_lab"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"/>
+
+    <LinearLayout
+            android:id="@+id/main_container_horario_lab"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="pe.edu.esan.appostgrado.view.mas.laboratorios.PregradoLabsHorarioActivity">
+
+        <!--<TextView
+                android:text="Horario de Pre-reserva"
+                android:layout_marginTop="36dp"
+                android:layout_marginLeft="36dp"
+                android:layout_marginRight="36dp"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>-->
+        <TextView
+                android:text="@string/seleccione_horario_para_iniciar_prereserva"
+                android:layout_marginTop="28dp"
+                android:layout_marginLeft="56dp"
+                android:layout_marginRight="56dp"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="64dp"
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:text="@string/horas_disponibles_text"
+                        android:textStyle="bold"
+                        android:textSize="12sp"
+                        android:textColor="@color/green"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:text="@string/horas_usadas_text"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"
+                        android:textSize="12sp"
+                        android:textColor="@color/esan_red"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/tv_horas_disponibles_lab"
+                        tools:text="6.5 horas"
+                        android:textStyle="bold"
+                        android:paddingLeft="8dp"
+                        android:textSize="12sp"
+                        android:textColor="@color/green"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/tv_horas_usadas_lab"
+                        tools:text="1.5 horas"
+                        android:textStyle="bold"
+                        android:paddingLeft="8dp"
+                        android:layout_marginTop="4dp"
+                        android:textSize="12sp"
+                        android:textColor="@color/esan_red"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_weight="1"
+                tools:listitem="@layout/itemview_pregrado_pr_lab"
+                android:scrollbars="vertical"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:clipToPadding="false"
+                android:id="@+id/recycler_view_horario_lab"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"/>
+
+
+        <RelativeLayout
+                android:layout_weight="0.3"
+                android:paddingBottom="24dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp">
+
+            <Button
+                    android:layout_alignParentBottom="true"
+                    android:id="@+id/revisar_disponibilidad_lab_button"
+                    android:textColor="@color/md_white_1000"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/shape_button_puntos_reunion"
+                    android:textAllCaps="false"
+                    android:text="@string/consultar_disponibilidad_laboratorios_button"
+                    android:layout_marginLeft="24dp"
+                    android:layout_marginRight="24dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ProgressBar
+                android:indeterminateTint="@color/green"
+                android:layout_centerInParent="true"
+                android:id="@+id/progress_bar_horario_lab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/tv_consultando_disp_lab"
+                android:paddingTop="8dp"
+                android:textAlignment="center"
+                android:textColor="@color/green"
+                android:textStyle="bold"
+                android:layout_below="@id/progress_bar_horario_lab"
+                android:text="@string/consultando_disponibilidad_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+    </RelativeLayout>
+
+
+</FrameLayout>

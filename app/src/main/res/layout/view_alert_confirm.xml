@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/superior"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/shape_dialog"
+        android:orientation="vertical">
+
+        <ImageView
+                android:layout_gravity="center_horizontal"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:srcCompat="@drawable/ic_info_outline_black_24dp"
+            android:contentDescription="@string/description_imagen_generic" />
+
+        <TextView
+            android:text="Esto es un texto de prueba."
+            android:id="@+id/tv_message_alert"
+            android:textSize="@dimen/text_size_content"
+            android:textStyle="bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textColor="@color/md_black_1000"
+            tools:ignore="UnusedAttribute" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/img_close_confirm"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_above="@+id/superior"
+        android:layout_toEndOf="@+id/superior"
+        android:layout_marginBottom="-40dp"
+        android:layout_marginStart="-30dp"
+        android:padding="4dp"
+        android:background="@drawable/shape_button_close_dialog"
+        app:srcCompat="@drawable/ic_close_black_24dp" />
+
+    <Button
+        android:layout_below="@+id/superior"
+        android:id="@+id/btn_acetp_confirm"
+        android:background="@drawable/shape_button_active"
+        android:text="Aceptar"
+        android:letterSpacing="0.1"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_button"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="150dp"
+        android:layout_height="42dp"
+        tools:ignore="UnusedAttribute" />
+
+</RelativeLayout>

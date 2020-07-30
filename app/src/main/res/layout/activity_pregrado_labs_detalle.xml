@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="pe.edu.esan.appostgrado.view.mas.laboratorios.ignore.PregradoLabsDetalleActivity">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar_detalle_lab"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"/>
+
+    <TextView
+            android:text="@string/prereserva_efectuada_title"
+            android:layout_marginTop="36dp"
+            android:layout_marginLeft="36dp"
+            android:layout_marginRight="36dp"
+            android:layout_marginBottom="24dp"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <LinearLayout
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="18dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:textColor="@color/md_black_1000"
+                android:layout_marginLeft="16dp"
+                android:text="@string/solicitante_text"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/tv_solicitante_detalle_lab"
+                android:textColor="@color/md_black_1000"
+                android:layout_marginLeft="24dp"
+                tools:text="Daniel Bedoya Martínez"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+            <TextView
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="16dp"
+                    android:text="@string/horas_text"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="16dp"
+                    android:text="@string/fecha_text"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="16dp"
+                    android:text="@string/estado_text"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+
+            <TextView
+                    android:id="@+id/tv_horario_detalle_lab"
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="48dp"
+                    tools:text="11:00 AM - 2:00 PM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+            <TextView
+                    android:id="@+id/tv_fecha_detalle_lab"
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="48dp"
+                    tools:text="28/03/2019"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="48dp"
+                    android:text="@string/sin_confirmar_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/tv_mensaje_prereserva_realizada_lab"
+            android:layout_weight="1.25"
+            android:paddingTop="36dp"
+            android:paddingLeft="48dp"
+            android:paddingRight="48dp"
+            android:textSize="14sp"
+            android:gravity="start"
+            android:textColor="@color/green"
+            android:textStyle="bold|italic"
+            tools:text="Su laboratorio ha sido reservado."
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+
+    <RelativeLayout
+            android:layout_weight="1"
+            android:paddingBottom="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+
+
+        <Button
+                android:layout_alignParentBottom="true"
+                android:id="@+id/detalle_volver_menu_principal_button"
+                android:layout_marginTop="36dp"
+                android:textColor="@color/md_white_1000"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:background="@drawable/shape_button_puntos_reunion"
+                android:textAllCaps="false"
+                android:text="@string/volver_menu_principal_button"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+
+</LinearLayout>

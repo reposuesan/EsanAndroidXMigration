@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/vIndicador_ihorario"
+        android:layout_width="10dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        android:background="@color/esan_rojo"
+        app:layout_constraintBottom_toTopOf="@+id/view4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:src="@drawable/indicator"
+        app:layout_constraintBottom_toTopOf="@+id/view4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lblDia_ihorario"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:fontFamily="Roboto"
+        android:text=""
+        android:textColor="@color/md_black_1000"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/view4"
+        app:layout_constraintEnd_toStartOf="@+id/imageView2"
+        app:layout_constraintStart_toEndOf="@+id/vIndicador_ihorario"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="90dp"
+        android:background="@color/esan_rojo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lblHoy_ihorario"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/hoy"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/lblDia_ihorario"
+        app:layout_constraintEnd_toEndOf="@+id/lblDia_ihorario"
+        app:layout_constraintStart_toStartOf="@+id/lblDia_ihorario" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

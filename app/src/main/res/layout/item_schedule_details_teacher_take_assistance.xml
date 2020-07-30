@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_light"
+        android:orientation="vertical">
+
+
+    <androidx.cardview.widget.CardView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:background="@android:color/white"
+
+            app:cardCornerRadius="20dp"
+            android:padding="6dp"
+            android:layout_marginBottom="6dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp">
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+            <LinearLayout
+                    android:id="@+id/rl_item_case_body"
+                    android:orientation="vertical"
+                    android:padding="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+
+                        <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                app:srcCompat="@drawable/ic_room_black_24dp" />
+
+                        <TextView
+                                android:id="@+id/tv_location_schedule_detail_teacher"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:textSize="14sp"
+                                android:textColor="@color/md_grey_800"
+                                android:textAllCaps="true"
+                                tools:text="A - 602" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+
+                        <ImageView
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                app:srcCompat="@drawable/ic_access_time_black_24dp" />
+
+                        <TextView
+                                android:id="@+id/tv_hour_schedule_detail_teacher"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/md_grey_800"
+                                tools:text="19:00 - 19:50" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginTop="6dp">
+
+                    <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            app:srcCompat="@drawable/ic_book_black_24dp" />
+
+                    <TextView
+                            android:id="@+id/tv_course_schedule_detail_teacher"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:textSize="14sp"
+                            android:textColor="@color/md_grey_800"
+                            android:textAllCaps="false"
+                            tools:text="Desarrollo de Aplicaciones Moviles." />
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="6dp">
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+
+                        <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                app:srcCompat="@drawable/ic_home_black_24dp" />
+
+                        <TextView
+                                android:id="@+id/tv_section_schedule_detail_teacher"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:textSize="13sp"
+                                android:textColor="@color/md_grey_800"
+                                android:textAllCaps="true"
+                                tools:text="08086-1-18" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5"
+                            android:layout_gravity="center"
+                            android:gravity="center">
+
+                        <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                app:srcCompat="@drawable/ic_format_list_numbered_black_24dp" />
+
+                        <TextView
+                                android:id="@+id/tv_session_schedule_detail_teacher"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:textSize="14sp"
+                                android:textColor="@color/md_grey_800"
+                                tools:text="054" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <ImageView
+                    android:id="@+id/img_close_confirm"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_above="@+id/rl_item_case_body"
+                    android:layout_toEndOf="@+id/rl_item_case_body"
+                    android:layout_marginBottom="-30dp"
+                    android:layout_marginStart="-30dp"
+                    android:padding="2dp"
+                    android:background="@drawable/shape_button_close_dialog"
+                    app:srcCompat="@drawable/ic_close_black_24dp"/>
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+</RelativeLayout>

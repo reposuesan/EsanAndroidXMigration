@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="pe.edu.esan.appostgrado.view.mas.ScanQRCodeActivity">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar_lectura_qr"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp" />
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="pe.edu.esan.appostgrado.view.mas.GenerateQRCodeActivity">
+
+        <Button
+                android:id="@+id/read_qr_code_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/leer_codigo_qr"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="@color/esan_red"
+                android:elevation="4dp"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="40dp"/>
+
+        <TextView
+                android:id="@+id/text_view_qr_read_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/read_qr_code_button"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                tools:text="Lectura Satisfactoria"
+                android:textColor="#5AAC04"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+
+    </RelativeLayout>
+
+</FrameLayout>

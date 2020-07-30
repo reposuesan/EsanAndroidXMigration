@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="90dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/view19"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imgFoto_idirectorio"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view19"
+        android:layout_width="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_height="1dp"
+        android:background="@color/esan_rojo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/lblSCodigo_idirectorio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/codigo"
+        app:layout_constraintBottom_toBottomOf="@+id/lblCodigo_idirectorio"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout3"
+        app:layout_constraintTop_toTopOf="@+id/lblCodigo_idirectorio" />
+
+    <TextView
+        android:id="@+id/lblCodigo_idirectorio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/md_black_1000"
+        app:layout_constraintBottom_toTopOf="@+id/lblNombre_idirectorio"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/lblNombre_idirectorio"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/lblSNombre_idirectorio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/nombres"
+        app:layout_constraintBottom_toBottomOf="@+id/lblNombre_idirectorio"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout3"
+        app:layout_constraintTop_toTopOf="@+id/lblNombre_idirectorio" />
+
+    <TextView
+        android:id="@+id/lblNombre_idirectorio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/md_black_1000"
+        app:layout_constraintBottom_toTopOf="@+id/lblCorreo_idirectorio"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lblSNombre_idirectorio"
+        app:layout_constraintTop_toBottomOf="@+id/lblCodigo_idirectorio" />
+
+    <TextView
+        android:id="@+id/lblSCorreo_idirectorio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/correo"
+        app:layout_constraintBottom_toBottomOf="@+id/lblCorreo_idirectorio"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout3"
+        app:layout_constraintTop_toTopOf="@+id/lblCorreo_idirectorio" />
+
+    <TextView
+        android:id="@+id/lblCorreo_idirectorio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="7dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/md_black_1000"
+        app:layout_constraintBottom_toTopOf="@+id/btnCorreo_idirectorio"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/lblNombre_idirectorio"
+        app:layout_constraintTop_toBottomOf="@+id/lblNombre_idirectorio" />
+
+    <Button
+        android:id="@+id/btnCorreo_idirectorio"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:textAllCaps="false"
+        android:background="@drawable/borde_rojo"
+        android:textColor="@color/esan_rojo"
+        android:text="@string/enviar_correo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/linearLayout3"
+        app:layout_constraintTop_toBottomOf="@+id/lblCorreo_idirectorio"
+        app:layout_constraintVertical_bias="1.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

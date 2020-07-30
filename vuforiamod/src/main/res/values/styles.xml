@@ -1,0 +1,18 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+
+    <style name="InternationalWeekTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/esan_rojo</item>
+        <item name="colorPrimaryDark">@color/rojo_oscuro</item>
+        <item name="colorAccent">@color/md_black_1000</item>
+        <!--<item name="android:textColorSecondary">@color/md_white_1000</item>-->
+    </style>
+
+
+    <style name="AppThemeNoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppThemeNoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+
+</resources>

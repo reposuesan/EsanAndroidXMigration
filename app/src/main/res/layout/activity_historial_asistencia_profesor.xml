@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pe.edu.esan.appostgrado.view.academico.docente.HistorialAsistenciaProfesorActivity">
+
+    <include
+        android:id="@+id/main_histoasistprof"
+        layout="@layout/toolbar_titulo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lblSeccion_histoasistprof"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textColor="@color/md_white_1000"
+        android:background="@color/esan_rojo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_histoasistprof" />
+
+    <TextView
+        android:id="@+id/lblCurso_histoasistprof"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/esan_rojo"
+        android:padding="15dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textColor="@color/md_white_1000"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblSeccion_histoasistprof" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/esan_rojo"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblCurso_histoasistprof">
+
+        <LinearLayout
+            android:id="@+id/viewClickSiMarco_histoasistprof"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
+
+                <LinearLayout
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:background="@drawable/borde_asistencia">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_check_white"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:paddingEnd="4dp"
+                android:paddingStart="4dp"
+                android:text="@string/simarcoasistencia"
+                android:textColor="@color/md_white_1000"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/viewClickNoMarco_histoasistprof"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
+
+                <LinearLayout
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:background="@drawable/borde_tardanza">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_check_white"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:paddingEnd="4dp"
+                android:paddingStart="4dp"
+                android:text="@string/nomarcoasistencia"
+                android:textColor="@color/md_white_1000"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/viewClickProximo_histoasistprof"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2">
+
+                <LinearLayout
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:background="@drawable/borde_falta">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/icon_check_white"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:paddingEnd="4dp"
+                android:paddingStart="4dp"
+                android:text="@string/proximassesiones"
+                android:textColor="@color/md_white_1000"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvSesiones_histoasistprof"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/viewContentDetalle_historialasistencias"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:background="#FFF"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/labelview00001"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text="@string/sesiones_totales"/>
+
+                        <TextView
+                            android:id="@+id/labelview00002"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text=":"
+                            android:layout_alignParentTop="true"
+                            android:layout_toRightOf="@+id/labelview00001"
+                            android:layout_alignParentBottom="true" />
+
+                        <TextView
+                            android:id="@+id/lblSesionesTotales_historialasistencias"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_toEndOf="@+id/labelview00002"
+                            android:layout_toRightOf="@+id/labelview00002" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp">
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="12dp"
+                            android:background="#007AFF"
+                            android:id="@+id/view4" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#FFF"
+                            android:gravity="center"
+                            android:textStyle="bold"
+                            android:textSize="12sp"
+                            android:text="100%"
+                            android:layout_alignBottom="@+id/view4" />
+                    </RelativeLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/viewContentSiMarco_historialasistencias"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/labelview00003"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:text="@string/simarcoasistencia"/>
+
+                        <TextView
+                            android:id="@+id/labelview00004"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:text=":"
+                            android:layout_alignParentTop="true"
+                            android:layout_toRightOf="@+id/labelview00003"
+                            android:layout_alignParentBottom="true" />
+
+                        <TextView
+                            android:id="@+id/lblSiAsistencia_historialasistencias"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:layout_marginLeft="10dp"
+                            android:textSize="14sp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_toEndOf="@+id/labelview00004"
+                            android:layout_toRightOf="@+id/labelview00004" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp">
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="12dp"
+                            android:background="@drawable/borde_siasistencia_t"
+                            android:id="@+id/view" />
+                        <View
+                            android:id="@+id/viewSiAsis_historialasistencias"
+                            android:layout_width="50dp"
+                            android:layout_height="12dp"
+                            android:background="#14B40A" />
+                        <TextView
+                            android:id="@+id/lblPorcSiAsis_historialasistencias"
+                            android:layout_width="30dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:text=""
+                            android:textColor="#000"
+                            android:textStyle="bold"
+                            android:textSize="11sp"
+                            android:layout_alignBottom="@+id/view" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/viewContentNoMarco_historialasistencias"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/labelview00005"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:text="@string/nomarcoasistencia"/>
+
+                        <TextView
+                            android:id="@+id/labelview00006"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:text=":"
+                            android:layout_alignParentTop="true"
+                            android:layout_toRightOf="@+id/labelview00005"
+                            android:layout_alignParentBottom="true" />
+
+                        <TextView
+                            android:id="@+id/lblNoAsistencia_historialasistencias"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:layout_marginLeft="10dp"
+                            android:textSize="14sp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_toEndOf="@+id/labelview00006"
+                            android:layout_toRightOf="@+id/labelview00006" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="5dp">
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="12dp"
+                            android:background="@drawable/borde_noasistencia_t"
+                            android:id="@+id/view3" />
+                        <View
+                            android:id="@+id/viewNoAsis_historialasistencias"
+                            android:layout_width="50dp"
+                            android:layout_height="12dp"
+                            android:background="#EF9402" />
+                        <TextView
+                            android:id="@+id/lblPorcNoAsis_historialasistencias"
+                            android:layout_width="30dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:text=""
+                            android:textColor="#000"
+                            android:textStyle="bold"
+                            android:textSize="11sp"
+                            android:layout_alignBottom="@+id/view3" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/viewContentProximas_historialasistencias"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:id="@+id/labelview00007"
+                            android:layout_width="150dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:text="@string/proximassesiones"/>
+
+                        <TextView
+                            android:id="@+id/labelview00008"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:text=":"
+                            android:layout_alignParentTop="true"
+                            android:layout_toRightOf="@+id/labelview00007"
+                            android:layout_alignParentBottom="true" />
+
+                        <TextView
+                            android:id="@+id/lblProximos_historialasistencias"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="00"
+                            android:layout_marginLeft="10dp"
+                            android:textSize="14sp"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_toEndOf="@+id/labelview00008"
+                            android:layout_toRightOf="@+id/labelview00008" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="12dp"
+                            android:background="#FFF"/>
+
+                        <View
+                            android:id="@+id/viewProximo_historialasistencias"
+                            android:layout_width="50dp"
+                            android:layout_height="12dp"
+                            android:background="#dadada" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="12dp"
+                            android:background="@drawable/borde_proximo_t"/>
+
+                        <TextView
+                            android:id="@+id/lblPorcProx_historialasistencias"
+                            android:layout_width="30dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:text=""
+                            android:textColor="#000"
+                            android:textStyle="bold"
+                            android:textSize="11sp"
+                            android:layout_alignBottom="@+id/viewProximo_historialasistencias" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/lblMensaje_histoasistprof"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:visibility="gone"
+        android:drawableTop="@drawable/ic_refresh_black_24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/prbCargando_histoasistprof"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:indeterminate="true"
+        android:theme="@style/Progress"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

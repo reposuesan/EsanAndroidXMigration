@@ -1,0 +1,202 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context="pe.edu.esan.appostgrado.view.horario.HorarioFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ImageButton
+            android:id="@+id/btnBefore_fhorario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:padding="10dp"
+            android:src="@drawable/ico_before_inactive"
+            app:layout_constraintBottom_toTopOf="@+id/view2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+            android:id="@+id/btnAfter_fhorario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:padding="10dp"
+            android:src="@drawable/ico_after_active"
+            app:layout_constraintBottom_toTopOf="@+id/view2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+            android:id="@+id/lblSemanaActual_fhorario"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textAlignment="center"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toTopOf="@+id/lblFecha_fhorario"
+            app:layout_constraintEnd_toStartOf="@+id/btnAfter_fhorario"
+            app:layout_constraintStart_toEndOf="@+id/btnBefore_fhorario"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread_inside" />
+
+    <TextView
+            android:id="@+id/lblFecha_fhorario"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/view2"
+            app:layout_constraintEnd_toStartOf="@+id/btnAfter_fhorario"
+            app:layout_constraintStart_toEndOf="@+id/btnBefore_fhorario"
+            app:layout_constraintTop_toBottomOf="@+id/lblSemanaActual_fhorario" />
+
+    <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/esan_rojo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lblFecha_fhorario" />
+
+    <LinearLayout
+            android:id="@+id/viewDiasSemana_fhorario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#4B72B2"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view2">
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/dia_hora"
+                android:textColor="#FFF"
+                android:textStyle="bold" />
+
+        <TextView
+                android:id="@+id/lblLunes_fhorario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:textStyle="bold" />
+
+        <TextView
+                android:id="@+id/lblMartes_fhorario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:textStyle="bold" />
+
+        <TextView
+                android:id="@+id/lblMiercoles_fhorario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:textStyle="bold" />
+
+        <TextView
+                android:id="@+id/lblJueves_fhorario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:textStyle="bold" />
+
+        <TextView
+                android:id="@+id/lblViernes_fhorario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:textStyle="bold" />
+
+        <TextView
+                android:id="@+id/lblSabado_fhorario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:textStyle="bold" />
+
+        <TextView
+                android:id="@+id/lblDomingo_fhorario"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="#FFF"
+                android:textStyle="bold" />
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swHorario_fhorario"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewDiasSemana_fhorario"
+            app:layout_constraintVertical_bias="0.0">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHorario_fhorario"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/md_white_1000" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <ProgressBar
+            android:id="@+id/prbCargando_fhorario"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:indeterminate="true"
+            android:theme="@style/Progress"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    <TextView
+            android:id="@+id/lblMensaje_fhorario"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

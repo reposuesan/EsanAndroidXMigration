@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_white_1000"
+    tools:context=".view.puntosreunion.postgrado.reserva.PRReservaSegundaActivity">
+
+    <include
+        android:id="@+id/main_prreservasegunda"
+        layout="@layout/toolbar_titulo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rvOtroHorarios_itemprreservasegunda"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/prbCargando_itemprreservasegunda"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_prreservasegunda">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/lblSDetalle_itemprreservasegunda"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/md_grey_550"
+                android:padding="10dp"
+                android:text="@string/detalle"
+                android:textColor="@color/md_white_1000"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/lblSReservaPor_itemprreservasegunda"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/reservado_por"
+                android:textColor="@color/md_grey_800"
+                app:layout_constraintBottom_toBottomOf="@+id/lblReservaPor_itemprreservasegunda"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/lblReservaPor_itemprreservasegunda" />
+
+            <TextView
+                android:id="@+id/lblReservaPor_itemprreservasegunda"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/lblSReservaPor_itemprreservasegunda"
+                app:layout_constraintTop_toBottomOf="@+id/lblSDetalle_itemprreservasegunda" />
+
+            <TextView
+                android:id="@+id/lblFecha_itemprreservasegunda"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/lblSFecha_itemprreservasegunda"
+                app:layout_constraintTop_toBottomOf="@+id/lblReservaPor_itemprreservasegunda" />
+
+            <TextView
+                android:id="@+id/lblSFecha_itemprreservasegunda"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/fecha"
+                android:textColor="@color/md_grey_800"
+                app:layout_constraintBottom_toBottomOf="@+id/lblFecha_itemprreservasegunda"
+                app:layout_constraintEnd_toEndOf="@+id/lblSReservaPor_itemprreservasegunda"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/lblFecha_itemprreservasegunda" />
+
+            <TextView
+                android:id="@+id/lblHora_itemprreservasegunda"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/lblSHora_itemprreservasegunda"
+                app:layout_constraintTop_toBottomOf="@+id/lblFecha_itemprreservasegunda" />
+
+            <TextView
+                android:id="@+id/lblSHora_itemprreservasegunda"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:text="@string/hora_s_"
+                android:textColor="@color/md_grey_800"
+                app:layout_constraintBottom_toBottomOf="@+id/lblHora_itemprreservasegunda"
+                app:layout_constraintEnd_toEndOf="@+id/lblSFecha_itemprreservasegunda"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/lblHora_itemprreservasegunda" />
+
+            <TextView
+                android:id="@+id/lblEstado_itemprreservasegunda"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/disponible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lblSHora_itemprreservasegunda" />
+
+            <Button
+                android:id="@+id/btnConfirmar_itemprreservasegunda"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/btn_activo"
+                android:text="@string/confirmar_reserva"
+                android:textAllCaps="false"
+                android:textColor="@color/md_white_1000"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/lblEstado_itemprreservasegunda" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvOtroHorarios_itemprreservasegunda"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/cardView"
+        app:layout_constraintTop_toBottomOf="@+id/main_prreservasegunda" />
+
+    <ProgressBar
+        android:id="@+id/prbCargando_itemprreservasegunda"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:indeterminate="true"
+        android:theme="@style/Progress"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

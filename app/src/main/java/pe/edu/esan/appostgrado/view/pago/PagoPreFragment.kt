@@ -1,0 +1,232 @@
+package pe.edu.esan.appostgrado.view.pago
+
+
+import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.fragment_pago_pre.*
+import kotlinx.android.synthetic.main.fragment_pago_pre.view.*
+import org.json.JSONException
+import org.json.JSONObject
+
+import pe.edu.esan.appostgrado.R
+import pe.edu.esan.appostgrado.adapter.PagoPreAdapter
+import pe.edu.esan.appostgrado.architecture.viewmodel.ControlViewModel
+import pe.edu.esan.appostgrado.control.ControlUsuario
+import pe.edu.esan.appostgrado.entidades.Alumno
+import pe.edu.esan.appostgrado.entidades.PagoPre
+import pe.edu.esan.appostgrado.util.Utilitarios
+
+
+class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
+
+    private val TAG = "PagoPreFragment"
+
+    private var requestQueue : RequestQueue? = null
+
+    private val LOG = PagoPreFragment::class.simpleName
+
+    private lateinit var controlViewModel: ControlViewModel
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Log.w(LOG, "onCreateView()")
+        val view: View?
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            view = inflater.inflate(R.layout.fragment_pago_pre, container, false)
+        } else{
+            view = inflater.inflate(R.layout.fragment_pago_pre_old_version, container, false)
+        }
+
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        controlViewModel = activity?.run {
+            ViewModelProviders.of(this)[ControlViewModel::class.java]
+        } ?: throw Exception("Invalid Activity")
+        Log.w(LOG, "ViewModel is: $controlViewModel")
+        view.lblMensaje_fpagopre.typeface = Utilitarios.getFontRoboto(context!!, Utilitarios.TypeFont.REGULAR)
+
+        view.swPago_fpagopre.setOnRefreshListener(this)
+        view.swPago_fpagopre.setColorSchemeResources(
+            R.color.s1,
+            R.color.s2,
+            R.color.s3,
+            R.color.s4
+        )
+        view.lblMensaje_fpagopre.typeface = Utilitarios.getFontRoboto(activity!!, Utilitarios.TypeFont.THIN)
+        view.rvPago_fpagopre.layoutManager =
+            androidx.recyclerview.widget.LinearLayoutManager(activity)
+        view.rvPago_fpagopre.adapter = null
+
+        view.lblMensaje_fpagopre.setOnClickListener {
+            showPagoPre()
+        }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        Log.w(LOG, "onActivityCreated()")
+        showPagoPre()
+    }
+
+    private fun showPagoPre () {
+        if (ControlUsuario.instance.currentUsuario.size == 1) {
+            sendRequest()
+        } else {
+            controlViewModel.dataWasRetrievedForFragmentPublic.observe(this,
+                Observer<Boolean> { value ->
+                    if(value){
+                        Log.w(LOG, "operationFinishedPagoPrePublic.observe() was called")
+                        Log.w(LOG, "sendRequest() was called")
+                        sendRequest()
+                    }
+                }
+            )
+            Log.w(LOG, "controlViewModel.refreshData() was called")
+            controlViewModel.refreshDataForFragment(true)
+        }
+    }
+
+    private fun sendRequest(){
+        val usuario = ControlUsuario.instance.currentUsuario[0] as Alumno
+
+        val request = JSONObject()
+        request.put("codigo", usuario.codigo)
+        request.put("idprocesomatricula", -1)
+        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
+        if (requestEncriptado != null) {
+            onPagoPre(Utilitarios.getUrl(Utilitarios.URL.PAGO_PRE), requestEncriptado)
+        } else {
+            lblMensaje_fpagopre.visibility = View.VISIBLE
+            lblMensaje_fpagopre.text = activity!!.resources.getString(R.string.error_encriptar)
+        }
+    }
+
+    private fun onPagoPre(url: String, request: JSONObject) {
+
+        //println(url)
+        Log.i(LOG,url)
+
+        //println(request.toString())
+        Log.i(LOG, request.toString())
+
+        prbCargando_fpagopre.visibility = View.VISIBLE
+        requestQueue = Volley.newRequestQueue(activity)
+        val jsObjectRequest = JsonObjectRequest(
+                Request.Method.POST,
+                url,
+                request,
+                Response.Listener { response ->
+                    try {
+                        val pagopreJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPregradoResult"] as String, activity!!.applicationContext)
+                        //println(pagopreJArray)
+                        Log.i(LOG, pagopreJArray.toString())
+                        if (pagopreJArray != null) {
+                            if (pagopreJArray.length() > 0) {
+                                val listPago = ArrayList<PagoPre>()
+                                var ultimoPeriodo = ""
+                                for (p in 0 until pagopreJArray.length()) {
+                                    val pagopreJson = pagopreJArray[p] as JSONObject
+                                    val codigo = pagopreJson["codigo"] as String
+                                    val periodo = pagopreJson["periodo"] as String
+                                    val moneda = pagopreJson["moneda"] as String
+                                    val montoneto = pagopreJson["montoneto"] as String
+                                    val monto = "$moneda $montoneto"
+                                    val concepto = pagopreJson["preciodescripcion"] as String
+                                    val vencimiento = pagopreJson["vencimiento"] as String
+
+                                    if (p == 0) {
+                                        ultimoPeriodo = periodo
+                                        listPago.add(PagoPre(Utilitarios.TipoFila.CABECERA, ultimoPeriodo))
+                                        listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
+                                    } else {
+                                        if (ultimoPeriodo == periodo) {
+                                            listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
+                                        } else {
+                                            //ultimoPeriodo = periodo
+                                            listPago.add(PagoPre(Utilitarios.TipoFila.CABECERA, ultimoPeriodo))
+                                            listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
+                                        }
+                                    }
+                                }
+                                val adapter = PagoPreAdapter(listPago) { pagoPre ->
+                                    //println(pagoPre.monto)
+                                    Log.i(LOG, pagoPre.monto)
+                                    if (pagoPre.codigo?.trim() != "") {
+                                        val intentBoleta = Intent().setClass(activity, PagoPreBoletaActivity::class.java!!)
+                                        intentBoleta.putExtra("KEY_CODBOLETA", pagoPre.codigo)
+                                        activity!!.startActivity(intentBoleta)
+                                    }
+                                }
+                                rvPago_fpagopre.adapter = adapter
+                                lblMensaje_fpagopre.visibility = View.GONE
+                            } else {
+                                lblMensaje_fpagopre.visibility = View.VISIBLE
+                                lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_pago_no)
+                            }
+                        } else {
+                            lblMensaje_fpagopre.visibility = View.VISIBLE
+                            lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
+                        }
+                    } catch (jex: JSONException) {
+
+                        lblMensaje_fpagopre.visibility = View.VISIBLE
+                        lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
+                    } catch (ccax: ClassCastException) {
+                        lblMensaje_fpagopre.visibility = View.VISIBLE
+                        lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
+                    }
+
+                    prbCargando_fpagopre.visibility = View.GONE
+                    swPago_fpagopre.isRefreshing = false
+                },
+                Response.ErrorListener { error ->
+                    //println(error.message)
+                    Log.e(LOG, error.message.toString())
+                    rvPago_fpagopre.visibility = View.GONE
+                    prbCargando_fpagopre.visibility = View.GONE
+                    swPago_fpagopre.isRefreshing = false
+                    lblMensaje_fpagopre.visibility = View.VISIBLE
+                    lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                }
+        )
+
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+        jsObjectRequest.tag = TAG
+        requestQueue?.add(jsObjectRequest)
+    }
+
+    override fun onStop() {
+        Log.w(LOG, "onStop()")
+        super.onStop()
+        requestQueue?.cancelAll(TAG)
+    }
+
+    override fun onRefresh() {
+        //println("REFRESH")
+        Log.i(LOG, "REFRESH")
+        swPago_fpagopre.isRefreshing = true
+        showPagoPre()
+    }
+
+    override fun onDestroy() {
+        Log.w(LOG, "onDestroy()")
+        super.onDestroy()
+    }
+
+}// Required empty public constructor

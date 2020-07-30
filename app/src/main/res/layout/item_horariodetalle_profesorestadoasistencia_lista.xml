@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:background="@color/md_white_1000">
+
+    <LinearLayout
+            android:id="@+id/viewTomarAsis_ahorarioprofesorasistencia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/md_grey_100"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="3dp"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="15dp"
+                android:paddingEnd="15dp"
+                android:paddingTop="3dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                    android:id="@+id/imgTomarAsis_horarioprofesorestasis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:src="@drawable/ico_error"/>
+
+            <TextView
+                    android:id="@+id/lblHoraInicio_ahorarioprofesorasistencia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="5dp"
+                    android:textColor="@color/md_grey_800"
+                    android:text="18:00"
+                    android:textSize="18sp"/>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/md_grey_800"
+                    android:text="-"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+            <TextView
+                    android:id="@+id/lblHoraFin_ahorarioprofesorasistencia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/md_grey_800"
+                    android:text="20:00"
+                    android:textSize="18sp"/>
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/lblEstadoAsis_ahorarioprofesorasistencia"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textSize="12sp"
+                android:gravity="center_vertical|end"
+                android:text="Tomar Asistencia"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/lblSeccion_ahorarioprofesorasistencia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="TextView"
+        android:textColor="@color/md_black_1000"
+        app:layout_constraintEnd_toStartOf="@+id/lblSesion_ahorarioprofesorasistencia"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/view14"
+        app:layout_constraintTop_toBottomOf="@+id/viewTomarAsis_ahorarioprofesorasistencia" />
+
+    <TextView
+        android:id="@+id/lblSesion_ahorarioprofesorasistencia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:text="TextView"
+        android:textColor="@color/md_black_1000"
+        app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioprofesorasistencia"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/lblSeccion_ahorarioprofesorasistencia"
+        app:layout_constraintTop_toBottomOf="@+id/viewTomarAsis_ahorarioprofesorasistencia" />
+
+    <ImageView
+        android:id="@+id/imgBtnRA_ahorarioprofesorasistencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewTomarAsis_ahorarioprofesorasistencia"
+        app:srcCompat="@drawable/raglass" />
+
+    <TextView
+        android:id="@+id/lblSCurso_ahorarioprofesorasistencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="@string/curso_"
+        android:textColor="@color/esan_rojo"
+        app:layout_constraintBottom_toBottomOf="@+id/lblCurso_ahorarioprofesorasistencia"
+        app:layout_constraintStart_toEndOf="@+id/view14"
+        app:layout_constraintTop_toTopOf="@+id/lblCurso_ahorarioprofesorasistencia" />
+
+    <TextView
+        android:id="@+id/lblCurso_ahorarioprofesorasistencia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/lblAula_ahorarioprofesorasistencia"
+        app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioprofesorasistencia"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/lblSCurso_ahorarioprofesorasistencia"
+        app:layout_constraintTop_toBottomOf="@+id/lblSeccion_ahorarioprofesorasistencia" />
+
+    <TextView
+        android:id="@+id/lblSAula_ahorarioprofesorasistencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="@string/aula_"
+        android:textColor="@color/esan_rojo"
+        app:layout_constraintBottom_toBottomOf="@+id/lblAula_ahorarioprofesorasistencia"
+        app:layout_constraintStart_toEndOf="@+id/view14"
+        app:layout_constraintTop_toTopOf="@+id/lblAula_ahorarioprofesorasistencia" />
+
+    <TextView
+        android:id="@+id/lblAula_ahorarioprofesorasistencia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/view15"
+        app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioprofesorasistencia"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/lblSCurso_ahorarioprofesorasistencia"
+        app:layout_constraintTop_toBottomOf="@+id/lblCurso_ahorarioprofesorasistencia" />
+
+
+    <View
+        android:id="@+id/view14"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/esan_rojo"
+        app:layout_constraintBottom_toBottomOf="@+id/lblAula_ahorarioprofesorasistencia"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lblCurso_ahorarioprofesorasistencia" />
+
+
+    <View
+        android:id="@+id/view15"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/esan_rojo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

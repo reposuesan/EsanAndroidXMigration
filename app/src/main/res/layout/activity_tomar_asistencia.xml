@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+    tools:context="pe.edu.esan.appostgrado.view.horario.TomarAsistenciaActivity">
+
+    <include
+        android:id="@+id/main_tomarasistencia"
+        layout="@layout/toolbar_titulo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lblSMarcaTodo_tomarasistencia"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/marcar_todos"
+        android:textColor="@color/md_black_1000"
+        android:padding="20dp"
+        android:background="@color/md_grey_100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_tomarasistencia" />
+
+    <pe.edu.esan.appostgrado.util.SegmentedGroup
+        android:id="@+id/sgMarca_tomarasistencia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        segmentedgroup:sc_border_width="1dp"
+        segmentedgroup:sc_checked_text_color="#FFF"
+        segmentedgroup:sc_corner_radius="10dp"
+        segmentedgroup:sc_tint_color="@color/esan_rojo"
+        segmentedgroup:sc_unchecked_tint_color="#FFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/lblSMarcaTodo_tomarasistencia"
+        app:layout_constraintTop_toTopOf="@+id/lblSMarcaTodo_tomarasistencia" >
+
+        <RadioButton
+            android:id="@+id/ck_asisa"
+            style="@style/RadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="A" />
+
+
+        <RadioButton
+            android:id="@+id/ck_asist"
+            style="@style/RadioButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="T" />
+
+        <RadioButton
+                style="@style/RadioButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="F" />
+    </pe.edu.esan.appostgrado.util.SegmentedGroup>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAlumno_tomarasistencia"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblSMarcaTodo_tomarasistencia" />
+
+
+    <ProgressBar
+        android:id="@+id/prbCargando_tomarasistencia"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:theme="@style/Progress"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

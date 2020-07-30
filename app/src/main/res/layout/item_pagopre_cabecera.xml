@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/lblMatricula_ipagopre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/matricula_"
+        android:textSize="17sp"
+        android:textColor="@color/md_grey_900"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lblConceptoT_ipagopre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16sp"
+        android:text="@string/concepto"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/lblMontoT_ipagopre"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lblMontoT_ipagopre" />
+
+    <TextView
+        android:id="@+id/lblMontoT_ipagopre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/monto"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/lblVencimientoT_ipagopre"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/lblConceptoT_ipagopre"
+        app:layout_constraintTop_toBottomOf="@+id/lblMatricula_ipagopre" />
+
+    <TextView
+        android:id="@+id/lblVencimientoT_ipagopre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16sp"
+        android:text="@string/vencimiento"
+        android:textSize="15sp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/lblMontoT_ipagopre"
+        app:layout_constraintTop_toTopOf="@+id/lblMontoT_ipagopre" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/esan_rojo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblConceptoT_ipagopre" />
+</androidx.constraintlayout.widget.ConstraintLayout>

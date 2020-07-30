@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_sensores_ra">Your device does not have the right sensors for this functionality</string>
+    <string name="error_permiso_camara">You must allow the use of the Camera of your device</string>
+    <string name="error_permiso_gps">You must allow the use of GPS of your device</string>
+
+
+    <!-- Title for app button bar -->
+    <string name="title_register">Registration</string>
+    <string name="title_course">Courses</string>
+    <string name="title_schedule">Hours</string>
+    <string name="title_week_intenational">IW</string>
+    <string name="title_more">More</string>
+    <string name="augmented_reality">Augmented Reality</string>
+    <string name="description_intenational_gps">Locate the most important points of ESAN, using the camera of your mobile device (for accuracy please activate your GPS)</string>
+    <string name="description_intenational_video">Check the welcome greeting from the rector to the XL International ESAN Week, using the camera of your mobile device</string>
+
+
+
+    <!--VUFORIA-->
+    <string name="INIT_ERROR">Error</string>
+    <string name="INIT_ERROR_DEVICE_NOT_SUPPORTED">Failed to initialize Vuforia. This device is not supported.</string>
+    <string name="INIT_ERROR_NO_CAMERA_ACCESS">Failed to initialize Vuforia. Camera not accessible</string>
+    <string name="INIT_LICENSE_ERROR_MISSING_KEY">Vuforia App key is missing. Please get a valid key, by logging into your account at developer.vuforia.com and creating a new project.</string>
+    <string name="INIT_LICENSE_ERROR_INVALID_KEY">Invalid Key used. Please make sure you are using a valid Vuforia App Key.</string>
+    <string name="INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT">Unable to contact server. Please try again later.</string>
+    <string name="INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT">No network available. Please make sure you are connected to the Internet.</string>
+    <string name="INIT_LICENSE_ERROR_CANCELED_KEY">This app license key has been canceled and may no longer be used. Please get a new license key.</string>
+    <string name="INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH">Vuforia App key is not valid for this product. Please get a valid key, by logging into your account at developer.vuforia.com and choosing the right product type during project creation.</string>
+    <string name="INIT_LICENSE_ERROR_UNKNOWN_ERROR">Failed to initialize Vuforia.</string>
+    <string name="menu_back">About</string>
+    <string name="menu_playFullscreenVideo">Pantalla Completa</string>
+    <string name="title_exit">Exit</string>
+
+
+    <string name="pulse_una_vez_mas_para_salir">Touch one more time to exit</string>
+    <string name="title_week_international_bar">International Week</string>
+    <string name="mas_de_1000_participantes_esta_edicion">More than 900 participants in this edition</string>
+
+    <string name="realidad_aumentada_iw">Augmented Reality</string>
+    <string name="descripcion_iw">ESAN GRADUATE SCHOOL OF BUSINESS 30 PROFESSORS - 40 COURSES - 5 ACADEMIC AREAS</string>
+    <string name="fiesta_del_pisco_programa">Final Ceremony (Schedule)</string>
+    <string name="instructivo_text">Instructions</string>
+    <string name="ceremonia_title_for_activity">Final Ceremony</string>
+</resources>

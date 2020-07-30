@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/apk/res-auto"
+                tools:context="com.example.vuforiamod.international.fragments.InternationalParticipationFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/appbar_padding_top"
+            android:theme="@style/AppThemeNoActionBar.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+                app:title="@string/title_week_international_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_weight="1"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppThemeNoActionBar.PopupOverlay"
+                app:layout_scrollFlags="scroll|enterAlways">
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ImageView
+            android:layout_below="@id/appbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/pieza_madre_2020_1"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:layout_above="@+id/viewRealidadAumentada_iwmas"/>
+
+    <LinearLayout
+            android:id="@+id/viewRealidadAumentada_iwmas"
+            android:layout_alignParentBottom="true"
+            android:background="#FFF"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <View
+                android:layout_weight="0.1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="#CCC"/>
+
+        <LinearLayout
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true">
+
+                    <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            app:srcCompat="@drawable/tab_ra_unselect" />
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
+                            android:layout_marginLeft="10dp"
+                            android:text="@string/realidad_aumentada_iw"
+                            android:textColor="#1d1d1d"
+                            android:gravity="center_vertical" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_marginRight="28dp"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="#bababa"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+        </LinearLayout>
+
+        <View
+                android:layout_weight="0.1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="#CCC"/>
+    </LinearLayout>
+
+</RelativeLayout>

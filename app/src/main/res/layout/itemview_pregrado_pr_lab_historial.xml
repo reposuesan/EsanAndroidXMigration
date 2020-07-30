@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@android:color/transparent"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+
+    <LinearLayout
+            android:elevation="16dp"
+            android:orientation="horizontal"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="12dp"
+            android:background="#fdf9fd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/tv_solicitante_historial"
+                android:textColor="@color/md_black_1000"
+                android:layout_marginLeft="24dp"
+                android:paddingTop="12dp"
+                android:text="@string/solicitante_text"
+                android:layout_weight="0.4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+
+        <TextView
+                android:id="@+id/tv_historial_creador_prereserva"
+                android:textColor="@color/md_black_1000"
+                android:layout_marginRight="12dp"
+                android:paddingTop="12dp"
+                android:layout_weight="0.7"
+                tools:text="Daniel Arturo Bedoya Martínez"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:elevation="16dp"
+            android:paddingTop="12dp"
+            android:background="#fdf9fd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        <LinearLayout
+                android:layout_weight="0.4"
+                android:layout_width="0dp"
+                android:layout_marginLeft="24dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <TextView
+                    android:textColor="@color/md_black_1000"
+                    android:text="@string/horas_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/fecha_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/estado_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            <TextView
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginTop="12dp"
+                    android:id="@+id/tv_cubiculo_lab_label"
+                    tools:text="@string/cubiculo_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_weight="0.7"
+                android:orientation="vertical"
+                android:layout_width="0dp"
+                android:layout_marginRight="12dp"
+                android:layout_height="wrap_content">
+
+
+            <TextView
+                    android:id="@+id/tv_historial_horario_prereserva"
+                    android:textColor="@color/md_black_1000"
+                    tools:text="11:00 AM - 2:00 PM"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+
+            <TextView
+                    android:id="@+id/tv_historial_fecha_prereserva"
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginTop="12dp"
+                    tools:text="28/03/2019"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/tv_historial_estado_prereserva"
+                    android:textColor="@color/esan_red"
+                    android:layout_marginTop="12dp"
+                    tools:text="Sin confirmar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:id="@+id/tv_historial_nombre_cubiculo_lab_prereserva"
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginTop="12dp"
+                    tools:text="Sala 10 (Cerrado) - Punto 01"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+            android:elevation="16dp"
+            android:orientation="vertical"
+            android:background="#fdf9fd"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="8dp"
+            android:paddingTop="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:layout_weight="0.4"
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginLeft="24dp"
+                    android:text="@string/ubicacion_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:layout_weight="0.7"
+                    android:id="@+id/tv_historial_ref_ubicacion_prereserva"
+                    android:textColor="@color/md_black_1000"
+                    android:layout_marginRight="12dp"
+                    tools:text="A la espalda de La Casita."
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <Button
+                android:background="@color/light_blue_color"
+                android:id="@+id/ver_mapa_labs_button"
+                android:layout_marginBottom="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:textColor="@color/md_white_1000"
+                android:textStyle="italic"
+                android:textSize="16sp"
+                android:textAllCaps="false"
+                android:layout_gravity="center"
+                android:text="@string/ver_ubicacion_en_mapa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+</LinearLayout>

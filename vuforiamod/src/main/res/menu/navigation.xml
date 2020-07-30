@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/navigation_register"
+            android:icon="@drawable/tab_registro_unselect"
+            android:title="@string/title_register"/>
+
+    <item
+            android:id="@+id/navigation_week_international"
+            android:icon="@drawable/tab_cursos_unselect"
+            android:title="@string/title_week_intenational"/>
+
+    <item
+            android:id="@+id/navigation_course"
+            android:icon="@drawable/tab_curso_unselect"
+            android:title="@string/title_course"/>
+
+    <item
+            android:id="@+id/navigation_schedule"
+            android:icon="@drawable/tab_horario_unselect"
+            android:title="@string/title_schedule"/>
+
+    <item
+            android:id="@+id/navigation_more"
+            android:icon="@drawable/tab_mas_unselect"
+            android:title="@string/title_more"/>
+
+
+</menu>

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.puntosreunion.postgrado.reserva.PRReservaPrimeraActivity"
+        android:background="@color/md_white_1000">
+
+    <include
+        android:id="@+id/main_prreservaprimera"
+        layout="@layout/toolbar_titulo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/md_grey_75"
+        android:orientation="vertical"
+        android:padding="9dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_prreservaprimera">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/lblSGrupo_prreservaprimera"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/grupo"
+                android:textColor="@color/esan_rojo" />
+
+            <TextView
+                android:id="@+id/lblGrupo_prreservaprimera"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/md_black_1000" />
+
+            <TextView
+                android:id="@+id/lblSDiasAnticipacion_prreservaprimera"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/max_dias_anticipa"
+                android:textColor="@color/esan_rojo" />
+
+            <TextView
+                android:id="@+id/lblDiasAnticipacion_prreservaprimera"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/md_black_1000" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/lblSHorasReserva_prreservaprimera"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/max_horas_reserva"
+                android:textColor="@color/esan_rojo" />
+
+            <TextView
+                android:id="@+id/lblHorasReserva_prreservaprimera"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/md_black_1000" />
+
+            <TextView
+                android:id="@+id/lblSHorasDisponibles_prreservaprimera"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/horas_disponible"
+                android:textColor="@color/esan_rojo" />
+
+            <TextView
+                android:id="@+id/lblHorasDisponibles_prreservaprimera"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@color/md_black_1000" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/txtFecha_prreservaprimera"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:clickable="true"
+        android:focusable="false"
+        android:hint="@string/ddmmyyyy"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/btnFecha_prreservaprimera"
+        app:layout_constraintStart_toEndOf="@+id/lblFecha_prreservaprimera"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+    <TextView
+        android:id="@+id/lblFecha_prreservaprimera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"
+        android:text="@string/fecha_reserva"
+        app:layout_constraintBottom_toBottomOf="@+id/txtFecha_prreservaprimera"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txtFecha_prreservaprimera" />
+
+    <ImageButton
+        android:id="@+id/btnFecha_prreservaprimera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@null"
+        app:layout_constraintBottom_toBottomOf="@+id/txtFecha_prreservaprimera"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txtFecha_prreservaprimera"
+        app:srcCompat="@drawable/ico_calendar" />
+
+    <LinearLayout
+            android:id="@+id/ll_botton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" >
+
+        <Button
+            android:id="@+id/btnConsultar_prreservaprimera"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/btn_desactivo"
+            android:text="@string/consultar_disponibilidad"
+            android:textAllCaps="false" />
+
+
+        <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchPRPrereservaPrimera"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                app:theme="@style/Switch"
+                android:padding="10dp"
+                android:text="Cerrado"
+                style="@style/Switch"
+                android:visibility="visible"
+                android:checked="false"/>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/lblHorario_prreservaprimera"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:textSize="12sp"
+        android:text="@string/horario"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtFecha_prreservaprimera" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvHorario_prreservaprimera"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/ll_botton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblHorario_prreservaprimera" />
+
+    <ProgressBar
+        android:id="@+id/prbCargando_prreservaprimera"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:theme="@style/Progress"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/rvHorario_prreservaprimera"
+        app:layout_constraintEnd_toEndOf="@+id/rvHorario_prreservaprimera"
+        app:layout_constraintStart_toStartOf="@+id/rvHorario_prreservaprimera"
+        app:layout_constraintTop_toTopOf="@+id/rvHorario_prreservaprimera" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

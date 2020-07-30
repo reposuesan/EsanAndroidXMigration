@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="pe.edu.esan.appostgrado.view.puntosreunion.pregrado.PregradoCubsRegistroActivity">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar_registro"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp" />
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <LinearLayout
+                android:id="@+id/main_container_registro_cubs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="36dp"
+                    android:layout_marginBottom="18dp"
+                    android:text="@string/registro_de_prereserva_title"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="68dp"
+                        android:layout_marginLeft="68dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="16dp"
+                        android:layout_weight="0.5"
+                        android:gravity="center"
+                        android:text="@string/ingresa_codigos_grupo_prereserva_text"
+                        android:textSize="14sp" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab_registro_prereserva"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        app:backgroundTint="#9c27b0"
+                        app:fabCustomSize="36dp"
+                        app:srcCompat="@drawable/ic_question_mark" />
+            </LinearLayout>
+
+            <EditText
+                    android:id="@+id/edit_text_usuario_sesion_codigo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="64dp"
+                    android:layout_marginRight="64dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/borde_edittext"
+                    android:hint="@string/usuario_en_sesion_hint"
+                    android:inputType="none"
+                    android:maxLength="8"
+                    android:padding="8dp"
+                    android:textSize="18sp"
+                    tools:text="77777777" />
+
+            <EditText
+                    android:id="@+id/edit_text_primer_codigo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="64dp"
+                    android:layout_marginRight="64dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/borde_edittext"
+                    android:hint="@string/codigo_primer_alumno_text"
+                    android:inputType="number"
+                    android:maxLength="8"
+                    android:padding="8dp"
+                    android:textSize="18sp"
+                    tools:text="12345678" />
+
+            <EditText
+                    android:id="@+id/edit_text_segundo_codigo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="64dp"
+                    android:layout_marginRight="64dp"
+                    android:background="@drawable/borde_edittext"
+                    android:hint="@string/codigo_segundo_alumno_text"
+                    android:inputType="number"
+                    android:maxLength="8"
+                    android:padding="8dp"
+                    android:textSize="18sp"
+                    tools:text="87654321" />
+
+            <Button
+                    android:id="@+id/borrar_codigos_button"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginRight="64dp"
+                    android:background="@drawable/shape_button_puntos_reunion"
+                    android:backgroundTint="@color/esan_rojo"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="14dp"
+                    android:text="@string/borrar_codigos_button_text"
+                    android:textAllCaps="false"
+                    android:textColor="@color/md_white_1000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="24dp">
+
+
+                <Button
+                        android:id="@+id/registro_sgte_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="32dp"
+                        android:layout_marginRight="32dp"
+                        android:background="@drawable/shape_button_puntos_reunion"
+                        android:text="@string/verificar_codigos"
+                        android:textAllCaps="false"
+                        android:textColor="@color/md_white_1000"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/empty_text_view_registro"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="18dp"
+                android:textColor="@color/esan_red"
+                android:textSize="32sp"
+                android:textStyle="bold|italic"
+                tools:text="Error en conexión con el servidor" />
+
+        <ProgressBar
+                android:id="@+id/progress_bar_registro_prereserva_pp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/esan_red" />
+
+    </FrameLayout>
+
+
+</LinearLayout>

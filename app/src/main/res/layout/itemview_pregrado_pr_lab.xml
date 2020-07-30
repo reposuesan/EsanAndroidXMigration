@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <Button
+            android:elevation="16dp"
+            android:textSize="12sp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            tools:textColor="#000000"
+            tools:background="@drawable/shape_item_no_seleccionado"
+            android:textAllCaps="false"
+            tools:text="17:00 - 18:00"
+            android:textStyle="italic"
+            android:id="@+id/button_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    </Button>
+
+</FrameLayout>

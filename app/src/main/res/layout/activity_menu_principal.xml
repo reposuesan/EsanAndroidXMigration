@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="pe.edu.esan.appostgrado.view.MenuPrincipalActivity">
+
+    <include
+            android:id="@+id/main_toolbar"
+            layout="@layout/toolbar_menuprincipal"/>
+
+    <androidx.viewpager.widget.ViewPager
+            android:layout_weight="1"
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+    </androidx.viewpager.widget.ViewPager>
+
+    <View
+            android:id="@+id/view"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@color/md_grey_200" />
+
+    <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            style="@style/TabLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:tabPaddingTop="0dp"
+            app:tabPaddingBottom="0dp"
+            app:tabGravity="fill"
+            app:tabMode="fixed"/>
+</LinearLayout>

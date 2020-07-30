@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="pe.edu.esan.appostgrado.view.puntosreunion.pregrado.PregradoCubsHistorialActivity">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar_historial"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp" />
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:layout_marginBottom="24dp"
+            android:text="@string/historial_de_prereservas_title"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    <TextView
+            android:id="@+id/tv_direccion_historial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="90dp"
+            android:textColor="@color/green"
+            android:textSize="16sp"
+            android:textStyle="bold|italic"
+            tools:text="Dirección: Pregrado Matrícula" />
+
+    <TextView
+            android:id="@+id/tv_promocion_historial"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="90dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:textColor="@color/green"
+            android:textSize="16sp"
+            android:textStyle="bold|italic"
+            tools:text="Promoción: 2019-1" />
+
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_historial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:scrollbars="vertical"
+                tools:listitem="@layout/itemview_pregrado_pr_lab_historial" />
+
+        <TextView
+                android:id="@+id/tv_empty_historial"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="62dp"
+                android:paddingRight="62dp"
+                android:text="@string/no_existe_registro_de_prereservas_text"
+                android:textColor="@color/esan_red"
+                android:textSize="24sp"
+                android:textStyle="italic" />
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <ProgressBar
+                    android:id="@+id/progress_bar_historial"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:indeterminateTint="@color/green" />
+            <TextView
+                    android:id="@+id/tv_cargando_integrantes"
+                    android:text="@string/cargando_integrantes_text_historial"
+                    android:textAlignment="center"
+                    android:paddingTop="8dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/green"
+                    android:layout_below="@id/progress_bar_historial"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </RelativeLayout>
+    </FrameLayout>
+
+</LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_partner"
+        android:title="@string/partner"
+        android:icon="@drawable/ico_partner"
+        android:orderInCategory="1"
+        app:showAsAction="always" />
+</menu>

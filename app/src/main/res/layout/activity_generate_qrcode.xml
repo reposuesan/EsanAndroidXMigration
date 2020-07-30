@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.mas.GenerateQRCodeActivity">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar_generacion_qr"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp" />
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="pe.edu.esan.appostgrado.view.mas.GenerateQRCodeActivity">
+
+        <ImageView
+                android:id="@+id/image_view_for_qr_code"
+                android:layout_width="240dp"
+                android:layout_height="240dp"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="40dp"
+                tools:src="@drawable/icon_charlotte" />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/image_view_for_qr_code"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center"
+                android:text="@string/qr_code_instrucciones"
+                android:textColor="#5AAC04"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+
+    </RelativeLayout>
+</FrameLayout>

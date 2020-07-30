@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pe.edu.esan.appostgrado.view.academico.docente.SeccionOpcionesActivity">
+
+    <include
+        android:id="@+id/main_seccionopcion"
+        layout="@layout/toolbar_titulo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/lblSeccion_secciondetalle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textColor="@color/md_white_1000"
+        android:background="@color/esan_rojo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_seccionopcion" />
+
+    <TextView
+        android:id="@+id/lblCurso_secciondetalle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/esan_rojo"
+        android:padding="15dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textColor="@color/md_white_1000"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblSeccion_secciondetalle" />
+
+    <LinearLayout
+            android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblCurso_secciondetalle">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/esan_rojo" />
+                <!--Primera Opción - INICIO-->
+                <RelativeLayout
+                    android:id="@+id/viewDirectorioAlumnos_secciondetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFF"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="20dp">
+
+                    <ImageView
+                        android:id="@+id/imageView13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ico_seguimiento" />
+
+                    <TextView
+                        android:id="@+id/lblSDirectorio_secciondetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/imageView13"
+                        android:layout_toStartOf="@+id/imageView16"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/directorio_alumno"
+                        android:textColor="#000"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/imageView16"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignTop="@+id/lblSDirectorio_secciondetalle"
+                        android:src="@drawable/indicator" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@color/esan_rojo" />
+                <!--Primera Opción - FIN -->
+                <!--Segunda Opción - INICIO-->
+                <RelativeLayout
+                    android:id="@+id/viewSeguimientoAlumnos_secciondetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFF"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="20dp">
+
+                    <ImageView
+                        android:id="@+id/imageView14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ico_buscar" />
+
+                    <TextView
+                        android:id="@+id/lblSSeguimiento_secciondetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="10dp"
+                        android:layout_toEndOf="@+id/imageView14"
+                        android:layout_toStartOf="@+id/imageView17"
+                        android:text="@string/seguimiento_alumno"
+                        android:textColor="#000"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/imageView17"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignTop="@+id/lblSSeguimiento_secciondetalle"
+                        android:src="@drawable/indicator" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@color/esan_rojo" />
+                <!--Segunda Opción - FIN -->
+                <!--Tercera Opción - INICIO-->
+                <RelativeLayout
+                    android:id="@+id/viewHistorialAsistencias_secciondetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFF"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="20dp">
+
+                    <ImageView
+                        android:id="@+id/imageView15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ico_asistencia" />
+
+                    <TextView
+                        android:id="@+id/lblSHistorial_secciondetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/imageView15"
+                        android:layout_toStartOf="@+id/imageView18"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/historial_asistencia"
+                        android:textColor="#000"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/imageView18"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignTop="@+id/lblSHistorial_secciondetalle"
+                        android:src="@drawable/indicator" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@color/esan_rojo" />
+                <!--Tercera Opción - FIN -->
+                <!--Cuarta Opción - INICIO-->
+                <RelativeLayout
+                    android:id="@+id/viewResultadoEncuesta_secciondetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFF"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="20dp">
+
+                    <ImageView
+                        android:id="@+id/imageView26"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ico_asistencia" />
+
+                    <TextView
+                        android:id="@+id/lblSResultado_secciondetalle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@+id/imageView26"
+                        android:layout_toStartOf="@+id/imageView19"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/resultado_encuesta"
+                        android:textColor="#000"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:id="@+id/imageView19"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignTop="@+id/lblSResultado_secciondetalle"
+                        android:src="@drawable/indicator" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@color/esan_rojo" />
+                <!--Cuarta Opción - FIN -->
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:layout_width="8dp"
+        android:layout_height="match_parent"
+        android:background="#CCC"/>
+
+    <LinearLayout
+        android:id="@+id/viewDetalle_iwitemcurso"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/view_row_cursoiw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="8dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@+id/imageView6"
+                android:layout_toStartOf="@+id/imageView6">
+
+                <pe.edu.esan.appostgrado.view.util.AutoResizeTextView
+                    android:id="@+id/lblCurso_iwitemcurso"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textStyle="bold"
+                    android:textSize="13sp"
+                    android:text="Nombre Curso"
+                    android:textColor="#1d1d1d"
+                    android:gravity="center_vertical" />
+
+                <pe.edu.esan.appostgrado.view.util.AutoResizeTextView
+                    android:id="@+id/lblHorario_iwitemcurso"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:textSize="10sp"
+                    android:text="Horario" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/indicator"
+                android:id="@+id/imageView6"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+        <View
+            android:layout_marginRight="28dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#bababa"
+            android:layout_alignBottom="@+id/view_row_cursoiw"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

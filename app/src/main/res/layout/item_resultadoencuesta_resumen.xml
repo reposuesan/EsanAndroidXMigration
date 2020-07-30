@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_marginTop="10dp">
+
+
+    <!--<RelativeLayout
+            android:id="@+id/relativeLayout8"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="200dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toRightOf="@+id/relativeLayout6"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/lblNoParticipan"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:gravity="center"
+            android:text="@string/no_participaron"
+            android:textAlignment="center"
+            android:textSize="11sp" />
+
+        <View
+            android:id="@+id/viewDPContent_itemcabresultencuesta"
+            android:layout_width="15dp"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/lblDP_itemcabresultencuesta"
+            android:layout_below="@+id/lblNoParticipan"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="#d7d7d7" />
+
+        <View
+            android:id="@+id/viewDP_itemcabresultencuesta"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_above="@+id/lblDP_itemcabresultencuesta"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="#d72a20" />
+
+        <TextView
+            android:id="@+id/lblDP_itemcabresultencuesta"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="-"
+            android:textColor="#000"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>-->
+
+    <RelativeLayout
+            android:id="@+id/relativeLayout7"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="200dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/relativeLayout6"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+                android:id="@+id/lblParticipan"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center"
+                android:textStyle="normal"
+                android:text="@string/participaron"
+                android:textAlignment="center"
+                android:textSize="11sp" />
+
+        <View
+                android:layout_width="15dp"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/lblAP_itemcabresultencuesta"
+                android:layout_below="@+id/lblParticipan"
+                android:layout_centerInParent="true"
+                android:background="#d7d7d7" />
+
+        <View
+                android:id="@+id/viewAP_itemcabresultencuesta"
+                android:layout_width="15dp"
+                android:layout_height="30dp"
+                android:layout_above="@+id/lblAP_itemcabresultencuesta"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="#12c241" />
+
+        <TextView
+                android:id="@+id/lblAP_itemcabresultencuesta"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:text="20 (90%)"
+                android:textColor="#000"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/relativeLayout6"
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintLeft_toRightOf="@+id/relativeLayout7"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/promedio"
+            android:textAlignment="center"
+            android:textSize="11sp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RelativeLayout
+                android:layout_width="wrap_content"
+            android:layout_height="125dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="h,1:1"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4">
+
+            <TextView
+                android:id="@+id/lblParticipantes_itemcabresultencuesta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="4.4"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textSize="30sp" />
+
+
+            <com.hookedonplay.decoviewlib.DecoView xmlns:custom="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/davParticipantes_itemcabresultencuesta"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                custom:dv_lineWidth="16dp" /> 
+
+            <TextView
+                android:id="@+id/lblPorcentaje_itemcabresultencuesta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/lblParticipantes_itemcabresultencuesta"
+                android:gravity="center"
+                android:text="90%"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>

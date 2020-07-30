@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pe.edu.esan.appostgrado.view.mas.cargacademica.CargaAcademicaActivity">
+
+    <include
+        android:id="@+id/main_cargacademica"
+        layout="@layout/toolbar_titulo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/txtFecha_cargacademica"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="3"
+        android:hint="@string/fecha"
+        app:layout_constraintEnd_toStartOf="@+id/swAcumulado_cargacademica"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_cargacademica" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/swAcumulado_cargacademica"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        android:theme="@style/Switch"
+        android:checked="true"
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/txtFecha_cargacademica"
+        app:layout_constraintEnd_toStartOf="@+id/btnConsultar_cargacademica"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/txtFecha_cargacademica"
+        app:layout_constraintTop_toTopOf="@+id/txtFecha_cargacademica" />
+
+    <Button
+        android:id="@+id/btnConsultar_cargacademica"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="2"
+        android:background="@drawable/borde_rojo"
+        android:gravity="center"
+        android:text="@string/consultar"
+        android:textAllCaps="false"
+        android:textColor="@color/esan_rojo"
+        app:layout_constraintBottom_toBottomOf="@+id/swAcumulado_cargacademica"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/swAcumulado_cargacademica"
+        app:layout_constraintTop_toTopOf="@+id/swAcumulado_cargacademica" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvHoras_cargacademica"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtFecha_cargacademica" />
+
+    <TextView
+        android:id="@+id/lblMensaje_cargacademica"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/prbCargando_cargacademica"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:indeterminate="true"
+        android:theme="@style/Progress"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

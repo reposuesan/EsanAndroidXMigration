@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/viewContent_cargacademicactividad"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal">
+        <View
+            android:layout_marginStart="10dp"
+            android:layout_width="1dp"
+            android:layout_height="wrap_content"
+            android:background="#EBEBF1"/>
+
+        <FrameLayout
+            android:visibility="gone"
+            android:layout_width="30dp"
+            android:layout_height="30dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/indicator"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/lblActividad_cargacademicactividad"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:textSize="13sp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:textColor="#505050"
+            android:layout_marginStart="10dp"/>
+
+        <TextView
+            android:id="@+id/lblSesiones_cargacademicactividad"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:textSize="13sp"
+            android:textColor="#004080"
+            android:gravity="end|center_vertical" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/lblSSesiones_cargacademicactividad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:text="@string/sesiones"
+        android:layout_marginTop="3dp"
+        android:layout_alignEnd="@+id/viewContent_cargacademicactividad" />
+
+    <View
+        android:layout_below="@+id/viewContent_cargacademicactividad"
+        android:layout_marginStart="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#EBEBF1"/>
+</RelativeLayout>

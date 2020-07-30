@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingBottom="16dp"
+              android:paddingLeft="16dp"
+              android:paddingRight="16dp"
+              android:paddingTop="16dp"
+              android:orientation="vertical"
+              tools:context="pe.edu.esan.appostgrado.view.mas.ra.DetalleMarkerActivity">
+
+    <LinearLayout
+        android:id="@+id/viewContent"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/n_bibliotecas"
+                android:id="@+id/imgDetArTipo" />
+            <TextView
+                android:paddingLeft="10dp"
+                android:id="@+id/txtDataSource"
+                android:layout_width="match_parent"
+                android:textStyle="bold|italic"
+                android:layout_height="wrap_content"
+                android:text="BIBLIOTECA"
+                android:textSize="18sp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/imgDetArTipo" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txtId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Id"
+            android:visibility="gone"
+            android:paddingTop="10dp"/>
+        <TextView
+            android:id="@+id/txtTitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Nombre:"
+            android:paddingTop="10dp"/>
+        <TextView
+            android:id="@+id/txtDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Detalle"
+            android:textSize="16sp"
+            android:paddingTop="10dp"/>
+        <TextView
+            android:id="@+id/txtUbicacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ubicación"
+            android:textSize="16sp"
+            android:paddingTop="10dp"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+            <Button
+                android:id="@+id/btn_onmarker_RA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Realidada Aumentada"
+                android:textSize="16sp"
+                android:textAllCaps="false"
+                android:layout_centerHorizontal="true"
+                />
+        </RelativeLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/viewContent_Cargando"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cargando..."
+            android:layout_below="@+id/progressBar"
+            android:layout_centerHorizontal="true" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="rojo_oscuro">#a90e0e</color>
+    <color name="esan_rojo">#cf1111</color>
+
+    <color name="md_black_1000">#000000</color>
+    <color name="md_white_1000">#FFFFFF</color>
+
+    <color name="danger_text">#933432</color>
+    <color name="warning_text">#957d32</color>
+
+    <color name="danger">#fddddd</color>
+    <color name="warning">#fef6dd</color>
+
+    <!--
+    <color name="malla_cursoaprobado_borde">#007aff</color>
+    <color name="malla_cursoaprobado_content">#f1f7ff</color>
+    <color name="malla_cursoconvalidado_borde">#0bc90d</color>
+    <color name="malla_cursoconvalidado_content">#f1fcf4</color>
+    <color name="malla_cursopendiente_borde">#7f7f7f</color>
+    <color name="malla_cursopendiente_content">#e6e6e6</color>
+-->
+
+    <!-- KillerYpa Color-->
+
+    <color name="esan_red">#cf1111</color>
+    <color name="gray_light">#f0f0f0</color>
+    <color name="gray_dark_light">#8e9090</color>
+
+    <color name="colorfondotablas">#EBEBF1</color>
+
+</resources>

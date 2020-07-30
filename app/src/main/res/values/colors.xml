@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="rojo_muyclaro">#fcf3f4</color>
+    <color name="rojo_oscuro">#a90e0e</color>
+    <color name="esan_rojo">#cf1111</color>
+
+    <color name="md_grey_75">#F5F5F5</color>
+    <color name="md_grey_80">#EDEEF0</color>
+    <color name="md_grey_100">#e7e7e7</color>
+    <color name="md_grey_200">#CFCFCF</color>
+    <color name="md_grey_500">#9E9E9E</color>
+    <color name="md_grey_550">#979797</color>
+    <color name="md_grey_600">#757575</color>
+    <color name="md_grey_700">#616161</color>
+    <color name="md_grey_800">#424242</color>
+    <color name="md_grey_900">#212121</color>
+    <color name="md_black_1000">#000000</color>
+    <color name="md_white_1000">#FFFFFF</color>
+
+    <color name="green">#00b919</color>
+
+    <color name="s1">#d16969</color>
+    <color name="s2">#cc3e3e</color>
+    <color name="s3">#ce2626</color>
+    <color name="s4">#CF1111</color>
+
+    <color name="danger_text">#933432</color>
+    <color name="warning_text">#957d32</color>
+    <color name="success_text">#0a7c71</color>
+    <color name="info_text">#2b6a94</color>
+
+    <color name="danger">#fddddd</color>
+    <color name="warning">#fef6dd</color>
+    <color name="success">#cff5f2</color>
+    <color name="info">#daeffd</color>
+
+    <color name="radio_button_selected_color">#ff33b5e5</color>
+    <color name="radio_button_unselected_color">#e0e0e0</color>
+
+    <color name="completo">#0cf500</color>
+    <color name="incompleto">#ffea00</color>
+
+    <color name="asistencia">#09b600</color>
+    <color name="tardanza">#EF9402</color>
+    <color name="falta">#b40f03</color>
+    <color name="retirado">#868686</color>
+
+    <color name="warning_color">#f4511e</color>
+    <color name="hint_color">#42000000</color>
+    <color name="success_color">#009688</color>
+
+    <color name="malla_cursoaprobado_borde">#97c9ff</color>
+    <color name="malla_cursoaprobado_content">#f1f7ff</color>
+    <color name="malla_cursoconvalidado_borde">#91f292</color>
+    <color name="malla_cursoconvalidado_content">#f1fcf4</color>
+    <color name="malla_cursopendiente_borde">#d2d2d2</color>
+    <color name="malla_cursopendiente_content">#e6e6e6</color>
+
+    <color name="color_radar">#7bc20000</color>
+    <color name="lineas_radar">#96ffffff</color>
+    <color name="main_asistencia">#EBEBF1</color>
+
+<!--<color name="malla_cursoaprobado_borde">#007aff</color>
+    <color name="malla_cursoaprobado_content">#f1f7ff</color>
+    <color name="malla_cursoconvalidado_borde">#0bc90d</color>
+    <color name="malla_cursoconvalidado_content">#f1fcf4</color>
+    <color name="malla_cursopendiente_borde">#7f7f7f</color>
+    <color name="malla_cursopendiente_content">#e6e6e6</color>-->
+
+    <color name="esan_red">#cf1111</color>
+    <color name="gray_light">#f0f0f0</color>
+    <color name="gray_dark_light">#8e9090</color>
+
+    <color name="colorWhithe">#FFFFFF</color>
+
+    <color name="light_blue_color">#3a9fbf</color>
+
+</resources>

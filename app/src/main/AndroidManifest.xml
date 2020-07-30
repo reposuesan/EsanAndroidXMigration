@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        package="pe.edu.esan.appostgrado">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!--
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    -->
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <application
+            android:name=".analytics.AnalyticsApplication"
+            android:allowBackup="false"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:largeHeap="true"
+            android:networkSecurityConfig="@xml/network_security_config"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:supportsRtl="true"
+            android:theme="@style/AppThemeNoActionBar"
+            tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".view.mas.ScanQRCodeActivity"></activity>
+        <activity
+                android:name=".view.mas.GenerateQRCodeActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.laboratorios.ignore.TYCPregradoLabsActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.configuracion.pversion.HuellaDigitalActivityPAndUp"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.laboratorios.PregradoLabsHistorialActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.laboratorios.PregradoLabsConfirmacionActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.laboratorios.ignore.PregradoLabsDetalleActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.laboratorios.PregradoLabsHorarioActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.laboratorios.PregradoLabsSelectSoftwareActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.laboratorios.PregradoLabsPrincipalActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.pregrado.ignore.SecondDummyActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.pregrado.ignore.FirstDummyActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.pregrado.PregradoCubsHistorialActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.pregrado.PregradoCubsConfirmacionActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.pregrado.PregradoCubsDetalleActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.pregrado.PregradoCubsHorarioActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.pregrado.PregradoCubsRegistroActivity"
+                android:screenOrientation="portrait" />
+
+        <meta-data
+                android:name="io.fabric.ApiKey"
+                android:value="bd466ffef9fe178d4c70121858996c49fb2869ce" />
+        <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version" />
+        <meta-data
+                android:name="com.google.android.gms.vision.DEPENDENCIES"
+                android:value="barcode" />
+
+        <activity
+                android:name=".LauncherActivity"
+                android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".SecondLauncherActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.login.LoginActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.MenuPrincipalActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.pago.PagoPreBoletaActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.horario.HorarioDetalleActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.horario.TomarAsistenciaActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.postgrado.reserva.PRReservaPrimeraActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.postgrado.reserva.PRReservaSegundaActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.postgrado.confirmar.PRConfirmarActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.postgrado.confirmar.PRConfirmarQRActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.postgrado.crear.PRMiGrupoActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.postgrado.crear.PRCrearGrupoActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.puntosreunion.postgrado.mireserva.PRMisReservasActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.academico.docente.SeccionOpcionesActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.academico.docente.SeguimientoAlumnoActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.academico.docente.HistorialAsistenciaProfesorActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.academico.docente.ResultadoEncuestaActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.academico.postgrado.CursosPostActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.academico.pregrado.HistoricoNotasPreActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.academico.pregrado.CursoDetalleActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.academico.EncuestaActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.academico.DirectorioActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.configuracion.ConfiguracionActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.configuracion.HuellaDigitalActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.cargacademica.CargaAcademicaActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.carne.CarneActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.curricula.MallaCurricularActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.linkinteres.LinkInteresActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.mensaje.MensajeActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.comedor.ComedorActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.comedor.MenuActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.ra.PrincipalRAActivity"
+                android:launchMode="singleTask"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.ra.DescargaMarkerActivity"
+                android:configChanges="keyboardHidden|orientation"
+                android:launchMode="singleTask" />
+        <activity
+                android:name=".view.mas.ra.DetalleMarkerActivity"
+                android:screenOrientation="portrait" />
+        <activity
+                android:name=".view.mas.ra.MixView"
+                android:launchMode="singleTop"
+                android:screenOrientation="landscape" />
+        <activity
+                android:name=".view.mas.ra.PrincipalAulaArBuscarActivity"
+                android:screenOrientation="portrait" />
+
+        <service
+                android:name=".firebase.MyFirebaseMessagingService"
+                android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+                android:name="firebase_messaging_auto_init_enabled"
+                android:value="false" />
+    </application>
+
+</manifest>

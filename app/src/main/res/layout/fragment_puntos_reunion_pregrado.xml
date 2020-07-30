@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+    <LinearLayout
+            android:id="@+id/linear_layout_container"
+            android:paddingTop="?attr/actionBarSize"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="pe.edu.esan.appostgrado.view.puntosreunion.pregrado.PuntosReunionPregradoFragment">
+
+        <RelativeLayout
+                android:id="@+id/realizar_prereserva_opcion"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:elevation="8dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/shape_puntos_reunion_item_principal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    app:srcCompat="@drawable/tab_clock" />
+
+            <TextView
+                    android:id="@+id/textview_prereservar"
+                    android:layout_marginLeft="56dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    android:textSize="18sp"
+                    android:text="@string/pre_reservar_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:layout_marginBottom="18dp"
+                    android:textColor="@color/gray_dark_light"
+                    android:layout_marginLeft="56dp"
+                    android:layout_below="@+id/textview_prereservar"
+                    android:text="@string/genera_tu_pre_reserva_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/indicator" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/confirmar_prereserva_opcion"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:elevation="8dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/shape_puntos_reunion_item_principal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    app:srcCompat="@drawable/tab_check" />
+
+            <TextView
+                    android:id="@+id/textview_confirmar"
+                    android:layout_marginLeft="56dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    android:textSize="18sp"
+                    android:text="@string/confirmar_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:layout_marginBottom="18dp"
+                    android:textColor="@color/gray_dark_light"
+                    android:layout_marginLeft="56dp"
+                    android:layout_below="@+id/textview_confirmar"
+                    android:text="@string/confirma_tus_pre_reservas_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/indicator" />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id="@+id/ver_historial_prereservas_opcion"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:elevation="8dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/shape_puntos_reunion_item_principal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    app:srcCompat="@drawable/tab_note" />
+
+            <TextView
+                    android:id="@+id/textview_historial"
+                    android:layout_marginLeft="56dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    android:textSize="18sp"
+                    android:text="@string/historial_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <TextView
+                    android:layout_marginBottom="18dp"
+                    android:textColor="@color/gray_dark_light"
+                    android:layout_marginLeft="56dp"
+                    android:layout_below="@+id/textview_historial"
+                    android:text="@string/ver_historial_de_pre_reservas_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    app:srcCompat="@drawable/indicator" />
+
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+            android:textStyle="italic|bold"
+            android:padding="18dp"
+            android:textSize="32sp"
+            android:gravity="center"
+            tools:text="Usted no tiene permiso para efectuar esta operación"
+            android:textColor="@color/esan_red"
+            android:id="@+id/empty_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    <ProgressBar
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/green"
+            android:id="@+id/progress_bar_pp_pregrado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+            android:layout_marginBottom="32dp"
+            android:layout_gravity="bottom|center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+       <!-- <CheckBox
+                android:textStyle="bold"
+                android:buttonTint="@color/esan_red"
+                app:buttonTint="@color/esan_red"
+                android:textColor="#000000"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="32dp"
+                android:layout_gravity="bottom|center"
+                android:id="@+id/checkbox_terminos_condiciones_pr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Acepto términos y condiciones"/>-->
+        <CheckBox
+                android:textStyle="bold"
+                android:buttonTint="@color/esan_red"
+                app:buttonTint="@color/esan_red"
+                android:textColor="#000000"
+                android:layout_gravity="bottom|center"
+                android:id="@+id/checkbox_terminos_condiciones_pr"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                tools:text=""
+                android:onClick="onCheckboxClicked"/>
+
+        <TextView
+                android:id="@+id/tv_for_checkbox_tyc_cubs"
+                android:textStyle="bold"
+                android:textColor="@color/md_black_1000"
+                android:gravity="center"
+                android:layout_toEndOf="@+id/checkbox_terminos_condiciones_pr"
+                tools:text="Acepto términos y condiciones de uso"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"/>
+    </RelativeLayout>
+</FrameLayout>

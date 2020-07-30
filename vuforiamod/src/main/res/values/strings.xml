@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">ESAN</string>
+
+    <string name="error_sensores_ra">No cuenta con los sensores adecuados para esta funcionalidad</string>
+    <string name="error_permiso_camara">Debe permitir el uso de la Cámara de su dispositivo</string>
+    <string name="error_permiso_gps">Debe permitir el uso del GPS de su dispositivo</string>
+
+
+    <!--
+    <string name="elegir_facultar">¿A que facultad desea ingresar?</string>
+    <string name="elegir_perfil">¿A que perfil desea ingresar?</string>
+     -->
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <!-- Title for app booton bar -->
+    <string name="title_register">Registro</string>
+    <string name="title_course">Cursos</string>
+    <string name="title_schedule">Horario</string>
+    <string name="title_week_international_bar">Semana Internacional</string>
+    <string name="title_week_intenational">SI</string>
+    <string name="title_more">Más</string>
+    <string name="title_activity_international_instructive" translatable="false">InternationalInstructiveActivity
+    </string>
+    <string name="augmented_reality">Realidad Aumentada</string>
+    <string name="description_intenational_gps">Localiza los puntos más importantes de ESAN, utilizando la cámara de su
+        dispositivo móvil (para mayor precision por favor active su GPS)</string>
+    <string name="description_intenational_video">Visualice el saludo de bienvenida del rector a la XL Semana
+        Internacional de ESAN, utilizando la cámara de su dispositivo móvil</string>
+
+
+    <!--VUFORIA-->
+    <string name="INIT_ERROR">Error</string>
+    <string name="INIT_ERROR_DEVICE_NOT_SUPPORTED">Failed to initialize Vuforia. This device is not supported.</string>
+    <string name="INIT_ERROR_NO_CAMERA_ACCESS">Failed to initialize Vuforia. Camera not accessible</string>
+    <string name="INIT_LICENSE_ERROR_MISSING_KEY">Vuforia App key is missing. Please get a valid key, by logging into your account at developer.vuforia.com and creating a new project.</string>
+    <string name="INIT_LICENSE_ERROR_INVALID_KEY">Invalid Key used. Please make sure you are using a valid Vuforia App Key.</string>
+    <string name="INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT">Unable to contact server. Please try again later.</string>
+    <string name="INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT">No network available. Please make sure you are connected to the Internet.</string>
+    <string name="INIT_LICENSE_ERROR_CANCELED_KEY">This app license key has been canceled and may no longer be used. Please get a new license key.</string>
+    <string name="INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH">Vuforia App key is not valid for this product. Please get a valid key, by logging into your account at developer.vuforia.com and choosing the right product type during project creation.</string>
+    <string name="INIT_LICENSE_ERROR_UNKNOWN_ERROR">Failed to initialize Vuforia.</string>
+    <string name="menu_back">About</string>
+    <string name="menu_playFullscreenVideo">Pantalla Completa</string>
+    <string name="title_exit">Salir</string>
+
+    <string name="pulse_una_vez_mas_para_salir">Pulse una vez más para salir</string>
+
+    <string name="splash_screen_description" translatable="false">Vuforia Engine Splash</string>
+
+    <string name="button_start" translatable="false">Start</string>
+
+    <string name="menu_versions" translatable="false">VERSIONS</string>
+    <string name="version_vuforia" translatable="false">Vuforia Engine v</string>
+    <string name="version_android" translatable="false">Android API level</string>
+    <string name="mas_de_1000_participantes_esta_edicion">Más de 900 participantes en esta edición</string>
+    <string name="realidad_aumentada_iw">Realidad Aumentada</string>
+    <string name="descripcion_iw">ESAN GRADUATE SCHOOL OF BUSINESS 30 DOCENTES - 40 CURSOS - 5 ÁREAS ACADÉMICAS</string>
+    <string name="fiesta_del_pisco_programa">Ceremonia Final (Programa)</string>
+    <string name="instructivo_text">Instructivo</string>
+    <string name="ceremonia_title_for_activity">Ceremonia Final</string>
+</resources>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="pe.edu.esan.appostgrado.view.puntosreunion.pregrado.PregradoCubsConfirmacionActivity">
+
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/my_toolbar_confirmacion"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"/>
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        <TextView
+                android:text="@string/confirmacion_de_prereservas_title"
+                android:layout_marginTop="36dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+        <ImageView
+                android:layout_weight="2"
+                android:id="@+id/img_confirmacion_reserva_pp"
+                android:layout_gravity="center"
+                tools:src="@drawable/conf_x_img"
+                android:layout_width="250dp"
+                android:layout_height="0dp"/>
+
+        <TextView
+                android:layout_weight="1"
+                android:id="@+id/tv_mensaje_confirmacion_prereserva_pp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:textSize="18sp"
+                tools:textColor="@color/esan_red"
+                android:fontFamily="sans-serif-light"
+                android:textStyle="italic"
+                android:textAlignment="center"
+                tools:text="No se encuentra en el rango de confirmación, recuerde que tiene 10 minutos antes y después de la hora de inicio de su reserva. Próxima reserva inicia a las 7:00PM"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+<!--<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="pe.edu.esan.appostgrado.view.puntosreunion.pregrado.PregradoCubsConfirmacionActivity  <android.support.v7.widget.Toolbar
+            android:id="@+id/my_toolbar_confirmacion"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"/>
+
+    <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+    <TextView
+            android:layout_gravity="top"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_marginTop="36dp"
+            android:layout_marginBottom="24dp"
+            android:textAlignment="center"
+            android:id="@+id/textview_title_prereserva_confirmacion"
+            android:text="@string/confirmacion_de_prereservas_title"
+            android:textSize="24sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    <TextView
+            android:id="@+id/tv_mensaje_confirmacion_prereserva"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp"
+            android:textSize="24sp"
+            android:textStyle="italic"
+            android:textAlignment="center"
+            tools:text="No se encuentra en el rango de confirmación, recuerde que tiene 10 minutos antes y después de la hora de inicio de su reserva. Próxima reserva inicia a las 7:00PM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
+</LinearLayout>-->

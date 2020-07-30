@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="145dp"
+                                             android:layout_height="145dp"
+                                             android:layout_margin="5dp">
+
+    <TextView
+        android:id="@+id/lblCredito_mallapredetalle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/lblCurso_mallapredetalle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <pe.edu.esan.appostgrado.view.util.AutoResizeTextView
+        android:id="@+id/lblCurso_mallapredetalle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:gravity="center"
+        android:lines="4"
+        android:textSize="16sp"
+        android:textColor="@color/md_grey_800"
+        android:text=""
+        app:layout_constraintBottom_toTopOf="@+id/lblPeriodo_mallapredetalle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblCredito_mallapredetalle" />
+
+    <TextView
+        android:id="@+id/lblPeriodo_mallapredetalle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:textAlignment="center"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/lblNota_mallapredetalle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblCurso_mallapredetalle" />
+
+    <TextView
+        android:id="@+id/lblNota_mallapredetalle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:textAlignment="center"
+        android:textColor="@color/md_black_1000"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblPeriodo_mallapredetalle" />
+
+    <ImageView
+        android:id="@+id/imgDetalle_mallapredetalle"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/lblCurso_mallapredetalle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lblCredito_mallapredetalle"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/ico_options" />
+
+    <ImageView
+        android:id="@+id/imgFlag_mallapredetalle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/lblCurso_mallapredetalle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/lblCredito_mallapredetalle"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/flag_uk" />
+</androidx.constraintlayout.widget.ConstraintLayout>

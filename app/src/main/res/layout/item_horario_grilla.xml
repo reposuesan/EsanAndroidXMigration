@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+        <TextView
+            android:id="@+id/lblValueSuperior_rowhorariogrilla"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text=""/>
+        <View
+            android:id="@+id/viewDivisor_rowhorariogrilla"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#4B72B2"/>
+        <TextView
+            android:id="@+id/lblValueInferior_rowhorariogrilla"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text=""/>
+    </LinearLayout>
+    <View
+        android:id="@+id/viewHorario_rowhorariogrilla"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/esan_rojo" />
+</RelativeLayout>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:background="@android:color/transparent">
+
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="@color/esan_rojo"
+        android:gravity="center"
+        android:text="@string/asistencia"
+        android:textColor="@color/md_white_1000"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <pe.edu.esan.appostgrado.view.util.AutoResizeTextView
+        android:id="@+id/lblCurso_asispost"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Curso"
+        android:gravity="center"
+        android:textColor="@color/md_black_1000"
+        android:maxLines="3"
+        android:textSize="16sp"
+        app:autoSizeMinTextSize="10sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/lblAsistencia_asispost"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/asistencia_cant_porc"
+        android:textColor="@color/asistencia"
+        app:layout_constraintEnd_toStartOf="@+id/lblTardanza_asispost"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblCurso_asispost" />
+
+    <TextView
+        android:id="@+id/lblTardanza_asispost"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/tardanza_cant_porc"
+        android:textColor="@color/tardanza"
+        app:layout_constraintEnd_toStartOf="@+id/lblFalta_asispost"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/lblAsistencia_asispost"
+        app:layout_constraintTop_toBottomOf="@+id/lblCurso_asispost" />
+
+    <TextView
+        android:id="@+id/lblFalta_asispost"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/falta_cant_porc"
+        android:textColor="@color/falta"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/lblTardanza_asispost"
+        app:layout_constraintTop_toBottomOf="@+id/lblCurso_asispost" />
+
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblTardanza_asispost">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="12dp"
+            android:background="#EBEBF1" />
+
+        <View
+            android:id="@+id/viewFalta_asispost"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:background="@color/falta" />
+
+        <View
+            android:id="@+id/viewTardanza_asispost"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:background="@color/tardanza" />
+
+        <View
+            android:id="@+id/viewAsistencia_asispost"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            android:background="@color/asistencia" />
+
+    </RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "107431185014",
+    "firebase_url": "https://esan-firebase.firebaseio.com",
+    "project_id": "esan-firebase",
+    "storage_bucket": "esan-firebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107431185014:android:46aee9f8bf951c29",
+        "android_client_info": {
+          "package_name": "appostgrado.esan.edu.pe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "107431185014-c5calllmebv50fcg250ajlinrgpem68b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcuXimX8FMtXOvyi-c3SCQwY9QyT46n_k"
+        },
+        {
+          "current_key": "AIzaSyB-yGczUeSapeDXs2Uu9xr5fI0eUAhzBtM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-82301344-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

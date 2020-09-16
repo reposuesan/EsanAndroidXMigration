@@ -29,6 +29,7 @@ class FirstDummyActivity : AppCompatActivity() {
 
         goToSecondButton.setOnClickListener {
             val intent = Intent(this@FirstDummyActivity, SecondDummyActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
             finish()
         }

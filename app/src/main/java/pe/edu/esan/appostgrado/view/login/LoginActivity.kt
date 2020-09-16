@@ -59,7 +59,8 @@ import javax.crypto.NoSuchPaddingException
 import javax.crypto.SecretKey
 import kotlin.collections.ArrayList
 
-class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogFragment.FingerprintResultsLogin {
+class LoginActivity : AppCompatActivity(),
+    FingerprintAuthenticationLoginDialogFragment.FingerprintResultsLogin {
 
     private val TAG = "LoginActivity"
     private val DIALOG_FRAGMENT_TAG = "myFragment"
@@ -153,7 +154,7 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
 
         //Login Button
         btnIngresar_login.setOnClickListener {
-            if(!iniciandoSesion) {
+            if (!iniciandoSesion) {
                 onIniciar()
             } else {
                 Log.w(LOG, "Usuario ya presionó botón Login, no repetir el request")
@@ -191,13 +192,13 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
         ControlUsuario.instance.statusLogout = 0
 
         //INTENT MENU PRINCIPAL PARA INVITADO
-        val intentMenuPrincipal = Intent().setClass(this@LoginActivity, MenuPrincipalActivity::class.java)
+        val intentMenuPrincipal =
+            Intent().setClass(this@LoginActivity, MenuPrincipalActivity::class.java)
         intentMenuPrincipal.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intentMenuPrincipal.putExtra("login_invitado","es_invitado")
+        intentMenuPrincipal.putExtra("login_invitado", "es_invitado")
         startActivity(intentMenuPrincipal)
 
     }
-
 
 
     override fun onStart() {
@@ -271,7 +272,12 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                 "Usuario 17200563 no tiene permiso para realizar esta operación",
                 Snackbar.LENGTH_SHORT
             )
-            snack.view.setBackgroundColor(ContextCompat.getColor(applicationContext, R.color.warning))
+            snack.view.setBackgroundColor(
+                ContextCompat.getColor(
+                    applicationContext,
+                    R.color.warning
+                )
+            )
             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
                 .setTextColor(ContextCompat.getColor(applicationContext, R.color.warning_text))
             snack.show()
@@ -283,7 +289,8 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
             focus?.requestFocus()
         } else {
             if (Utilitarios.isNetworkAvailable(this)) {
-                val misPreferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+                val misPreferencias =
+                    getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
                 val token = misPreferencias.getString("tokenID", "")
 
                 val request = JSONObject()
@@ -319,7 +326,7 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener<JSONObject> { response ->
+                { response ->
                     try {
                         ControlUsuario.instance.currentUsuario = ArrayList()
 
@@ -333,13 +340,16 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                             Log.i(LOG, jsResponse.toString())
                             if (jsResponse != null) {
 
-                                val jsObjDatosPersonales = jsResponse["ObjDatosPersonal"] as? JSONObject
+                                val jsObjDatosPersonales =
+                                    jsResponse["ObjDatosPersonal"] as? JSONObject
 
-                                val tipoDocumento = jsObjDatosPersonales?.getString("TipoDocumento") ?: ""
+                                val tipoDocumento =
+                                    jsObjDatosPersonales?.getString("TipoDocumento") ?: ""
                                 val documento = jsObjDatosPersonales?.getString("Documento") ?: ""
                                 val nombre = jsObjDatosPersonales?.getString("Nombre") ?: ""
                                 val apellido = jsObjDatosPersonales?.getString("Apellido") ?: ""
-                                val nombreCompleto = jsObjDatosPersonales?.getString("NombreCompleto") ?: ""
+                                val nombreCompleto =
+                                    jsObjDatosPersonales?.getString("NombreCompleto") ?: ""
                                 val correo = jsObjDatosPersonales?.getString("Correo") ?: ""
 
                                 //Use the current user's information
@@ -347,34 +357,41 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                 Crashlytics.setUserEmail(correo)
                                 Crashlytics.setUserName(nombreCompleto)
 
-                                val jsObjDatosPostgrado = jsResponse["ObjDatosPostgrado"] as? JSONObject
+                                val jsObjDatosPostgrado =
+                                    jsResponse["ObjDatosPostgrado"] as? JSONObject
 
                                 //ALUMNO POSTGRADO--------------------------------------------------------------
-                                val esAlumnoPost = jsObjDatosPostgrado?.getBoolean("EsAlumno") ?: false
+                                val esAlumnoPost =
+                                    jsObjDatosPostgrado?.getBoolean("EsAlumno") ?: false
                                 //TODO: CÓDIGO ALUMNO POSTGRADO
-                                val codAlumnoPost = jsObjDatosPostgrado?.getString("CodAlumno") ?: ""
+                                val codAlumnoPost =
+                                    jsObjDatosPostgrado?.getString("CodAlumno") ?: ""
                                 //TODO: ONLY FOR DEBUGGING POSTGRADO
                                 /*val codAlumnoPost = txtUsuario_login.text.toString()*/
 
                                 Crashlytics.setUserIdentifier(codAlumnoPost)
 
                                 //DOCENTE POSTGRADO--------------------------------------------------------------
-                                val esDocentePost = when (jsObjDatosPostgrado?.getInt("EsDocente") ?: 0) {
-                                    0 -> false
-                                    1 -> true
-                                    2 -> false
-                                    9 -> true
-                                    else -> false
-                                }
+                                val esDocentePost =
+                                    when (jsObjDatosPostgrado?.getInt("EsDocente") ?: 0) {
+                                        0 -> false
+                                        1 -> true
+                                        2 -> false
+                                        9 -> true
+                                        else -> false
+                                    }
                                 //TODO: CÓDIGO DOCENTE POSTGRADO
-                                val codDocentePost = jsObjDatosPostgrado?.getString("CodDocente") ?: ""
+                                val codDocentePost =
+                                    jsObjDatosPostgrado?.getString("CodDocente") ?: ""
 
                                 Crashlytics.setUserIdentifier(codDocentePost)
 
-                                val jsObjDatosPregrado = jsResponse["ObjDatosPregrado"] as? JSONObject
+                                val jsObjDatosPregrado =
+                                    jsResponse["ObjDatosPregrado"] as? JSONObject
 
                                 //ALUMNO PREGRADO--------------------------------------------------------------
-                                val esAlumnoPre = jsObjDatosPregrado?.getBoolean("EsAlumno") ?: false
+                                val esAlumnoPre =
+                                    jsObjDatosPregrado?.getBoolean("EsAlumno") ?: false
                                 //TODO: CÓDIGO ALUMNO PREGRADO
                                 val codAlumnoPre = jsObjDatosPregrado?.getString("CodAlumno") ?: ""
                                 //TODO: ONLY FOR DEBUGGING PREGRADO
@@ -382,8 +399,8 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
 
                                 Crashlytics.setUserIdentifier(codAlumnoPre)
 
-                                val objCarrerasPre = jsObjDatosPregrado?.getJSONArray("LstCarreraPregrado")
-                                /*val CodPeriodo = objCarrerasPre.getString("CodPeriodo")*/
+                                val objCarrerasPre =
+                                    jsObjDatosPregrado?.getJSONArray("LstCarreraPregrado")
 
                                 val programasPregrado = ArrayList<ProgramasPregrado>()
 
@@ -391,24 +408,33 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                     for (i in 0 until (objCarrerasPre?.length() ?: 0)) {
                                         val objCarrera = objCarrerasPre?.getJSONObject(i)
                                         val codPrograma = objCarrera?.getString("CodPrograma") ?: ""
-                                        val esCarreraActual = objCarrera?.getBoolean("EsCarreraActual") ?: false
-                                        val nombrePrograma = objCarrera?.getString("NomPrograma") ?: ""
+                                        val esCarreraActual =
+                                            objCarrera?.getBoolean("EsCarreraActual") ?: false
+                                        val nombrePrograma =
+                                            objCarrera?.getString("NomPrograma") ?: ""
 
-                                        val programaPre = ProgramasPregrado(codPrograma, nombrePrograma, "", esCarreraActual)
+                                        val programaPre = ProgramasPregrado(
+                                            codPrograma,
+                                            nombrePrograma,
+                                            "",
+                                            esCarreraActual
+                                        )
                                         programasPregrado.add(programaPre)
                                     }
                                 }
                                 //DOCENTE PREGRADO--------------------------------------------------------------
-                                val esDocentePre = when (jsObjDatosPregrado?.getInt("EsDocente") ?: 0) {
-                                    0 -> false
-                                    1 -> false
-                                    2 -> true
-                                    9 -> true
-                                    else -> false
-                                }
+                                val esDocentePre =
+                                    when (jsObjDatosPregrado?.getInt("EsDocente") ?: 0) {
+                                        0 -> false
+                                        1 -> false
+                                        2 -> true
+                                        9 -> true
+                                        else -> false
+                                    }
 
                                 //TODO: CÓDIGO DOCENTE PREGRADO
                                 val codDocentePre = jsObjDatosPregrado?.getString("CodDocente") ?: ""
+                                /*val codDocentePre = "agazzolo"*/
 
                                 Crashlytics.setUserIdentifier(codDocentePre)
 
@@ -437,7 +463,10 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                 //Usuario General guardado en Singleton
                                 ControlUsuario.instance.currentUsuarioGeneral = usuarioGeneral
 
-                                val misPreferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+                                val misPreferencias = getSharedPreferences(
+                                    "PreferenciasUsuario",
+                                    Context.MODE_PRIVATE
+                                )
 
                                 val agreetouchid = misPreferencias.getBoolean("touchid", false)
                                 val editor = misPreferencias.edit()
@@ -448,7 +477,8 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                     editor.putString("password", clave)
                                 } else {
                                     //Si la opción de huella digital está encendida
-                                    val codeSaved = misPreferencias.getString("userWithFingerprint", "")
+                                    val codeSaved =
+                                        misPreferencias.getString("userWithFingerprint", "")
                                     if (codeSaved == usuario) {
                                         editor.putString("code", usuario)
                                         editor.putString("password", clave)
@@ -495,9 +525,12 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                         this.esPreyPost = true
                                     }
 
-                                    ControlUsuario.instance.currentUsuarioGeneral!!.validaPerfil = true
-                                    ControlUsuario.instance.currentUsuarioGeneral!!.validarFacultad = this.esPreyPost
-                                    ControlUsuario.instance.currentUsuarioGeneral!!.cambioPerfil = true
+                                    ControlUsuario.instance.currentUsuarioGeneral!!.validaPerfil =
+                                        true
+                                    ControlUsuario.instance.currentUsuarioGeneral!!.validarFacultad =
+                                        this.esPreyPost
+                                    ControlUsuario.instance.currentUsuarioGeneral!!.cambioPerfil =
+                                        true
 
                                     //MUESTRA OPCIONES AL USUARIO
 
@@ -505,7 +538,7 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                         //La opción de selección de perfil automático NO está habilitada
                                         val fragmentManager = supportFragmentManager
 
-                                        if(dialogoPerfil == null) {
+                                        if (dialogoPerfil == null) {
 
                                             dialogoPerfil = PerfilUsuarioDialog()
 
@@ -527,13 +560,15 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                                                 supportFragmentManager
 
                                                             if (dialogoFacultad == null) {
-                                                                dialogoFacultad = FacultadUsuarioDialog()
+                                                                dialogoFacultad =
+                                                                    FacultadUsuarioDialog()
                                                                 dialogoFacultad?.show(
                                                                     fragmentManagerF,
                                                                     "facultad"
                                                                 )
 
-                                                                dialogoFacultad?.isCancelable = false
+                                                                dialogoFacultad?.isCancelable =
+                                                                    false
                                                                 dialogoFacultad?.onClickOptionCustomListener { op ->
                                                                     if (dialogoFacultad != null) {
                                                                         dialogoFacultad?.dismiss()
@@ -590,7 +625,10 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
 
                                                                 }
                                                             } else {
-                                                                Log.w(LOG, "dialogoFacultad ${dialogoFacultad.toString()} is not null, we are using a previous created dialogoFacultad")
+                                                                Log.w(
+                                                                    LOG,
+                                                                    "dialogoFacultad ${dialogoFacultad.toString()} is not null, we are using a previous created dialogoFacultad"
+                                                                )
                                                             }
 
                                                         } else {
@@ -687,7 +725,10 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                                 }
                                             }
                                         } else {
-                                            Log.w(LOG, "dialogoPerfil ${dialogoPerfil.toString()} is not null, we are using a previous created dialogoPerfil")
+                                            Log.w(
+                                                LOG,
+                                                "dialogoPerfil ${dialogoPerfil.toString()} is not null, we are using a previous created dialogoPerfil"
+                                            )
                                         }
                                     } else {
                                         //La opción de selección de perfil automático SI está habilitada
@@ -784,7 +825,7 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                             }
                                         }
                                     }
-                                //SOLO ALUMNO, NO ES DOCENTE
+                                    //SOLO ALUMNO, NO ES DOCENTE
                                 } else if (esAlumno) {
                                     //ALUMNO PREGRADO Y POSTGRADO, AMBOS
                                     if (esAlumnoPre && esAlumnoPost) {
@@ -793,8 +834,10 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
 
                                         ControlUsuario.instance.statusLogout = 0
                                         this.esPreyPost = true
-                                        ControlUsuario.instance.currentUsuarioGeneral!!.validarFacultad = true
-                                        ControlUsuario.instance.currentUsuarioGeneral!!.cambioPerfil = true
+                                        ControlUsuario.instance.currentUsuarioGeneral!!.validarFacultad =
+                                            true
+                                        ControlUsuario.instance.currentUsuarioGeneral!!.cambioPerfil =
+                                            true
 
                                         //SHOW OPCIONES
 
@@ -802,12 +845,12 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                             //La opción de selección de perfil automático NO está habilitada
                                             val fragmentManager = supportFragmentManager
 
-                                            if(dialogoFacultad == null){
+                                            if (dialogoFacultad == null) {
                                                 dialogoFacultad = FacultadUsuarioDialog()
                                                 dialogoFacultad?.show(fragmentManager, "fd")
                                                 dialogoFacultad?.isCancelable = false
                                                 dialogoFacultad?.onClickOptionCustomListener { opcion ->
-                                                    if(dialogoFacultad != null) {
+                                                    if (dialogoFacultad != null) {
                                                         dialogoFacultad?.dismiss()
                                                     }
                                                     dialogoFacultad = null
@@ -823,13 +866,18 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                                     )
 
                                                     val preferencias =
-                                                        getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+                                                        getSharedPreferences(
+                                                            "PreferenciasUsuario",
+                                                            Context.MODE_PRIVATE
+                                                        )
                                                     val edit = preferencias.edit()
                                                     edit.putString("tipoperfil", opcion)
                                                     edit.putBoolean("cerrosesion", false)
                                                     edit.apply()
 
-                                                    ControlUsuario.instance.currentUsuario.add(student)
+                                                    ControlUsuario.instance.currentUsuario.add(
+                                                        student
+                                                    )
                                                     ControlUsuario.instance.statusLogout = 0
 
                                                     //INTENT MENU PRINCIPAL
@@ -842,11 +890,17 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                                 }
 
                                             } else {
-                                                Log.w(LOG, "dialogoFacultad ${dialogoFacultad.toString()} is not null, we are using a previous created dialogoFacultad")
+                                                Log.w(
+                                                    LOG,
+                                                    "dialogoFacultad ${dialogoFacultad.toString()} is not null, we are using a previous created dialogoFacultad"
+                                                )
                                             }
                                         } else {
                                             //La opción de selección de perfil automático SI está habilitada
-                                            val preferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+                                            val preferencias = getSharedPreferences(
+                                                "PreferenciasUsuario",
+                                                Context.MODE_PRIVATE
+                                            )
                                             val edit = preferencias.edit()
                                             edit.putBoolean("cerrosesion", false)
                                             edit.apply()
@@ -864,7 +918,9 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                                         usuario, clave
                                                     )
 
-                                                    ControlUsuario.instance.currentUsuario.add(student)
+                                                    ControlUsuario.instance.currentUsuario.add(
+                                                        student
+                                                    )
                                                     ControlUsuario.instance.statusLogout = 0
 
                                                     //INTENT MENU PRINCIPAL
@@ -888,7 +944,9 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                                         usuario, clave
                                                     )
 
-                                                    ControlUsuario.instance.currentUsuario.add(student)
+                                                    ControlUsuario.instance.currentUsuario.add(
+                                                        student
+                                                    )
                                                     ControlUsuario.instance.statusLogout = 0
 
                                                     //INTENT MENU PRINCIPAL
@@ -910,13 +968,21 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                             ControlUsuario.instance.currentUsuarioGeneral!!.apellido,
                                             ControlUsuario.instance.currentUsuarioGeneral!!.tipoDocumento,
                                             ControlUsuario.instance.currentUsuarioGeneral!!.numeroDocumento,
-                                            if (esAlumnoPre) Utilitarios.PRE else Utilitarios.POS, 0,
-                                            usuario, clave
+                                            if (esAlumnoPre) Utilitarios.PRE else Utilitarios.POS,
+                                            0,
+                                            usuario,
+                                            clave
                                         )
 
-                                        val preferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+                                        val preferencias = getSharedPreferences(
+                                            "PreferenciasUsuario",
+                                            Context.MODE_PRIVATE
+                                        )
                                         val edit = preferencias.edit()
-                                        edit.putString("tipoperfil", if (esAlumnoPre) Utilitarios.PRE else Utilitarios.POS)
+                                        edit.putString(
+                                            "tipoperfil",
+                                            if (esAlumnoPre) Utilitarios.PRE else Utilitarios.POS
+                                        )
                                         edit.putBoolean("cerrosesion", false)
                                         edit.apply()
 
@@ -925,7 +991,10 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
 
                                         //INTENT MENU PRINCIPAL
                                         val intentMenuPrincipal =
-                                            Intent().setClass(this@LoginActivity, MenuPrincipalActivity::class.java)
+                                            Intent().setClass(
+                                                this@LoginActivity,
+                                                MenuPrincipalActivity::class.java
+                                            )
                                         intentMenuPrincipal.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                         startActivity(intentMenuPrincipal)
 
@@ -950,7 +1019,10 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                         ControlUsuario.instance.currentUsuarioGeneral!!.esDocentePostgrado
                                     )
 
-                                    val preferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+                                    val preferencias = getSharedPreferences(
+                                        "PreferenciasUsuario",
+                                        Context.MODE_PRIVATE
+                                    )
                                     val edit = preferencias.edit()
                                     edit.putString("tipoperfil", Utilitarios.DOC)
                                     edit.putBoolean("cerrosesion", false)
@@ -961,7 +1033,10 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
 
                                     //INTENT MENU PRINCIPAL
                                     val intentMenuPrincipal =
-                                        Intent().setClass(this@LoginActivity, MenuPrincipalActivity::class.java)
+                                        Intent().setClass(
+                                            this@LoginActivity,
+                                            MenuPrincipalActivity::class.java
+                                        )
                                     intentMenuPrincipal.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                     startActivity(intentMenuPrincipal)
 
@@ -996,12 +1071,12 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                         )
                         iniciandoSesion = false
                     }
-                    if(CustomDialog.instance.dialogoCargando != null) {
+                    if (CustomDialog.instance.dialogoCargando != null) {
                         CustomDialog.instance.dialogoCargando?.dismiss()
                         CustomDialog.instance.dialogoCargando = null
                     }
                 },
-                Response.ErrorListener {
+                {
 
                     Log.e(LOG, "Error Volley")
                     val showAlertHelpe = ShowAlertHelper(this)
@@ -1010,7 +1085,7 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                         getString(R.string.error_no_conexion),
                         null
                     )
-                    if(CustomDialog.instance.dialogoCargando != null) {
+                    if (CustomDialog.instance.dialogoCargando != null) {
                         CustomDialog.instance.dialogoCargando?.dismiss()
                         CustomDialog.instance.dialogoCargando = null
                     }
@@ -1044,7 +1119,10 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
 
         if (iCamara != PackageManager.PERMISSION_GRANTED || iGPS != PackageManager.PERMISSION_GRANTED) {
             val pCamara =
-                ActivityCompat.shouldShowRequestPermissionRationale(this@LoginActivity, Manifest.permission.CAMERA)
+                ActivityCompat.shouldShowRequestPermissionRationale(
+                    this@LoginActivity,
+                    Manifest.permission.CAMERA
+                )
             val pGps = ActivityCompat.shouldShowRequestPermissionRationale(
                 this@LoginActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -1053,7 +1131,10 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                 if (pCamara && pGps) {
                     ActivityCompat.requestPermissions(
                         this@LoginActivity,
-                        arrayOf(Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION),
+                        arrayOf(
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ),
                         PERMISO_CAM_GPS
                     )
                 } else {
@@ -1086,12 +1167,18 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
     }
 
     //RESULTADO DE VALIDACIÓN DE PERMISOS
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
             PERMISO_CAM_GPS -> {
                 if (grantResults.isNotEmpty()) {
-                    ControlUsuario.instance.accesoCamara = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    ControlUsuario.instance.accesoGPS = grantResults[1] == PackageManager.PERMISSION_GRANTED
+                    ControlUsuario.instance.accesoCamara =
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    ControlUsuario.instance.accesoGPS =
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED
                 } else {
                     ControlUsuario.instance.accesoCamara = false
                     ControlUsuario.instance.accesoGPS = false
@@ -1104,12 +1191,14 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
             }
             PERMISO_CAMARA -> {
                 if (grantResults.isNotEmpty()) {
-                    ControlUsuario.instance.accesoCamara = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    ControlUsuario.instance.accesoCamara =
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED
                 }
             }
             PERMISO_GPS -> {
                 if (grantResults.isNotEmpty()) {
-                    ControlUsuario.instance.accesoGPS = grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    ControlUsuario.instance.accesoGPS =
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED
                 }
             }
         }
@@ -1289,12 +1378,12 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
         }
         Log.w(LOG, "onPause()")
 
-        if(dialogoPerfil != null) {
+        if (dialogoPerfil != null) {
             dialogoPerfil?.dismiss()
             dialogoPerfil = null
         }
 
-        if(dialogoFacultad != null){
+        if (dialogoFacultad != null) {
             dialogoFacultad?.dismiss()
             dialogoFacultad = null
         }
@@ -1303,11 +1392,11 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
     }
 
     override fun onDestroy() {
-        if(CustomDialog.instance.dialogoCargando != null){
+        if (CustomDialog.instance.dialogoCargando != null) {
             CustomDialog.instance.dialogoCargando?.dismiss()
             CustomDialog.instance.dialogoCargando = null
         }
-        Log.w(LOG,"onDestroy()")
+        Log.w(LOG, "onDestroy()")
         super.onDestroy()
     }
 
@@ -1352,17 +1441,26 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                     cryptoObject = FingerprintManager.CryptoObject(it)
                                 }
 
-                                mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+                                mSharedPreferences =
+                                    PreferenceManager.getDefaultSharedPreferences(this)
 
-                                fingerFragmentDialog = FingerprintAuthenticationLoginDialogFragment()
+                                fingerFragmentDialog =
+                                    FingerprintAuthenticationLoginDialogFragment()
 
 
                                 fingerFragmentDialog?.let { it.setCryptoObject(cryptoObject) }
 
-                                fingerFragmentDialog?.let { it.setFingerprintResultsLoginInterface(this) }
+                                fingerFragmentDialog?.let {
+                                    it.setFingerprintResultsLoginInterface(
+                                        this
+                                    )
+                                }
 
                                 val useFingerprintPreference =
-                                    mSharedPreferences?.getBoolean("use_fingerprint_to_authenticate_key", true)
+                                    mSharedPreferences?.getBoolean(
+                                        "use_fingerprint_to_authenticate_key",
+                                        true
+                                    )
 
                                 if (useFingerprintPreference!!) {
 
@@ -1380,7 +1478,12 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
                                     }
                                 }
 
-                                fingerFragmentDialog?.let { it.show(fragmentManager, DIALOG_FRAGMENT_TAG) }
+                                fingerFragmentDialog?.let {
+                                    it.show(
+                                        fragmentManager,
+                                        DIALOG_FRAGMENT_TAG
+                                    )
+                                }
 
                             }
                         }
@@ -1389,7 +1492,7 @@ class LoginActivity : AppCompatActivity(), FingerprintAuthenticationLoginDialogF
 
             }
         } else {
-            if(!iniciandoSesion) {
+            if (!iniciandoSesion) {
                 callLogin()
             } else {
                 Log.w(LOG, "Usuario ya presionó botón Login, no repetir el request")

@@ -28,8 +28,8 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
 
     private val TAG = "SeguimientoAlumnoActivity"
     private var requestQueue: RequestQueue? = null
-    private var CodigoSeccion = ""
-    private var nombreCurso = ""
+    private var CodigoSeccion: String? = ""
+    private var nombreCurso: String? = ""
 
     private var anchoPantalla = 0
     private var densidad = .0f
@@ -80,7 +80,7 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
         getAlumnos(CodigoSeccion)
     }
 
-    private fun getAlumnos(seccion: String) {
+    private fun getAlumnos(seccion: String?) {
         val request = JSONObject()
         request.put("codigoSeccion", seccion)
 

@@ -146,56 +146,56 @@ class CursosPostActivity : AppCompatActivity() {
         val jsObjectRequest = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
-                    Log.i(LOG, response.toString())
-                    try {
-                        val listaEncuestas = ArrayList<SeccionEncuestaPos>()
-                        val encuestaJArray = Utilitarios.jsArrayDesencriptar(response["ListarEncuestasProfesorPostResult"] as String, this)
-                        /*val encuestaJArray = response["ListarEncuestasProfesorPostResult"] as JSONArray*/
-                        if (encuestaJArray != null) {
-                            if (encuestaJArray.length() > 0) {
-                                for (i in 0 until encuestaJArray.length()) {
-                                    val encuestaJObject = encuestaJArray[i] as JSONObject
-                                    val evaluo = encuestaJObject["Evaluo"] as Int
+            { response ->
+                Log.i(LOG, response.toString())
+                try {
+                    val listaEncuestas = ArrayList<SeccionEncuestaPos>()
+                    val encuestaJArray = Utilitarios.jsArrayDesencriptar(response["ListarEncuestasProfesorPostResult"] as String, this)
+                    /*val encuestaJArray = response["ListarEncuestasProfesorPostResult"] as JSONArray*/
+                    if (encuestaJArray != null) {
+                        if (encuestaJArray.length() > 0) {
+                            for (i in 0 until encuestaJArray.length()) {
+                                val encuestaJObject = encuestaJArray[i] as JSONObject
+                                val evaluo = encuestaJObject["Evaluo"] as Int
+                                /*val encuestaVigente = encuestaJObject["Vigente"] as Int*/
+                                //Si evaluo es 0, entonces el usuario no ha evaluado
+                                val encuestar = evaluo == 0
+                                /*val encuestar = (encuestaVigente == 1  && evaluo == 0)*/
+                                if (encuestar) {
+                                    val idSeccion = encuestaJObject["IdSeccion"] as Int
+                                    val idProfesor = encuestaJObject["IdProfesor"] as Int
+                                    val idEncuesta = encuestaJObject["IdEncuesta"] as Int
+                                    val idProgramacion = encuestaJObject["IdProgramacion"] as Int
+                                    val nombreCompleto = encuestaJObject["nombreCompleto"] as String
                                     /*val encuestaVigente = encuestaJObject["Vigente"] as Int*/
-                                    //Si evaluo es 0, entonces el usuario no ha evaluado
-                                    val encuestar = evaluo == 0
+
+                                    //Si vigente es 1, entonces la encuesta está vigente
+                                    /*val encuestaVigente = vigente == 1*/
+
                                     /*val encuestar = (encuestaVigente == 1  && evaluo == 0)*/
-                                    if (encuestar) {
-                                        val idSeccion = encuestaJObject["IdSeccion"] as Int
-                                        val idProfesor = encuestaJObject["IdProfesor"] as Int
-                                        val idEncuesta = encuestaJObject["IdEncuesta"] as Int
-                                        val idProgramacion = encuestaJObject["IdProgramacion"] as Int
-                                        val nombreCompleto = encuestaJObject["nombreCompleto"] as String
-                                        /*val encuestaVigente = encuestaJObject["Vigente"] as Int*/
 
-                                        //Si vigente es 1, entonces la encuesta está vigente
-                                        /*val encuestaVigente = vigente == 1*/
-
-                                        /*val encuestar = (encuestaVigente == 1  && evaluo == 0)*/
-
-                                        listaEncuestas.add(SeccionEncuestaPos(codigoPromocion, idSeccion, idProfesor, nombreCompleto, idEncuesta, idProgramacion, encuestar))
-                                    }
+                                    listaEncuestas.add(SeccionEncuestaPos(codigoPromocion, idSeccion, idProfesor, nombreCompleto, idEncuesta, idProgramacion, encuestar))
                                 }
                             }
-                            showCursos(codigoPromocion, listaEncuestas)
-                        } else {
-                            lblMensaje_acursospost.visibility = View.VISIBLE
-                            lblMensaje_acursospost.text = resources.getText(R.string.error_desencriptar)
                         }
-                    } catch (jex: JSONException) {
+                        showCursos(codigoPromocion, listaEncuestas)
+                    } else {
                         lblMensaje_acursospost.visibility = View.VISIBLE
-                        lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
-                    } catch (ccex: ClassCastException) {
-                        lblMensaje_acursospost.visibility = View.VISIBLE
-                        lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_acursospost.text = resources.getText(R.string.error_desencriptar)
                     }
-                },
-                Response.ErrorListener { error ->
-                    Log.e(LOG, error.message.toString())
+                } catch (jex: JSONException) {
+                    lblMensaje_acursospost.visibility = View.VISIBLE
+                    lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
+                } catch (ccex: ClassCastException) {
                     lblMensaje_acursospost.visibility = View.VISIBLE
                     lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
                 }
+            },
+            { error ->
+                Log.e(LOG, error.message.toString())
+                lblMensaje_acursospost.visibility = View.VISIBLE
+                lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueueEncuesta?.add(jsObjectRequest)
@@ -330,6 +330,7 @@ class CursosPostActivity : AppCompatActivity() {
                                         ControlUsuario.instance.currentCursoPost = cursosPost
                                         /*ControlUsuario.instance.encuestasPost = cursosPost.listaSeccionEncuesta*/
                                         val intentEncuesta = Intent(this, EncuestaActivity::class.java)
+                                        intentEncuesta.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                         startActivity(intentEncuesta)
 
                                     } else {

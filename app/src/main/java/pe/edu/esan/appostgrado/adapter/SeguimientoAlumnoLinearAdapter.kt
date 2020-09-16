@@ -21,7 +21,7 @@ class SeguimientoAlumnoLinearAdapter (con: Context, listaAlumnos: List<AlumnoSho
     val lenght1 = (24 * densidad + 0.5f)
     val margen = (20 * densidad + 0.5f)
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.item_seguimientoalumno_lista, parent, false)
         val alumno = getItem(position)
@@ -29,11 +29,11 @@ class SeguimientoAlumnoLinearAdapter (con: Context, listaAlumnos: List<AlumnoSho
         itemView.lblAlumno_rowdetalleasistencia.typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.REGULAR)
         itemView.lblCodigo_rowdetalleasistencia.typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.THIN)
 
-        itemView.lblAlumno_rowdetalleasistencia.text = alumno.nombre
-        itemView.lblCodigo_rowdetalleasistencia.text = alumno.codigo
+        itemView.lblAlumno_rowdetalleasistencia.text = alumno?.nombre
+        itemView.lblCodigo_rowdetalleasistencia.text = alumno?.codigo
 
         Glide.with(itemView.context)
-                .load(Utilitarios.getUrlFoto(alumno.codigo, 100))
+                .load(Utilitarios.getUrlFoto(alumno!!.codigo, 100))
                 .into(itemView.imgAlumno_rowdetalleasistencia)
 
         val porcAsistencia =  alumno.asistencias.toFloat() * 100 / alumno.totalsesiones.toFloat()

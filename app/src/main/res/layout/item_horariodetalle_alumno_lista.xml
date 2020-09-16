@@ -64,46 +64,45 @@
         app:layout_constraintTop_toTopOf="@+id/lblCurso_ahorarioalumnodetalle" />
 
     <TextView
-        android:id="@+id/lblCurso_ahorarioalumnodetalle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/lblAula_ahorarioalumnodetalle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioalumnodetalle"
-        app:layout_constraintStart_toEndOf="@+id/lblSProfesor_ahorarioalumnodetalle"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            android:id="@+id/lblCurso_ahorarioalumnodetalle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toTopOf="@+id/lblAula_ahorarioalumnodetalle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioalumnodetalle"
+            app:layout_constraintStart_toEndOf="@+id/lblSProfesor_ahorarioalumnodetalle"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <TextView
-        android:id="@+id/lblAula_ahorarioalumnodetalle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:text="Valor"
-        app:layout_constraintBottom_toTopOf="@+id/lblProfesor_ahorarioalumnodetalle"
-        app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioalumnodetalle"
-        app:layout_constraintStart_toEndOf="@+id/lblSProfesor_ahorarioalumnodetalle"
-        app:layout_constraintTop_toBottomOf="@+id/lblCurso_ahorarioalumnodetalle" />
+            android:id="@+id/lblAula_ahorarioalumnodetalle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toTopOf="@+id/lblProfesor_ahorarioalumnodetalle"
+            app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioalumnodetalle"
+            app:layout_constraintStart_toEndOf="@+id/lblSProfesor_ahorarioalumnodetalle"
+            app:layout_constraintTop_toBottomOf="@+id/lblCurso_ahorarioalumnodetalle" />
 
     <TextView
-        android:id="@+id/lblSAula_ahorarioalumnodetalle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:text="@string/aula_"
-        android:textColor="@color/esan_rojo"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toBottomOf="@+id/lblAula_ahorarioalumnodetalle"
-        app:layout_constraintStart_toEndOf="@+id/view12"
-        app:layout_constraintTop_toTopOf="@+id/lblAula_ahorarioalumnodetalle" />
+            android:id="@+id/lblSAula_ahorarioalumnodetalle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/aula_"
+            android:textColor="@color/esan_rojo"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/lblAula_ahorarioalumnodetalle"
+            app:layout_constraintStart_toEndOf="@+id/view12"
+            app:layout_constraintTop_toTopOf="@+id/lblAula_ahorarioalumnodetalle" />
 
     <TextView
         android:id="@+id/lblSProfesor_ahorarioalumnodetalle"
@@ -119,18 +118,18 @@
         app:layout_constraintTop_toTopOf="@+id/lblProfesor_ahorarioalumnodetalle" />
 
     <TextView
-        android:id="@+id/lblProfesor_ahorarioalumnodetalle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/view11"
-        app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioalumnodetalle"
-        app:layout_constraintStart_toEndOf="@+id/lblSProfesor_ahorarioalumnodetalle"
-        app:layout_constraintTop_toBottomOf="@+id/lblAula_ahorarioalumnodetalle" />
+            android:id="@+id/lblProfesor_ahorarioalumnodetalle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toTopOf="@+id/view11"
+            app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioalumnodetalle"
+            app:layout_constraintStart_toEndOf="@+id/lblSProfesor_ahorarioalumnodetalle"
+            app:layout_constraintTop_toBottomOf="@+id/lblAula_ahorarioalumnodetalle" />
 
     <ImageView
         android:id="@+id/imgBtnRA_ahorarioalumnodetalle"

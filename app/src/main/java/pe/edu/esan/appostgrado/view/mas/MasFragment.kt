@@ -64,6 +64,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
     private var cerrandoSesion = false
 
     private lateinit var controlViewModel: ControlViewModel
+    //TODO: QR INTERNATIONAL WEEK
     /*private var generateQRForIW: Boolean? = false
     private var readQRForIW: Boolean? = false*/
 
@@ -92,6 +93,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
         if(ControlUsuario.instance.currentUsuarioGeneral != null && ControlUsuario.instance.currentUsuario.size != 0){
             mainSetupMasFragment(view)
             setupAdapters()
+            //TODO: QR INTERNATIONAL WEEK
             /*checkQRFeatureForIW(view)*/
         } else if(ControlUsuario.instance.currentUsuarioGeneral == null){
             if(ControlUsuario.instance.currentUsuario.size != 0){
@@ -99,6 +101,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 if(ControlUsuario.instance.currentUsuario[0].nombreCompleto == "Invitado"){
                     mainSetupMasFragment(view)
                     setupAdapters()
+                    //TODO: QR INTERNATIONAL WEEK
                     /*checkQRFeatureForIW(view)*/
                 } else {
                     waitForViewModel(view)
@@ -113,12 +116,13 @@ class MasFragment : androidx.fragment.app.Fragment() {
     }
 
     fun waitForViewModel(view: View){
-        controlViewModel.dataWasRetrievedForFragmentPublic.observe(this,
+        controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
             Observer<Boolean> { value ->
                 if(value){
                     Log.w(LOG, "operationFinishedMasPublic.observe()")
                     mainSetupMasFragment(view)
                     setupAdapters()
+                    //TODO: QR INTERNATIONAL WEEK
                     /*checkQRFeatureForIW(view)*/
                 }
             })
@@ -126,7 +130,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
         controlViewModel.refreshDataForFragment(true)
     }
 
-
+    //TODO: QR INTERNATIONAL WEEK
     /*fun checkQRFeatureForIW(view: View){
         Log.w(LOG, "checkQRFeatureForIW()")
         /*controlViewModel.showQRFeaturePublic.observe(this,
@@ -300,6 +304,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
             MasOpcionAdapter(getOpcionesUsuario(ControlUsuario.instance.currentUsuario[0]), invitado) { masOpcion ->
                 if (masOpcion != null) {
                     if (masOpcion.intent != null) {
+                        masOpcion.intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         activity!!.startActivity(masOpcion.intent)
                     }
                 } else {
@@ -366,9 +371,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
             Request.Method.POST,
             url,
             request,
-            Response.Listener { response ->
+            { response ->
 
-                controlViewModel.proceedLogoutPublic.observe(this, Observer<Boolean> { value ->
+                controlViewModel.proceedLogoutPublic.observe(viewLifecycleOwner, Observer<Boolean> { value ->
                     if(value){
                         Log.w(LOG, "proceedLogoutPublic.observe()")
 
@@ -400,7 +405,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 controlViewModel.deleteDataFromRoom()
 
             },
-            Response.ErrorListener { error ->
+            { error ->
                 CustomDialog.instance.dialogoCargando?.dismiss()
                 CustomDialog.instance.dialogoCargando = null
                 ControlUsuario.instance.statusLogout = 1
@@ -465,6 +470,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
             editor.putString("tipoperfil", "")
             editor.putBoolean("cerrosesion", true)
         }
+        //TODO: QR INTERNATIONAL WEEK
         /*editor.putBoolean("qr_code_iw", false)*/
         editor.apply()
     }
@@ -474,6 +480,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
         val listaOpciones = ArrayList<MasOpcion>()
         when (usuario) {
             is Alumno -> {
+                //TODO: QR INTERNATIONAL WEEK
                 /*readQRForIW = false*/
                 listaOpciones.add(
                     MasOpcion(
@@ -604,6 +611,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     )
                 )
 
+                //TODO: QR INTERNATIONAL WEEK
                 /*if(generateQRForIW!!){
                     listaOpciones.add(
                         MasOpcion(
@@ -619,6 +627,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 }*/
             }
             is Profesor -> {
+                //TODO: QR INTERNATIONAL WEEK
                 /*readQRForIW = false*/
                 listaOpciones.add(
                     MasOpcion(
@@ -655,7 +664,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                         0
                     )
                 )
-
+                //TODO: QR INTERNATIONAL WEEK
                 /*if(generateQRForIW!!){
                     listaOpciones.add(
                         MasOpcion(
@@ -672,11 +681,12 @@ class MasFragment : androidx.fragment.app.Fragment() {
             }
             else -> {
                 invitado = true
+                //TODO: QR INTERNATIONAL WEEK
                 /*readQRForIW = true*/
             }
         }
 
-        //TODO: QR SCAN LOGIC
+        //TODO: QR INTERNATIONAL WEEK
         /*if(readQRForIW!!){
             listaOpciones.add(
                 MasOpcion(

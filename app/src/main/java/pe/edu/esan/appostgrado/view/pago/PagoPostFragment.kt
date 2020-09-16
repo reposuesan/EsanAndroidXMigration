@@ -43,8 +43,6 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
     private lateinit var controlViewModel: ControlViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-
         return inflater.inflate(R.layout.fragment_pago_post, container, false)
     }
 
@@ -53,7 +51,7 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
         Log.w(LOG, "ViewModel is: $controlViewModel")
-        view.lblMensaje_fpagopost.typeface = Utilitarios.getFontRoboto(context!!!!, Utilitarios.TypeFont.REGULAR)
+        view.lblMensaje_fpagopost.typeface = Utilitarios.getFontRoboto(context!!, Utilitarios.TypeFont.REGULAR)
 
         view.swPago_fpagopost.setOnRefreshListener(this)
         view.swPago_fpagopost.setColorSchemeResources(
@@ -62,7 +60,7 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
             R.color.s3,
             R.color.s4
         )
-        view.lblMensaje_fpagopost.typeface = Utilitarios.getFontRoboto(activity!!!!, Utilitarios.TypeFont.THIN)
+        view.lblMensaje_fpagopost.typeface = Utilitarios.getFontRoboto(activity!!, Utilitarios.TypeFont.THIN)
         view.rvPago_fpagopost.layoutManager =
             androidx.recyclerview.widget.LinearLayoutManager(activity!!)
         view.rvPago_fpagopost.adapter = null
@@ -82,7 +80,7 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             sendRequest()
         } else {
-            controlViewModel.dataWasRetrievedForFragmentPublic.observe(this,
+            controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 Observer<Boolean> { value ->
                     if(value){
                         Log.w(LOG, "operationFinishedPagoPostPublic.observe() was called")
@@ -114,9 +112,9 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
 
 
     private fun onPagoPost(url: String, request: JSONObject) {
-        //println(url)
+
         Log.i(LOG, url)
-        //println(request.toString())
+
         Log.i(LOG, request.toString())
 
         prbCargando_fpagopost.visibility = View.VISIBLE
@@ -126,69 +124,68 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        //println(response)
-                        Log.i(LOG, response.toString())
-                        val pagopostJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPosgradoResult"] as String, activity!!)
-                        //println(pagopostJArray)
-                        Log.i(LOG, pagopostJArray.toString())
-                        if (pagopostJArray != null) {
-                            if (pagopostJArray.length() > 0) {
-                                val listaPago = ArrayList<PagoPost>()
-                                for (p in 0 until pagopostJArray.length()) {
-                                    val pagopostJson = pagopostJArray[p] as JSONObject
-                                    val diasvencidos = pagopostJson["DiasVencimiento"] as Double
-                                    val fechavencimiento = pagopostJson["FechaVencimiento"] as String
-                                    val importe = pagopostJson["Importe"] as Double
-                                    val moneda = pagopostJson["Moneda"] as String
-                                    val interes = pagopostJson["Intereses"] as Double
-                                    val penalidad = pagopostJson["Mora"] as Double
-                                    val pagodolares = pagopostJson["PagarDolares"] as Double
-                                    val pagoSoles = pagopostJson["PagarSoles"] as Double
-                                    var simbolo = ""
-                                    var total = ""
-                                    if (moneda == "PEN") {
-                                        simbolo = "S/"
-                                        total = "S/ $pagoSoles"
-                                    } else {
-                                        simbolo = "$"
-                                        total = "$ $pagodolares"
-                                    }
+            { response ->
+                try {
 
-                                    listaPago.add(PagoPost(fechavencimiento, diasvencidos, simbolo + importe, simbolo + penalidad, simbolo + interes, total))
+                    Log.i(LOG, response.toString())
+                    val pagopostJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPosgradoResult"] as String, activity!!)
+
+                    Log.i(LOG, pagopostJArray.toString())
+                    if (pagopostJArray != null) {
+                        if (pagopostJArray.length() > 0) {
+                            val listaPago = ArrayList<PagoPost>()
+                            for (p in 0 until pagopostJArray.length()) {
+                                val pagopostJson = pagopostJArray[p] as JSONObject
+                                val diasvencidos = pagopostJson["DiasVencimiento"] as Double
+                                val fechavencimiento = pagopostJson["FechaVencimiento"] as String
+                                val importe = pagopostJson["Importe"] as Double
+                                val moneda = pagopostJson["Moneda"] as String
+                                val interes = pagopostJson["Intereses"] as Double
+                                val penalidad = pagopostJson["Mora"] as Double
+                                val pagodolares = pagopostJson["PagarDolares"] as Double
+                                val pagoSoles = pagopostJson["PagarSoles"] as Double
+                                var simbolo = ""
+                                var total = ""
+                                if (moneda == "PEN") {
+                                    simbolo = "S/"
+                                    total = "S/ $pagoSoles"
+                                } else {
+                                    simbolo = "$"
+                                    total = "$ $pagodolares"
                                 }
-                                rvPago_fpagopost.adapter = PagoPostAdapter(listaPago)
-                                lblMensaje_fpagopost.visibility = View.GONE
-                            } else {
-                                lblMensaje_fpagopost.visibility = View.VISIBLE
-                                lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_pago_no)
+
+                                listaPago.add(PagoPost(fechavencimiento, diasvencidos, simbolo + importe, simbolo + penalidad, simbolo + interes, total))
                             }
+                            rvPago_fpagopost.adapter = PagoPostAdapter(listaPago)
+                            lblMensaje_fpagopost.visibility = View.GONE
                         } else {
                             lblMensaje_fpagopost.visibility = View.VISIBLE
-                            lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
+                            lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_pago_no)
                         }
-                    } catch (jex: JSONException) {
-                        lblMensaje_fpagopost.visibility = View.VISIBLE
-                        lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
-                    } catch (ccax: ClassCastException) {
+                    } else {
                         lblMensaje_fpagopost.visibility = View.VISIBLE
                         lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
                     }
-
-                    prbCargando_fpagopost.visibility = View.GONE
-                    swPago_fpagopost.isRefreshing = false
-                },
-                Response.ErrorListener { error ->
-                    //println(error.message)
-                    Log.e(LOG, error.message.toString())
-                    prbCargando_fpagopost.visibility = View.GONE
-                    rvPago_fpagopost.visibility = View.GONE
-                    swPago_fpagopost.isRefreshing = false
+                } catch (jex: JSONException) {
                     lblMensaje_fpagopost.visibility = View.VISIBLE
-                    lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default);
-                    // lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_no_conexion)
+                    lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
+                } catch (ccax: ClassCastException) {
+                    lblMensaje_fpagopost.visibility = View.VISIBLE
+                    lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
                 }
+
+                prbCargando_fpagopost.visibility = View.GONE
+                swPago_fpagopost.isRefreshing = false
+            },
+            { error ->
+                Log.e(LOG, error.message.toString())
+                prbCargando_fpagopost.visibility = View.GONE
+                rvPago_fpagopost.visibility = View.GONE
+                swPago_fpagopost.isRefreshing = false
+                lblMensaje_fpagopost.visibility = View.VISIBLE
+                lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default);
+                /*lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_no_conexion)*/
+            }
         )
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
@@ -209,4 +206,4 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
         requestQueue?.cancelAll(TAG)
     }
 
-}// Required empty public constructor
+}

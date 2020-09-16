@@ -39,6 +39,7 @@ class ComedorAdapter(val listaComedores: List<Comedor>): androidx.recyclerview.w
             itemView.setOnClickListener {
                 val intentComedor = Intent(itemView.context, MenuActivity::class.java)
                 intentComedor.putExtra("IdComedor", comedor.id)
+                intentComedor.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 itemView.context.startActivity(intentComedor)
             }
         }

@@ -183,6 +183,7 @@ class PRConfirmarActivity : AppCompatActivity() {
 
                                             btnScanQr_prconfirmar.setOnClickListener {
                                                 val intentConfirmarQR = Intent(this, PRConfirmarQRActivity::class.java)
+                                                intentConfirmarQR.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                                 startActivity(intentConfirmarQR)
                                             }
                                         } else {

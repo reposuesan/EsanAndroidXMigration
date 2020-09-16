@@ -80,7 +80,7 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             sendRequest()
         } else {
-            controlViewModel.dataWasRetrievedForFragmentPublic.observe(this,
+            controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 Observer<Boolean> { value ->
                     if(value){
                         Log.w(LOG, "operationFinishedProgramasPublic.observe() was called")
@@ -89,7 +89,7 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                     }
                 }
             )
-            Log.w(LOG, "controlViewModel.refreshData() was called")
+            Log.w(LOG, "refreshDataForFragment() from Programas")
             controlViewModel.refreshDataForFragment(true)
         }
     }
@@ -140,6 +140,7 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                                     //getEncuestaPorPrograma (programa)
                                     val intent = Intent(activity, CursosPostActivity::class.java)
                                     intent.putExtra("KEY_CODIGO_PROGRAMA", programa.codigo)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                     startActivity(intent)
                                 }
 

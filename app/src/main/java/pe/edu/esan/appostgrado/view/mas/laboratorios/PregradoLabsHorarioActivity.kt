@@ -301,12 +301,14 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                                 intent.putExtra("fecha_prereserva", fechaPrereserva)
                                 intent.putExtra("programas_list", programasList)
                                 intent.putExtra("max_cantidad_prog_permitidos", maxCantidadProgPermitidos)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(intent)
                             } else {
                                 Log.e(LOG, "Response is empty")
 
                                 val intent = Intent(this, PregradoLabsSelectSoftwareActivity::class.java)
                                 intent.putExtra("empty_response", true)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(intent)
                             }
 

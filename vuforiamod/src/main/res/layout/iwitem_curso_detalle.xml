@@ -34,7 +34,7 @@
                 android:layout_toLeftOf="@+id/imageView6"
                 android:layout_toStartOf="@+id/imageView6">
 
-                <pe.edu.esan.appostgrado.view.util.AutoResizeTextView
+                <com.example.vuforiamod.util.AutoResizeTextView
                     android:id="@+id/lblCurso_iwitemcurso"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -44,7 +44,7 @@
                     android:textColor="#1d1d1d"
                     android:gravity="center_vertical" />
 
-                <pe.edu.esan.appostgrado.view.util.AutoResizeTextView
+                <com.example.vuforiamod.util.AutoResizeTextView
                     android:id="@+id/lblHorario_iwitemcurso"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"

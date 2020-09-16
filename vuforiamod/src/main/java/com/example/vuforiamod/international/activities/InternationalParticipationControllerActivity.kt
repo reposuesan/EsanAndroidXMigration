@@ -5,11 +5,12 @@ import android.os.Build
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
+
 import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.vuforiamod.R
 import com.example.vuforiamod.helpers.PermissionHelper
 import com.example.vuforiamod.util.Utilitarios

@@ -33,8 +33,8 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
 
     private val TAG = "ResultadoEncuestaActivity"
     private var requestQueue: RequestQueue? = null
-    private var CodigoSeccion = ""
-    private var nombreCurso = ""
+    private var CodigoSeccion: String? = ""
+    private var nombreCurso: String? = ""
 
     private val LOG = ResultadoEncuestaActivity::class.simpleName
 
@@ -73,7 +73,7 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
         getResultadoEncuesta(CodigoSeccion)
     }
 
-    private fun getResultadoEncuesta(seccion: String) {
+    private fun getResultadoEncuesta(seccion: String?) {
 
         if (ControlUsuario.instance.currentUsuario.size == 1) {
            sendRequest(seccion)
@@ -94,7 +94,7 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
 
     }
 
-    private fun sendRequest(seccion: String){
+    private fun sendRequest(seccion: String?){
         val usuario = ControlUsuario.instance.currentUsuario[0] as UserEsan
 
         val request = JSONObject()

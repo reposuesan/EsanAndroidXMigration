@@ -27,7 +27,7 @@ class DirectorioActivity : AppCompatActivity() {
 
     private val TAG = "DirectorioActivity"
     private var requestQueue: RequestQueue? = null
-    private var CodigoSeccion = ""
+    private var CodigoSeccion: String? = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,7 +60,7 @@ class DirectorioActivity : AppCompatActivity() {
         getAlumnos(CodigoSeccion)
     }
 
-    private fun getAlumnos(seccion: String) {
+    private fun getAlumnos(seccion: String?) {
         val request = JSONObject()
         request.put("codigoSeccion", seccion)
 

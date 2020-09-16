@@ -21,6 +21,7 @@ import pe.edu.esan.appostgrado.view.login.LoginActivity
 
 class SecondLauncherActivity : AppCompatActivity() {
 
+    private val TAG = "SecondLauncherActivity"
     private var segundo = 1
     private var milisegundo = segundo * 1000
 
@@ -125,8 +126,10 @@ class SecondLauncherActivity : AppCompatActivity() {
             }
         )
         requestQueue?.add(jsObjectRequest)
+    }
 
-
-
+    override fun onStop() {
+        super.onStop()
+        requestQueue?.cancelAll(TAG)
     }
 }

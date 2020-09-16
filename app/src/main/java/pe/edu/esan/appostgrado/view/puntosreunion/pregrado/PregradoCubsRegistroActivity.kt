@@ -206,6 +206,7 @@ class PregradoCubsRegistroActivity : AppCompatActivity() {
                                 intent.putExtra("grupoPrereserva", grupoPrereserva)
                                 intent.putExtra("codAlumnos", codigosAlumnos)
                                 intent.putExtra("lista_alumnos_integrantes_grupo", listIntegrantes.replace("|","\n"))
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(intent)
 
                             } else {

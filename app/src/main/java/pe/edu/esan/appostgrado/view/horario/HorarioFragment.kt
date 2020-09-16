@@ -193,7 +193,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             sendRequest()
         } else {
-            controlViewModel.dataWasRetrievedForFragmentPublic.observe(this,
+            controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
                         Log.w(LOG, "operationFinishedHorarioPublic.observe() was called")
@@ -260,7 +260,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             Request.Method.POST,
             url,
             request,
-            Response.Listener { response ->
+            { response ->
                 try {
 
                     Log.i(LOG, response.toString())
@@ -295,7 +295,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                                 val nombreProfesorReemplazo = scheduleJs["ProfesorReemplazo"] as String
                                 val promocion = scheduleJs["Promocion"] as String
 
-                                //TODO: QR FOR INTERNATIONAL WEEK
+                                //TODO: QR INTERNATIONAL WEEK
                                 /*if(promocion.equals("[OBLIESP/20-2] CICLO 2020-0")){
                                     enableQR()
                                 } else {
@@ -391,7 +391,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                     view!!.prbCargando_fhorario.visibility = View.GONE
                 }
             },
-            Response.ErrorListener { volleyError ->
+            { volleyError ->
 
                 Log.e(LOG, volleyError.message.toString())
                 Log.e(LOG, "Error en Volley request")
@@ -517,6 +517,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         when (item.itemId) {
             R.id.action_changehorario -> {
                 //val historicoNotas = Intent(activity!!, HistoricoNotasPreActivity::class.java)
+                //historicoNotas.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 //startActivity(historicoNotas)
                 Log.i(LOG, "CAMBIAR HORARIO")
                 cambiarHorario()
@@ -551,8 +552,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         }
     }
 
-
-    //LIFECYCLE METHODS
     override fun onStop() {
         super.onStop()
         Log.w(LOG, "onStop()")
@@ -869,16 +868,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
         return newListFormatted
     }
-
-
-
-
-
-
-
-
-
-
 
 
     /*private fun generateNewDeepCopyList(oldList: List<Horario>): List<Horario>{
@@ -1436,6 +1425,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     }
 
+    //TODO: QR INTERNATIONAL WEEK
     /*fun enableQR(){
         //controlViewModel.setQRCondition(true)
         val misPreferencias = activity!!.getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
@@ -1447,6 +1437,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     }
 
+    //TODO: QR INTERNATIONAL WEEK
     fun disableQR(){
         //controlViewModel.setQRCondition(false)
         val misPreferencias = activity!!.getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)

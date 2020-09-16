@@ -133,48 +133,52 @@ class ControlViewModel(application: Application) : AndroidViewModel(application)
 
             val operation = async {
                 val list = controlDao.getAll()
-                Log.w(LOG, "Data has been retrieved from Room")
-                val item = list[0]
 
-                ControlUsuario.instance.currentUsuarioGeneral = item.currentUsuarioGeneral
-                ControlUsuario.instance.statusLogout = item.statusLogout
-                ControlUsuario.instance.currentUsuario.clear()
+                if(list.isNotEmpty()) {
+                    Log.w(LOG, "Data has been retrieved from Room")
 
-                if (item.type.equals("Alumno")) {
-                    ControlUsuario.instance.currentUsuario.add(item.currentUsuario[0] as Alumno)
-                } else if (item.type.equals("Profesor")) {
-                    ControlUsuario.instance.currentUsuario.add(item.currentUsuario[0] as Profesor)
-                } else {
-                    ControlUsuario.instance.currentUsuario.add(item.currentUsuario[0])
+                    val item = list[0]
+
+                    ControlUsuario.instance.currentUsuarioGeneral = item.currentUsuarioGeneral
+                    ControlUsuario.instance.statusLogout = item.statusLogout
+                    ControlUsuario.instance.currentUsuario.clear()
+
+                    if (item.type.equals("Alumno")) {
+                        ControlUsuario.instance.currentUsuario.add(item.currentUsuario[0] as Alumno)
+                    } else if (item.type.equals("Profesor")) {
+                        ControlUsuario.instance.currentUsuario.add(item.currentUsuario[0] as Profesor)
+                    } else {
+                        ControlUsuario.instance.currentUsuario.add(item.currentUsuario[0])
+                    }
+
+
+                    ControlUsuario.instance.entroEncuesta = item.entroEncuesta
+                    ControlUsuario.instance.currentListHorario = item.currentListHorario
+
+                    ControlUsuario.instance.currentListHorarioSelect = item.currentListHorarioSelect
+                    ControlUsuario.instance.copiarListHorario = item.copiarListHorario
+                    ControlUsuario.instance.currentHorario = item.currentHorario
+                    ControlUsuario.instance.accesoCamara = item.accesoCamara
+                    ControlUsuario.instance.accesoGPS = item.accesoGPS
+                    ControlUsuario.instance.prconfiguracion = item.prconfiguracion
+                    ControlUsuario.instance.prPromocionConfig = item.prPromocionConfig
+                    ControlUsuario.instance.prreserva = item.prreserva
+                    ControlUsuario.instance.esReservaExitosa = item.esReservaExitosa
+
+                    ControlUsuario.instance.creoMomificoGrupo = item.creoMomificoGrupo
+                    ControlUsuario.instance.currentMiGrupo = item.currentMiGrupo
+                    ControlUsuario.instance.cambioPantalla = item.cambioPantalla
+                    ControlUsuario.instance.pantallaSuspendida = item.pantallaSuspendida
+                    ControlUsuario.instance.recargaHorarioProfesor = item.recargaHorarioProfesor
+                    ControlUsuario.instance.tomoAsistenciaMasica = item.tomoAsistenciaMasica
+                    ControlUsuario.instance.indexActualiza = item.indexActualiza
+
+                    ControlUsuario.instance.currentCursoPost = item.currentCursoPost
+                    ControlUsuario.instance.currentCursoPre = item.currentCursoPre
+                    ControlUsuario.instance.currentSeccion = item.currentSeccion
+
+                    Log.w(LOG, "Singleton has been updated")
                 }
-
-
-                ControlUsuario.instance.entroEncuesta = item.entroEncuesta
-                ControlUsuario.instance.currentListHorario = item.currentListHorario
-
-                ControlUsuario.instance.currentListHorarioSelect = item.currentListHorarioSelect
-                ControlUsuario.instance.copiarListHorario = item.copiarListHorario
-                ControlUsuario.instance.currentHorario = item.currentHorario
-                ControlUsuario.instance.accesoCamara = item.accesoCamara
-                ControlUsuario.instance.accesoGPS = item.accesoGPS
-                ControlUsuario.instance.prconfiguracion = item.prconfiguracion
-                ControlUsuario.instance.prPromocionConfig = item.prPromocionConfig
-                ControlUsuario.instance.prreserva = item.prreserva
-                ControlUsuario.instance.esReservaExitosa = item.esReservaExitosa
-
-                ControlUsuario.instance.creoMomificoGrupo = item.creoMomificoGrupo
-                ControlUsuario.instance.currentMiGrupo = item.currentMiGrupo
-                ControlUsuario.instance.cambioPantalla = item.cambioPantalla
-                ControlUsuario.instance.pantallaSuspendida = item.pantallaSuspendida
-                ControlUsuario.instance.recargaHorarioProfesor = item.recargaHorarioProfesor
-                ControlUsuario.instance.tomoAsistenciaMasica = item.tomoAsistenciaMasica
-                ControlUsuario.instance.indexActualiza = item.indexActualiza
-
-                ControlUsuario.instance.currentCursoPost = item.currentCursoPost
-                ControlUsuario.instance.currentCursoPre = item.currentCursoPre
-                ControlUsuario.instance.currentSeccion = item.currentSeccion
-
-                Log.w(LOG, "Singleton has been updated")
             }
 
             Log.w(LOG, "Before await()")

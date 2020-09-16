@@ -50,6 +50,7 @@ class SeccionOpcionesActivity : AppCompatActivity() {
             viewDirectorioAlumnos_secciondetalle.setOnClickListener {
                 val intentDirectorio = Intent(applicationContext, DirectorioActivity::class.java)
                 intentDirectorio.putExtra("CodSeccion", seccion.seccionCodigo)
+                intentDirectorio.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intentDirectorio)
             }
 
@@ -57,6 +58,7 @@ class SeccionOpcionesActivity : AppCompatActivity() {
                 val intentSeguimiento = Intent(applicationContext, SeguimientoAlumnoActivity::class.java)
                 intentSeguimiento.putExtra("CodSeccion", seccion.seccionCodigo)
                 intentSeguimiento.putExtra("Curso", seccion.nombreCurso)
+                intentSeguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intentSeguimiento)
             }
 
@@ -64,6 +66,7 @@ class SeccionOpcionesActivity : AppCompatActivity() {
                 val intentHistorico = Intent(applicationContext, HistorialAsistenciaProfesorActivity::class.java)
                 intentHistorico.putExtra("CodSeccion", seccion.seccionCodigo)
                 intentHistorico.putExtra("Curso", seccion.nombreCurso)
+                intentHistorico.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intentHistorico)
             }
 
@@ -72,6 +75,7 @@ class SeccionOpcionesActivity : AppCompatActivity() {
                 //intentResultEncuesta.putExtra("CodSeccion", seccion.seccionCodigo) 03998-1-17
                 intentResultEncuesta.putExtra("CodSeccion", seccion.seccionCodigo)
                 intentResultEncuesta.putExtra("Curso", seccion.nombreCurso)
+                intentResultEncuesta.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intentResultEncuesta)
             }
         } else {

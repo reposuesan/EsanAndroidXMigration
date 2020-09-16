@@ -83,7 +83,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             sendRequest()
         } else {
-            controlViewModel.dataWasRetrievedForFragmentPublic.observe(this,
+            controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 Observer<Boolean> { value ->
                     if(value){
                         Log.w(LOG, "operationFinishedSeccionesPublic.observe() was called")
@@ -148,6 +148,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                                     //println(seccion.nombreCurso)
                                     ControlUsuario.instance.currentSeccion = seccion
                                     val intentOpciones = Intent(activity, SeccionOpcionesActivity::class.java)
+                                    intentOpciones.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                     startActivity(intentOpciones)
                                 }
 

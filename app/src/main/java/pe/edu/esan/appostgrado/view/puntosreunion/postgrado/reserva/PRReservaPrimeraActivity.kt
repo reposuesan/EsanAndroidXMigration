@@ -590,7 +590,7 @@ class PRReservaPrimeraActivity : AppCompatActivity(){
                                 ControlUsuario.instance.prreserva = reserva
 
                                 val intentSegunda = Intent(this, PRReservaSegundaActivity::class.java).putExtra("TipoCubiculo", stateReser)
-
+                                intentSegunda.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(intentSegunda)
                             } else {
                                 val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)

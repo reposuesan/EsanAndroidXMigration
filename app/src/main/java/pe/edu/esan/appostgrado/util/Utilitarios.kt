@@ -276,8 +276,8 @@ class Utilitarios {
          * @return String URL
          */
         fun getCodeBarUrl(codigo: String): String {
-            //return "http://barcode.tec-it.com/barcode.ashx?bgcolor=FFFFFF&code=Code39FullASCII&color=CF1111&data=$codigo&dpi=96"
-            return "https://bwipjs-api.metafloor.com/?bcid=code128&text=$codigo&backgroundcolor=FFFFFF&textcolor=CF1111&barcolor=CF1111&scaleX=16&scaleY=4&includetext"
+            return "https://barcode.tec-it.com/barcode.ashx?bgcolor=FFFFFF&code=Code39FullASCII&color=CF1111&data=$codigo&dpi=96"
+            /*return "https://bwipjs-api.metafloor.com/?bcid=code128&text=$codigo&backgroundcolor=FFFFFF&textcolor=CF1111&barcolor=CF1111&scaleX=16&scaleY=4&includetext"*/
         }
 
         /** Obtener la url de la boleta de pago de los alumnos (Solo Pregrado)

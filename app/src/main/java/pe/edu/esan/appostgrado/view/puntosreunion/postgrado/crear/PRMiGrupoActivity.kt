@@ -456,6 +456,7 @@ class PRMiGrupoActivity : AppCompatActivity() {
                 if (creaGrupo) {
                     ///Ir a crear
                     val intentCrear = Intent(this, PRCrearGrupoActivity::class.java)
+                    intentCrear.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     startActivity(intentCrear)
                 }else {
                     if (puedeEliminarAgregar) {

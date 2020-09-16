@@ -49,7 +49,7 @@ class FacultadUsuarioDialog: androidx.fragment.app.DialogFragment() {
         builder.setView(viewDialog)
 
         val dialog = builder.create()
-        dialog.window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         return dialog
     }

@@ -5,13 +5,13 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.RectF;
 import android.os.Build;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.text.Layout.Alignment;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.SparseIntArray;
 import android.util.TypedValue;
+import androidx.appcompat.widget.AppCompatTextView;
 
 
 public class AutoResizeTextView extends AppCompatTextView {

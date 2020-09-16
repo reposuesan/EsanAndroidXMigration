@@ -10,7 +10,7 @@
     <string name="m_tab_cursos">Cursos</string>
     <string name="m_tab_programas">Programas</string>
     <string name="m_tab_secciones">Secciones</string>
-    <string name="m_tab_pagos">Pagos Pendientes</string>
+    <string name="m_tab_pagos">Pagos</string>
     <string name="m_tab_comedores">Comedores</string>
     <string name="m_tab_puntosreunion">Puntos de Reunión</string>
     <string name="m_tab_salas_estudio">Salas de Estudio</string>
@@ -108,7 +108,7 @@
     <string name="error_curso_no">No existen cursos programados</string>
     <string name="error_seccion_no">No tiene secciones registradas</string>
     <string name="error_programa_no">No tiene programas registrados</string>
-    <string name="error_pago_no">No tiene pagos pendientes</string>
+    <string name="error_pago_no">No tiene pagos registrados</string>
 
     <string name="sesiones">Sesiones</string>
     <string name="sesiones_">Sesiones: %.2f</string>

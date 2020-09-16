@@ -15,6 +15,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 
 import kotlinx.android.synthetic.main.activity_carne.*
 
@@ -74,7 +75,7 @@ class CarneActivity : AppCompatActivity() {
         controlViewModel = ViewModelProviders.of(this).get(ControlViewModel::class.java)
 
         val extras = intent.extras
-        val carrera = extras["KEY_CARRERA"] as String
+        val carrera = extras!!["KEY_CARRERA"] as String
 
         if(carrera.equals("Sin Carrera") || carrera.isEmpty()){
             mostrarCarnet()
@@ -140,7 +141,7 @@ class CarneActivity : AppCompatActivity() {
         val jsObjectRequest = JsonObjectRequest (
             url,
             request,
-            Response.Listener { response ->
+            { response ->
 
                 try {
                     val cursosJArray = Utilitarios.jsArrayDesencriptar(response["ListarNotasActualesAlumnoPreResult"] as String, applicationContext)
@@ -180,7 +181,7 @@ class CarneActivity : AppCompatActivity() {
                 }
             },
 
-            Response.ErrorListener { error ->
+            { error ->
                 Log.e(LOG, error.message.toString())
                 empty_text_view_carnet.text = resources.getText(R.string.error_respuesta_server)
                 ocultarCarnet()
@@ -233,6 +234,7 @@ class CarneActivity : AppCompatActivity() {
             if(!userIsOut){
                 Glide.with(this)
                     .load(Utilitarios.getCodeBarUrl(extras["KEY_CODIGO"] as String))
+                    .apply(RequestOptions.timeoutOf(20 * 60 * 1000))
                     .into(imgCodeBar_carnealumno)
             }
 
@@ -275,8 +277,9 @@ class CarneActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
-        controlViewModel.insertDataToRoom()
         super.onStop()
+        requestQueue?.cancelAll(TAG)
+        controlViewModel.insertDataToRoom()
     }
 
     override fun onDestroy() {

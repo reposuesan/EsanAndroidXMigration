@@ -2,6 +2,7 @@ package pe.edu.esan.appostgrado.view.pago
 
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -88,7 +89,7 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             sendRequest()
         } else {
-            controlViewModel.dataWasRetrievedForFragmentPublic.observe(this,
+            controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 Observer<Boolean> { value ->
                     if(value){
                         Log.w(LOG, "operationFinishedPagoPrePublic.observe() was called")
@@ -119,10 +120,8 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     private fun onPagoPre(url: String, request: JSONObject) {
 
-        //println(url)
         Log.i(LOG,url)
 
-        //println(request.toString())
         Log.i(LOG, request.toString())
 
         prbCargando_fpagopre.visibility = View.VISIBLE
@@ -131,79 +130,87 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        val pagopreJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPregradoResult"] as String, activity!!.applicationContext)
-                        //println(pagopreJArray)
-                        Log.i(LOG, pagopreJArray.toString())
-                        if (pagopreJArray != null) {
-                            if (pagopreJArray.length() > 0) {
-                                val listPago = ArrayList<PagoPre>()
-                                var ultimoPeriodo = ""
-                                for (p in 0 until pagopreJArray.length()) {
-                                    val pagopreJson = pagopreJArray[p] as JSONObject
-                                    val codigo = pagopreJson["codigo"] as String
-                                    val periodo = pagopreJson["periodo"] as String
-                                    val moneda = pagopreJson["moneda"] as String
-                                    val montoneto = pagopreJson["montoneto"] as String
-                                    val monto = "$moneda $montoneto"
-                                    val concepto = pagopreJson["preciodescripcion"] as String
-                                    val vencimiento = pagopreJson["vencimiento"] as String
+            { response ->
+                try {
+                    val pagopreJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPregradoResult"] as String, activity!!.applicationContext)
+                    Log.i(LOG, pagopreJArray.toString())
+                    if (pagopreJArray != null) {
+                        if (pagopreJArray.length() > 0) {
+                            val listPago = ArrayList<PagoPre>()
+                            var ultimoPeriodo = ""
+                            for (p in 0 until pagopreJArray.length()) {
+                                val pagopreJson = pagopreJArray[p] as JSONObject
+                                val codigo = pagopreJson["codigo"] as String
+                                val periodo = pagopreJson["periodo"] as String
+                                val moneda = pagopreJson["moneda"] as String
+                                val montoneto = pagopreJson["montoneto"] as String
+                                val monto = "$moneda $montoneto"
+                                val concepto = pagopreJson["preciodescripcion"] as String
+                                val vencimiento = pagopreJson["vencimiento"] as String
 
-                                    if (p == 0) {
-                                        ultimoPeriodo = periodo
-                                        listPago.add(PagoPre(Utilitarios.TipoFila.CABECERA, ultimoPeriodo))
+                                if (p == 0) {
+                                    ultimoPeriodo = periodo
+                                    listPago.add(PagoPre(Utilitarios.TipoFila.CABECERA, ultimoPeriodo))
+                                    listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
+                                } else {
+                                    if (ultimoPeriodo == periodo) {
                                         listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
                                     } else {
-                                        if (ultimoPeriodo == periodo) {
-                                            listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
-                                        } else {
-                                            //ultimoPeriodo = periodo
-                                            listPago.add(PagoPre(Utilitarios.TipoFila.CABECERA, ultimoPeriodo))
-                                            listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
-                                        }
+                                        /*ultimoPeriodo = periodo*/
+                                        listPago.add(PagoPre(Utilitarios.TipoFila.CABECERA, ultimoPeriodo))
+                                        listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
                                     }
                                 }
-                                val adapter = PagoPreAdapter(listPago) { pagoPre ->
-                                    //println(pagoPre.monto)
-                                    Log.i(LOG, pagoPre.monto)
-                                    if (pagoPre.codigo?.trim() != "") {
-                                        val intentBoleta = Intent().setClass(activity, PagoPreBoletaActivity::class.java!!)
-                                        intentBoleta.putExtra("KEY_CODBOLETA", pagoPre.codigo)
-                                        activity!!.startActivity(intentBoleta)
-                                    }
-                                }
-                                rvPago_fpagopre.adapter = adapter
-                                lblMensaje_fpagopre.visibility = View.GONE
-                            } else {
-                                lblMensaje_fpagopre.visibility = View.VISIBLE
-                                lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_pago_no)
                             }
+                            val adapter = PagoPreAdapter(listPago) { pagoPre ->
+
+                                Log.i(LOG, pagoPre.monto)
+                                if (pagoPre.codigo?.trim() != "") {
+
+                                    val webpageRecibo: Uri = Uri.parse(Utilitarios.getBoletasPreUrl(pagoPre.codigo!!))
+                                    val intent = Intent(Intent.ACTION_VIEW, webpageRecibo)
+
+                                    if(intent.resolveActivity(requireActivity().packageManager) != null){
+                                        startActivity(intent)
+                                    }
+
+                                    //This uses a WebView which does not work well with PDF files
+                                    /*val intentBoleta = Intent().setClass(activity, PagoPreBoletaActivity::class.java!!)
+                                    intentBoleta.putExtra("KEY_CODBOLETA", pagoPre.codigo)
+                                    intentBoleta.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                    activity!!.startActivity(intentBoleta)*/
+                                }
+                            }
+                            rvPago_fpagopre.adapter = adapter
+                            lblMensaje_fpagopre.visibility = View.GONE
                         } else {
                             lblMensaje_fpagopre.visibility = View.VISIBLE
-                            lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
+                            lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_pago_no)
                         }
-                    } catch (jex: JSONException) {
-
-                        lblMensaje_fpagopre.visibility = View.VISIBLE
-                        lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
-                    } catch (ccax: ClassCastException) {
+                    } else {
                         lblMensaje_fpagopre.visibility = View.VISIBLE
                         lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
                     }
+                } catch (jex: JSONException) {
 
-                    prbCargando_fpagopre.visibility = View.GONE
-                    swPago_fpagopre.isRefreshing = false
-                },
-                Response.ErrorListener { error ->
-                    //println(error.message)
-                    Log.e(LOG, error.message.toString())
-                    rvPago_fpagopre.visibility = View.GONE
-                    prbCargando_fpagopre.visibility = View.GONE
-                    swPago_fpagopre.isRefreshing = false
                     lblMensaje_fpagopre.visibility = View.VISIBLE
-                    lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                    lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
+                } catch (ccax: ClassCastException) {
+                    lblMensaje_fpagopre.visibility = View.VISIBLE
+                    lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
                 }
+
+                prbCargando_fpagopre.visibility = View.GONE
+                swPago_fpagopre.isRefreshing = false
+            },
+            { error ->
+                Log.e(LOG, error.message.toString())
+                rvPago_fpagopre.visibility = View.GONE
+                prbCargando_fpagopre.visibility = View.GONE
+                swPago_fpagopre.isRefreshing = false
+                lblMensaje_fpagopre.visibility = View.VISIBLE
+                lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+            }
         )
 
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
@@ -218,7 +225,6 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
     }
 
     override fun onRefresh() {
-        //println("REFRESH")
         Log.i(LOG, "REFRESH")
         swPago_fpagopre.isRefreshing = true
         showPagoPre()
@@ -229,4 +235,4 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         super.onDestroy()
     }
 
-}// Required empty public constructor
+}

@@ -120,47 +120,46 @@
         app:layout_constraintTop_toTopOf="@+id/lblCurso_ahorarioprofesordetalle" />
 
     <TextView
-        android:id="@+id/lblCurso_ahorarioprofesordetalle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/lblAula_ahorarioprofesordetalle"
-        app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioprofesordetalle"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/lblSCurso_ahorarioprofesordetalle"
-        app:layout_constraintTop_toBottomOf="@+id/lblSeccion_ahorarioprofesordetalle" />
+            android:id="@+id/lblCurso_ahorarioprofesordetalle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="42dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toTopOf="@+id/lblAula_ahorarioprofesordetalle"
+            app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioprofesordetalle"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/lblSCurso_ahorarioprofesordetalle"
+            app:layout_constraintTop_toBottomOf="@+id/lblSeccion_ahorarioprofesordetalle" />
 
     <TextView
-        android:id="@+id/lblSAula_ahorarioprofesordetalle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:text="@string/aula_"
-        android:textSize="15sp"
-        android:textColor="@color/esan_rojo"
-        app:layout_constraintBottom_toBottomOf="@+id/lblAula_ahorarioprofesordetalle"
-        app:layout_constraintStart_toEndOf="@+id/view10"
-        app:layout_constraintTop_toTopOf="@+id/lblAula_ahorarioprofesordetalle" />
+            android:id="@+id/lblSAula_ahorarioprofesordetalle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/aula_"
+            android:textColor="@color/esan_rojo"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/lblAula_ahorarioprofesordetalle"
+            app:layout_constraintStart_toEndOf="@+id/view10"
+            app:layout_constraintTop_toTopOf="@+id/lblAula_ahorarioprofesordetalle" />
 
     <TextView
-        android:id="@+id/lblAula_ahorarioprofesordetalle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/view13"
-        app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioprofesordetalle"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/lblSCurso_ahorarioprofesordetalle"
-        app:layout_constraintTop_toBottomOf="@+id/lblCurso_ahorarioprofesordetalle" />
+            android:id="@+id/lblAula_ahorarioprofesordetalle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="42dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toTopOf="@+id/view13"
+            app:layout_constraintEnd_toStartOf="@+id/imgBtnRA_ahorarioprofesordetalle"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/lblSCurso_ahorarioprofesordetalle"
+            app:layout_constraintTop_toBottomOf="@+id/lblCurso_ahorarioprofesordetalle" />
 
     <View
         android:id="@+id/view13"

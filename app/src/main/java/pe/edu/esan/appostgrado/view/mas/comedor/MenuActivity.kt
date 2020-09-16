@@ -37,7 +37,7 @@ class MenuActivity : AppCompatActivity() {
         val toolbar = main_menu as Toolbar
         toolbar.toolbar_title.typeface = Utilitarios.getFontRoboto(applicationContext, Utilitarios.TypeFont.BLACK)
 
-        val idComedor = intent.extras["IdComedor"] as String
+        val idComedor = intent.extras!!["IdComedor"] as String
 
         if (idComedor == "1") {
             toolbar.toolbar_title.text = resources.getString(R.string.charlotte)

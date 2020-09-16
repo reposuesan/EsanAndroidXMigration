@@ -99,7 +99,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             sendRequest()
         } else {
-            controlViewModel.dataWasRetrievedForFragmentPublic.observe(this,
+            controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 Observer<Boolean> { value ->
                     if(value){
                         Log.w(LOG, "operationFinishedPuntosReunionPostPublic.observe() was called")
@@ -270,6 +270,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                                                 listaOpciones.add(MasOpcion(1, Intent(activity!!, PRMiGrupoActivity::class.java), context!!.resources.getString(R.string.grupos), context!!.resources.getString(R.string.sub_grupos), activity!!.resources.getDrawable(R.drawable.tab_grupo)))
 
                                                 val puntosAdapter = PuntosReunionOpcionAdapter(listaOpciones) { masOpcion ->
+                                                    masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                                     activity!!.startActivity(masOpcion.intent)
                                                 }
 
@@ -298,6 +299,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                                             listaOpciones.add(MasOpcion(1, Intent(activity!!, PRMiGrupoActivity::class.java), context!!.resources.getString(R.string.grupos), context!!.resources.getString(R.string.sub_grupos), activity!!.resources.getDrawable( R.drawable.tab_grupo)))
 
                                             val puntosAdapter = PuntosReunionOpcionAdapter(listaOpciones) { masOpcion ->
+                                                masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                                 activity!!.startActivity(masOpcion.intent)
                                             }
 
@@ -393,6 +395,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                                     //listaOpciones.add(MasOpcion(4, Intent(), context!!.resources.getString(R.string.disponibilidad_pr), context!!.resources.getString(R.string.sub_disponibilidad_pr), ContextCompat.getDrawable(activity!!, R.drawable.tab_grid)))
 
                                     val puntosAdapter = PuntosReunionOpcionAdapter(listaOpciones) { masOpcion ->
+                                        masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                         activity!!.startActivity(masOpcion.intent)
                                     }
 

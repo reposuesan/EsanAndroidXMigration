@@ -355,9 +355,9 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
 
                                 if(language.equals("English")){
                                     if(mensaje.contains("no se encuentra matr")){
-                                        empty_text_view_lab.text = "You are not enrolled in the current semester"
+                                        empty_text_view_lab.text = "You are not enrolled in the current semester or these services will be available at the beginning of the semester."
                                     } else {
-                                        empty_text_view_lab.text = "An error occurred, please contact ServiceDesk"
+                                        empty_text_view_lab.text = "An error occurred, please contact ServiceDesk."
                                     }
                                 }
                             }

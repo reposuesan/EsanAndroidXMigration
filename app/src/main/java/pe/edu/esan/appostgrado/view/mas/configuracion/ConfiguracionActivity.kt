@@ -83,6 +83,7 @@ class ConfiguracionActivity : AppCompatActivity() {
                 if(agreetouchId){
                     if (user == ControlUsuario.instance.currentUsuarioGeneral?.usuario) {
                         /**.-.-.-.-.-VALIDAR-..-.-.-.-.-.-.**/
+                        masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(masOpcion.intent)
                     } else {
                         val dialog = AlertDialog.Builder(this)
@@ -91,6 +92,7 @@ class ConfiguracionActivity : AppCompatActivity() {
                         dialog.create().show()
                     }
                 } else {
+                    masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     startActivity(masOpcion.intent)
                 }
             } else {

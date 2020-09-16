@@ -203,7 +203,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
         if(ControlUsuario.instance.currentUsuarioGeneral != null){
             sendRequest()
         } else {
-            controlViewModel.dataWasRetrievedForFragmentPublic.observe(this,
+            controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
                         Log.w(LOG, "operationFinishedPuntosReunionPrePublic.observe() was called")
@@ -397,10 +397,10 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                             if (language.equals("English")) {
                                                 if (mensaje.contains("no se encuentra matr")) {
                                                     view!!.empty_text_view.text =
-                                                        "You are not enrolled in the current semester"
+                                                        "You are not enrolled in the current semester or these services will be available at the beginning of the semester."
                                                 } else {
                                                     view!!.empty_text_view.text =
-                                                        "An error occurred, please contact ServiceDesk"
+                                                        "An error occurred, please contact ServiceDesk."
                                                 }
                                             }
                                         }

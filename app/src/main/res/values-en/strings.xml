@@ -7,7 +7,7 @@
     <string name="m_tab_cursos">Courses</string>
     <string name="m_tab_programas">Programs</string>
     <string name="m_tab_secciones">Sections</string>
-    <string name="m_tab_pagos">Pending payments</string>
+    <string name="m_tab_pagos">Payments</string>
     <string name="m_tab_comedores">Dining rooms</string>
     <string name="m_tab_puntosreunion">Meeting Points</string>
     <string name="m_tab_mas">More</string>
@@ -76,7 +76,7 @@
     <string name="error_curso_no">There are no scheduled courses</string>
     <string name="error_seccion_no">You do not have registered sections</string>
     <string name="error_programa_no">You do not have registered programs</string>
-    <string name="error_pago_no">You do not have pending payments</string>
+    <string name="error_pago_no">You do not have registered payments</string>
     <string name="sesiones">Sessions</string>
     <string name="sesiones_">Sessions: %.2f</string>
     <string name="concepto">Concept</string>

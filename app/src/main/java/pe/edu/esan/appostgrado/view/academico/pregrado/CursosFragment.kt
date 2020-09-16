@@ -129,7 +129,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             sendRequest()
         } else {
-            controlViewModel.dataWasRetrievedForFragmentPublic.observe(this,
+            controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 Observer<Boolean> { value ->
                     if(value){
                         Log.w(LOG, "operationFinishedCursosPublic.observe() was called")
@@ -329,12 +329,14 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                                     if (encuestar) {
                                         curso.listProfesores = lstProfesores
                                         val intentEncuesta = Intent(activity, EncuestaActivity::class.java)
+                                        intentEncuesta.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                         startActivity(intentEncuesta)
                                     } else {
                                         getAsistencias(curso.seccionCodigo, alumnoRetirado)
 
                                         /*
                                           val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+                                          intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                           startActivity(intentDetalleCurso)
                                                                     */
                                     }
@@ -407,6 +409,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                 lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                 ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
                 val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+                intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intentDetalleCurso)
             }
         } else {
@@ -414,6 +417,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
             lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
             ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
             val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+            intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intentDetalleCurso)
         }
     }
@@ -504,6 +508,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                         } else {
                             intentDetalleCurso.putExtra("alumno_esta_retirado", false)
                         }
+                        intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intentDetalleCurso)
                     }
                 },
@@ -522,6 +527,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
                     if(activity != null){
                         val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+                        intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(intentDetalleCurso)
                     }
 
@@ -557,6 +563,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
         when (item.itemId) {
             R.id.action_histonotas -> {
                 val historicoNotas = Intent(activity, HistoricoNotasPreActivity::class.java)
+                historicoNotas.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(historicoNotas)
                 return true
             }

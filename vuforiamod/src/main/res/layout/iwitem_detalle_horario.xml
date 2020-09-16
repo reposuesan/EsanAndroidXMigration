@@ -17,7 +17,7 @@
         android:layout_margin="10dp"
         android:orientation="vertical">
 
-        <pe.edu.esan.appostgrado.view.util.AutoResizeTextView
+        <com.example.vuforiamod.util.AutoResizeTextView
             android:id="@+id/lblCurso_itemhorariodetalleiw"
             android:layout_width="match_parent"
             android:layout_height="40dp"

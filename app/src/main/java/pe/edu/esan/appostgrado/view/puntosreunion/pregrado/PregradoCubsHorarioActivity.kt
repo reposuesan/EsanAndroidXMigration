@@ -318,6 +318,7 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
             intent.putExtra("mensaje_prereserva_realizada", mensaje)
             intent.putExtra("rango_horario", "$horaInicioPantalla - $horaFinPantalla")
             intent.putExtra("fecha", fechaPrereserva)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent)
         } else {
             var errorMensaje: String = mensaje

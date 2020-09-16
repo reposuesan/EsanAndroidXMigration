@@ -50,7 +50,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
     private var latitud = ""
     private var red = ""
 
-    private var diaSeleccionado = ""
+    private var diaSeleccionado: String? = ""
     private var eshoy = false
 
     private var requestQueue: RequestQueue? = null
@@ -477,6 +477,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                                 ControlUsuario.instance.currentHorario = horario
 
                                 val intentTomarAsistencia = Intent(this, TomarAsistenciaActivity::class.java)
+                                intentTomarAsistencia.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(intentTomarAsistencia)
                             }
                         }
@@ -604,6 +605,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                                 ControlUsuario.instance.cambioPantalla = true
                                 ControlUsuario.instance.currentHorario = horario
                                 val intentTomarAsistencia = Intent(this, TomarAsistenciaActivity::class.java)
+                                intentTomarAsistencia.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(intentTomarAsistencia)
                             }
                         }

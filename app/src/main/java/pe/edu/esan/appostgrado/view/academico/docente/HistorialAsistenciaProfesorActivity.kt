@@ -34,8 +34,8 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
 
     private val TAG = "HistorialAsistenciaProfesorActivity"
     private var requestQueue: RequestQueue? = null
-    private var CodigoSeccion = ""
-    private var nombreCurso = ""
+    private var CodigoSeccion: String? = ""
+    private var nombreCurso: String? = ""
 
     private var adapter : HistoricoAsistenciaProfesorAdapter? = null
 
@@ -213,7 +213,7 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
         }
     }
 
-    private fun getHistorialAsistencia(seccion: String) {
+    private fun getHistorialAsistencia(seccion: String?) {
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             sendRequest(seccion)
         } else {
@@ -232,7 +232,7 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendRequest(seccion: String){
+    private fun sendRequest(seccion: String?){
         val usuario = ControlUsuario.instance.currentUsuario[0] as UserEsan
 
         val request = JSONObject()

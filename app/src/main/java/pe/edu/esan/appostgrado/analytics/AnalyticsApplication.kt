@@ -25,7 +25,7 @@ import com.google.android.gms.analytics.Tracker
 import pe.edu.esan.appostgrado.R
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
-import pe.edu.esan.appostgrado.BuildConfig
+//import pe.edu.esan.appostgrado.BuildConfig
 
 
 /**

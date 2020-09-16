@@ -305,6 +305,7 @@ class CursoDetalleActivity : AppCompatActivity() {
             R.id.menu_partner -> {
                 val intentContacto = Intent(this@CursoDetalleActivity, DirectorioActivity::class.java)
                 intentContacto.putExtra("CodSeccion", cursoActual!!.seccionCodigo)
+                intentContacto.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intentContacto)
                 return true
             }

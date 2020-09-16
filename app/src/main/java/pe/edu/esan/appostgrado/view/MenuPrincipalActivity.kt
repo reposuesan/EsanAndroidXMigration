@@ -11,8 +11,6 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
-import android.view.ViewGroup
-import android.widget.TableLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -67,7 +65,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
     var toolbar : Toolbar? = null
     var lblTituloActivity : TextView? = null
     var mTracker : Tracker? = null
-    var tipousuario = ""
+    var tipoUsuario = ""
 
     private val LOG = MenuPrincipalActivity::class.simpleName
 
@@ -92,7 +90,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
         controlViewModel.refreshDataForFragmentPublic.observe(this,
             Observer<Boolean> { value ->
                 if(value){
-                    Log.w(LOG,"refreshDataForFragment()")
+                    Log.w(LOG,"refreshDataForFragment() from Menu")
                     refreshDataForFragment()
                 }
             })
@@ -119,7 +117,6 @@ class MenuPrincipalActivity : AppCompatActivity() {
 
                 if(intent.hasExtra("back_from_pregrado_prereserva_lab") || intent.hasExtra("back_from_pregrado_prereserva")){
                     controlViewModel.getDataFromRoom()
-
                 }
             }
 
@@ -147,7 +144,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
 
                 if (tab.text.toString() != resources.getString(TAB_MAS)){
                     println(tab.text.toString())
-                    sendAnalyticsOption(tipousuario, tab.text.toString())
+                    sendAnalyticsOption(tipoUsuario, tab.text.toString())
                 }
             }
         })
@@ -262,39 +259,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
                 println("ES ALUMNO")
                 if (usuario.tipoAlumno.equals(Utilitarios.POS)) {
                     println("ALUMNO POS")
-                    tipousuario = "AlumnoPosgrado"
-
-                    /*val firstTab = tabs.getTabAt(0)
-
-                    tabs.getTabAt(0)?.text = (resources.getString(T_HORARIO))
-                    tabs.getTabAt(0)?.setIcon(if (firstTab!!.isSelected) R.drawable.tab_horario else R.drawable.tab_horario_unselect)
-
-                    tabs.getTabAt(1)?.text = resources.getString(T_PROGRAMAS)
-                    tabs.getTabAt(1)?.setIcon(R.drawable.tab_curso)
-
-                    tabs.getTabAt(2)?.text = resources.getString(T_PAGOS)
-                    tabs.getTabAt(2)?.setIcon(R.drawable.tab_pago)
-
-                    tabs.getTabAt(3)?.text = resources.getString(T_PUNTOSREUNION)
-                    tabs.getTabAt(3)?.setIcon(R.drawable.tab_grupo)
-
-                    tabs.getTabAt(4)?.text = resources.getString(T_MAS)
-                    tabs.getTabAt(4)?.setIcon(R.drawable.tab_mas)*/
-
-                    /*tabs.getTabAt(0)?.text = (resources.getString(T_HORARIO))
-                    tabs.getTabAt(0)?.setIcon(R.drawable.tab_horario)
-
-                    tabs.getTabAt(1)?.text = resources.getString(T_PROGRAMAS)
-                    tabs.getTabAt(1)?.setIcon(R.drawable.tab_curso)
-
-                    tabs.getTabAt(2)?.text = resources.getString(T_PAGOS)
-                    tabs.getTabAt(2)?.setIcon(R.drawable.tab_pago)
-
-                    tabs.getTabAt(3)?.text = resources.getString(T_PUNTOSREUNION)
-                    tabs.getTabAt(3)?.setIcon(R.drawable.tab_grupo)
-
-                    tabs.getTabAt(4)?.text = resources.getString(T_MAS)
-                    tabs.getTabAt(4)?.setIcon(R.drawable.tab_mas)*/
+                    tipoUsuario = "AlumnoPosgrado"
 
                     val poshorario= LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
                     poshorario.text = resources.getString(T_HORARIO)
@@ -324,7 +289,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
 
                 } else {
                     println("ALUMNO PRE")
-                    tipousuario = "AlumnoPregrado"
+                    tipoUsuario = "AlumnoPregrado"
                     val poshorario = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
                     poshorario.text = resources.getString(T_HORARIO)
                     poshorario.isSelected = true
@@ -355,7 +320,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
             }
             is Profesor -> {
                 println("ES PROFESOR")
-                tipousuario = "Profesor"
+                tipoUsuario = "Profesor"
                 val poshorario = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
                 poshorario.text = resources.getString(T_HORARIO)
                 poshorario.isSelected = true
@@ -374,7 +339,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
             }
             else -> {
                 println("INVITADO")
-                tipousuario = "Invitado"
+                tipoUsuario = "Invitado"
 
                 val invmas = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
                 invmas.text = resources.getString(T_MAS)
@@ -468,16 +433,19 @@ class MenuPrincipalActivity : AppCompatActivity() {
                 }
                 return true
             } else {
-                val showAlertHelper = ShowAlertHelper(this)
-                showAlertHelper.showAlertError(
-                    resources.getString(R.string.error),
-                    resources.getString(R.string.error_ingreso)
-                ) {  android.os.Process.killProcess(android.os.Process.myPid()) }
+                if(tipoUsuario != "Invitado"){
+                    val showAlertHelper = ShowAlertHelper(this)
+                    showAlertHelper.showAlertError(
+                        resources.getString(R.string.error),
+                        resources.getString(R.string.error_ingreso)
+                    ) {  android.os.Process.killProcess(android.os.Process.myPid()) }
+                } else {
+                    tabs.getTabAt(0)?.select()
+                    return true
+                }
             }
         }
         return super.onKeyDown(keyCode, event)
-
-
     }
 
 

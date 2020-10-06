@@ -18,7 +18,8 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.crashlytics.android.Crashlytics
+/*import com.crashlytics.android.Crashlytics*/
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.android.synthetic.main.fragment_mas.*
 import kotlinx.android.synthetic.main.fragment_mas.view.*
 import org.json.JSONException
@@ -160,16 +161,16 @@ class MasFragment : androidx.fragment.app.Fragment() {
             usuarioGeneral = ControlUsuario.instance.currentUsuarioGeneral
         } catch (e: Exception) {
             val usuario = misPreferencias?.getString("code", "")
-
-            Crashlytics.log(Log.ERROR, "MasFragmentTag", "currentUsuarioGeneral is null, the user is $usuario.")
+            val crashlytics = FirebaseCrashlytics.getInstance()
+            crashlytics.log("E/MasFragment: currentUsuarioGeneral is null, the user is $usuario.")
         }
 
         try {
             currentUsuario = ControlUsuario.instance.currentUsuario[0]
         } catch (e: Exception) {
             val usuario = misPreferencias?.getString("code", "")
-
-            Crashlytics.log(Log.ERROR, "MasFragmentTag", "currentUsuario is null, the user is $usuario.")
+            val crashlytics = FirebaseCrashlytics.getInstance()
+            crashlytics.log("E/MasFragment: currentUsuario is null, the user is $usuario.")
         }
 
         when (usuarioGeneral) {

@@ -13,7 +13,8 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+/*import com.crashlytics.android.Crashlytics*/
 import org.json.JSONObject
 import pe.edu.esan.appostgrado.helpers.ShowAlertHelper
 import pe.edu.esan.appostgrado.util.Utilitarios
@@ -58,7 +59,7 @@ class SecondLauncherActivity : AppCompatActivity() {
             Request.Method.POST,
             Utilitarios.getUrl(Utilitarios.URL.VERSION_CODE),
             request,
-            Response.Listener<JSONObject> { response ->
+            { response ->
                 try {
                     val pInfo = packageManager.getPackageInfo(packageName, 0)
                     val code = PackageInfoCompat.getLongVersionCode(pInfo)
@@ -113,13 +114,13 @@ class SecondLauncherActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             },
-            Response.ErrorListener { error ->
+            { error ->
                 Log.e(LOG, "Volley error:  " + error.message.toString())
 
-                Crashlytics.log(Log.ERROR, "SecondLauncherActivity", error.message.toString())
-                //Crashlytics.log("SecondLauncherActivity: ${error.message.toString()}")
+                val crashlytics = FirebaseCrashlytics.getInstance()
 
-                Crashlytics.logException(Exception("Volley Exception: ${error.message.toString()}"))
+                crashlytics.log("E/SecondLauncherActivity: ${error.message.toString()}")
+                FirebaseCrashlytics.getInstance().recordException(Exception("Volley Exception: ${error.message.toString()}"))
 
                 val showAlertHelper = ShowAlertHelper(this)
                 showAlertHelper.showAlertError(getString(R.string.error),getString(R.string.error_no_conexion), null);

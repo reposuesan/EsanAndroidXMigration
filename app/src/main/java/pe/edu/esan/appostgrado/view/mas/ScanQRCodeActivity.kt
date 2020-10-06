@@ -18,7 +18,8 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+/*import com.crashlytics.android.Crashlytics*/
 import com.google.zxing.integration.android.IntentIntegrator
 import kotlinx.android.synthetic.main.activity_scan_qrcode.*
 import org.json.JSONObject
@@ -90,7 +91,7 @@ class ScanQRCodeActivity : AppCompatActivity() {
             Request.Method.POST,
             "<URL DEL SERVICIO WEB PARA EL CÓDIGO QR>",
             request,
-            Response.Listener<JSONObject> { response ->
+            { response ->
                 try {
 
                     //TODO: THIS DATA IS FOR REFERENCE ONLY
@@ -102,11 +103,11 @@ class ScanQRCodeActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             },
-            Response.ErrorListener { error ->
+            { error ->
                 Log.e(LOG, "Volley error:  " + error.message.toString())
-
-                Crashlytics.log(Log.ERROR, "ScanQRCodeActivity", error.message.toString())
-                Crashlytics.logException(Exception("Volley Exception: ${error.message.toString()}"))
+                val crashlytics = FirebaseCrashlytics.getInstance()
+                crashlytics.log("E/ScanQRCodeActivity: ${error.message.toString()}")
+                FirebaseCrashlytics.getInstance().recordException(Exception("Volley Exception: ${error.message.toString()}"))
 
                 val showAlertHelper = ShowAlertHelper(this)
                 showAlertHelper.showAlertError(getString(R.string.error),getString(R.string.error_no_conexion), null);

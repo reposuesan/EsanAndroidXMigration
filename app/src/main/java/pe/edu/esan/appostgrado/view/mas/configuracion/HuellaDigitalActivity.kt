@@ -374,7 +374,6 @@ class HuellaDigitalActivity : AppCompatActivity(), FingerprintAuthenticationDial
     }
 
     /*override fun onSaveInstanceState(outState: Bundle?) {
-        Crashlytics.log(Log.ERROR, LOG, "onSaveInstanceState was called")
         super.onSaveInstanceState(outState)
     }*/
 }

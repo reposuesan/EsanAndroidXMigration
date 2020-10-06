@@ -24,7 +24,8 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+/*import com.crashlytics.android.Crashlytics*/
 import kotlinx.android.synthetic.main.activity_horario_detalle.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONException
@@ -130,10 +131,9 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
             var temp = ControlUsuario.instance.currentUsuario[0]
         } catch (e: Exception) {
             val usuario = misPreferencias?.getString("code", "")
-            Crashlytics.log(
-                Log.ERROR,
-                "HorarioDetalleActivity",
-                "ArrayList ControlUsuario.instance.currentUsuario has 0 elements, the user is $usuario."
+            val crashlytics = FirebaseCrashlytics.getInstance()
+            crashlytics.log(
+                "E/HorarioDetalleActivity: ArrayList ControlUsuario.instance.currentUsuario has 0 elements, the user is $usuario."
             )
         }*/
         try {
@@ -284,10 +284,9 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
             }
         } catch (e: Exception) {
             val usuario = misPreferencias?.getString("code", "")
-            Crashlytics.log(
-                Log.ERROR,
-                "HorarioDetalleActivity",
-                "ArrayList ControlUsuario.instance.currentUsuario has 0 elements, the user is $usuario."
+            val crashlytics = FirebaseCrashlytics.getInstance()
+            crashlytics.log(
+                "E/HorarioDetalleActivity: ArrayList ControlUsuario.instance.currentUsuario has 0 elements, the user is $usuario."
             )
         }
     }

@@ -6,7 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+/*import com.crashlytics.android.Crashlytics*/
 import kotlinx.android.synthetic.main.item_cursopost_curso.view.*
 import kotlinx.android.synthetic.main.item_cursopost_modulo.view.*
 import kotlinx.android.synthetic.main.item_cursopost_nota.view.*
@@ -63,7 +64,6 @@ class CursoPostAdapter (val listaModuloCurso: List<CursoPostModulo>, val clickAs
     override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ModuloViewHolder -> {
-                //val objeto = getObjectReal(position)
                 val objeto = getObjectReal(holder.adapterPosition)
                 when (objeto?.objReal) {
                     is CursoPostModulo -> {
@@ -72,7 +72,6 @@ class CursoPostAdapter (val listaModuloCurso: List<CursoPostModulo>, val clickAs
                 }
             }
             is CursoViewHolder -> {
-                //val objeto = getObjectReal(position)
                 val objeto = getObjectReal(holder.adapterPosition)
                 when (objeto?.objReal) {
                     is CursosPost -> {
@@ -81,7 +80,6 @@ class CursoPostAdapter (val listaModuloCurso: List<CursoPostModulo>, val clickAs
                 }
             }
             is NotaViewHolder -> {
-                //val objeto = getObjectReal(position)
                 val objeto = getObjectReal(holder.adapterPosition)
                 when (objeto?.objReal) {
                     is NotasPost -> {
@@ -110,57 +108,38 @@ class CursoPostAdapter (val listaModuloCurso: List<CursoPostModulo>, val clickAs
                             contDet++
                         } while (listaModuloCurso[modulo].listaCursos[cursoONotaEnModulo-contDet] == null)
 
-
-                        //TODO: DELETE LATER
-                        /*try{
-                            Log.w(LOG,"Value is : ${listaModuloCurso[modulo].listaCursos[cursoONotaEnModulo-contDet]?.detalleNotas?.get(contDet-1)}")
-                        } catch (e: Exception){
-                            if(listaModuloCurso.isNotEmpty()){
-                                Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Size of listaModuloCurso is: ${listaModuloCurso.size}")
-                                Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Value of module is: $modulo")
-
-                            } else {
-                                Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Size of listaModuloCurso is: 0")
-                            }
-
-
-                            Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Value of cursoONotaEnModulo is: $cursoONotaEnModulo")
-                            Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Value of countDet is: $contDet")
-                        }*/
-
-
-
+                        val crashlytics = FirebaseCrashlytics.getInstance()
 
                         try {
-                            Log.w(LOG,"Value in bug is : ${listaModuloCurso[modulo].listaCursos[cursoONotaEnModulo-contDet]?.detalleNotas?.get(contDet-1)}")
+                            Log.w(LOG,"Value in bug is: ${listaModuloCurso[modulo].listaCursos[cursoONotaEnModulo-contDet]?.detalleNotas?.get(contDet-1)}")
                         } catch (e: Exception){
                             try {
-                                Log.w(LOG,"First list value is : ${listaModuloCurso[modulo]}")
+                                Log.w(LOG,"First list value is: ${listaModuloCurso[modulo]}")
 
                                 try {
-                                    Log.w(LOG,"Second list value is : ${listaModuloCurso[modulo].listaCursos[cursoONotaEnModulo-contDet]}")
+                                    Log.w(LOG,"Second list value is: ${listaModuloCurso[modulo].listaCursos[cursoONotaEnModulo-contDet]}")
 
                                     try {
-                                        Log.w(LOG,"Third list value is : ${listaModuloCurso[modulo].listaCursos[cursoONotaEnModulo-contDet]?.detalleNotas?.get(contDet-1)}")
+                                        Log.w(LOG,"Third list value is: ${listaModuloCurso[modulo].listaCursos[cursoONotaEnModulo-contDet]?.detalleNotas?.get(contDet-1)}")
                                     } catch (e: Exception){
-                                        Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Value of modulo is: $modulo")
-                                        Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Size of listaModuloCurso is: ${listaModuloCurso.size}")
-                                        Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Value of cursoONotaEnModulo is: $cursoONotaEnModulo")
-                                        Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Value of contDet is: $contDet")
-                                        Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Size of listaModuloCurso[modulo].listaCursos is: ${listaModuloCurso[modulo].listaCursos.size}")
-                                        Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Size of listaModuloCurso[modulo].listaCursos[cursoONotaEnModulo-contDet]?.detalleNotas? is: ${listaModuloCurso[modulo].listaCursos[cursoONotaEnModulo-contDet]?.detalleNotas?.size}")
+                                        crashlytics.log("E/CursoPostAdapter: Value of modulo is: $modulo")
+                                        crashlytics.log("E/CursoPostAdapter: Size of listaModuloCurso is: ${listaModuloCurso.size}")
+                                        crashlytics.log("E/CursoPostAdapter: Value of cursoONotaEnModulo is: $cursoONotaEnModulo")
+                                        crashlytics.log("E/CursoPostAdapter: Value of contDet is: $contDet")
+                                        crashlytics.log("E/CursoPostAdapter: Size of listaModuloCurso[modulo].listaCursos is: ${listaModuloCurso[modulo].listaCursos.size}")
+                                        crashlytics.log("E/CursoPostAdapter: Size of listaModuloCurso[modulo].listaCursos[cursoONotaEnModulo-contDet]?.detalleNotas? is: ${listaModuloCurso[modulo].listaCursos[cursoONotaEnModulo-contDet]?.detalleNotas?.size}")
                                     }
 
                                 } catch (e: Exception){
-                                    Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Value of modulo is: $modulo")
-                                    Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Size of listaModuloCurso is: ${listaModuloCurso.size}")
-                                    Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Value of cursoONotaEnModulo is: $cursoONotaEnModulo")
-                                    Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Value of contDet is: $contDet")
-                                    Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Size of listaModuloCurso[modulo].listaCursos is: ${listaModuloCurso[modulo].listaCursos.size}")
+                                    crashlytics.log("E/CursoPostAdapter: Value of modulo is: $modulo")
+                                    crashlytics.log("E/CursoPostAdapter: Size of listaModuloCurso is: ${listaModuloCurso.size}")
+                                    crashlytics.log("E/CursoPostAdapter: Value of cursoONotaEnModulo is: $cursoONotaEnModulo")
+                                    crashlytics.log("E/CursoPostAdapter: Value of contDet is: $contDet")
+                                    crashlytics.log("E/CursoPostAdapter: Size of listaModuloCurso[modulo].listaCursos is: ${listaModuloCurso[modulo].listaCursos.size}")
                                 }
                             } catch (e: Exception){
-                                Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Value of modulo is: $modulo")
-                                Crashlytics.log(Log.ERROR, "CursoPostAdapter", "Size of listaModuloCurso is: ${listaModuloCurso.size}")
+                                crashlytics.log("E/CursoPostAdapter: Value of modulo is: $modulo")
+                                crashlytics.log("E/CursoPostAdapter: Size of listaModuloCurso is: ${listaModuloCurso.size}")
                             }
                         }
 

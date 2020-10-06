@@ -23,9 +23,9 @@ import androidx.multidex.MultiDexApplication
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
 import pe.edu.esan.appostgrado.R
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
-//import pe.edu.esan.appostgrado.BuildConfig
+/*import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric*/
+/*import pe.edu.esan.appostgrado.BuildConfig*/
 
 
 /**
@@ -41,7 +41,7 @@ class AnalyticsApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         sAnalytics = GoogleAnalytics.getInstance(this)
-        Fabric.with(this, Crashlytics())
+        /*Fabric.with(this, Crashlytics())*/
     }
 
     /**
@@ -57,10 +57,5 @@ class AnalyticsApplication : Application() {
 
         return sTracker
     }
-
-/*    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-        MultiDex.install(this)
-    }*/
 
 }

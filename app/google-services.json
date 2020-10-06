@@ -22,24 +22,23 @@
       "api_key": [
         {
           "current_key": "AIzaSyDcuXimX8FMtXOvyi-c3SCQwY9QyT46n_k"
-        },
-        {
-          "current_key": "AIzaSyB-yGczUeSapeDXs2Uu9xr5fI0eUAhzBtM"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 2,
-          "analytics_property": {
-            "tracking_id": "UA-82301344-1"
-          }
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "107431185014-c5calllmebv50fcg250ajlinrgpem68b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "107431185014-birlgb38nc6qj17956147hi7gng26kju.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "UEApp.UEApp"
+              }
+            }
+          ]
         }
       }
     }

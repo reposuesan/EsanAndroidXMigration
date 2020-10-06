@@ -34,7 +34,8 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+/*import com.crashlytics.android.Crashlytics*/
 import kotlinx.android.synthetic.main.activity_login.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -352,10 +353,12 @@ class LoginActivity : AppCompatActivity(),
                                     jsObjDatosPersonales?.getString("NombreCompleto") ?: ""
                                 val correo = jsObjDatosPersonales?.getString("Correo") ?: ""
 
+                                val crashlytics = FirebaseCrashlytics.getInstance()
                                 //Use the current user's information
                                 //You can call any combination of these three methods
-                                Crashlytics.setUserEmail(correo)
-                                Crashlytics.setUserName(nombreCompleto)
+                                /*crashlytics.setUserId("$correo - $nombreCompleto")
+                                crashlytics.setUserEmail(correo)
+                                crashlytics.setUserName(nombreCompleto)*/
 
                                 val jsObjDatosPostgrado =
                                     jsResponse["ObjDatosPostgrado"] as? JSONObject
@@ -369,7 +372,7 @@ class LoginActivity : AppCompatActivity(),
                                 //TODO: ONLY FOR DEBUGGING POSTGRADO
                                 /*val codAlumnoPost = txtUsuario_login.text.toString()*/
 
-                                Crashlytics.setUserIdentifier(codAlumnoPost)
+                                crashlytics.setUserId(codAlumnoPost)
 
                                 //DOCENTE POSTGRADO--------------------------------------------------------------
                                 val esDocentePost =
@@ -384,7 +387,7 @@ class LoginActivity : AppCompatActivity(),
                                 val codDocentePost =
                                     jsObjDatosPostgrado?.getString("CodDocente") ?: ""
 
-                                Crashlytics.setUserIdentifier(codDocentePost)
+                                crashlytics.setUserId(codDocentePost)
 
                                 val jsObjDatosPregrado =
                                     jsResponse["ObjDatosPregrado"] as? JSONObject
@@ -397,7 +400,7 @@ class LoginActivity : AppCompatActivity(),
                                 //TODO: ONLY FOR DEBUGGING PREGRADO
                                 /*val codAlumnoPre = txtUsuario_login.text.toString()*/
 
-                                Crashlytics.setUserIdentifier(codAlumnoPre)
+                                crashlytics.setUserId(codAlumnoPre)
 
                                 val objCarrerasPre =
                                     jsObjDatosPregrado?.getJSONArray("LstCarreraPregrado")
@@ -436,7 +439,7 @@ class LoginActivity : AppCompatActivity(),
                                 val codDocentePre = jsObjDatosPregrado?.getString("CodDocente") ?: ""
                                 /*val codDocentePre = "agazzolo"*/
 
-                                Crashlytics.setUserIdentifier(codDocentePre)
+                                crashlytics.setUserId(codDocentePre)
 
                                 //USUARIO GENERAL OBJECT
                                 val usuarioGeneral = UsuarioGeneral(

@@ -36,10 +36,10 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
 
     private var prereservasList = ArrayList<PrereservaDetalle>()
 
-    private var promocion: String = ""
-    private var direccion: String = ""
+    private var promocion: String? = ""
+    private var direccion: String? = ""
 
-    private var configuracionID: String = ""
+    private var configuracionID: String? = ""
 
     private var usuarioEnSesion: UsuarioGeneral? = null
 
@@ -102,8 +102,7 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
             recycler_view_historial_lab.visibility = View.GONE
             progress_bar_historial_lab.visibility = View.GONE
             tv_promocion_historial_lab.visibility = View.GONE
-            tv_direccion_historial_lab.visibility = View.GONE
-            Crashlytics.log(Log.ERROR,"empty_object","currentUsuarioGeneral is empty")*/
+            tv_direccion_historial_lab.visibility = View.GONE*/
 
         }
 
@@ -126,7 +125,7 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
+                { response ->
                     Log.i(LOG, response.toString())
                     if (!response.isNull("ListarPreReservasxAlumnoResult")) {
                         val jsResponse = Utilitarios.jsArrayDesencriptar(response.getString("ListarPreReservasxAlumnoResult"), this@PregradoLabsHistorialActivity)
@@ -186,7 +185,7 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
 
                     }
                 },
-                Response.ErrorListener { error ->
+                { error ->
                     Log.e(LOG, "Error durante el request de Volley")
                     Log.e(LOG, error.message.toString())
                     tv_empty_historial_lab.visibility = View.VISIBLE

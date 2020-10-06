@@ -74,10 +74,9 @@
         <activity
                 android:name=".view.puntosreunion.pregrado.PregradoCubsRegistroActivity"
                 android:screenOrientation="portrait" />
-
-        <meta-data
+        <!--<meta-data
                 android:name="io.fabric.ApiKey"
-                android:value="bd466ffef9fe178d4c70121858996c49fb2869ce" />
+                android:value="bd466ffef9fe178d4c70121858996c49fb2869ce"/>-->
         <meta-data
                 android:name="com.google.android.gms.version"
                 android:value="@integer/google_play_services_version" />

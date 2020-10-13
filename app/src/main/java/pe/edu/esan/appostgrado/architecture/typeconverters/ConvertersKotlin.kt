@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken
 import pe.edu.esan.appostgrado.architecture.adapter.AbstractElementAdapter
 import pe.edu.esan.appostgrado.control.CustomArrayList
 import pe.edu.esan.appostgrado.entidades.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 class ConvertersKotlin {
 
@@ -52,21 +53,33 @@ class ConvertersKotlin {
     }
 
     @TypeConverter
-    fun fromArrayListHorarioToString(currentListHorario: ArrayList<Horario>): String {
+    fun fromArrayListHorarioToString(listHorario: ArrayList<Horario>): String {
         val type = object : TypeToken<ArrayList<Horario>>(){}.type
-        return gson.toJson(currentListHorario,type)
+        return gson.toJson(listHorario,type)
     }
 
-    @TypeConverter
+    /*@TypeConverter
     fun fromStringToCustomArrayListHorario(stringInput: String): CustomArrayList<Horario> {
         val type = object : TypeToken<CustomArrayList<Horario>>(){}.type
         return gson.fromJson(stringInput, type)
     }
 
     @TypeConverter
-    fun fromCustomArrayListHorarioToString(currentListHorario: CustomArrayList<Horario>): String {
+    fun fromCustomArrayListHorarioToString(listHorario: CustomArrayList<Horario>): String {
         val type = object : TypeToken<CustomArrayList<Horario>>(){}.type
-        return gson.toJson(currentListHorario,type)
+        return gson.toJson(listHorario,type)
+    }*/
+
+    @TypeConverter
+    fun fromStringToUnmodifiedArrayListHorario(stringInput: String): CopyOnWriteArrayList<Horario> {
+        val type = object : TypeToken<CopyOnWriteArrayList<Horario>>(){}.type
+        return gson.fromJson(stringInput, type)
+    }
+
+    @TypeConverter
+    fun fromUnmodifiedArrayListHorarioToString(listHorario: CopyOnWriteArrayList<Horario>): String {
+        val type = object : TypeToken<CopyOnWriteArrayList<Horario>>(){}.type
+        return gson.toJson(listHorario,type)
     }
 
     @TypeConverter

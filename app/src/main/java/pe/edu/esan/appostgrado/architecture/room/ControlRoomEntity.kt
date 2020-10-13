@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import pe.edu.esan.appostgrado.control.CustomArrayList
 import pe.edu.esan.appostgrado.entidades.*
+import java.util.concurrent.CopyOnWriteArrayList
 
 @Entity(tableName = "control_room")
 data class ControlRoomEntity (
@@ -13,8 +14,9 @@ data class ControlRoomEntity (
     var statusLogout: Int = 1,
     var currentUsuario: ArrayList<UserEsan> = ArrayList<UserEsan>(),
     var entroEncuesta: Boolean = false,
-    /*var currentListHorario: ArrayList<Horario> = ArrayList<Horario>(),*/
-    var currentListHorario: CustomArrayList<Horario> = CustomArrayList<Horario>(),
+    /*var currentListHorario: ArrayList<Horario> = ArrayList<Horario>(),
+    var currentListHorario: CustomArrayList<Horario> = CustomArrayList<Horario>(),*/
+    var currentListHorario: CopyOnWriteArrayList<Horario> = CopyOnWriteArrayList<Horario>(),
     var currentListHorarioSelect: ArrayList<Horario> = ArrayList<Horario>(),
     var copiarListHorario: ArrayList<Horario> = ArrayList<Horario>(),
     var currentHorario : Horario? = null,

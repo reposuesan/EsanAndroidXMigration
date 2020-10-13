@@ -6,6 +6,7 @@ import androidx.annotation.Nullable
 import pe.edu.esan.appostgrado.architecture.room.AppRoomDatabase
 import pe.edu.esan.appostgrado.entidades.*
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.collections.ArrayList
 
 
@@ -32,7 +33,8 @@ class ControlUsuario private constructor(){
     var statusLogout = 1
     var currentUsuario = ArrayList<UserEsan>()
     var entroEncuesta = false
-    var currentListHorario = CustomArrayList<Horario>()
+    //var currentListHorario = CustomArrayList<Horario>()
+    var currentListHorario = CopyOnWriteArrayList<Horario>()
     var currentListHorarioSelect = ArrayList<Horario>()
     var copiarListHorario = ArrayList<Horario>()
     var currentHorario : Horario? = null

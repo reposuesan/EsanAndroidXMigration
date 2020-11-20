@@ -309,7 +309,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                         activity!!.startActivity(masOpcion.intent)
                     }
                 } else {
-
+                    //TODO: SHOW DIALOG TO AVOID ERROR IN LINKS DE INTERES
                     Log.w(LOG, "Usuario presionó Salir o Cerrar Sesión")
                     if (invitado) {
                         ControlUsuario.instance.currentUsuario.clear()
@@ -396,7 +396,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
                         }
                         borrarDatos()
-                        //TODO: UNSUBSCRIBE FROM TOPICS
+                        //UNSUBSCRIBE FROM TOPICS
                         /*unsubscribeUserFromTopics()*/
                         activity!!.finish()
 
@@ -860,8 +860,8 @@ class MasFragment : androidx.fragment.app.Fragment() {
     }
 
 
-    //TODO: ****************************************************************** TOPICS ************************************************************************************
-    //TODO: UNSUBSCRIBE FROM TOPICS
+    //****************************************************************** TOPICS ************************************************************************************
+    //UNSUBSCRIBE FROM TOPICS
     /*private fun unsubscribeUserFromTopics(){
         executeUnsubscriptionFromTopic("notific_alumnos_pregrado")
         executeUnsubscriptionFromTopic("notific_alumnos_postgrado")
@@ -871,7 +871,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
 
 
-    //TODO: UNSUBSCRIBE USER FROM TOPIC
+    //UNSUBSCRIBE USER FROM TOPIC
     /*fun executeUnsubscriptionFromTopic(topic: String) {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
             .addOnCompleteListener { task ->

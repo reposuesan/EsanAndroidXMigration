@@ -153,7 +153,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
 
         checkTabSelection()
 
-        //TODO: SUBSCRIBE USER TO TOPICS
+        //SUBSCRIBE USER TO TOPICS
         /*subscribeUserToTopics()*/
 
         if(intent.hasExtra("back_from_pregrado_prereserva")){
@@ -417,10 +417,10 @@ class MenuPrincipalActivity : AppCompatActivity() {
                 when (usuario) {
                     is Alumno -> {
                         if (usuario.tipoAlumno.equals(Utilitarios.POS)) {
-                            //TODO: ALUMNO POSTGRADO
+                            //ALUMNO POSTGRADO
                             tabs.getTabAt(4)?.select()
                         } else {
-                            //TODO: ALUMNO PREGRADO
+                            //ALUMNO PREGRADO
                             tabs.getTabAt(4)?.select()
                         }
                     }
@@ -450,8 +450,8 @@ class MenuPrincipalActivity : AppCompatActivity() {
 
 
 
-    //TODO: ****************************************************************** TOPICS ************************************************************************************
-    //TODO: SUBSCRIBE TO TOPICS
+    //****************************************************************** TOPICS ************************************************************************************
+    //SUBSCRIBE TO TOPICS
     /*private fun subscribeUserToTopics(){
         val user = ControlUsuario.instance.currentUsuario[0]
 
@@ -473,7 +473,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
         }
     }
 
-    //TODO: UNSUBSCRIBE FROM TOPICS
+    //UNSUBSCRIBE FROM TOPICS
     private fun unsubscribeUserFromTopics(){
         executeUnsubscriptionFromTopic("notific_alumnos_pregrado")
         executeUnsubscriptionFromTopic("notific_alumnos_postgrado")
@@ -481,7 +481,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
         executeUnsubscriptionFromTopic("notific_docentes")
     }
 
-    //TODO: SUBSCRIBE USER TO TOPIC
+    //SUBSCRIBE USER TO TOPIC
     fun executeSubscriptionToTopic(topic: String) {
         FirebaseMessaging.getInstance().subscribeToTopic(topic)
             .addOnCompleteListener { task ->
@@ -493,7 +493,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
             }
     }
 
-    //TODO: UNSUBSCRIBE USER FROM TOPIC
+    //UNSUBSCRIBE USER FROM TOPIC
     fun executeUnsubscriptionFromTopic(topic: String) {
         FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
             .addOnCompleteListener { task ->

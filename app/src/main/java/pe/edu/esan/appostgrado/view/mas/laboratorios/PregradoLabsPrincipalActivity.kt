@@ -241,7 +241,6 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                     Log.e(LOG, e.message.toString())
                 }
 
-                //TODO: AGREGAR DISPOSITIVO
                 requestTYC.put("Dispositivo", dispositivo)
 
                 aceptarTipoPolitica(URL_TEST_ACEPTAR_TYC, requestTYC)
@@ -288,7 +287,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
+                { response ->
                     Log.i(LOG, response.toString())
                     if (!response.isNull("VerificarAlumnoReservaResult")) {
                         val jsResponse = Utilitarios.jsObjectDesencriptar(response.getString("VerificarAlumnoReservaResult"), this@PregradoLabsPrincipalActivity)
@@ -374,7 +373,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                         Log.i(LOG, "IdConfiguracion es: $configuracionID")
                     }
                 },
-                Response.ErrorListener { error ->
+                { error ->
                     Log.e(LOG, "Error durante el request de Volley")
                     Log.e(LOG, error.message.toString())
                     linear_layout_container_lab.visibility = View.GONE
@@ -413,7 +412,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
+                { response ->
                     Log.i(LOG, response.toString())
                     if (!response.isNull("VerificarTipoPoliticaPortalResult")) {
                         val jsResponse = Utilitarios.jsObjectDesencriptar(response.getString("VerificarTipoPoliticaPortalResult"), this@PregradoLabsPrincipalActivity)
@@ -460,7 +459,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
 
                     }
                 },
-                Response.ErrorListener { error ->
+                { error ->
                     Log.e(LOG, "Error durante el request de Volley")
                     Log.e(LOG, error.message.toString())
                     linear_layout_container_lab.visibility = View.GONE
@@ -500,7 +499,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
+                { response ->
                     Log.i(LOG, response.toString())
                     if (!response.isNull("AceptarTipoPoliticaResult")) {
                         val jsResponse = Utilitarios.jsObjectDesencriptar(response.getString("AceptarTipoPoliticaResult"), this@PregradoLabsPrincipalActivity)
@@ -543,7 +542,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
 
                     }
                 },
-                Response.ErrorListener { error ->
+                { error ->
                     Log.e(LOG, "Error durante el request de Volley")
                     Log.e(LOG, error.message.toString())
                     linear_layout_container_lab.visibility = View.GONE

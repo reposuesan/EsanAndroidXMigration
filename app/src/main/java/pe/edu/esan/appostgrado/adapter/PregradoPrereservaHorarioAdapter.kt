@@ -91,7 +91,7 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                             sgteIndexAllowed = holder.adapterPosition
                         }
                         count--
-                        //TODO: ACTUALIZAR HASHMAP
+                        //ACTUALIZAR HASHMAP
                         Log.i(LOG,count.toString())
                         listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHoras)
                     }
@@ -104,7 +104,7 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                     prevIndexAllowed = -2
                     sgteIndexAllowed = -2
                     count--
-                    //TODO: ACTUALIZAR HASHMAP
+                    //ACTUALIZAR HASHMAP
                     Log.i(LOG,count.toString())
                     listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHoras)
                 }
@@ -120,7 +120,7 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                                 listHorario[holder.adapterPosition].itemSeleccionado = true
                                 holder.buttonRangoHoraItem.setBackgroundResource(R.drawable.shape_item_seleccionado_rango_hora)
                                 holder.buttonRangoHoraItem.setTextColor(ContextCompat.getColor(holder.view.context, R.color.md_white_1000))
-                                //TODO: ACTUALIZAR HASHMAP
+                                //ACTUALIZAR HASHMAP
                                 Log.i(LOG,count.toString())
                                 listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHoras)
                             } else {
@@ -134,7 +134,7 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                                     listHorario[holder.adapterPosition].itemSeleccionado = true
                                     holder.buttonRangoHoraItem.setBackgroundResource(R.drawable.shape_item_seleccionado_rango_hora)
                                     holder.buttonRangoHoraItem.setTextColor(ContextCompat.getColor(holder.view.context, R.color.md_white_1000))
-                                    //TODO: ACTUALIZAR HASHMAP
+                                    //ACTUALIZAR HASHMAP
                                     Log.i(LOG,count.toString())
                                     listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHoras)
                                 } else {

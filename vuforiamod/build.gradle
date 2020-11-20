@@ -9,7 +9,7 @@ apply plugin: 'kotlin-kapt'
 def VUFORIA_SDK_DIR = '/Users/danielbedoya/Work/Android/vuforia-sdk-android-8-1-10/'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     sourceSets.main {
         jni.srcDirs = []
@@ -18,7 +18,7 @@ android {
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

@@ -15,7 +15,6 @@ import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
 import com.android.volley.RequestQueue
-import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_mensaje.*
@@ -141,74 +140,58 @@ class MensajeActivity : AppCompatActivity() {
         val jsObjectRequest = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        val mensajeJArray = Utilitarios.jsArrayDesencriptar(response["ListarNotificacionPorUsuarioResult"] as String, this)
-                        if (mensajeJArray != null) {
-                            if (mensajeJArray.length() > 0) {
-                                val ListaMensajes = ArrayList<Mensaje>()
-                                for (i in 0 until mensajeJArray.length()) {
-                                    val mensajeJObject = mensajeJArray[i] as JSONObject
-                                    val noleido = mensajeJObject["Activo"] as Boolean
-                                    val mensaje = mensajeJObject["Descripcion"] as String
-                                    println(mensajeJObject["FechaCreacion"] as String)
-                                    val fechaCreacion = Utilitarios.getStringToStringddMMyyyyHHmmThree(mensajeJObject["FechaCreacion"] as String)
-                                    val idSeguimiento = mensajeJObject["IdSeguimiento"] as String
-                                    val titulo = mensajeJObject["Titulo"] as String
-                                    val url = mensajeJObject["URL"] as? String ?: ""
+            { response ->
+                try {
+                    val mensajeJArray = Utilitarios.jsArrayDesencriptar(response["ListarNotificacionPorUsuarioResult"] as String, this)
+                    if (mensajeJArray != null) {
+                        if (mensajeJArray.length() > 0) {
+                            val ListaMensajes = ArrayList<Mensaje>()
+                            for (i in 0 until mensajeJArray.length()) {
+                                val mensajeJObject = mensajeJArray[i] as JSONObject
+                                val noleido = mensajeJObject["Activo"] as Boolean
+                                val mensaje = mensajeJObject["Descripcion"] as String
+                                println(mensajeJObject["FechaCreacion"] as String)
+                                val fechaCreacion = Utilitarios.getStringToStringddMMyyyyHHmmThree(mensajeJObject["FechaCreacion"] as String)
+                                val idSeguimiento = mensajeJObject["IdSeguimiento"] as String
+                                val titulo = mensajeJObject["Titulo"] as String
+                                val urlMensaje = mensajeJObject["URL"] as? String ?: ""
 
-                                    ListaMensajes.add(Mensaje(idSeguimiento, titulo, mensaje, fechaCreacion, noleido, url))
-                                }
-
-                                mensajeAdapter = MensajeAdapter(ListaMensajes) { mensaje, position ->
-                                    println("Mensaje")
-                                    val alertReturn = AlertDialog.Builder(this)
-                                        .setTitle(mensaje.titulo)
-                                        .setMessage(mensaje.mensaje)
-                                        .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i ->
-                                            if (mensaje.noLeido) {
-                                                val requestL = JSONObject()
-                                                requestL.put("IdSeguimiento", mensaje.key)
-                                                val requestEncriptado = Utilitarios.jsObjectEncrypted(requestL, this)
-
-                                                if (requestEncriptado != null)
-                                                    onMarcarComoLeido(Utilitarios.getUrl(Utilitarios.URL.MENSAJE_MARCARCOMOLEIDO), requestEncriptado, position)
-                                            }
-                                        })
-                                        .setNegativeButton(resources.getString(R.string.cancelar), null)
-                                        .create()
-                                    alertReturn.show()
-                                    alertReturn.getButton(android.app.Dialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.esan_rojo))
-                                    alertReturn.findViewById<TextView>(android.R.id.message)?.typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.LIGHT)
-                                }
-                                rvMensaje_mensaje.visibility = View.VISIBLE
-                                rvMensaje_mensaje.adapter = mensajeAdapter
-                            } else {
-                                lblMensaje_mensaje.visibility = View.VISIBLE
-                                lblMensaje_mensaje.text = resources.getText(R.string.advertencia_nocuenta_conmensajes)
+                                ListaMensajes.add(Mensaje(idSeguimiento, titulo, mensaje, fechaCreacion, noleido, urlMensaje))
                             }
+
+                            mensajeAdapter = MensajeAdapter(ListaMensajes) { mensaje, position ->
+                                println("Mensaje")
+                                val alertReturn = AlertDialog.Builder(this)
+                                    .setTitle(mensaje.titulo)
+                                    .setMessage(mensaje.mensaje)
+                                    .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i ->
+                                        if (mensaje.noLeido) {
+                                            val requestL = JSONObject()
+                                            requestL.put("IdSeguimiento", mensaje.key)
+                                            val requestEncriptado = Utilitarios.jsObjectEncrypted(requestL, this)
+
+                                            if (requestEncriptado != null)
+                                                onMarcarComoLeido(Utilitarios.getUrl(Utilitarios.URL.MENSAJE_MARCARCOMOLEIDO), requestEncriptado, position)
+                                        }
+                                    })
+                                    .setNegativeButton(resources.getString(R.string.cancelar), null)
+                                    .create()
+                                alertReturn.show()
+                                alertReturn.getButton(android.app.Dialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.esan_rojo))
+                                alertReturn.findViewById<TextView>(android.R.id.message)?.typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.LIGHT)
+                            }
+                            rvMensaje_mensaje.visibility = View.VISIBLE
+                            rvMensaje_mensaje.adapter = mensajeAdapter
                         } else {
                             lblMensaje_mensaje.visibility = View.VISIBLE
-                            lblMensaje_mensaje.text = resources.getText(R.string.error_desencriptar)
+                            lblMensaje_mensaje.text = resources.getText(R.string.advertencia_nocuenta_conmensajes)
                         }
-                    } catch (jex: JSONException) {
+                    } else {
                         lblMensaje_mensaje.visibility = View.VISIBLE
-                        lblMensaje_mensaje.text = resources.getText(R.string.error_default)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            lblMensaje_mensaje.setCompoundDrawables(
-                                null,
-                                resources.getDrawable(R.drawable.ic_refresh_black_24dp),
-                                null,
-                                null
-                            );
-                        }
+                        lblMensaje_mensaje.text = resources.getText(R.string.error_desencriptar)
                     }
-                    prbCargando_mensaje.visibility = View.GONE
-                },
-                Response.ErrorListener { error ->
-                    prbCargando_mensaje.visibility = View.GONE
+                } catch (jex: JSONException) {
                     lblMensaje_mensaje.visibility = View.VISIBLE
-                    // lblMensaje_mensaje.text = resources.getText(R.string.error_no_conexion)
                     lblMensaje_mensaje.text = resources.getText(R.string.error_default)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         lblMensaje_mensaje.setCompoundDrawables(
@@ -219,6 +202,22 @@ class MensajeActivity : AppCompatActivity() {
                         );
                     }
                 }
+                prbCargando_mensaje.visibility = View.GONE
+            },
+            { error ->
+                prbCargando_mensaje.visibility = View.GONE
+                lblMensaje_mensaje.visibility = View.VISIBLE
+                // lblMensaje_mensaje.text = resources.getText(R.string.error_no_conexion)
+                lblMensaje_mensaje.text = resources.getText(R.string.error_default)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    lblMensaje_mensaje.setCompoundDrawables(
+                        null,
+                        resources.getDrawable(R.drawable.ic_refresh_black_24dp),
+                        null,
+                        null
+                    );
+                }
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
@@ -229,23 +228,23 @@ class MensajeActivity : AppCompatActivity() {
         val jsObjectRequest = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        val respuesta = Utilitarios.stringDesencriptar(response["DesactivarNotificacionPorIdResult"] as String, this)?.toInt()
-                        if (respuesta != null) {
-                            if (respuesta > 0) {
-                                mensajeAdapter?.actualizarMensajeComoLeido(position)
-                            }
+            { response ->
+                try {
+                    val respuesta = Utilitarios.stringDesencriptar(response["DesactivarNotificacionPorIdResult"] as String, this)?.toInt()
+                    if (respuesta != null) {
+                        if (respuesta > 0) {
+                            mensajeAdapter?.actualizarMensajeComoLeido(position)
                         }
-                    } catch (jex: JSONException) {
-
-                    } catch (caas: ClassCastException) {
-
                     }
-                },
-                Response.ErrorListener { error ->
+                } catch (jex: JSONException) {
+
+                } catch (caas: ClassCastException) {
 
                 }
+            },
+            { error ->
+
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueueLeido?.add(jsObjectRequest)

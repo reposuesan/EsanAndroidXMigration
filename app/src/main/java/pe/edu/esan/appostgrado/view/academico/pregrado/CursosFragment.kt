@@ -178,110 +178,66 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
+            { response ->
+                try {
 
-                        var cursosJArray: JSONArray? = null
-                        if(activity != null) {
-                            cursosJArray = Utilitarios.jsArrayDesencriptar(
-                                response["ListarNotasActualesAlumnoPreResult"] as String,
-                                activity!!.applicationContext
-                            )
-                        }
-                        if (cursosJArray != null) {
+                    var cursosJArray: JSONArray? = null
+                    if(activity != null) {
+                        cursosJArray = Utilitarios.jsArrayDesencriptar(
+                            response["ListarNotasActualesAlumnoPreResult"] as String,
+                            activity!!.applicationContext
+                        )
+                    }
+                    if (cursosJArray != null) {
 
-                            Log.i(LOG, cursosJArray.toString())
-                            if (cursosJArray.length() > 0) {
+                        Log.i(LOG, cursosJArray.toString())
+                        if (cursosJArray.length() > 0) {
 
-                                val listCursosPre = ArrayList<CursosPre>()
-                                val listEstado = ArrayList<String>()
+                            val listCursosPre = ArrayList<CursosPre>()
+                            val listEstado = ArrayList<String>()
 
-                                var listaProfesores = ArrayList<Profesor>()
-                                var listaNotas = ArrayList<NotasPre>()
-                                var idSeccionActual = 0
-                                var cursoActual = CursosPre()
+                            var listaProfesores = ArrayList<Profesor>()
+                            var listaNotas = ArrayList<NotasPre>()
+                            var idSeccionActual = 0
+                            var cursoActual = CursosPre()
 
-                                for (f in 0 until cursosJArray.length()) {
-                                    val cursoJson = cursosJArray[f] as JSONObject
-                                    val idSeccion = cursoJson["IdSeccion"] as Int
-                                    val seccionCodigo = cursoJson["SeccionCodigo"] as String
-                                    val idProesoMatricula = cursoJson["IdProcesoMatricula"] as Int
-                                    val nombreCurso = cursoJson["Curso"] as String
-                                    val idProfesor = cursoJson["IdProfesor"] as Int
-                                    val nombreProfesor = cursoJson["NombreProfesor"] as String
-                                    val esResponsable = cursoJson["EsResponsable"] as Boolean
-                                    val estadoEncuesta = cursoJson["EstadoEncuesta"] as String
+                            for (f in 0 until cursosJArray.length()) {
+                                val cursoJson = cursosJArray[f] as JSONObject
+                                val idSeccion = cursoJson["IdSeccion"] as Int
+                                val seccionCodigo = cursoJson["SeccionCodigo"] as String
+                                val idProesoMatricula = cursoJson["IdProcesoMatricula"] as Int
+                                val nombreCurso = cursoJson["Curso"] as String
+                                val idProfesor = cursoJson["IdProfesor"] as Int
+                                val nombreProfesor = cursoJson["NombreProfesor"] as String
+                                val esResponsable = cursoJson["EsResponsable"] as Boolean
+                                val estadoEncuesta = cursoJson["EstadoEncuesta"] as String
 
-                                    val nota = cursoJson["Nota"] as? String
-                                    val tipoNota = cursoJson["TipoNota"] as? String
-                                    val notaCodigo = cursoJson["NotaCodigo"] as? String
-                                    val notaPeso = cursoJson["NotaPeso"] as? Double
+                                val nota = cursoJson["Nota"] as? String
+                                val tipoNota = cursoJson["TipoNota"] as? String
+                                val notaCodigo = cursoJson["NotaCodigo"] as? String
+                                val notaPeso = cursoJson["NotaPeso"] as? Double
 
-                                    val idEncuesta = cursoJson["IdEncuesta"] as Int
-                                    val idProgramacion = cursoJson["IdProgramacion"] as Int
-                                    val estadoAlumno = cursoJson["Estado"] as String
-                                    /*estadoAlumno = cursoJson["Estado"] as String*/
+                                val idEncuesta = cursoJson["IdEncuesta"] as Int
+                                val idProgramacion = cursoJson["IdProgramacion"] as Int
+                                val estadoAlumno = cursoJson["Estado"] as String
+                                /*estadoAlumno = cursoJson["Estado"] as String*/
 
-                                    if(esResponsable == true){
-                                        if (idSeccion == idSeccionActual) {
-                                            val profesor = Profesor(
-                                                idProfesor,
-                                                nombreProfesor,
-                                                estadoEncuesta,
-                                                esResponsable,
-                                                idEncuesta,
-                                                idProgramacion, estadoAlumno)
-                                            if (!findProfesor(listaProfesores, idProfesor)) {
-                                                listaProfesores.add(profesor)
-                                            }
+                                if(esResponsable == true){
+                                    if (idSeccion == idSeccionActual) {
+                                        val profesor = Profesor(
+                                            idProfesor,
+                                            nombreProfesor,
+                                            estadoEncuesta,
+                                            esResponsable,
+                                            idEncuesta,
+                                            idProgramacion,
+                                            estadoAlumno)
+                                        if (!findProfesor(listaProfesores, idProfesor)) {
+                                            listaProfesores.add(profesor)
+                                        }
 
-                                            if (nota != null && tipoNota != null && notaCodigo != null && notaPeso != null) {
-                                                if (!findNotaPre(listaNotas, tipoNota)) {
-                                                    if (notaCodigo == "PG") {
-                                                        cursoActual.cambiaPromedio(nota)
-                                                    } else {
-                                                        if (notaPeso.toInt() > 0) {
-                                                            listaNotas.add(
-                                                                NotasPre(
-                                                                    tipoNota,
-                                                                    notaCodigo,
-                                                                    nota,
-                                                                    notaPeso.toString()
-                                                                )
-                                                            )
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        } else {
-
-                                            if (idSeccionActual != 0) {
-                                                cursoActual.listProfesores = listaProfesores
-
-                                                if (listaNotas.size > 0)
-                                                    cursoActual.listNotasPre = listaNotas
-                                                else
-                                                    cursoActual.fillCursoDefault(context!!)
-
-                                                listCursosPre.add(cursoActual)
-                                            }
-
-                                            idSeccionActual = idSeccion
-                                            cursoActual =
-                                                    CursosPre(idSeccion, seccionCodigo, idProesoMatricula, nombreCurso)
-                                            listaProfesores = ArrayList()
-                                            listaProfesores.add(
-                                                Profesor(
-                                                    idProfesor,
-                                                    nombreProfesor,
-                                                    estadoEncuesta,
-                                                    esResponsable,
-                                                    idEncuesta,
-                                                    idProgramacion, estadoAlumno)
-                                            )
-
-                                            listaNotas = ArrayList()
-                                            if (nota != null && tipoNota != null && notaCodigo != null && notaPeso != null) {
+                                        if (nota != null && tipoNota != null && notaCodigo != null && notaPeso != null) {
+                                            if (!findNotaPre(listaNotas, tipoNota)) {
                                                 if (notaCodigo == "PG") {
                                                     cursoActual.cambiaPromedio(nota)
                                                 } else {
@@ -298,88 +254,133 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                                                 }
                                             }
                                         }
-                                    }
-                                }
-
-                                cursoActual.listProfesores = listaProfesores
-                                if (listaNotas.size > 0)
-                                    cursoActual.listNotasPre = listaNotas
-                                else
-                                    cursoActual.fillCursoDefault(context!!)
-
-                                listCursosPre.add(cursoActual)
-
-
-
-                                val adapter = CursoPreAdapter(listCursosPre) { curso ->
-                                    var encuestar = false
-                                    var alumnoRetirado = true
-                                    val lstProfesores = ArrayList<Profesor>()
-                                    for (profesor in curso.listProfesores ){
-                                        if (profesor.encuesta.trim().toUpperCase() == "N" && profesor.estadoAlumno == "A") {
-                                            encuestar = true
-                                            lstProfesores.add(profesor)
-                                        }
-                                        if(profesor.estadoAlumno == "A"){
-                                            alumnoRetirado = false
-                                        }
-                                    }
-
-                                    ControlUsuario.instance.currentCursoPre = curso
-                                    if (encuestar) {
-                                        curso.listProfesores = lstProfesores
-                                        val intentEncuesta = Intent(activity, EncuestaActivity::class.java)
-                                        intentEncuesta.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                        startActivity(intentEncuesta)
                                     } else {
-                                        getAsistencias(curso.seccionCodigo, alumnoRetirado)
 
-                                        /*
-                                          val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
-                                          intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                          startActivity(intentDetalleCurso)
-                                                                    */
+                                        if (idSeccionActual != 0) {
+                                            cursoActual.listProfesores = listaProfesores
+
+                                            if (listaNotas.size > 0)
+                                                cursoActual.listNotasPre = listaNotas
+                                            else
+                                                cursoActual.fillCursoDefault(context!!)
+
+                                            listCursosPre.add(cursoActual)
+                                        }
+
+                                        idSeccionActual = idSeccion
+                                        cursoActual =
+                                                CursosPre(idSeccion, seccionCodigo, idProesoMatricula, nombreCurso)
+                                        listaProfesores = ArrayList()
+                                        listaProfesores.add(
+                                            Profesor(
+                                                idProfesor,
+                                                nombreProfesor,
+                                                estadoEncuesta,
+                                                esResponsable,
+                                                idEncuesta,
+                                                idProgramacion, estadoAlumno)
+                                        )
+
+                                        listaNotas = ArrayList()
+                                        if (nota != null && tipoNota != null && notaCodigo != null && notaPeso != null) {
+                                            if (notaCodigo == "PG") {
+                                                cursoActual.cambiaPromedio(nota)
+                                            } else {
+                                                if (notaPeso.toInt() > 0) {
+                                                    listaNotas.add(
+                                                        NotasPre(
+                                                            tipoNota,
+                                                            notaCodigo,
+                                                            nota,
+                                                            notaPeso.toString()
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            cursoActual.listProfesores = listaProfesores
+                            if (listaNotas.size > 0)
+                                cursoActual.listNotasPre = listaNotas
+                            else
+                                cursoActual.fillCursoDefault(context!!)
+
+                            listCursosPre.add(cursoActual)
+
+
+
+                            val adapter = CursoPreAdapter(listCursosPre) { curso ->
+                                var encuestar = false
+                                var alumnoRetirado = true
+                                val lstProfesores = ArrayList<Profesor>()
+                                for (profesor in curso.listProfesores ){
+                                    if (profesor.encuesta.trim().toUpperCase() == "N" && profesor.estadoAlumno == "A") {
+                                        encuestar = true
+                                        lstProfesores.add(profesor)
+                                    }
+                                    if(profesor.estadoAlumno == "A"){
+                                        alumnoRetirado = false
                                     }
                                 }
 
-                                if(view != null) {
-                                    view!!.rvCurso_fcurso.adapter = adapter
-                                    view!!.lblMensaje_fcurso.visibility = View.GONE
+                                ControlUsuario.instance.currentCursoPre = curso
+                                if (encuestar) {
+                                    curso.listProfesores = lstProfesores
+                                    val intentEncuesta = Intent(activity, EncuestaActivity::class.java)
+                                    intentEncuesta.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                    startActivity(intentEncuesta)
+                                } else {
+                                    getAsistencias(curso.seccionCodigo, alumnoRetirado)
+
+                                    /*
+                                      val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+                                      intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                      startActivity(intentDetalleCurso)
+                                                                */
                                 }
-                            } else {
-                                if(view != null) {
-                                    view!!.lblMensaje_fcurso.visibility = View.VISIBLE
-                                    view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_curso_no)
-                                }
+                            }
+
+                            if(view != null) {
+                                view!!.rvCurso_fcurso.adapter = adapter
+                                view!!.lblMensaje_fcurso.visibility = View.GONE
                             }
                         } else {
                             if(view != null) {
                                 view!!.lblMensaje_fcurso.visibility = View.VISIBLE
-                                view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_desencriptar)
+                                view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_curso_no)
                             }
                         }
-                    } catch (jex: JSONException) {
+                    } else {
                         if(view != null) {
                             view!!.lblMensaje_fcurso.visibility = View.VISIBLE
-                            view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_default)
+                            view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_desencriptar)
                         }
                     }
+                } catch (jex: JSONException) {
                     if(view != null) {
-                        view!!.swCurso_fcurso.isRefreshing = false
-                        view!!.prbCargando_fcurso.visibility = View.GONE
-                    }
-                },
-                Response.ErrorListener { error ->
-
-                    Log.e(LOG, error.message.toString())
-                    if(view != null) {
-                        view!!.swCurso_fcurso.isRefreshing = false
-                        view!!.prbCargando_fcurso.visibility = View.GONE
                         view!!.lblMensaje_fcurso.visibility = View.VISIBLE
-                        view!!.rvCurso_fcurso.visibility = View.GONE
                         view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_default)
                     }
                 }
+                if(view != null) {
+                    view!!.swCurso_fcurso.isRefreshing = false
+                    view!!.prbCargando_fcurso.visibility = View.GONE
+                }
+            },
+            { error ->
+
+                Log.e(LOG, error.message.toString())
+                if(view != null) {
+                    view!!.swCurso_fcurso.isRefreshing = false
+                    view!!.prbCargando_fcurso.visibility = View.GONE
+                    view!!.lblMensaje_fcurso.visibility = View.VISIBLE
+                    view!!.rvCurso_fcurso.visibility = View.GONE
+                    view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_default)
+                }
+            }
         )
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(1500, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
@@ -437,101 +438,101 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
         val jsObjectRequest = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        var historicoJArray: JSONArray? = null
-                        if(activity != null) {
-                            historicoJArray = Utilitarios.jsArrayDesencriptar(
-                                response["ResumenAsistenciaAlumnoPregradoResult"] as String,
-                                activity!!.applicationContext
-                            )
-                        }
+            { response ->
+                try {
+                    var historicoJArray: JSONArray? = null
+                    if(activity != null) {
+                        historicoJArray = Utilitarios.jsArrayDesencriptar(
+                            response["ResumenAsistenciaAlumnoPregradoResult"] as String,
+                            activity!!.applicationContext
+                        )
+                    }
 
-                        Log.i(LOG, historicoJArray.toString())
-                        if (historicoJArray != null) {
-                            if (historicoJArray.length() > 0) {
+                    Log.i(LOG, historicoJArray.toString())
+                    if (historicoJArray != null) {
+                        if (historicoJArray.length() > 0) {
 
-                                for (i in 0 until historicoJArray.length()) {
-                                    val historicoJObject = historicoJArray[i] as JSONObject
+                            for (i in 0 until historicoJArray.length()) {
+                                val historicoJObject = historicoJArray[i] as JSONObject
 
 
-                                    val CodigoSeccion = historicoJObject["SeccionCodigo"] as String
+                                val CodigoSeccion = historicoJObject["SeccionCodigo"] as String
 
-                                    Log.i(LOG, codSeccion)
-                                    if (codSeccion == CodigoSeccion) {
-                                        val tardanza = historicoJObject["CantTardanzas"] as Double
-                                        val asistencia = historicoJObject["CantAsistencias"] as Double
-                                        val faltas = historicoJObject["CantFalta"] as Double
-                                        val sesiones = historicoJObject["CantidadSesiones"] as Int
+                                Log.i(LOG, codSeccion)
+                                if (codSeccion == CodigoSeccion) {
+                                    val tardanza = historicoJObject["CantTardanzas"] as Double
+                                    val asistencia = historicoJObject["CantAsistencias"] as Double
+                                    val faltas = historicoJObject["CantFalta"] as Double
+                                    val sesiones = historicoJObject["CantidadSesiones"] as Int
 
-                                        ControlUsuario.instance.currentCursoPre!!.asistencias = asistencia.roundToInt()
-                                        ControlUsuario.instance.currentCursoPre!!.tardanzas = tardanza.roundToInt()
-                                        ControlUsuario.instance.currentCursoPre!!.faltas = faltas.roundToInt()
-                                        ControlUsuario.instance.currentCursoPre!!.totalsesiones = sesiones
+                                    ControlUsuario.instance.currentCursoPre!!.asistencias = asistencia.roundToInt()
+                                    ControlUsuario.instance.currentCursoPre!!.tardanzas = tardanza.roundToInt()
+                                    ControlUsuario.instance.currentCursoPre!!.faltas = faltas.roundToInt()
+                                    ControlUsuario.instance.currentCursoPre!!.totalsesiones = sesiones
 
-                                        break
-                                    }
-
+                                    break
                                 }
 
-                                /*rvCurso_historiconotaspre.adapter = HistoricoNotaPreAdapter(listaCursos)*/
-
-                            } else {
-                                /*lblMensaje_historiconotaspre.text = resources.getText(R.string.advertencia_no_informacion)
-                                lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
-                                ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
                             }
+
+                            /*rvCurso_historiconotaspre.adapter = HistoricoNotaPreAdapter(listaCursos)*/
+
                         } else {
-                            /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_desencriptar)
+                            /*lblMensaje_historiconotaspre.text = resources.getText(R.string.advertencia_no_informacion)
                             lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                             ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
                         }
-                    } catch (jex: JSONException) {
-
-                        Log.e(LOG, jex.message)
-                        /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                        lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
-                        ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
-                    } catch (ccax: ClassCastException) {
-
-                        Log.e(LOG, ccax.message)
-                        /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                    } else {
+                        /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_desencriptar)
                         lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                         ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
                     }
-                    /*prbCargando_historiconotaspre.visibility = View.GONE*/
-                    CustomDialog.instance.dialogoCargando?.dismiss()
-                    if(activity != null) {
-                        val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
-                        if (alumnoRetirado) {
-                            intentDetalleCurso.putExtra("alumno_esta_retirado", true)
-                        } else {
-                            intentDetalleCurso.putExtra("alumno_esta_retirado", false)
-                        }
-                        intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        startActivity(intentDetalleCurso)
-                    }
-                },
-                Response.ErrorListener { error ->
-                    Log.e(LOG, error.message.toString())
-                    /*prbCargando_historiconotaspre.visibility = View.GONE
-                    lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                } catch (jex: JSONException) {
+
+                    Log.e(LOG, jex.message)
+                    /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
                     lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
-                    if(ControlUsuario.instance.currentCursoPre != null){
-                        ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
-                    }
+                    ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
+                } catch (ccax: ClassCastException) {
 
-                    if(CustomDialog.instance.dialogoCargando != null){
-                        CustomDialog.instance.dialogoCargando?.dismiss()
-                    }
-
-                    if(activity != null){
-                        val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
-                        intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        startActivity(intentDetalleCurso)
-                    }
-
+                    Log.e(LOG, ccax.message)
+                    /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                    lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
+                    ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
                 }
+                /*prbCargando_historiconotaspre.visibility = View.GONE*/
+                CustomDialog.instance.dialogoCargando?.dismiss()
+                if(activity != null) {
+                    val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+                    if (alumnoRetirado) {
+                        intentDetalleCurso.putExtra("alumno_esta_retirado", true)
+                    } else {
+                        intentDetalleCurso.putExtra("alumno_esta_retirado", false)
+                    }
+                    intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intentDetalleCurso)
+                }
+            },
+            { error ->
+                Log.e(LOG, error.message.toString())
+                /*prbCargando_historiconotaspre.visibility = View.GONE
+                lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
+                if(ControlUsuario.instance.currentCursoPre != null){
+                    ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
+                }
+
+                if(CustomDialog.instance.dialogoCargando != null){
+                    CustomDialog.instance.dialogoCargando?.dismiss()
+                }
+
+                if(activity != null){
+                    val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+                    intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intentDetalleCurso)
+                }
+
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

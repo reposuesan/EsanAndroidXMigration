@@ -44,7 +44,7 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.control.CustomDialog
 import pe.edu.esan.appostgrado.entidades.*
 import pe.edu.esan.appostgrado.helpers.ShowAlertHelper
-//TODO: UNCOMMENT THIS FOR THE INTERNATIONAL WEEK
+//UNCOMMENT THIS FOR THE INTERNATIONAL WEEK
 /*import com.example.vuforiamod.international.activities.InternationalMainActivity*/
 import pe.edu.esan.appostgrado.util.Utilitarios
 import pe.edu.esan.appostgrado.view.MenuPrincipalActivity
@@ -94,7 +94,7 @@ class LoginActivity : AppCompatActivity(),
 
     private var fingerFragmentDialog: FingerprintAuthenticationLoginDialogFragment? = null
 
-    //TODO: UNCOMMENT THIS FOR CMUDE
+    //UNCOMMENT THIS FOR CMUDE
     /*private val URL_CMUDE = "https://cmudeperu.esan.edu.pe/"*/
     private var iniciandoSesion = false
     private var dialogoPerfil: PerfilUsuarioDialog? = null
@@ -126,13 +126,13 @@ class LoginActivity : AppCompatActivity(),
             lblVersion_login.text = ""
         }
 
-        //TODO: CHANGE THIS TO VISIBLE FOR THE INTERNATIONAL WEEK
+        //CHANGE THIS TO VISIBLE FOR THE INTERNATIONAL WEEK
         imgInternationalWeek.visibility = View.GONE
-        //TODO: CHANGE THIS TO VISIBLE FOR CMUDE
+        //CHANGE THIS TO VISIBLE FOR CMUDE
         img_cmude.visibility = View.GONE
 
         //Cmude Imagen
-        //TODO: UNCOMMENT THIS FOR CMUDE
+        //UNCOMMENT THIS FOR CMUDE
         /*img_cmude.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(URL_CMUDE)
@@ -143,7 +143,7 @@ class LoginActivity : AppCompatActivity(),
         }*/
 
         //Semana Internacional
-        //TODO: UNCOMMENT THIS FOR THE INTERNATIONAL WEEK
+        //UNCOMMENT THIS FOR THE INTERNATIONAL WEEK
         /*imgInternationalWeek.setOnClickListener {
             val intent = Intent(this@LoginActivity,  InternationalMainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -240,13 +240,13 @@ class LoginActivity : AppCompatActivity(),
     //Grab user and password and verify data input
     private fun onIniciar() {
 
-        //TODO: ONLY FOR DEBUGGING (DEBUGGING PARA ALUMNO PREGRADO)
-        /*val usuario = "13200177"*/
-        //TODO: ONLY FOR DEBUGGING (DEBUGGING PARA ALUMNO POSGRADO)
-        /*val usuario = "1713155"*/
+        //ONLY FOR DEBUGGING (DEBUGGING PARA ALUMNO PREGRADO)
+        val usuario = "19100263"
+        //ONLY FOR DEBUGGING (DEBUGGING PARA ALUMNO POSGRADO)
+        /*val usuario = "11100951"*/
 
-        //TODO: USUARIO Y CLAVE
-        val usuario = txtUsuario_login.text.toString()
+        //USUARIO Y CLAVE
+        //val usuario = txtUsuario_login.text.toString()
         val clave = txtClave_login.text.toString()
 
         txtUsuario_login.error = null
@@ -266,7 +266,7 @@ class LoginActivity : AppCompatActivity(),
             isError = true
         }
 
-        //TODO: USUARIO EXPULSADO DE LA UNIVERSIDAD
+        //USUARIO EXPULSADO DE LA UNIVERSIDAD
         if (usuario == "17200563") {
             val snack = Snackbar.make(
                 findViewById(android.R.id.content),
@@ -321,7 +321,7 @@ class LoginActivity : AppCompatActivity(),
         Log.i(LOG, fRequest.toString())
         if (fRequest != null) {
             requestQueue = Volley.newRequestQueue(this)
-            //TODO: CÓDIGO PARA IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
             /*val jsObjectRequest = object: JsonObjectRequest(*/
             val jsObjectRequest = JsonObjectRequest(
                 Request.Method.POST,
@@ -354,11 +354,6 @@ class LoginActivity : AppCompatActivity(),
                                 val correo = jsObjDatosPersonales?.getString("Correo") ?: ""
 
                                 val crashlytics = FirebaseCrashlytics.getInstance()
-                                //Use the current user's information
-                                //You can call any combination of these three methods
-                                /*crashlytics.setUserId("$correo - $nombreCompleto")
-                                crashlytics.setUserEmail(correo)
-                                crashlytics.setUserName(nombreCompleto)*/
 
                                 val jsObjDatosPostgrado =
                                     jsResponse["ObjDatosPostgrado"] as? JSONObject
@@ -366,10 +361,10 @@ class LoginActivity : AppCompatActivity(),
                                 //ALUMNO POSTGRADO--------------------------------------------------------------
                                 val esAlumnoPost =
                                     jsObjDatosPostgrado?.getBoolean("EsAlumno") ?: false
-                                //TODO: CÓDIGO ALUMNO POSTGRADO
+                                //CÓDIGO ALUMNO POSTGRADO
                                 val codAlumnoPost =
                                     jsObjDatosPostgrado?.getString("CodAlumno") ?: ""
-                                //TODO: ONLY FOR DEBUGGING POSTGRADO
+                                //ONLY FOR DEBUGGING POSTGRADO
                                 /*val codAlumnoPost = txtUsuario_login.text.toString()*/
 
                                 crashlytics.setUserId(codAlumnoPost)
@@ -383,7 +378,7 @@ class LoginActivity : AppCompatActivity(),
                                         9 -> true
                                         else -> false
                                     }
-                                //TODO: CÓDIGO DOCENTE POSTGRADO
+                                //CÓDIGO DOCENTE POSTGRADO
                                 val codDocentePost =
                                     jsObjDatosPostgrado?.getString("CodDocente") ?: ""
 
@@ -395,10 +390,11 @@ class LoginActivity : AppCompatActivity(),
                                 //ALUMNO PREGRADO--------------------------------------------------------------
                                 val esAlumnoPre =
                                     jsObjDatosPregrado?.getBoolean("EsAlumno") ?: false
-                                //TODO: CÓDIGO ALUMNO PREGRADO
-                                val codAlumnoPre = jsObjDatosPregrado?.getString("CodAlumno") ?: ""
-                                //TODO: ONLY FOR DEBUGGING PREGRADO
-                                /*val codAlumnoPre = txtUsuario_login.text.toString()*/
+                                //CÓDIGO ALUMNO PREGRADO
+                                //val codAlumnoPre = jsObjDatosPregrado?.getString("CodAlumno") ?: ""
+                                //ONLY FOR DEBUGGING PREGRADO
+                                val codAlumnoPre = txtUsuario_login.text.toString()
+                                //val codAlumnoPre = "19100252"
 
                                 crashlytics.setUserId(codAlumnoPre)
 
@@ -435,7 +431,7 @@ class LoginActivity : AppCompatActivity(),
                                         else -> false
                                     }
 
-                                //TODO: CÓDIGO DOCENTE PREGRADO
+                                //CÓDIGO DOCENTE PREGRADO
                                 val codDocentePre = jsObjDatosPregrado?.getString("CodDocente") ?: ""
                                 /*val codDocentePre = "agazzolo"*/
 
@@ -522,7 +518,7 @@ class LoginActivity : AppCompatActivity(),
                                     Log.i(LOG, "ALUMNO Y PROFESOR")
                                     ControlUsuario.instance.statusLogout = 0
                                     this.esAlumnoProfesor = true
-                                    //TODO: REALIZAR CONSULTA SI UN ALUMNO PUEDE SER PRE Y POST Y ADEMÁS DOCENTE
+                                    //TODO: CONSULTAR SI UN ALUMNO PUEDE SER DE PREGRADO Y POSTGRADO Y ADEMÁS DOCENTE
                                     this.esPreyPost = false
                                     if (esAlumnoPre && esAlumnoPost) {
                                         this.esPreyPost = true
@@ -1095,7 +1091,7 @@ class LoginActivity : AppCompatActivity(),
                     iniciandoSesion = false
                 }
             )
-            //TODO: CÓDIGO PARA IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
             /*{
                 override fun getHeaders(): MutableMap<String, String> {
                     val headers = HashMap<String, String>()
@@ -1404,14 +1400,13 @@ class LoginActivity : AppCompatActivity(),
     }
 
 
-    //VERIFICAR LA EXISTENCIA DE DICHAS PREFERENCIAS
+    //VERIFICAR LA EXISTENCIA DE PREFERENCIAS PARA LA HUELLA DIGITAL
     fun checkRemovedPreferences(): Boolean {
 
         val misPreferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
 
         val code = misPreferencias.getString("userWithFingerprint", "")
         val password = misPreferencias.getString("passwordWithFingerprint", "")
-
 
         return (code.isNullOrEmpty() && password.isNullOrEmpty())
     }

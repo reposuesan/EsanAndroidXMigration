@@ -481,7 +481,7 @@ public class MixContext extends ContextWrapper {
 	}
 	
 	/*
-	 * Return true si no hay markers dentro del radio de visibilidad establecido, false si hay almenos 1 marker dentro de él*/
+	 * Return true si no hay markers dentro del radio de visibilidad establecido, false si hay al menos 1 marker dentro de él*/
 	public boolean noMarkerInRadius(int radioMetros) {
 		List<Marker> markerList = PrincipalRAActivity.dataView.getDataHandler().getMarkerList();
 		//List<Marker> markerList = f_comedor.dataView.getDataHandler().getMarkerList();

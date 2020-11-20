@@ -203,7 +203,7 @@ public class DetalleMarkerActivity extends AppCompatActivity {
                 }
                 return true;
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
+                //Auto-generated catch block
                 e.printStackTrace();
                 return false;
             }

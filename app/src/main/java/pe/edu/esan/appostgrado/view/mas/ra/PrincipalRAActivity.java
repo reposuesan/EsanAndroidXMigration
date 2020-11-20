@@ -197,7 +197,7 @@ public class PrincipalRAActivity extends AppCompatActivity {
             i.putExtra(PutExtraAR, "arbuscar");
             startActivity(i);
             finish();
-        }else {
+        } else {
             //Mostrar todos los puntos importantes
             JSonCabecera = "ListarDescripcionAmbienteGrupoResult";
             Log.i(TAG, "MOSTRAR TODOS LOS PUNTOS IMPORTANTES");

@@ -244,6 +244,8 @@ class Utilitarios {
 
                 URL.MENU_COMEDOR ->                 return "http://intranetmovil.ue.edu.pe/Service/AlumnoService.svc/menuComedor/"
                 /*URL.MENU_COMEDOR ->                 return "http://devintranetmovil.ue.edu.pe/Service/AlumnoService.svc/menuComedor/"*/
+
+                //REALIDAD AUMENTADA
                 URL.RA_FACULTADES ->                return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/facultades"
                 URL.RA_EDIFICIOS ->                 return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/edificios"
                 URL.RA_CAFETERIAS ->                return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/cafeterias"

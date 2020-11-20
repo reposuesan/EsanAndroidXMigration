@@ -72,39 +72,39 @@ class MenuActivity : AppCompatActivity() {
                 Request.Method.GET,
                 url,
                 null,
-                Response.Listener { response ->
-                    prbCargando_menu.visibility = View.GONE
+            { response ->
+                prbCargando_menu.visibility = View.GONE
 
-                    val almuerzoJArray = response["MenuComedorResult"] as JSONArray
-                    if (almuerzoJArray.length() > 0) {
-                        val listaAlmuerzo = ArrayList<AlmuerzoComedor>()
-                        for (a in 0 until almuerzoJArray.length()) {
-                            val almuerzoJObject = almuerzoJArray[a] as JSONObject
-                            val descripcion = almuerzoJObject["descripcion"] as String
-                            val dia = almuerzoJObject["dia"] as Int
-                            val entrada = almuerzoJObject["entrada"] as String
-                            val fecha = almuerzoJObject["fecha"] as String
-                            val guarnicion = almuerzoJObject["guarnicion"] as String
-                            val postre = almuerzoJObject["postre"] as String
-                            val precio = almuerzoJObject["precio"] as String
-                            val refresco = almuerzoJObject["refresco"] as String
-                            val segundo = almuerzoJObject["segundo"] as String
-                            val sopa = almuerzoJObject["sopa"] as String
+                val almuerzoJArray = response["MenuComedorResult"] as JSONArray
+                if (almuerzoJArray.length() > 0) {
+                    val listaAlmuerzo = ArrayList<AlmuerzoComedor>()
+                    for (a in 0 until almuerzoJArray.length()) {
+                        val almuerzoJObject = almuerzoJArray[a] as JSONObject
+                        val descripcion = almuerzoJObject["descripcion"] as String
+                        val dia = almuerzoJObject["dia"] as Int
+                        val entrada = almuerzoJObject["entrada"] as String
+                        val fecha = almuerzoJObject["fecha"] as String
+                        val guarnicion = almuerzoJObject["guarnicion"] as String
+                        val postre = almuerzoJObject["postre"] as String
+                        val precio = almuerzoJObject["precio"] as String
+                        val refresco = almuerzoJObject["refresco"] as String
+                        val segundo = almuerzoJObject["segundo"] as String
+                        val sopa = almuerzoJObject["sopa"] as String
 
-                            val fechaFormat = Utilitarios.getStringToDateddMMyyyy(fecha)
-                            listaAlmuerzo.add(AlmuerzoComedor(1,"",descripcion,dia,entrada,fechaFormat,guarnicion,postre,precio,refresco,segundo,sopa,"",""))
-                        }
-                        getListaOrdenadaMenu(listaAlmuerzo)
-                    } else {
-                        lblMensaje_menu.visibility = View.VISIBLE
-                        lblMensaje_menu.text = resources.getString(R.string.advertencia_no_existe_menu)
+                        val fechaFormat = Utilitarios.getStringToDateddMMyyyy(fecha)
+                        listaAlmuerzo.add(AlmuerzoComedor(1,"",descripcion,dia,entrada,fechaFormat,guarnicion,postre,precio,refresco,segundo,sopa,"",""))
                     }
-                },
-                Response.ErrorListener { error ->
-                    prbCargando_menu.visibility = View.GONE
+                    getListaOrdenadaMenu(listaAlmuerzo)
+                } else {
                     lblMensaje_menu.visibility = View.VISIBLE
-                    lblMensaje_menu.text = resources.getString(R.string.error_no_conexion)
+                    lblMensaje_menu.text = resources.getString(R.string.advertencia_no_existe_menu)
                 }
+            },
+            { error ->
+                prbCargando_menu.visibility = View.GONE
+                lblMensaje_menu.visibility = View.VISIBLE
+                lblMensaje_menu.text = resources.getString(R.string.error_no_conexion)
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

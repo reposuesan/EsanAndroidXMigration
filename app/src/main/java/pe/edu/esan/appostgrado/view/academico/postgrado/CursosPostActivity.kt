@@ -139,7 +139,7 @@ class CursosPostActivity : AppCompatActivity() {
     }
 
 
-    //TODO: ESTE MÉTODO RECUPERA LAS ENCUESTAS PENDIENTES DE CADA PROGRAMA
+    //ESTE MÉTODO RECUPERA LAS ENCUESTAS PENDIENTES DE CADA PROGRAMA
     private fun onEncuestaPorPrograma (url: String, request: JSONObject, codigoPromocion: String?) {
 
         requestQueueEncuesta = Volley.newRequestQueue(this)
@@ -224,7 +224,7 @@ class CursosPostActivity : AppCompatActivity() {
     }
 
 
-    //TODO: ESTE MÉTODO DEVUELVE LOS CURSOS Y LOS ORDENA POR PROGRAMA
+    //ESTE MÉTODO DEVUELVE LOS CURSOS Y LOS ORDENA POR PROGRAMA
     private fun onCursos(url: String, request: JSONObject, listaEncuesta: ArrayList<SeccionEncuestaPos>) {
 
         Log.i(LOG, url)
@@ -314,8 +314,6 @@ class CursosPostActivity : AppCompatActivity() {
                                 Log.i(LOG, "Agregar ultimo modulo")
 
                                 listaModuloCursos.add(CursoPostModulo(ultimoModulo, listaCursos))
-
-                                //TODO: SETEAMOS EL ADAPTER
                                 cursoAdapter = CursoPostAdapter(listaModuloCursos , {codigoSeccion ->
 
                                     Log.i(LOG, "Asistencia")
@@ -334,7 +332,7 @@ class CursosPostActivity : AppCompatActivity() {
                                         startActivity(intentEncuesta)
 
                                     } else {
-                                        //TODO: SI LA LISTA ESTÁ EXPANDIDA
+                                        //SI LA LISTA ESTÁ EXPANDIDA
                                         if (cursosPost.expandible) {
                                             listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = true
                                             /*updateAdater(posAdapter)*/
@@ -351,7 +349,7 @@ class CursosPostActivity : AppCompatActivity() {
                                             listaModuloCursos[posModulo].listaCursos[posCurso]?.expandible = false
                                             /*updateAdater(posAdapter)*/
                                             refreshAdapter()
-                                        //TODO: SI LA LISTA NO ESTÁ EXPANDIDA
+                                        //SI LA LISTA NO ESTÁ EXPANDIDA
                                         } else {
                                             listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = true
                                             /*updateAdater(posAdapter)*/
@@ -525,7 +523,7 @@ class CursosPostActivity : AppCompatActivity() {
     }
 
 
-    //TODO: ESTE MÉTODO DEVUELVE LA ASISTENCIA EN CADA CURSO
+    //ESTE MÉTODO DEVUELVE LA ASISTENCIA EN CADA CURSO
     private fun onAsistenciaCurso(url: String, request: JSONObject) {
         val displaymetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(displaymetrics)

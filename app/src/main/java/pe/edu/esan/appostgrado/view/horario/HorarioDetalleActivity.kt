@@ -201,8 +201,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                                                 "IdSesion",
                                                 if (horario.esPregrado == 1) -1 else horario.idSesion
                                             )
-                                            //println(valores)
-                                            Log.i(LOG, valores.toString())
+
                                             val listaHorarioAdelante = ArrayList<Horario>()
                                             for (i in position + 1 until listaHorarioDetalle.size) {
                                                 if (horario.seccionCodigo == listaHorarioDetalle[i].seccionCodigo) {
@@ -299,7 +298,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
         val jsObjectRequest = JsonObjectRequest(
             url,
             request,
-            Response.Listener { response ->
+            { response ->
                 try {
                     if (response["RegistrarAsistenciaMasivaAlumnoResult"] as Boolean) {
                         val snack = Snackbar.make(
@@ -356,7 +355,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                     snack.show()
                 }
             },
-            Response.ErrorListener { error ->
+            { error ->
                 Log.e(LOG, error.message.toString())
                 ControlUsuario.instance.indexActualiza = -1
                 val snack = Snackbar.make(
@@ -396,7 +395,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
             } catch (e: IndexOutOfBoundsException) {
                 ""
             }
-            //val hActual = "19:00"
 
             val fini = Utilitarios.getStringToDateHHmm(horario.horaInicio)
             val ffinal = Utilitarios.getStringToDateHHmm(horario.horaFin)
@@ -415,7 +413,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                                 valores.put("CodSeccion", horario.seccionCodigo)
                                 valores.put("IdHorario", horario.idHorario)
                                 valores.put("IdSesion", if (horario.esPregrado == 1) -1 else horario.idSesion)
-                                //println(valores)
                                 Log.i(LOG, valores.toString())
                                 val requestEncriptado = Utilitarios.jsObjectEncrypted(valores, this)
                                 if (requestEncriptado != null)
@@ -432,7 +429,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                     }
                 }
             }
-            //println(horario.curso + " --- " + horario.horaFin + " <> " + horario.horaInicio + " -- " + horario.horaConsulta)
             Log.i(
                 LOG,
                 horario.curso + " --- " + horario.horaFin + " <> " + horario.horaInicio + " -- " + horario.horaConsulta
@@ -448,26 +444,17 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
         curso: String,
         horario: Horario?
     ) {
-        //println(url)
-        Log.i(LOG, url)
-        //println(request)
-        Log.i(LOG, request.toString())
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest(
             Request.Method.POST,
             url,
             request,
-            Response.Listener { response ->
+            { response ->
                 try {
-                    //println(response)
-                    Log.i(LOG, response.toString())
+
                     val respuesta =
                         Utilitarios.stringDesencriptar(response["ConsultarAsistenciaProfesorResult"] as String, this)
                     if (respuesta != null) {
-                        //println("CONSULTA ASISTENCIA DEL PROFESOR")
-                        Log.i(LOG, "CONSULTA ASISTENCIA DEL PROFESOR")
-                        //println(respuesta)
-                        Log.i(LOG, respuesta)
                         if (respuesta == "false") {
                             showPreguntarTomarAsistencia(requestSinEncriptar, curso, horario)
                         } else {
@@ -508,7 +495,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                     snack.show()
                 }
             },
-            Response.ErrorListener { error ->
+            { error ->
                 Log.e(LOG, error.message.toString())
                 ControlUsuario.instance.indexActualiza = -1
                 val snack = Snackbar.make(
@@ -538,8 +525,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                 request.put("Latitud", latitud)
                 request.put("Longitud", longitud)
                 request.put("NombreRed", "")
-                /*val valores = JSONObject()
-                valores.put("objAsistenciaProf", request)*/
+
                 val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
                 if (requestEncriptado != null) {
                     onRegistrarAsistenciaProfesor(
@@ -560,22 +546,18 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
 
 
     private fun onRegistrarAsistenciaProfesor(url: String, request: JSONObject, horario: Horario?) {
-        //println(url)
-        Log.i(LOG, url)
-        //println(request)
-        Log.i(LOG, request.toString())
+
         requestQueueRegAsisProf = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest(
             url,
             request,
-            Response.Listener { response ->
+            { response ->
                 try {
                     val respuesta =
                         Utilitarios.stringDesencriptar(response["GrabarAsistenciaProfesorResult"] as String, this)
-                    //val respuesta = response["GrabarAsistenciaProfesorNuevoResult"] as Boolean
+
                     if (respuesta != null) {
-                        //println(respuesta)
-                        Log.i(LOG, respuesta)
+
                         if (respuesta == "false") {
                             val snack = Snackbar.make(
                                 findViewById(android.R.id.content),
@@ -636,7 +618,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                     snack.show()
                 }
             },
-            Response.ErrorListener { error ->
+            { error ->
                 Log.e(LOG, error.message.toString())
                 val snack = Snackbar.make(
                     findViewById(android.R.id.content),
@@ -753,12 +735,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                         adapterHorario?.listaHorario!!.filter { horario -> horario.seccionCodigo == codigoSeccion }
                             .map { horario -> horario.takeAssist = 1 }
 
-                        /*for (c in adapterHorario?.listaHorario!!) {
-                            if (c.seccionCodigo == codigoSeccion) {
-                                c.takeAssist = 1
-                            }
-                        }*/
-
                         adapterHorario?.notifyDataSetChanged()
                     }
 
@@ -804,25 +780,13 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
         requestQueueRegCopiaAsisAlumno?.cancelAll(TAG)
         controlViewModel.insertDataToRoom()
 
-        /*ControlUsuario.instance.pantallaSuspendida = if (ControlUsuario.instance.cambioPantalla)
-            false
-        else
-            true*/
         ControlUsuario.instance.pantallaSuspendida = !ControlUsuario.instance.cambioPantalla
-        //ControlUsuario.instance.pantallaSuspendida = true
+
     }
 
 
     override fun onStart() {
         super.onStart()
-        //println("CARGA")
-        //Log.i(LOG, "CARGA")
-        //Log.i(LOG, "onStart")
-        //println(ControlUsuario.instance.pantallaSuspendida)
-        //Log.i(LOG, "Pantalla Suspendida: " + ControlUsuario.instance.pantallaSuspendida.toString())
-        /*if (ControlUsuario.instance.pantallaSuspendida) {
-            //finish()
-        }*/
     }
 
     override fun onDestroy() {
@@ -832,11 +796,5 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
         }
         super.onDestroy()
     }
-
-
-    /*override fun onDestroy() {
-        Log.i(LOG, "onDestroy")
-        super.onDestroy()
-    }*/
 
 }

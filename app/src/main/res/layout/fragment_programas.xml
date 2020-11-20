@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
                                              tools:context="pe.edu.esan.appostgrado.view.academico.postgrado.ProgramasFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swPrograma_fprograma"
         android:layout_width="match_parent"

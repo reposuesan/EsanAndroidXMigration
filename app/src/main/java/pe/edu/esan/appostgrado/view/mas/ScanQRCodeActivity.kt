@@ -62,7 +62,7 @@ class ScanQRCodeActivity : AppCompatActivity() {
             if(result.contents == null){
                 Toast.makeText(this,"Cancelled", Toast.LENGTH_LONG).show()
             } else {
-                //TODO: Extraer string resources para la traducción a Inglés
+                //TODO: USAR STRING RESOURCES PARA LA TRADUCCIÓN AL INGLÉS
                 AlertDialog.Builder(this)
                     .setTitle("Código QR")
                     .setMessage("Valor obtenido: " + result.contents)
@@ -94,7 +94,7 @@ class ScanQRCodeActivity : AppCompatActivity() {
             { response ->
                 try {
 
-                    //TODO: THIS DATA IS FOR REFERENCE ONLY
+                    //THIS DATA IS FOR REFERENCE ONLY
                     //val responseBackEnd = response["ObtenerVersionMovilResult"]  as? JSONObject
                     //val versionMovilResult = responseBackEnd?.getInt("VersionAndroid") ?: 0
                     //val flagAndroid = responseBackEnd?.getBoolean("FlagAndroid") ?: false

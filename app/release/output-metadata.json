@@ -1,19 +1,17 @@
 {
-  "version": 1,
+  "version": 2,
   "artifactType": {
     "type": "APK",
     "kind": "Directory"
   },
   "applicationId": "appostgrado.esan.edu.pe",
-  "variantName": "release",
+  "variantName": "processReleaseResources",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
-      "properties": [],
-      "versionCode": 84,
-      "versionName": "5.0.39",
-      "enabled": true,
+      "versionCode": 85,
+      "versionName": "5.0.40",
       "outputFile": "EsanAndroidXMigration-release.apk"
     }
   ]

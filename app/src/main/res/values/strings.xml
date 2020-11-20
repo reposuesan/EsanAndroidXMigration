@@ -100,8 +100,6 @@
     <string name="tardanza_cant_porc">Tardanzas</string>
     <string name="falta_cant_porc">Faltas</string>
 
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hoy">Hoy</string>
 
     <string name="error_horario_no">No existe horario para esta semana</string>

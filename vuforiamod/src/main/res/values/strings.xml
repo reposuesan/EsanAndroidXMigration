@@ -12,9 +12,6 @@
     <string name="elegir_perfil">¿A que perfil desea ingresar?</string>
      -->
 
-
-    <!-- TODO: Remove or change this placeholder text -->
-
     <!-- Title for app booton bar -->
     <string name="title_register">Registro</string>
     <string name="title_course">Cursos</string>

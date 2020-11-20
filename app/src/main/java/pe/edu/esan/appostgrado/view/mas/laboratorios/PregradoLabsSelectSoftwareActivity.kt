@@ -43,15 +43,10 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
     private val TAG = "PregradoLabsSelectSoftwareActivity"
 
     private var mRequestQueue : RequestQueue? = null
-
     private var configuracionID: String = ""
-
     private var codigoAlumno: String = ""
-
     private var horaInicioPrereserva: String = ""
-
     private var horaFinPrereserva: String = ""
-
     private var fechaPrereserva: String = ""
 
     private var rawList = ArrayList<ProgramaDescripcionItem>()
@@ -61,27 +56,17 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
     private var mAdapterTags: PregradoPrereservaTagsAdapter? = null
 
     private var countForAdapter = 0
-
     private var cantHorasSeleccionadas = 0.0
-
     private var dispositivo: String? = null
-
     private var maxCantidadProgPermitidos = 0
-
     private var prereservaRealizada = false
-
     private var dialogoMostradoEnPantalla = false
-
     private var sizeSavedOfList = 0
-
     private var lastFirstVisiblePosition = 0
-
     private var offsetTop = 0
-
     private var tagsList = ArrayList<String>()
-
     private var internetChecked = false
-
+    private var listItemsUpdated = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -205,7 +190,12 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
                     val dataEntered = et_search_field_labs.text.toString().trim()
                     if(!dataEntered.isNullOrEmpty()) {
                         efectuarFiltroBusquedaPrograma(dataEntered, helperList)
+                    } else {
+                        if(!listItemsUpdated){
+                            refreshList()
+                        }
                     }
+                    listItemsUpdated = false
                 }
 
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -218,6 +208,11 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
             })
         }
 
+    }
+
+    fun refreshList() {
+        mAdapter = PregradoPrereservaSeleccionLabsAdapter(helperList, this, countForAdapter, maxCantidadProgPermitidos)
+        recycler_view_select_software_lab.adapter = mAdapter
     }
 
     fun showDialogFab(){
@@ -569,11 +564,10 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
             }
         }
 
-        et_search_field_labs.setText("")
-
         mostrarButtonRealizarPrereserva()
-
         efectuarFiltroDeRelacion("", rawList)
+        listItemsUpdated = true
+        et_search_field_labs.setText("")
 
     }
 

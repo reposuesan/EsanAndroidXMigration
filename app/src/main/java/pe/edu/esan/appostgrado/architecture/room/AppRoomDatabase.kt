@@ -38,22 +38,4 @@ abstract class AppRoomDatabase : RoomDatabase() {
             }
         }
     }
-
-    /*companion object {
-        //Singleton prevents multiple instances of database opening at the
-        //same time.
-        @Volatile
-        private var instance: AppRoomDatabase? = null
-
-        private val LOCK = Any()
-
-        operator fun invoke(context: Context)= instance ?: synchronized(LOCK){
-            instance ?: buildDatabase(context).also { instance = it}
-        }
-
-        //TODO: REMOVE MAIN THREAD QUERIES FOR ROOM, USE EXECUTORS OR SOMETHING ELSE
-        private fun buildDatabase(context: Context) = Room.databaseBuilder(context,
-            AppRoomDatabase::class.java, "room_database")
-            .build()
-    }*/
 }

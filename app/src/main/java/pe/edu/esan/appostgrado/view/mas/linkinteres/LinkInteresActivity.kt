@@ -113,7 +113,7 @@ class LinkInteresActivity : AppCompatActivity() {
                 if (usuarioActual.tipoAlumno == Utilitarios.POS) {
                     listaLinkInteres.add(Link("Alumni", R.drawable.tab_link,"https://esanalumni.esan.edu.pe/"))
                 } else {
-                    listaLinkInteres.add(Link("Bolsa de Trabajo", R.drawable.tab_link,"https://bolsatrabajo.ue.edu.pe/"))
+                    listaLinkInteres.add(Link("Bolsa de Trabajo", R.drawable.tab_link,"https://bolsatrabajo.uesan.edu.pe/"))
                 }
             }
             else ->{

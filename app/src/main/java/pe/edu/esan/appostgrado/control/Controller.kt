@@ -59,7 +59,7 @@ class ControlUsuario private constructor(){
 
 }
 
-//TODO: This class was defined to solve ConvertersKotlin.kt problem line 55 reported in Crashlytics
+//This class was defined to solve ConvertersKotlin.kt problem line 55 reported in Crashlytics
 class CustomArrayList<T>: ArrayList<T>() {
 
     var values = ArrayList<T>()

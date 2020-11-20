@@ -23,10 +23,8 @@ class ControlViewModel(application: Application) : AndroidViewModel(application)
 
     private val controlDao: ControlRoomDao = AppRoomDatabase.getDatabase(application).controlRoomDao()
 
-    //TODO: BOOLEAN FOR ONGOING DATABASE OPERATION
     private var isDatabaseOperationOngoing = AtomicBoolean(false)
 
-    //TODO: PRIVATE FIELDS LIVEDATA
     private val dataIsReadyPrivate = MutableLiveData<Boolean>(false)
     private val refreshDataForFragmentPrivate = MutableLiveData<Boolean>(false)
     private val dataWasRetrievedForFragmentPrivate = MutableLiveData<Boolean>(false)
@@ -35,7 +33,6 @@ class ControlViewModel(application: Application) : AndroidViewModel(application)
 
     /*private val showQRFeaturePrivate = MutableLiveData<Boolean>(false)*/
 
-    //TODO: PUBLIC FIELDS LIVEDATA
     val dataWasRetrievedForFragmentPublic: LiveData<Boolean>
         get() = dataWasRetrievedForFragmentPrivate
 

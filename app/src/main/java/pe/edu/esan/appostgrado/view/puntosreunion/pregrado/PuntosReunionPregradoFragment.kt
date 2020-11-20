@@ -289,7 +289,6 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                             Log.e(LOG, e.message.toString())
                         }
 
-                        //TODO: AGREGAR DISPOSITIVO
                         requestTYC.put("Dispositivo", dispositivo)
 
                         aceptarTipoPolitica(URL_TEST_ACEPTAR_TYC_PR, requestTYC)
@@ -338,7 +337,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                     Request.Method.POST,
                     url,
                     fRequest,
-                    Response.Listener { response ->
+                    { response ->
                         Log.i(LOG, response.toString())
                         if (!response.isNull("ObtenerConfiguracionAlumnoResult")) {
                             var jsResponse: JSONObject? = null
@@ -430,7 +429,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                             }
                         }
                     },
-                    Response.ErrorListener { error ->
+                    { error ->
                         Log.e(LOG, "Error durante el request de Volley")
                         Log.e(LOG, error.message.toString())
 
@@ -475,7 +474,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                     Request.Method.POST,
                     url,
                     fRequest,
-                    Response.Listener { response ->
+                    { response ->
                         Log.i(LOG, response.toString())
                         if (!response.isNull("VerificarTipoPoliticaPortalResult")) {
                             var jsResponse: JSONObject? = null
@@ -555,7 +554,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                             }
                         }
                     },
-                    Response.ErrorListener { error ->
+                    { error ->
                         Log.e(LOG, "Error durante el request de Volley")
                         Log.e(LOG, error.message.toString())
                         if (view != null) {
@@ -598,7 +597,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                     Request.Method.POST,
                     url,
                     fRequest,
-                    Response.Listener { response ->
+                    { response ->
                         Log.i(LOG, response.toString())
                         if (!response.isNull("AceptarTipoPoliticaResult")) {
                             var jsResponse: JSONObject? = null
@@ -685,7 +684,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                             }
                         }
                     },
-                    Response.ErrorListener { error ->
+                    { error ->
                         Log.e(LOG, "Error durante el request de Volley")
                         Log.e(LOG, error.message.toString())
                         if (view != null) {

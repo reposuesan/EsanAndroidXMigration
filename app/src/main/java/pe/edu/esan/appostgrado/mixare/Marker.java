@@ -247,10 +247,10 @@ abstract public class Marker implements Comparable<Marker> {
 	}
 	//deprecated
 	public void drawTextBlock(PaintScreen dw) {
-		//TODO: grandezza cerchi e trasparenza
+		//grandezza cerchi e trasparenza
 		float maxHeight = Math.round(dw.getHeight() / 10f) + 1;
 
-		//TODO: change textblock only when distance changes
+		//change textblock only when distance changes
 		String textStr="";
 
 		double d = distance;

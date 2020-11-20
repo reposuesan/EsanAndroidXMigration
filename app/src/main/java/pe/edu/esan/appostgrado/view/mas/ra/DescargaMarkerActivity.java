@@ -74,7 +74,7 @@ public class DescargaMarkerActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+            //attempt authentication against a network service.
             return DescargarMarker();
         }
 

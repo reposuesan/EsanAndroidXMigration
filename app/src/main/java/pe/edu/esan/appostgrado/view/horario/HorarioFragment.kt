@@ -58,20 +58,13 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        Log.w(LOG, "onCreate()")
-
         infoDayPlist = activity!!.resources.getStringArray(R.array.dias_semana)
-
-        /*fechaActual = Date(1591236029000)*/
         fechaActual = Date()
 
     }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        Log.w(LOG, "onCreateView()")
-
         val view: View?
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -88,8 +81,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         controlViewModel = activity?.run {
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-        Log.w(LOG, "ViewModel is: $controlViewModel")
-        Log.w(LOG, "onViewCreated()")
+
         view.lblMensaje_fhorario.typeface = Utilitarios.getFontRoboto(context!!, Utilitarios.TypeFont.REGULAR)
 
         view.swHorario_fhorario.setOnRefreshListener(this)
@@ -111,7 +103,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.w(LOG, "onActivityCreated()")
 
         btnAfter_fhorario.setOnClickListener {
             val c = Calendar.getInstance()
@@ -171,38 +162,22 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     private fun showBeforeButton(fecha: Date): Boolean {
         val hoy = Date()
-        /*val ddMMyyyy = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-
-        try {
-            val f = ddMMyyyy.parse(ddMMyyyy.format(fecha.time))
-            val h = ddMMyyyy.parse(ddMMyyyy.format(hoy.time))
-
-
-        } catch (pex: ParseException) {
-            return false
-        }*/
-
         return fecha.after(hoy)
-
     }
 
 
     private fun showHorario() {
 
-        Log.w(LOG, "showHorario()")
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             sendRequest()
         } else {
             controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedHorarioPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
-            Log.w(LOG, "controlViewModel.refreshData() was called")
             controlViewModel.refreshDataForFragment(true)
 
         }
@@ -219,10 +194,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                 request.put("Tipo", 1)
                 request.put("Fecha", ddMMyyyy.format(fechaActual?.time))
                 request.put("Facultad", if (usuario.tipoAlumno == Utilitarios.POS) 1 else 2)
-                /*request.put("Codigo", "marauco")
-                request.put("Tipo", 2)
-                request.put("Fecha", ddMMyyyy.format(fechaActual?.time))
-                request.put("Facultad", 0)*/
             }
             is Profesor -> {
                 request.put("Codigo", usuario.codigo)
@@ -232,7 +203,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             }
         }
 
-        Log.i(LOG, request.toString())
         val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
         if (requestEncriptado != null) {
             onHorario(
@@ -249,11 +219,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     private fun onHorario(url: String, request: JSONObject, currentUsuario: Any) {
 
-
-        Log.i(LOG, url)
-
-        Log.i(LOG, request.toString())
-
         prbCargando_fhorario.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity!!)
         val jsObjectRequest = JsonObjectRequest(
@@ -262,8 +227,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             request,
             { response ->
                 try {
-
-                    Log.i(LOG, response.toString())
                     if (!response.isNull("ListarHorarioAlumnoProfesorxFecha2Result")) {
                         val scheduleJArray = response["ListarHorarioAlumnoProfesorxFecha2Result"] as JSONArray
                         if (scheduleJArray.length() > 0) {
@@ -352,9 +315,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                                 ControlUsuario.instance.currentListHorario.add(horario)
                                 existeHorario = true
                             }
-
-                            //TODO: NUEVO MANEJO DE HORARIO
-                            //showHorarioWithoutAsyncTask(cambiarListaHorarioParaGrilla(), true)
                             showHorarioWithoutAsyncTask(reformatHours(), true)
 
                             if (view != null) {
@@ -403,29 +363,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                     view!!.lblMensaje_fhorario.visibility = View.VISIBLE
                     view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
                 }
-
-
-/*
-                    if (volleyError is NetworkError) {
-                        lblMensaje_fhorario.text = "Cannot connect to Internet...Please check your connection!";
-                        // No se puede conectar a Internet ... ¡Por favor verifique su conexión!
-                    } else if (volleyError is ServerError) {
-                        lblMensaje_fhorario.text = "The server could not be found. Please try again after some time!!";
-                        // No se pudo encontrar el servidor. Por favor, inténtalo de nuevo después de un tiempo !!
-                    } else if (volleyError is AuthFailureError) {
-                        lblMensaje_fhorario.text = "Cannot connect to Internet...Please check your connection!";
-                        // No se puede conectar a Internet ... ¡Por favor verifique su conexión!
-                    } else if (volleyError is ParseError) {
-                        lblMensaje_fhorario.text = "Parsing error! Please try again after some time!!";
-                        // ¡Error de sintáxis! Por favor, inténtalo de nuevo después de un tiempo !!
-                    } else if (volleyError is NoConnectionError) {
-                        lblMensaje_fhorario.text = "Cannot connect to Internet...Please check your connection!";
-                        // No se puede conectar a Internet ... ¡Por favor verifique su conexión!
-                    } else if (volleyError is TimeoutError) {
-                        lblMensaje_fhorario.text = "Connection TimeOut! Please check your internet connection.";
-                        // ¡El tiempo de conexión expiro! Por favor revise su conexion a internet.
-                    }
-*/
 
             }
         )
@@ -506,8 +443,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     private fun cambiarHorario() {
         if (existeHorario) {
-            //TODO: NUEVO MANEJO DE HORARIO
-            //showHorarioWithoutAsyncTask(cambiarListaHorarioParaGrilla(), false)
             showHorarioWithoutAsyncTask(reformatHours(), false)
         }
     }
@@ -516,10 +451,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_changehorario -> {
-                //val historicoNotas = Intent(activity!!, HistoricoNotasPreActivity::class.java)
-                //historicoNotas.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                //startActivity(historicoNotas)
-                Log.i(LOG, "CAMBIAR HORARIO")
                 cambiarHorario()
                 return true
             }
@@ -540,7 +471,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
 
     fun refreshManual() {
-        Log.i(LOG, "REFRESCA")
         if (Utilitarios.isNetworkAvailable(activity!!)) {
             swHorario_fhorario.isRefreshing = true
             showHorario()
@@ -554,7 +484,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     override fun onStop() {
         super.onStop()
-        Log.w(LOG, "onStop()")
         requestQueue?.cancelAll(TAG)
     }
 
@@ -566,24 +495,19 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     override fun onResume() {
         super.onResume()
-        Log.w(LOG, "onResume()")
         if (ControlUsuario.instance.pantallaSuspendida) {
             ControlUsuario.instance.pantallaSuspendida = false
             getHorario()
         }
-        Log.i(LOG, "Pantalla suspendida: " + ControlUsuario.instance.pantallaSuspendida.toString())
-
     }
 
 
     override fun onStart() {
-        Log.w(LOG, "onStart()")
         super.onStart()
     }
 
 
     override fun onDestroy() {
-        Log.w(LOG, "onDestroy()")
         super.onDestroy()
     }
 
@@ -699,11 +623,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         } else{
            Log.w(LOG,"ControlUsuario.instance.currentListHorario is empty")
         }
-
-        //DELETE OR COMMENT THIS LATER
-        /*for (horario in newListFormatted){
-            Log.e(LOG,"reformatHours() Hora inicio: ${horario.horaInicio} - Hora fin: ${horario.horaFin} - Día: ${horario.dia}")
-        }*/
 
         return generateNewArrangement(newListFormatted)
     }
@@ -858,250 +777,8 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             }
         }
 
-        //DELETE OR COMMENT THIS LATER
-        /*Log.e(LOG, "*********NEW LIST*******************")*/
-
-        //DELETE OR COMMENT THIS LATER
-        /*for (horario in newListFormatted){
-            Log.e(LOG,"generateNewArrangement() Hora inicio: ${horario.horaInicio} - Hora fin: ${horario.horaFin} - Día: ${horario.dia}")
-        }*/
-
         return newListFormatted
     }
-
-
-    /*private fun generateNewDeepCopyList(oldList: List<Horario>): List<Horario>{
-
-        val newDeepCopyList = ArrayList<Horario>()
-
-        if(oldList.isNotEmpty()){
-            for (horario: Horario in oldList) {
-                newDeepCopyList.add(Horario(0,0,"","","",
-                    "",0,"",0,"",0,"","",
-                    0,0,"","",0,"", horario))
-            }
-        }
-
-        return newDeepCopyList
-    }*/
-
-
-    /*private fun cambiarListaHorarioParaGrilla(): List<Horario> {
-
-        val listToBeVerified = ControlUsuario.instance.currentListHorario
-        var counter: Int = 0
-
-        val newListHorario = ArrayList<Horario>()
-
-        for (horario in listToBeVerified) {
-
-            val inicioHorario = horario.horaInicio.replace(":", "").toInt()
-            val finHorario = horario.horaFin.replace(":", "").toInt()
-
-            if (finHorario - inicioHorario > 50 && (inicioHorario % 100 == 30 || inicioHorario % 100 == 0)) {
-
-                val inicio = horario.horaInicio.replace(":", "").toInt()
-                val fin = horario.horaFin.replace(":", "").toInt()
-
-                for (i in inicio until (fin + 100) step 100) {
-
-                    //DETERMINAR HORA
-                    val hora = i / 100
-                    //DETERMINAR MINUTOS
-                    val minutos = i % 100
-
-                    //if (i != fin) {
-                    if (i < fin){
-
-                        newListHorario.add(
-                            Horario(
-                                0, 0, "", "", "",
-                                "", 0, "", 0, "", 0, "", "",
-                                0, 0, "", "", 0, "", horario
-                            )
-                        )
-                        val horarioItem = newListHorario[counter]
-
-                        if (inicio % 100 == 30 && i > inicio) {
-                            //DAR FORMATO A HORA INICIO Y HORA FIN
-                            if (hora < 10) {
-                                horarioItem.horaInicio = "0$hora:00"
-                            } else {
-                                horarioItem.horaInicio = "$hora:00"
-                            }
-                        } else {
-                            //DAR FORMATO A HORA INICIO Y HORA FIN
-                            if (hora < 10) {
-                                if (minutos == 0) {
-                                    horarioItem.horaInicio = "0$hora:00"
-                                } else {
-                                    horarioItem.horaInicio = "0$hora:$minutos"
-                                }
-                            } else {
-                                if (minutos == 0) {
-                                    horarioItem.horaInicio = "$hora:00"
-                                } else {
-                                    horarioItem.horaInicio = "$hora:$minutos"
-                                }
-                            }
-                        }
-
-                        if(fin - i <= 30){
-                            if (hora < 10) {
-                                horarioItem.horaFin = "0$hora:30"
-                            } else {
-                                horarioItem.horaFin = "$hora:30"
-                            }
-                        } else {
-                            if (hora < 10) {
-                                horarioItem.horaFin = "0$hora:50"
-                            } else {
-                                horarioItem.horaFin = "$hora:50"
-                            }
-                        }
-
-                        /*if (hora < 10) {
-                            horarioItem.horaFin = "0$hora:50"
-                        } else {
-                            horarioItem.horaFin = "$hora:50"
-                        }*/
-
-                        counter++
-
-                        //Log.e(LOG, "Item Insertado: ${horarioItem.horaInicio} - ${horarioItem.horaFin} - ${horarioItem.dia}")
-
-                    } else if (i == fin && i % 100 == 30) {
-
-                        newListHorario.add(
-                            Horario(
-                                0, 0, "", "", "",
-                                "", 0, "", 0, "", 0, "", "",
-                                0, 0, "", "", 0, "", horario
-                            )
-                        )
-                        val horarioItem = newListHorario[counter]
-
-                        val minutos = fin % 100
-
-                        if (hora < 10) {
-                            horarioItem.horaInicio = "0$hora:00"
-                        } else {
-                            horarioItem.horaInicio = "$hora:00"
-                        }
-
-                        if (hora < 10) {
-                            horarioItem.horaFin = "0$hora:$minutos"
-                        } else {
-                            horarioItem.horaFin = "$hora:$minutos"
-                        }
-
-                        counter++
-
-                        //Log.e(LOG, "Item Insertado: ${horarioItem.horaInicio} - ${horarioItem.horaFin} - ${horarioItem.dia}")
-
-                    } else {
-                        Log.i(LOG, "Horario Especial ó valor de minutos es 30")
-                    }
-
-                }
-
-            } else {
-                if(finHorario - inicioHorario <= 50 || inicioHorario % 100 == 0) {
-
-                    //newListHorario.add(horario)
-                    newListHorario.add(Horario(
-                        0, 0, "", "", "",
-                        "", 0, "", 0, "", 0, "", "",
-                        0, 0, "", "", 0, "", horario
-                    ))
-
-                    val horarioItem = newListHorario[counter]
-
-                    val inicio = horario.horaInicio.replace(":", "").toInt()
-                    val fin = horario.horaFin.replace(":", "").toInt()
-
-                    if(fin - inicio >= 45){
-                        val hora = inicio / 100
-                        if (hora < 10) {
-                            horarioItem.horaFin = "0$hora:50"
-                        } else {
-                            horarioItem.horaFin = "$hora:50"
-                        }
-                    } else if (fin - inicio <= 15){
-                        val hora = inicio / 100
-                        if (hora < 10) {
-                            horarioItem.horaInicio = "0$hora:00"
-                        } else {
-                            horarioItem.horaInicio = "$hora:00"
-                        }
-                    }
-
-                } else if(inicioHorario % 100 != 0) {
-                    newListHorario.add(Horario(
-                        0, 0, "", "", "",
-                        "", 0, "", 0, "", 0, "", "",
-                        0, 0, "", "", 0, "", horario
-                    ))
-
-                    val horarioItem = newListHorario[counter]
-
-                    val inicio = horario.horaInicio.replace(":", "").toInt()
-                    val fin = horario.horaFin.replace(":", "").toInt()
-
-                    //DETERMINAR MINUTOS
-                    val minutosHoraInicio = inicio % 100
-                    val minutosHoraFin = fin % 100
-
-                    if(minutosHoraInicio <= 15){
-                        val hora = inicio / 100
-                        if (hora < 10) {
-                            horarioItem.horaInicio = "0$hora:00"
-                        } else {
-                            horarioItem.horaInicio = "$hora:00"
-                        }
-                    } else {
-                        val hora = inicio / 100
-                        if (hora < 10) {
-                            horarioItem.horaInicio = "0$hora:30"
-                        } else {
-                            horarioItem.horaInicio = "$hora:30"
-                        }
-                    }
-
-                    if(minutosHoraFin >= 45){
-                        val hora = fin / 100
-                        if (hora < 10) {
-                            horarioItem.horaInicio = "0$hora:50"
-                        } else {
-                            horarioItem.horaInicio = "$hora:50"
-                        }
-                    } else {
-                        val hora = fin / 100
-                        if (hora < 10) {
-                            horarioItem.horaInicio = "0$hora:30"
-                        } else {
-                            horarioItem.horaInicio = "$hora:30"
-                        }
-                    }
-
-                } else {
-                    newListHorario.add(horario)
-                }
-
-                counter++
-            }
-        }
-
-        for (horario in newListHorario) {
-            Log.e(LOG, "Item Insertado: ${horario.horaInicio} - ${horario.horaFin} - ${horario.dia}")
-        }
-
-        return newListHorario
-
-    }*/
-
-
-
 
     private fun defineTipoHorario(listaHorario: List<Horario>, mantener: Boolean): Boolean {
         return if (mantener) {
@@ -1125,8 +802,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         listaHorarioDiasTwo.clear()
 
         val day_ofWeek = GregorianCalendar()
-        /*var _dayof = day_ofWeek.get(Calendar.DAY_OF_WEEK)
-        _dayof = Utilitarios.getDiaSemana(_dayof)*/
         var _dayof = Utilitarios.getDiaSemana(day_ofWeek.get(Calendar.DAY_OF_WEEK))
 
 
@@ -1134,7 +809,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
         var contador = 0
         for (i in infoDayPlist!!.indices) {
-            //val listaHorarioDiaSelect = getHorarioDiaEspecifico(infoDayPlist!![i], list)
             val listaHorarioDiaSelect = getHorarioDiaEspecifico(diasSemanaKey[i], list)
 
             if (listaHorarioDiaSelect.isNotEmpty()) {
@@ -1212,7 +886,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                 var tipo = 3
 
                 for (horario in listaHorario) {
-                    //if (clearDayText(h.dia) == resources.getStringArray(R.array.dias_semana)[j].toUpperCase()) {
                     if (clearDayText(horario.dia) == diasSemanaKey[indexParaDiaDeSemana].toUpperCase()) {
                         val inicio = horario.horaInicio.split(":")
                         val fin = horario.horaFin.split(":")
@@ -1316,22 +989,17 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                     rvHorario_fhorario.adapter = adapter
                     horarioCambio = true
                 } else {
-                    /*MUESTRA HORARIO EN RECYCLER*/
                     rvHorario_fhorario.layoutManager =
                         androidx.recyclerview.widget.LinearLayoutManager(context!!)
 
                     val adapter = HorarioAdapter(listaHorarioDiasTwo, diaSemana, context!!) { position: Int ->
 
-                        Log.i(LOG, position.toString())
                         val diaClick = listaHorarioDiasTwo[position][0]
-                        //val horarioDia = getHorarioDiaEspecifico(diaClick, listaHorario)
                         val horarioDia = getHorarioDiaEspecifico(diaClick, ControlUsuario.instance.currentListHorario)
 
                         if (horarioDia.size > 0) {
                             val hoy = diaSemana == position
                             ControlUsuario.instance.currentListHorarioSelect = horarioDia
-
-                            Log.d(LOG, "HorarioDetalleActivity was called()")
 
                             val intent = Intent(activity!!, HorarioDetalleActivity::class.java)
                             intent.putExtra("KEY_DIA", diaClick)
@@ -1358,17 +1026,12 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
                     val adapter = HorarioAdapter(listaHorarioDiasTwo, diaSemana, context!!) { position: Int ->
 
-                        Log.i(LOG, position.toString())
                         val diaClick = listaHorarioDiasTwo[position][0]
-                        //val horarioDia = getHorarioDiaEspecifico(diaClick, listaHorario)
-                        //val horarioDia = getHorarioDiaEspecifico(diaClick, listaHorario)
                         val horarioDia = getHorarioDiaEspecifico(diaClick, ControlUsuario.instance.currentListHorario)
 
                         if (horarioDia.size > 0) {
                             val hoy = diaSemana == position
                             ControlUsuario.instance.currentListHorarioSelect = horarioDia
-
-                            Log.d(LOG, "HorarioDetalleActivity was called()")
 
                             val intent = Intent(activity!!, HorarioDetalleActivity::class.java)
                             intent.putExtra("KEY_DIA", diaClick)

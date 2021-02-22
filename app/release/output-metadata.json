@@ -10,8 +10,8 @@
     {
       "type": "SINGLE",
       "filters": [],
-      "versionCode": 85,
-      "versionName": "5.0.40",
+      "versionCode": 87,
+      "versionName": "5.0.42",
       "outputFile": "EsanAndroidXMigration-release.apk"
     }
   ]

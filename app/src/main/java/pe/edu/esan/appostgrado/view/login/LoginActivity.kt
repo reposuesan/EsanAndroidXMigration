@@ -241,12 +241,12 @@ class LoginActivity : AppCompatActivity(),
     private fun onIniciar() {
 
         //ONLY FOR DEBUGGING (DEBUGGING PARA ALUMNO PREGRADO)
-        val usuario = "19100263"
+        /*val usuario = "19100263"*/
         //ONLY FOR DEBUGGING (DEBUGGING PARA ALUMNO POSGRADO)
         /*val usuario = "11100951"*/
 
         //USUARIO Y CLAVE
-        //val usuario = txtUsuario_login.text.toString()
+        val usuario = txtUsuario_login.text.toString()
         val clave = txtClave_login.text.toString()
 
         txtUsuario_login.error = null
@@ -391,10 +391,9 @@ class LoginActivity : AppCompatActivity(),
                                 val esAlumnoPre =
                                     jsObjDatosPregrado?.getBoolean("EsAlumno") ?: false
                                 //CÓDIGO ALUMNO PREGRADO
-                                //val codAlumnoPre = jsObjDatosPregrado?.getString("CodAlumno") ?: ""
+                                val codAlumnoPre = jsObjDatosPregrado?.getString("CodAlumno") ?: ""
                                 //ONLY FOR DEBUGGING PREGRADO
-                                val codAlumnoPre = txtUsuario_login.text.toString()
-                                //val codAlumnoPre = "19100252"
+                                /*val codAlumnoPre = txtUsuario_login.text.toString()*/
 
                                 crashlytics.setUserId(codAlumnoPre)
 

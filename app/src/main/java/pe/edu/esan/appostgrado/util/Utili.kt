@@ -5,6 +5,7 @@ import android.util.Base64
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import pe.edu.esan.appostgrado.BuildConfig
 import pe.edu.esan.appostgrado.R
 import java.io.IOException
 import java.io.UnsupportedEncodingException
@@ -24,7 +25,7 @@ class Utili {
 
     fun jsObjectEncrypted(json : JSONObject, context: Context) : JSONObject? {
         try {
-            val encriptado = encrypt(json.toString(), context.resources.getString(R.string.KeyEncripter)).replace("\n","")
+            val encriptado = encrypt(json.toString(), BuildConfig.ESAN).replace("\n","")
             val jsObject = JSONObject()
             jsObject.put("request", encriptado)
 
@@ -43,7 +44,7 @@ class Utili {
 
     fun jsArrayEncrypted(jarray : JSONArray, context: Context) : JSONObject? {
         try {
-            val encriptado = encrypt(jarray.toString(), context.resources.getString(R.string.KeyEncripter)).replace("\n","")
+            val encriptado = encrypt(jarray.toString(), BuildConfig.ESAN).replace("\n","")
             val jsObject = JSONObject()
             jsObject.put("request", encriptado)
 
@@ -62,7 +63,7 @@ class Utili {
 
     fun jsObjectDesencriptar (valor: String, context: Context) : JSONObject? {
         try {
-            val resultado = decrypt(valor, context.resources.getString(R.string.KeyEncripter))
+            val resultado = decrypt(valor, BuildConfig.ESAN)
 
             return JSONObject(resultado)
 
@@ -81,7 +82,7 @@ class Utili {
 
     fun jsArrayDesencriptar (valor: String, context: Context) : JSONArray? {
         try {
-            val resultado = decrypt(valor, context.resources.getString(R.string.KeyEncripter))
+            val resultado = decrypt(valor, BuildConfig.ESAN)
 
             if (resultado == "null") {
                 return JSONArray()
@@ -103,7 +104,7 @@ class Utili {
 
     fun stringDesencriptar (valor: String, context: Context) : String? {
         try {
-            return decrypt(valor, context.resources.getString(R.string.KeyEncripter))
+            return decrypt(valor, BuildConfig.ESAN)
 
         } catch (ue: UnsupportedEncodingException) { }
         catch (ike: InvalidKeyException) { }

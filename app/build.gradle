@@ -20,11 +20,12 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         multiDexEnabled true
-        //El versionCode actual del Play Store es 85
-        versionCode 85
-        //El versionName actual del Play Store es 5.0.40
-        versionName "5.0.40"
+        //El versionCode actual del Play Store es 87
+        versionCode 87
+        //El versionName actual del Play Store es 5.0.42
+        versionName "5.0.42"
         vectorDrawables.useSupportLibrary = true
+        buildConfigField("String","ESAN", ESAN)
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         ndk {

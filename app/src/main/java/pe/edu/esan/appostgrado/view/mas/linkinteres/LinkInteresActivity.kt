@@ -79,54 +79,24 @@ class LinkInteresActivity : AppCompatActivity() {
         val usuarioActual = ControlUsuario.instance.currentUsuario[0]
         val listaLinkInteres = ArrayList<Link>()
 
-        /*when (usuarioActual) {
-            is Alumno -> {
-                if (usuarioActual.tipoAlumno == Utilitarios.POS) {
-                    //listaLinkInteres.add(Link("ESAN Virtual", R.drawable.tab_link,"https://esanvirtual.edu.pe/login/index.php"))
-                    listaLinkInteres.add(Link("Portal Académico", R.drawable.tab_link,"https://pa.uesan.edu.pe/"))
-                } else {
-                    //listaLinkInteres.add(Link("UE Virtual", R.drawable.tab_link,"https://uevirtual.ue.edu.pe/intranet/"))
-                    listaLinkInteres.add(Link("Portal Académico", R.drawable.tab_link,"https://pa.uesan.edu.pe/"))
-                }
-            }
-            is Profesor -> {
-                //listaLinkInteres.add(Link("UE Virtual", R.drawable.tab_link,"https://uevirtual.ue.edu.pe/intranet/"))
-                //listaLinkInteres.add(Link("ESAN Virtual", R.drawable.tab_link,"https://esanvirtual.edu.pe/login/index.php"))
-                listaLinkInteres.add(Link("Portal Académico", R.drawable.tab_link,"https://pa.uesan.edu.pe/"))
-            }
-            else -> {
-                //listaLinkInteres.add(Link("UE Virtual", R.drawable.tab_link,"https://uevirtual.ue.edu.pe/intranet/"))
-                //listaLinkInteres.add(Link("ESAN Virtual", R.drawable.tab_link,"https://esanvirtual.edu.pe/login/index.php"))
-                listaLinkInteres.add(Link("Portal Académico", R.drawable.tab_link,"https://pa.uesan.edu.pe/"))
-            }
-        }*/
-
-        /*listaLinkInteres.add(Link("Career Center", R.drawable.tab_link,"https://careercenter.esan.edu.pe/"))*/
-
-        listaLinkInteres.add(Link("Portal Académico", R.drawable.tab_link,"https://pa.uesan.edu.pe/"))
-
-        /*listaLinkInteres.add(Link("CENDOC", R.drawable.tab_link,"https://esancendoc.esan.edu.pe/"))*/
-        listaLinkInteres.add(Link("CENDOC", R.drawable.tab_link,"https://biblioteca.uesan.edu.pe/"))
+        listaLinkInteres.add(Link(getString(R.string.portal_academico), R.drawable.tab_link,"https://pa.uesan.edu.pe/"))
+        listaLinkInteres.add(Link(getString(R.string.cendoc), R.drawable.tab_link,"https://biblioteca.uesan.edu.pe/"))
 
         when (usuarioActual){
             is Alumno -> {
                 if (usuarioActual.tipoAlumno == Utilitarios.POS) {
-                    listaLinkInteres.add(Link("Alumni", R.drawable.tab_link,"https://esanalumni.esan.edu.pe/"))
+                    listaLinkInteres.add(Link(getString(R.string.alumni), R.drawable.tab_link,"https://esanalumni.esan.edu.pe/"))
                 } else {
-                    listaLinkInteres.add(Link("Bolsa de Trabajo", R.drawable.tab_link,"https://bolsatrabajo.uesan.edu.pe/"))
+                    listaLinkInteres.add(Link(getString(R.string.bolsa_de_trabajo), R.drawable.tab_link,"https://bolsatrabajo.uesan.edu.pe/"))
                 }
             }
             else ->{
-                listaLinkInteres.add(Link("Alumni", R.drawable.tab_link,"https://esanalumni.esan.edu.pe/"))
+                listaLinkInteres.add(Link(getString(R.string.alumni), R.drawable.tab_link,"https://esanalumni.esan.edu.pe/"))
             }
         }
 
-        /*listaLinkInteres.add(Link("Libro de Reclamaciones", R.drawable.tab_link,"https://intranet.esan.edu.pe/SistemasEsan/LibroReclamaciones.nsf"))*/
-        /*listaLinkInteres.add(Link("Facturación Electrónica", R.drawable.tab_link,"https://consulta.webfactura.pe/aplicaciones/documentos/documento.nsf"))*/
-
-
-        listaLinkInteres.add(Link("Libro de Reclamaciones", R.drawable.tab_link,"http://intranet.esan.edu.pe/SistemasEsan/LibroReclamaciones.nsf"))
-        listaLinkInteres.add(Link("Facturación Electrónica", R.drawable.tab_link,"http://consulta.webfactura.pe/aplicaciones/documentos/documento.nsf"))
+        listaLinkInteres.add(Link(getString(R.string.libro_de_reclamaciones), R.drawable.tab_link,"http://intranet.esan.edu.pe/SistemasEsan/LibroReclamaciones.nsf"))
+        listaLinkInteres.add(Link(getString(R.string.facturacion_electronica), R.drawable.tab_link,"http://consulta.webfactura.pe/aplicaciones/documentos/documento.nsf"))
 
         rvLinkInteres_link.adapter = LinkInteresAdapter(listaLinkInteres)
     }

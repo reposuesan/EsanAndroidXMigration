@@ -463,4 +463,11 @@
     <string name="qr_code_instrucciones">Use your QR code in any food truck</string>
     <string name="leer_codigo_qr">Scan QR Code</string>
     <string name="lectura_codigo_qr">Code QR Scanning</string>
+
+    <string name="portal_academico">Academic Portal</string>
+    <string name="cendoc">CENDOC</string>
+    <string name="alumni">Alumni</string>
+    <string name="bolsa_de_trabajo">Job Exchange</string>
+    <string name="libro_de_reclamaciones">Complaints Book</string>
+    <string name="facturacion_electronica">Electronic Billing</string>
 </resources>

@@ -116,6 +116,13 @@ class SecondLauncherActivity : AppCompatActivity() {
             },
             { error ->
                 Log.e(LOG, "Volley error:  " + error.message.toString())
+                /*Log.e(LOG, "Volley error:  " + error.networkResponse.toString())
+                Log.e(LOG, "Volley error:  " + error.cause.toString())
+                Log.e(LOG, "Volley error:  " + error.stackTrace.toString())
+                Log.e(LOG, "Volley error:  " + error.networkResponse.allHeaders)
+                Log.e(LOG, "Volley error:  " + error.networkResponse.data)
+                Log.e(LOG, "Volley error:  " + error.networkResponse.headers)
+                Log.e(LOG, "Volley error:  " + error.networkResponse.statusCode)*/
 
                 val crashlytics = FirebaseCrashlytics.getInstance()
 

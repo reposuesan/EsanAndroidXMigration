@@ -243,23 +243,23 @@ class Utilitarios {
                 URL.PREG_LAB_VERIFICAR_TIPO_POLITICA -> return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionSeguridad/Politicas/PoliticaUsoPortal.svc/VerificarTipoPoliticaPortal"
                 URL.PREG_LAB_ACEPTAR_TIPO_POLITICA -> return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionSeguridad/Politicas/PoliticaUsoPortal.svc/AceptarTipoPolitica"
 
-                URL.MENU_COMEDOR ->                 return "http://intranetmovil.ue.edu.pe/Service/AlumnoService.svc/menuComedor/"
+                URL.MENU_COMEDOR ->                 return "https://intranetmovil.ue.edu.pe/Service/AlumnoService.svc/menuComedor/"
                 /*URL.MENU_COMEDOR ->                 return "http://devintranetmovil.ue.edu.pe/Service/AlumnoService.svc/menuComedor/"*/
 
                 //REALIDAD AUMENTADA
-                URL.RA_FACULTADES ->                return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/facultades"
-                URL.RA_EDIFICIOS ->                 return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/edificios"
-                URL.RA_CAFETERIAS ->                return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/cafeterias"
-                URL.RA_DEPORTES ->                  return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/deportes"
-                URL.RA_BIBLIOTECAS ->               return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/bibliotecas"
-                URL.RA_LABORATORIOS ->              return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/laboratorios"
-                URL.RA_AUDITORIOS ->                return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/auditorios"
-                URL.RA_LIBRERIAS ->                 return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/librerias"
-                URL.RA_OFICINAS ->                  return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/oficinas"
-                URL.RA_AULAS ->                     return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/aulas"
-                URL.RA_VARIOS ->                    return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/varios"
-                URL.RA_BYID ->                      return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambiente/"
-                URL.RA_IMAGEN ->                    return "http://intranetmovil.esan.edu.pe/recursos/img/"
+                URL.RA_FACULTADES ->                return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/facultades"
+                URL.RA_EDIFICIOS ->                 return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/edificios"
+                URL.RA_CAFETERIAS ->                return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/cafeterias"
+                URL.RA_DEPORTES ->                  return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/deportes"
+                URL.RA_BIBLIOTECAS ->               return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/bibliotecas"
+                URL.RA_LABORATORIOS ->              return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/laboratorios"
+                URL.RA_AUDITORIOS ->                return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/auditorios"
+                URL.RA_LIBRERIAS ->                 return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/librerias"
+                URL.RA_OFICINAS ->                  return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/oficinas"
+                URL.RA_AULAS ->                     return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/aulas"
+                URL.RA_VARIOS ->                    return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/varios"
+                URL.RA_BYID ->                      return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambiente/"
+                URL.RA_IMAGEN ->                    return "https://intranetmovil.esan.edu.pe/recursos/img/"
                 else -> return ""
             }
 
@@ -516,7 +516,7 @@ class Utilitarios {
         fun jsObjectEncrypted(json : JSONObject, context: Context) : JSONObject? {
             try {
                 val stringJSON = json.toString()
-                val encriptado = encrypt(stringJSON, BuildConfig.ESAN).replace("\n","")
+                val encriptado = encrypt(stringJSON, String(Base64.decode(BuildConfig.ESAN, Base64.DEFAULT))).replace("\n","")
                 val jsObject = JSONObject()
                 jsObject.put("request", encriptado)
 
@@ -535,7 +535,7 @@ class Utilitarios {
 
         fun jsArrayEncrypted(jarray : JSONArray, context: Context) : JSONObject? {
             try {
-                val encriptado = encrypt(jarray.toString(), BuildConfig.ESAN).replace("\n","")
+                val encriptado = encrypt(jarray.toString(), String(Base64.decode(BuildConfig.ESAN, Base64.DEFAULT))).replace("\n","")
                 val jsObject = JSONObject()
                 jsObject.put("request", encriptado)
 
@@ -554,7 +554,7 @@ class Utilitarios {
 
         fun jsObjectDesencriptar (valor: String, context: Context) : JSONObject? {
             try {
-                val resultado = decrypt(valor, BuildConfig.ESAN)
+                val resultado = decrypt(valor, String(Base64.decode(BuildConfig.ESAN, Base64.DEFAULT)))
 
                 return JSONObject(resultado)
 
@@ -573,7 +573,7 @@ class Utilitarios {
 
         fun jsArrayDesencriptar (valor: String, context: Context) : JSONArray? {
             try {
-                val resultado = decrypt(valor, BuildConfig.ESAN)
+                val resultado = decrypt(valor, String(Base64.decode(BuildConfig.ESAN, Base64.DEFAULT)))
 
                 if (resultado == "null") {
                     return JSONArray()
@@ -595,7 +595,7 @@ class Utilitarios {
 
         fun stringDesencriptar (valor: String, context: Context) : String? {
             try {
-                return decrypt(valor, BuildConfig.ESAN)
+                return decrypt(valor, String(Base64.decode(BuildConfig.ESAN, Base64.DEFAULT)))
 
             } catch (ue: UnsupportedEncodingException) { }
             catch (ike: InvalidKeyException) { }
@@ -612,23 +612,21 @@ class Utilitarios {
 
         @Throws(NoSuchAlgorithmException::class, NoSuchPaddingException::class, InvalidKeyException::class, InvalidAlgorithmParameterException::class, IllegalBlockSizeException::class, BadPaddingException::class)
         private fun decrypt(cipherText: ByteArray, key: ByteArray, initialVector: ByteArray): ByteArray {
-            /*var cipherText = cipherText*/
             val cipher = Cipher.getInstance(cipherTransformation)
             val secretKeySpecy = SecretKeySpec(key, aesEncryptionAlgorithm)
             val ivParameterSpec = IvParameterSpec(initialVector)
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpecy, ivParameterSpec)
-            /*cipherText = cipher.doFinal(cipherText)*/
+
             return cipher.doFinal(cipherText)
         }
 
         @Throws(NoSuchAlgorithmException::class, NoSuchPaddingException::class, InvalidKeyException::class, InvalidAlgorithmParameterException::class, IllegalBlockSizeException::class, BadPaddingException::class)
         private fun encrypt(plainText: ByteArray, key: ByteArray, initialVector: ByteArray): ByteArray {
-            /*var plainText = plainText*/
             val cipher = Cipher.getInstance(cipherTransformation)
             val secretKeySpec = SecretKeySpec(key, aesEncryptionAlgorithm)
             val ivParameterSpec = IvParameterSpec(initialVector)
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec)
-            /*plainText = cipher.doFinal(plainText)*/
+
             return cipher.doFinal(plainText)
         }
 

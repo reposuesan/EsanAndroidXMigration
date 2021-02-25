@@ -3,5 +3,5 @@
     <domain-config>
         <domain includeSubdomains="true">pe.edu.esan.appostgrado</domain>
     </domain-config>
-    <base-config cleartextTrafficPermitted="true" />
+    <base-config cleartextTrafficPermitted="true"/>
 </network-security-config>

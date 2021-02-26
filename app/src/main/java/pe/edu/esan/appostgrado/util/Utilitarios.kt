@@ -176,8 +176,8 @@ class Utilitarios {
 
             when (url) {
                 URL.LOGIN ->                        return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionSeguridad/Acceso/AutenticacionService.svc/AutenticarUsuario"
-                /*URL.HORARIO ->                      return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Horario/Horario.svc/HorarioFecha"*/
-                URL.HORARIO_NEW ->                  return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Horario/Horario.svc/HorarioFecha2"
+                URL.HORARIO_NEW ->                  return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Horario/Horario.svc/HorarioFecha"
+                //URL.HORARIO_NEW ->                return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Horario/Horario.svc/HorarioFecha2"
                 URL.CURSOS_PRE ->                   return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Notas/NotasAlumno.svc/ListarNotasActualesAlumnoPre"
                 URL.SECCIONES ->                    return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Horario/Horario.svc/SeccionesXProfesor"
                 URL.PROGRAMAS ->                    return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Notas/NotasAlumno.svc/ListarProgramasPost"
@@ -554,7 +554,7 @@ class Utilitarios {
 
         fun jsObjectDesencriptar (valor: String, context: Context) : JSONObject? {
             try {
-                val resultado = decrypt(valor, String(Base64.decode(BuildConfig.ESAN, Base64.DEFAULT)))
+                val resultado = decrypt(valor, String(Base64.decode(BuildConfig.ESAN, Base64.DEFAULT)).replace("\n",""))
 
                 return JSONObject(resultado)
 
@@ -573,7 +573,7 @@ class Utilitarios {
 
         fun jsArrayDesencriptar (valor: String, context: Context) : JSONArray? {
             try {
-                val resultado = decrypt(valor, String(Base64.decode(BuildConfig.ESAN, Base64.DEFAULT)))
+                val resultado = decrypt(valor, String(Base64.decode(BuildConfig.ESAN, Base64.DEFAULT)).replace("\n",""))
 
                 if (resultado == "null") {
                     return JSONArray()
@@ -595,7 +595,7 @@ class Utilitarios {
 
         fun stringDesencriptar (valor: String, context: Context) : String? {
             try {
-                return decrypt(valor, String(Base64.decode(BuildConfig.ESAN, Base64.DEFAULT)))
+                return decrypt(valor, String(Base64.decode(BuildConfig.ESAN, Base64.DEFAULT)).replace("\n",""))
 
             } catch (ue: UnsupportedEncodingException) { }
             catch (ike: InvalidKeyException) { }

@@ -207,7 +207,8 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         if (requestEncriptado != null) {
             onHorario(
                 Utilitarios.getUrl(Utilitarios.URL.HORARIO_NEW),
-                request,
+                //request,
+                requestEncriptado,
                 usuario
             )
         } else {
@@ -219,6 +220,9 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     private fun onHorario(url: String, request: JSONObject, currentUsuario: Any) {
 
+        Log.i(LOG, url)
+        Log.i(LOG, request.toString())
+
         prbCargando_fhorario.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity!!)
         val jsObjectRequest = JsonObjectRequest(
@@ -227,9 +231,12 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             request,
             { response ->
                 try {
-                    if (!response.isNull("ListarHorarioAlumnoProfesorxFecha2Result")) {
-                        val scheduleJArray = response["ListarHorarioAlumnoProfesorxFecha2Result"] as JSONArray
-                        if (scheduleJArray.length() > 0) {
+                    //if (!response.isNull("ListarHorarioAlumnoProfesorxFecha2Result")) {
+                    if (!response.isNull("ListarHorarioAlumnoProfesorxFechaResult")) {
+                        //val scheduleJArray = response["ListarHorarioAlumnoProfesorxFecha2Result"] as JSONArray
+                        val stringOutput = response["ListarHorarioAlumnoProfesorxFechaResult"] as String
+                        val scheduleJArray = Utilitarios.jsArrayDesencriptar(stringOutput, activity!!)
+                        if (scheduleJArray!!.length() > 0) {
 
                             ControlUsuario.instance.currentListHorario.clear()
                             for (z in 0 until scheduleJArray.length()) {

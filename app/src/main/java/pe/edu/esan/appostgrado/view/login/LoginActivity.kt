@@ -47,6 +47,7 @@ import pe.edu.esan.appostgrado.helpers.ShowAlertHelper
 //UNCOMMENT THIS FOR THE INTERNATIONAL WEEK
 /*import com.example.vuforiamod.international.activities.InternationalMainActivity*/
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.isOnlineUtils
 import pe.edu.esan.appostgrado.view.MenuPrincipalActivity
 import pe.edu.esan.appostgrado.view.login.dialog.FacultadUsuarioDialog
 import pe.edu.esan.appostgrado.view.login.dialog.PerfilUsuarioDialog
@@ -209,7 +210,7 @@ class LoginActivity : AppCompatActivity(),
 
 
     private fun callLogin() {
-        if (Utilitarios.isNetworkAvailable(this)) {
+        if (isOnlineUtils(this)) {
 
             val misPreferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
             val usuario = misPreferencias.getString("code", "")
@@ -218,13 +219,12 @@ class LoginActivity : AppCompatActivity(),
 
             if (!usuario.isNullOrEmpty() && !clave.isNullOrEmpty()) {
                 val request = JSONObject()
-                request.put("Usuario", usuario)
-                request.put("Password", clave)
+                request.put("Usuario", Utilitarios.stringDesencriptar(usuario,this))
+                request.put("Password", Utilitarios.stringDesencriptar(clave,this))
                 request.put("Token", token)
 
-                Log.i(LOG, "callLogin()")
                 iniciandoSesion = true
-                onLogin(Utilitarios.getUrl(Utilitarios.URL.LOGIN), request, usuario, clave)
+                onLogin(Utilitarios.getUrl(Utilitarios.URL.LOGIN), request, Utilitarios.stringDesencriptar(usuario,this) ?: "",Utilitarios.stringDesencriptar(clave,this) ?: "")
             } else {
                 Log.w(LOG, "Usuario y clave son null o están vacíos")
             }
@@ -289,7 +289,7 @@ class LoginActivity : AppCompatActivity(),
         if (isError) {
             focus?.requestFocus()
         } else {
-            if (Utilitarios.isNetworkAvailable(this)) {
+            if (isOnlineUtils(this)) {
                 val misPreferencias =
                     getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
                 val token = misPreferencias.getString("tokenID", "")
@@ -471,19 +471,19 @@ class LoginActivity : AppCompatActivity(),
 
                                 if (!agreetouchid) {
                                     //Si la opción de huella digital está apagada
-                                    editor.putString("code", usuario)
-                                    editor.putString("password", clave)
+                                    editor.putString("code", Utilitarios.stringEncriptar(usuario))
+                                    editor.putString("password", Utilitarios.stringEncriptar(clave))
                                 } else {
                                     //Si la opción de huella digital está encendida
                                     val codeSaved =
                                         misPreferencias.getString("userWithFingerprint", "")
                                     if (codeSaved == usuario) {
-                                        editor.putString("code", usuario)
-                                        editor.putString("password", clave)
+                                        editor.putString("code", Utilitarios.stringEncriptar(usuario))
+                                        editor.putString("password", Utilitarios.stringEncriptar(clave))
 
                                     } else {
-                                        editor.putString("code", usuario)
-                                        editor.putString("password", clave)
+                                        editor.putString("code", Utilitarios.stringEncriptar(usuario))
+                                        editor.putString("password", Utilitarios.stringEncriptar(clave))
 
                                     }
                                 }
@@ -1400,7 +1400,7 @@ class LoginActivity : AppCompatActivity(),
 
 
     //VERIFICAR LA EXISTENCIA DE PREFERENCIAS PARA LA HUELLA DIGITAL
-    fun checkRemovedPreferences(): Boolean {
+    private fun checkRemovedPreferences(): Boolean {
 
         val misPreferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
 

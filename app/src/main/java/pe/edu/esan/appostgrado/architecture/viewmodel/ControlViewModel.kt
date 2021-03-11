@@ -31,8 +31,6 @@ class ControlViewModel(application: Application) : AndroidViewModel(application)
     private val dataWasRetrievedForActivityPrivate = MutableLiveData<Boolean>(false)
     private val proceedLogoutPrivate = MutableLiveData<Boolean>(false)
 
-    /*private val showQRFeaturePrivate = MutableLiveData<Boolean>(false)*/
-
     val dataWasRetrievedForFragmentPublic: LiveData<Boolean>
         get() = dataWasRetrievedForFragmentPrivate
 
@@ -48,17 +46,12 @@ class ControlViewModel(application: Application) : AndroidViewModel(application)
     val proceedLogoutPublic: LiveData<Boolean>
         get() = proceedLogoutPrivate
 
-    /*val showQRFeaturePublic: LiveData<Boolean>
-        get() = showQRFeaturePrivate*/
-
     fun deleteDataFromRoom() = viewModelScope.launch(Dispatchers.IO){
 
         val operation = async {
             controlDao.deleteControlRoom()
 
             val rowsNumber = controlDao.getRowCount()
-            Log.w(LOG,"Number of rows in database: $rowsNumber")
-            Log.w(LOG,"ControlRoomEntity Table ha sido borrada")
         }
 
         operation.await()
@@ -114,10 +107,8 @@ class ControlViewModel(application: Application) : AndroidViewModel(application)
             )
 
             controlDao.insertAll(input)
-            Log.w(LOG, "Data has been saved to Room")
 
             val rowsNumber = controlDao.getRowCount()
-            Log.w(LOG, "Number of rows in database: $rowsNumber")
         }
     }
 
@@ -132,7 +123,6 @@ class ControlViewModel(application: Application) : AndroidViewModel(application)
                 val list = controlDao.getAll()
 
                 if(list.isNotEmpty()) {
-                    Log.w(LOG, "Data has been retrieved from Room")
 
                     val item = list[0]
 
@@ -173,23 +163,15 @@ class ControlViewModel(application: Application) : AndroidViewModel(application)
                     ControlUsuario.instance.currentCursoPost = item.currentCursoPost
                     ControlUsuario.instance.currentCursoPre = item.currentCursoPre
                     ControlUsuario.instance.currentSeccion = item.currentSeccion
-
-                    Log.w(LOG, "Singleton has been updated")
                 }
             }
 
-            Log.w(LOG, "Before await()")
-
             operation.await()
-
-            Log.w(LOG, "After await()")
-
             informUICanBeRendered()
         }
     }
 
-    fun informUICanBeRendered(){
-        Log.w(LOG,"informUICanBeRendered()")
+    private fun informUICanBeRendered(){
 
         isDatabaseOperationOngoing.set(false)
 
@@ -208,21 +190,17 @@ class ControlViewModel(application: Application) : AndroidViewModel(application)
         refreshDataForFragmentPrivate.value = status
     }
 
-    fun resetRefreshConditionInBackground(status: Boolean){
+    private fun resetRefreshConditionInBackground(status: Boolean){
         refreshDataForFragmentPrivate.postValue(status)
     }
 
-    fun databaseRetrievalFinished(status: Boolean){
+    private fun databaseRetrievalFinished(status: Boolean){
         dataWasRetrievedForFragmentPrivate.postValue(status)
         dataWasRetrievedForActivityPrivate.postValue(status)
     }
 
-    fun proceedWithLogout(status: Boolean){
+    private fun proceedWithLogout(status: Boolean){
         proceedLogoutPrivate.postValue(status)
     }
-
-    /*fun setQRCondition(condition: Boolean){
-        showQRFeaturePrivate.value = condition
-    }*/
 
 }

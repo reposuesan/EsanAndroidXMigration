@@ -59,37 +59,6 @@ public class ConvertersJava {
         return gson.toJson(currentListHorario);
     }
 
-    /*@TypeConverter
-    public static ArrayList<Horario> fromStringToCurrentListHorarioSelect(String stringInput){
-
-        Type type = new TypeToken <ArrayList<Horario>>(){}.getType();
-
-        return new Gson().fromJson(stringInput, type);
-
-    }
-
-    @TypeConverter
-    public static String fromCurrentListHorarioSelectToString(ArrayList<Horario> currentListHorarioSelect){
-        Gson gson = new Gson();
-
-        return gson.toJson(currentListHorarioSelect);
-    }
-
-    @TypeConverter
-    public static ArrayList<Horario> fromStringToCopiarListHorario(String stringInput){
-
-        Type type = new TypeToken <ArrayList<Horario>>(){}.getType();
-
-        return new Gson().fromJson(stringInput, type);
-
-    }
-
-    @TypeConverter
-    public static String fromCopiarListHorarioToString(ArrayList<Horario> copiarListHorario){
-        Gson gson = new Gson();
-
-        return gson.toJson(copiarListHorario);
-    }*/
 
     @TypeConverter
     public static Horario fromStringToCurrentHorario(String stringInput){

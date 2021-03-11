@@ -24,7 +24,6 @@ class Horario (
         var idProfesorReem: Int,
         var profesorReem: String) {
 
-
         //Secondary Constructor
         constructor(tipoHorario: Int, idHorario: Int, horaInicio: String, horaFin: String,
                     profesor: String, dia: String, idAmbiente: Int, curso: String,

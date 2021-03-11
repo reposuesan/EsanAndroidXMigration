@@ -60,7 +60,7 @@
         android:layout_below="@+id/superior"
         android:id="@+id/error_bt_ok"
         android:background="@drawable/shape_button_active"
-        android:text="Aceptar"
+        android:text="@string/ok"
         android:textColor="@android:color/white"
         android:textSize="@dimen/text_size_button"
         android:layout_marginTop="8dp"

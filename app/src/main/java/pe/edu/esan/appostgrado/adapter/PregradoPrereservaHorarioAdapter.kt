@@ -1,14 +1,12 @@
 package pe.edu.esan.appostgrado.adapter
 
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.itemview_pregrado_pr_lab.view.*
 import pe.edu.esan.appostgrado.R
 import pe.edu.esan.appostgrado.entidades.PrereservaHorario
@@ -92,7 +90,6 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                         }
                         count--
                         //ACTUALIZAR HASHMAP
-                        Log.i(LOG,count.toString())
                         listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHoras)
                     }
                 }
@@ -105,7 +102,6 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                     sgteIndexAllowed = -2
                     count--
                     //ACTUALIZAR HASHMAP
-                    Log.i(LOG,count.toString())
                     listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHoras)
                 }
             // El item no está seleccionado
@@ -121,7 +117,6 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                                 holder.buttonRangoHoraItem.setBackgroundResource(R.drawable.shape_item_seleccionado_rango_hora)
                                 holder.buttonRangoHoraItem.setTextColor(ContextCompat.getColor(holder.view.context, R.color.md_white_1000))
                                 //ACTUALIZAR HASHMAP
-                                Log.i(LOG,count.toString())
                                 listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHoras)
                             } else {
                                 if(holder.adapterPosition == prevIndexAllowed || holder.adapterPosition == sgteIndexAllowed){
@@ -135,7 +130,6 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                                     holder.buttonRangoHoraItem.setBackgroundResource(R.drawable.shape_item_seleccionado_rango_hora)
                                     holder.buttonRangoHoraItem.setTextColor(ContextCompat.getColor(holder.view.context, R.color.md_white_1000))
                                     //ACTUALIZAR HASHMAP
-                                    Log.i(LOG,count.toString())
                                     listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHoras)
                                 } else {
                                     val snack = Snackbar.make(holder.view,holder.view.context.getString(R.string.deben_seleccionarse_horas_continuas_mensaje),
@@ -155,7 +149,6 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                                 holder.buttonRangoHoraItem.setBackgroundResource(R.drawable.shape_item_seleccionado_rango_hora)
                                 holder.buttonRangoHoraItem.setTextColor(ContextCompat.getColor(holder.view.context, R.color.md_white_1000))
                                 //ACTUALIZAR HASHMAP
-                                Log.i(LOG,count.toString())
                                 listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHoras)
                             } else {
                                 if(holder.adapterPosition == prevIndexAllowed || holder.adapterPosition == sgteIndexAllowed){
@@ -169,7 +162,6 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                                     holder.buttonRangoHoraItem.setBackgroundResource(R.drawable.shape_item_seleccionado_rango_hora)
                                     holder.buttonRangoHoraItem.setTextColor(ContextCompat.getColor(holder.view.context, R.color.md_white_1000))
                                     //ACTUALIZAR HASHMAP
-                                    Log.i(LOG,count.toString())
                                     listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHoras)
                                 } else {
                                     val snack = Snackbar.make(holder.view,holder.view.context.getString(R.string.deben_seleccionarse_horas_continuas_mensaje),
@@ -192,7 +184,6 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                                 holder.buttonRangoHoraItem.setBackgroundResource(R.drawable.shape_item_seleccionado_rango_hora)
                                 holder.buttonRangoHoraItem.setTextColor(ContextCompat.getColor(holder.view.context, R.color.md_white_1000))
                                 //ACTUALIZAR HASHMAP
-                                Log.i(LOG,count.toString())
                                 listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHoras)
                             } else if (count == 0){
                                 prevIndexAllowed = holder.adapterPosition - 1
@@ -202,7 +193,6 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                                 holder.buttonRangoHoraItem.setBackgroundResource(R.drawable.shape_item_seleccionado_rango_hora)
                                 holder.buttonRangoHoraItem.setTextColor(ContextCompat.getColor(holder.view.context, R.color.md_white_1000))
                                 //ACTUALIZAR HASHMAP
-                                Log.i(LOG,count.toString())
                                 listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHoras)
                             } else {
                                 val snack = Snackbar.make(holder.view,holder.view.context.getString(R.string.deben_seleccionarse_horas_continuas_mensaje),
@@ -215,7 +205,6 @@ class PregradoPrereservaHorarioAdapter(private val listHorario: ArrayList<Preres
                     /*listHorario[holder.adapterPosition].itemSeleccionado = true
                     holder.buttonRangoHoraItem.setBackgroundResource(R.drawable.shape_item_seleccionado_rango_hora)
                     holder.buttonRangoHoraItem.setTextColor(ContextCompat.getColor(holder.view.context, R.color.md_white_1000))
-                    Log.i(LOG,count.toString())
                     listener.itemClick(holder.adapterPosition, listHorario[holder.adapterPosition].itemSeleccionado, rangoHora)
                     if(holder.adapterPosition == 0){
                     } else if (holder.adapterPosition == listHorario.size - 1) {

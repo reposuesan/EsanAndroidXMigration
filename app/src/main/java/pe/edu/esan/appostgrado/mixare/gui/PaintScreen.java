@@ -109,7 +109,6 @@ public class PaintScreen {
 
 	public void paintObj(ScreenObj obj, float x, float y, float rotation,
 			float scale, boolean doRotate) {
-//		Log.d(ScheduleDetailsActivity.TAG, "obj className: " + obj.getClass().getName());
 		canvas.save();
 		canvas.translate(x + obj.getWidth() / 2, y + obj.getHeight() / 2);
 		if (doRotate)

@@ -23,10 +23,6 @@ import androidx.multidex.MultiDexApplication
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
 import pe.edu.esan.appostgrado.R
-/*import com.crashlytics.android.Crashlytics
-import io.fabric.sdk.android.Fabric*/
-/*import pe.edu.esan.appostgrado.BuildConfig*/
-
 
 /**
  * This is a subclass of {@link Application} used to provide shared objects for this app, such as
@@ -41,7 +37,6 @@ class AnalyticsApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         sAnalytics = GoogleAnalytics.getInstance(this)
-        /*Fabric.with(this, Crashlytics())*/
     }
 
     /**

@@ -17,7 +17,7 @@ class CustomDialog private constructor(){
     private val LOG = CustomDialog::class.simpleName
 
     init {
-        Log.d(LOG,"This ($this) is a singleton dialog")
+        Log.w(LOG,"This ($this) is a singleton dialog")
     }
 
     private object Holder {

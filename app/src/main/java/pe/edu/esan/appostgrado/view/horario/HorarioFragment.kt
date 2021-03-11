@@ -26,6 +26,7 @@ import pe.edu.esan.appostgrado.entidades.Horario
 import pe.edu.esan.appostgrado.entidades.HorarioGrilla
 import pe.edu.esan.appostgrado.entidades.Profesor
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.isOnlineUtils
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -478,7 +479,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
 
     fun refreshManual() {
-        if (Utilitarios.isNetworkAvailable(activity!!)) {
+        if (isOnlineUtils(activity!!)) {
             swHorario_fhorario.isRefreshing = true
             showHorario()
         } else {

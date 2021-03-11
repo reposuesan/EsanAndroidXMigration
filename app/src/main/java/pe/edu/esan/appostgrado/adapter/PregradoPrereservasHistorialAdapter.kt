@@ -1,24 +1,14 @@
 package pe.edu.esan.appostgrado.adapter
 
 
-import android.content.Intent
-import android.net.Uri
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.startActivity
-import androidx.recyclerview.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
-
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.LinearLayout
-
 import android.widget.TextView
-
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.itemview_pregrado_pr_lab_historial.view.*
 import pe.edu.esan.appostgrado.R
-
 import pe.edu.esan.appostgrado.entidades.PrereservaDetalle
 
 class PregradoPrereservasHistorialAdapter(private val listPrereservas: ArrayList<PrereservaDetalle>, val esLaboratorio: Boolean, var listener: HistorialListener?, var mapListener: HistorialMapaListener?) :
@@ -45,7 +35,6 @@ class PregradoPrereservasHistorialAdapter(private val listPrereservas: ArrayList
 
     override fun onBindViewHolder(holder: HistorialViewHolder, position: Int) {
         holder.creadorPrereservaTV.text = listPrereservas[position].creadorPrereserva
-        //holder.creadorPrereservaTV.text = "XXXXXXXXX XXXXXXX XXXX XXXXXX"
         holder.horarioPrereservaTV.text = listPrereservas[position].horarioPrereserva
         holder.fechaPrereservaTV.text = listPrereservas[position].fechaPrereserva
 
@@ -67,14 +56,11 @@ class PregradoPrereservasHistorialAdapter(private val listPrereservas: ArrayList
 
         holder.cubiculoLabPrereservaTV.text = listPrereservas[position].nomLabCubiculo
 
-        //Log.e("TEST", listPrereservas[position].prereservaEstado)
-
         if (listPrereservas[position].prereservaEstado.equals("Confirmado")) {
             holder.estadoPrereservaTV.text = holder.view.context.getString(R.string.confirmada_text)
             holder.estadoPrereservaTV.setTextColor(ContextCompat.getColor(holder.view.context, R.color.green))
         } else if(listPrereservas[position].prereservaEstado.equals("Perdida")) {
             holder.estadoPrereservaTV.text = holder.view.context.getString(R.string.perdida_text)
-            //holder.estadoPrereservaTV.setTextColor(ContextCompat.getColor(holder.view.context, R.color.prereserva_perdida))
             holder.estadoPrereservaTV.setTextColor(ContextCompat.getColor(holder.view.context, R.color.esan_red))
         } else {
             holder.estadoPrereservaTV.text = holder.view.context.getString(R.string.sin_confirmar_text)

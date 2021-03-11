@@ -1,9 +1,7 @@
 package pe.edu.esan.appostgrado.architecture.adapter
 
-import android.util.Log
 import com.google.gson.*
 import pe.edu.esan.appostgrado.entidades.UserEsan
-import pe.edu.esan.appostgrado.view.MenuPrincipalActivity
 import java.lang.reflect.Type
 
 
@@ -23,7 +21,6 @@ class AbstractElementAdapter : JsonSerializer<UserEsan>, JsonDeserializer<UserEs
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): UserEsan {
         val jsonObject = json.asJsonObject
         val type = jsonObject.get("type").asString
-        /*Log.i(LOG, "The type for the deserialization is: $type")*/
         val element = jsonObject.get("properties")
 
         try {

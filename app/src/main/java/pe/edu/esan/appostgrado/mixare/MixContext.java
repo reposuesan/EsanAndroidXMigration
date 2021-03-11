@@ -27,7 +27,6 @@ import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.ViewGroup.LayoutParams;
@@ -62,12 +61,12 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.X509TrustManager;
 
-import pe.edu.esan.appostgrado.view.mas.ra.MixView;
-import pe.edu.esan.appostgrado.view.mas.ra.PrincipalRAActivity;
 import pe.edu.esan.appostgrado.R;
 import pe.edu.esan.appostgrado.mixare.data.DataSource;
 import pe.edu.esan.appostgrado.mixare.data.DataSource.DATASOURCE;
 import pe.edu.esan.appostgrado.mixare.render.Matrix;
+import pe.edu.esan.appostgrado.view.mas.ra.MixView;
+import pe.edu.esan.appostgrado.view.mas.ra.PrincipalRAActivity;
 
 
 public class MixContext extends ContextWrapper {
@@ -131,14 +130,14 @@ public class MixContext extends ContextWrapper {
 			try {
 				lastFix = locationMgr.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 			} catch(SecurityException e){
-				Log.e(LOG,e.getMessage());
+				e.printStackTrace();
 			}
 			
 			if (lastFix == null){
 				try {
 					lastFix = locationMgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 				} catch (SecurityException e) {
-					Log.e(LOG,e.getMessage());
+					e.printStackTrace();
 				}
 			}
 
@@ -391,7 +390,6 @@ public class MixContext extends ContextWrapper {
 	}
 
 	public void setDataSource(DataSource.DATASOURCE source, Boolean selection){
-		Log.i("MIXCONTEXT","Seleccion: "+source.toString());
 		selectedDataSources.put(source,selection);
 		SharedPreferences settings = getSharedPreferences(PrincipalRAActivity.PREFS_NAME, 0);
 		//SharedPreferences settings = getSharedPreferences(f_comedor.PREFS_NAME, 0);

@@ -6,9 +6,10 @@ import android.graphics.drawable.Drawable
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.nfc.FormatException
+import android.os.Build
 import android.util.Base64
-import android.util.Log
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -162,8 +163,8 @@ class Utilitarios {
         val mostrarDetalleMarker = false
 
         private val ReleasePortal = true
-        private val DominioPortal = "http://restws.esan.edu.pe"
-        private val DominioPortalTest = "http://devrestws.esan.edu.pe"
+        private val DominioPortal = "https://restws.esan.edu.pe"
+        private val DominioPortalTest = "https://devrestws.esan.edu.pe"
         //CONEXION
         fun isNetworkAvailable (context: Context) : Boolean {
 
@@ -243,23 +244,23 @@ class Utilitarios {
                 URL.PREG_LAB_VERIFICAR_TIPO_POLITICA -> return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionSeguridad/Politicas/PoliticaUsoPortal.svc/VerificarTipoPoliticaPortal"
                 URL.PREG_LAB_ACEPTAR_TIPO_POLITICA -> return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionSeguridad/Politicas/PoliticaUsoPortal.svc/AceptarTipoPolitica"
 
-                URL.MENU_COMEDOR ->                 return "https://intranetmovil.ue.edu.pe/Service/AlumnoService.svc/menuComedor/"
+                URL.MENU_COMEDOR ->                 return "http://intranetmovil.ue.edu.pe/Service/AlumnoService.svc/menuComedor/"
                 /*URL.MENU_COMEDOR ->                 return "http://devintranetmovil.ue.edu.pe/Service/AlumnoService.svc/menuComedor/"*/
 
                 //REALIDAD AUMENTADA
-                URL.RA_FACULTADES ->                return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/facultades"
-                URL.RA_EDIFICIOS ->                 return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/edificios"
-                URL.RA_CAFETERIAS ->                return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/cafeterias"
-                URL.RA_DEPORTES ->                  return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/deportes"
-                URL.RA_BIBLIOTECAS ->               return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/bibliotecas"
-                URL.RA_LABORATORIOS ->              return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/laboratorios"
-                URL.RA_AUDITORIOS ->                return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/auditorios"
-                URL.RA_LIBRERIAS ->                 return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/librerias"
-                URL.RA_OFICINAS ->                  return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/oficinas"
-                URL.RA_AULAS ->                     return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/aulas"
-                URL.RA_VARIOS ->                    return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/varios"
-                URL.RA_BYID ->                      return "https://intranetmovil.esan.edu.pe/DataUsuario.svc/ambiente/"
-                URL.RA_IMAGEN ->                    return "https://intranetmovil.esan.edu.pe/recursos/img/"
+                URL.RA_FACULTADES ->                return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/facultades"
+                URL.RA_EDIFICIOS ->                 return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/edificios"
+                URL.RA_CAFETERIAS ->                return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/cafeterias"
+                URL.RA_DEPORTES ->                  return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/deportes"
+                URL.RA_BIBLIOTECAS ->               return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/bibliotecas"
+                URL.RA_LABORATORIOS ->              return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/laboratorios"
+                URL.RA_AUDITORIOS ->                return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/auditorios"
+                URL.RA_LIBRERIAS ->                 return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/librerias"
+                URL.RA_OFICINAS ->                  return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/oficinas"
+                URL.RA_AULAS ->                     return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/aulas"
+                URL.RA_VARIOS ->                    return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/varios"
+                URL.RA_BYID ->                      return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambiente/"
+                URL.RA_IMAGEN ->                    return "http://intranetmovil.esan.edu.pe/recursos/img/"
                 else -> return ""
             }
 
@@ -391,7 +392,6 @@ class Utilitarios {
         }
 
         fun getStringToStringddMMyyyyHHmm(fecha: String): String {
-            Log.i("H", fecha)
             val ddMMyyyyHHmm = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
 
             var f: Date
@@ -610,6 +610,23 @@ class Utilitarios {
             return null
         }
 
+        fun stringEncriptar(input: String): String? {
+            try {
+                return encrypt(input, String(Base64.decode(BuildConfig.ESAN, Base64.DEFAULT))).replace("\n","")
+            } catch (ue: UnsupportedEncodingException) { }
+            catch (ike: InvalidKeyException) { }
+            catch (nae: NoSuchAlgorithmException) { }
+            catch (iape: InvalidAlgorithmParameterException) { }
+            catch (ibe: IllegalBlockSizeException) { }
+            catch (bpe: BadPaddingException) { }
+            catch (nspe: NoSuchPaddingException) { }
+            catch (gs: GeneralSecurityException) { }
+            catch (io: IOException) { }
+            catch (jex: JSONException) { }
+            return null
+
+        }
+
         @Throws(NoSuchAlgorithmException::class, NoSuchPaddingException::class, InvalidKeyException::class, InvalidAlgorithmParameterException::class, IllegalBlockSizeException::class, BadPaddingException::class)
         private fun decrypt(cipherText: ByteArray, key: ByteArray, initialVector: ByteArray): ByteArray {
             val cipher = Cipher.getInstance(cipherTransformation)
@@ -652,4 +669,30 @@ class Utilitarios {
             return String(decrypt(cipheredBytes, keyBytes, keyBytes), charset(characterEncoding))
         }
     }
+}
+
+fun isOnlineUtils(context: Context): Boolean{
+    val connectivityManager =  context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if(capabilities != null){
+            when {
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
+                    return true
+                }
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
+                    return true
+                }
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
+                    return true
+                }
+            }
+        }
+    } else {
+        val netInfo = connectivityManager.activeNetworkInfo
+        return netInfo != null && netInfo.isConnectedOrConnecting
+    }
+
+    return false
 }

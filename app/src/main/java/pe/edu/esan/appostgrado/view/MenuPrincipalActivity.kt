@@ -1,37 +1,36 @@
 package pe.edu.esan.appostgrado.view
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.tabs.TabLayout
-import androidx.core.content.ContextCompat
-import androidx.appcompat.widget.Toolbar
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.Menu
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.analytics.HitBuilders
 import com.google.android.gms.analytics.Tracker
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_menu_principal.*
 import kotlinx.android.synthetic.main.toolbar_menuprincipal.view.*
 import pe.edu.esan.appostgrado.R
 import pe.edu.esan.appostgrado.analytics.AnalyticsApplication
+import pe.edu.esan.appostgrado.architecture.viewmodel.ControlViewModel
 import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.Alumno
 import pe.edu.esan.appostgrado.entidades.Profesor
 import pe.edu.esan.appostgrado.entidades.UserEsan
 import pe.edu.esan.appostgrado.helpers.ShowAlertHelper
-import pe.edu.esan.appostgrado.architecture.viewmodel.ControlViewModel
 import pe.edu.esan.appostgrado.util.Utilitarios
-import pe.edu.esan.appostgrado.view.academico.pregrado.CursosFragment
-import pe.edu.esan.appostgrado.view.academico.postgrado.ProgramasFragment
 import pe.edu.esan.appostgrado.view.academico.docente.SeccionesFragment
+import pe.edu.esan.appostgrado.view.academico.postgrado.ProgramasFragment
+import pe.edu.esan.appostgrado.view.academico.pregrado.CursosFragment
 import pe.edu.esan.appostgrado.view.horario.HorarioFragment
 import pe.edu.esan.appostgrado.view.mas.MasFragment
 import pe.edu.esan.appostgrado.view.pago.PagoPostFragment
@@ -74,7 +73,6 @@ class MenuPrincipalActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu_principal)
-        Log.w(LOG,"onCreate()")
 
         val application = application as AnalyticsApplication
         mTracker = application.getDefaultTracker()
@@ -86,18 +84,15 @@ class MenuPrincipalActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         controlViewModel = ViewModelProviders.of(this).get(ControlViewModel::class.java)
-        Log.w(LOG, "ViewModel is: $controlViewModel")
         controlViewModel.refreshDataForFragmentPublic.observe(this,
             Observer<Boolean> { value ->
                 if(value){
-                    Log.w(LOG,"refreshDataForFragment() from Menu")
                     refreshDataForFragment()
                 }
             })
 
         if (ControlUsuario.instance.currentUsuario.size != 0  && ControlUsuario.instance.currentUsuarioGeneral != null) {
             controlViewModel.insertDataToRoom()
-            Log.w(LOG,"controlViewModel.insertDataToRoom()")
             mainSetup()
         } else {
             if(intent.hasExtra("login_invitado")){
@@ -109,7 +104,6 @@ class MenuPrincipalActivity : AppCompatActivity() {
                 controlViewModel.dataIsReadyPublic.observe(this,
                     Observer<Boolean> { value ->
                         if(value){
-                            Log.w(LOG,"mainSetup()")
                             mainSetup()
                             controlViewModel.setValueForDataIsReady(false)
                         }
@@ -378,22 +372,18 @@ class MenuPrincipalActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
-        Log.w(LOG,"onResume()")
         super.onResume()
     }
 
     override fun onPause() {
-        Log.w(LOG,"onPause()")
         super.onPause()
     }
 
     override fun onStart() {
-        Log.w(LOG,"onStart()")
         super.onStart()
     }
 
     override fun onStop() {
-        Log.w(LOG,"onStop()")
         if (ControlUsuario.instance.currentUsuario.size != 0  && ControlUsuario.instance.currentUsuarioGeneral != null) {
             controlViewModel.insertDataToRoom()
         }
@@ -401,7 +391,6 @@ class MenuPrincipalActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        Log.w(LOG, "onDestroy()")
         super.onDestroy()
     }
 
@@ -489,7 +478,6 @@ class MenuPrincipalActivity : AppCompatActivity() {
                 if (!task.isSuccessful) {
                     msg = "Error during subscription"
                 }
-                Log.d(LOG, msg)
             }
     }
 
@@ -501,7 +489,6 @@ class MenuPrincipalActivity : AppCompatActivity() {
                 if (!task.isSuccessful) {
                     msg = "Error during unsubscription"
                 }
-                Log.d(LOG, msg)
             }
     }*/
 

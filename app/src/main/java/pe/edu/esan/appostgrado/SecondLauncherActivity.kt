@@ -18,6 +18,7 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import org.json.JSONObject
 import pe.edu.esan.appostgrado.helpers.ShowAlertHelper
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.isOnlineUtils
 import pe.edu.esan.appostgrado.view.login.LoginActivity
 
 class SecondLauncherActivity : AppCompatActivity() {
@@ -43,7 +44,12 @@ class SecondLauncherActivity : AppCompatActivity() {
             override fun onTick(millisUntilFinished: Long) { }
 
             override fun onFinish() {
-                validateVersionApp()
+                if(isOnlineUtils(this@SecondLauncherActivity)){
+                    validateVersionApp()
+                } else {
+                    val showAlertHelper = ShowAlertHelper(this@SecondLauncherActivity)
+                    showAlertHelper.showAlertError(null, getString(R.string.error_no_internet), null)
+                }
             }
         }.start()
     }
@@ -64,11 +70,9 @@ class SecondLauncherActivity : AppCompatActivity() {
                     val pInfo = packageManager.getPackageInfo(packageName, 0)
                     val code = PackageInfoCompat.getLongVersionCode(pInfo)
 
-                    Log.i(LOG, "The versionCode is: $code")
-
                     if (!response.isNull("ObtenerVersionMovilResult")) {
                         val data = response["ObtenerVersionMovilResult"]  as? JSONObject
-                        //println(data)
+
                         val versionMovilResult = data?.getInt("VersionAndroid") ?: 0
                         val flagAndroid = data?.getBoolean("FlagAndroid") ?: false
 
@@ -81,7 +85,7 @@ class SecondLauncherActivity : AppCompatActivity() {
                                 showAlertHelper.showAlertError(getString(R.string.update), getString(R.string.update_description))
 
                                 {
-                                    val appPackageName = packageName // getPackageName() from Context or Activity object
+                                    val appPackageName = packageName
                                     try {
                                         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
                                     } catch (anfe: android.content.ActivityNotFoundException) {
@@ -91,19 +95,15 @@ class SecondLauncherActivity : AppCompatActivity() {
 
 
                             } else {
-                                Log.i(LOG, "flagAndroid is true")
                                 val i = Intent(applicationContext, LoginActivity::class.java)
                                 i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                                //i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                                 startActivity(i)
                                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                                 finish()
                             }
                         } else {
-                            Log.i(LOG, "flagAndroid is false")
                             val i = Intent(applicationContext, LoginActivity::class.java)
                             i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            //i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                             startActivity(i)
                             overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                             finish()
@@ -116,13 +116,6 @@ class SecondLauncherActivity : AppCompatActivity() {
             },
             { error ->
                 Log.e(LOG, "Volley error:  " + error.message.toString())
-                /*Log.e(LOG, "Volley error:  " + error.networkResponse.toString())
-                Log.e(LOG, "Volley error:  " + error.cause.toString())
-                Log.e(LOG, "Volley error:  " + error.stackTrace.toString())
-                Log.e(LOG, "Volley error:  " + error.networkResponse.allHeaders)
-                Log.e(LOG, "Volley error:  " + error.networkResponse.data)
-                Log.e(LOG, "Volley error:  " + error.networkResponse.headers)
-                Log.e(LOG, "Volley error:  " + error.networkResponse.statusCode)*/
 
                 val crashlytics = FirebaseCrashlytics.getInstance()
 

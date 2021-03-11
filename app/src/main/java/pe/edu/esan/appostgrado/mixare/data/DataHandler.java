@@ -40,13 +40,10 @@ public class DataHandler {
 
 	public void addMarkers(List<Marker> markers) {
 
-		Log.v(TAG, "Marker before: " + markerList.size());
 		for (Marker ma : markers) {
 			if((!markerList.contains(ma)) && (!contieneCodigo(ma)))
 					markerList.add(ma);
 		}
-
-		Log.d(TAG, "Marker count: " + markerList.size());
 	}
 
 	public void sortMarkerList() {

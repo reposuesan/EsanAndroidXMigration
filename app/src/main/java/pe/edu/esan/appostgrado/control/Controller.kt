@@ -33,7 +33,6 @@ class ControlUsuario private constructor(){
     var statusLogout = 1
     var currentUsuario = ArrayList<UserEsan>()
     var entroEncuesta = false
-    //var currentListHorario = CustomArrayList<Horario>()
     var currentListHorario = CopyOnWriteArrayList<Horario>()
     var currentListHorarioSelect = ArrayList<Horario>()
     var copiarListHorario = ArrayList<Horario>()
@@ -56,34 +55,4 @@ class ControlUsuario private constructor(){
     var currentCursoPost : CursosPost? = null
     var currentCursoPre : CursosPre? = null
     var currentSeccion : Seccion? = null
-
-}
-
-//This class was defined to solve ConvertersKotlin.kt problem line 55 reported in Crashlytics
-class CustomArrayList<T>: ArrayList<T>() {
-
-    var values = ArrayList<T>()
-    var viewValues: List<T>  = Collections.unmodifiableList(values)
-
-    override fun add(element: T): Boolean {
-        values.add(element)
-        return super.add(element)
-    }
-
-    override fun get(index: Int): T {
-        if (index >= viewValues.size) throw IndexOutOfBoundsException(outOfBoundsMsg(index))
-
-        return viewValues[index]
-
-    }
-
-    override fun clear() {
-        values.clear()
-        viewValues = Collections.unmodifiableList(values)
-        super.clear()
-    }
-
-    private fun outOfBoundsMsg(index: Int): String? {
-        return "Index: $index, Size: ${viewValues.size}"
-    }
 }

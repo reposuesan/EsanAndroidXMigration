@@ -1,11 +1,9 @@
 package pe.edu.esan.appostgrado.adapter
 
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_alumnoasistencia_lista.view.*
 import pe.edu.esan.appostgrado.R
@@ -57,9 +55,6 @@ class AsistenciaAdapter (val listaAlumno: List<Alumno>): androidx.recyclerview.w
 
             itemView.lblNombre_itomarasistencia.text = alumno.nombreCompleto
             itemView.lblCodigo_itomarasistencia.text = alumno.codigo
-
-            //Log.e("AsistenciaAdapter", alumno.estado)
-            //Log.e("AsistenciaAdapter", alumno.porcInha.toString())
 
             if (alumno.estado == "A") {
                 /*if (alumno.porcFaltas > alumno.porcInha.toFloat()) {

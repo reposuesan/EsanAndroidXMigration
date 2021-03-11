@@ -119,7 +119,6 @@ public class DataView {
 	public void changeState(int newState) {
 		int oldState = state.nextLStatus;
 		state.nextLStatus = newState;
-		//Log.d(ScheduleDetailsActivity.TAG + "-HILO", "Cambio de Estado de " + oldState + " a " + newState);
 	}
 
 	public float getRadius() {
@@ -143,7 +142,6 @@ public class DataView {
 	}
 
 	public void doStart() {
-		//Log.v(ScheduleDetailsActivity.TAG, "DO START STATE: " + state.nextLStatus);
 		if (state.nextLStatus != MixState.DONE) {
 			state.nextLStatus = MixState.NOT_STARTED;
 		}
@@ -214,10 +212,7 @@ public class DataView {
 			TUltimo = TUltimo - 60;
 		}
 		if (Tactual - TUltimo > segundos)	{
-//			Log.d(ScheduleDetailsActivity.TAG, "FPS: " + frames);
-//			Log.d(ScheduleDetailsActivity.TAG, "FPS: act:" + Tactual + "ult" + TUltimo);
 //			frames = 0;
-////			Log.d(ScheduleDetailsActivity.TAG,"*************************");
 ////			for (int i = 0; i <= dataHandler.getMarkerCount() - 1; i++) {
 ////				Marker ma = dataHandler.getMarker(i);
 ////				if (ma.isVisible)//ma.isLookingAt
@@ -225,7 +220,6 @@ public class DataView {
 ////				else
 ////					Log.d(ScheduleDetailsActivity.TAG,"NO visible:" + ma.getTitle());
 ////			}
-////			Log.d(ScheduleDetailsActivity.TAG,"*************************");
 			reiniciarAlturas();
 			TUltimo = Tactual;
 		}
@@ -257,7 +251,6 @@ public class DataView {
 											mActivos.get(j).cMarker.y, ma.cMarker.y)) {
 								// si hay traslape
 								huboTraslape = true;
-//								Log.d(ScheduleDetailsActivity.TAG, "Traslape POI en: " + ma.getTitle());
 								// cambio las coordenadas de dibujo de este marker
 								if (dibujarArriba) {
 									ma.addY -= tamanoCirculo * 6;

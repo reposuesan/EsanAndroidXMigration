@@ -68,7 +68,6 @@ class ContactoAdapter (val listaAlumnos: List<Alumno>): androidx.recyclerview.wi
                 }
                 /*val intent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
-                    //Log.e("ContactoAdapter.kt",alumno.correo)
                     //putExtra(Intent.EXTRA_EMAIL, alumno.correo)
                     putExtra(Intent.EXTRA_EMAIL, arrayOf(alumno.correo))
                     putExtra(Intent.EXTRA_SUBJECT, itemView.resources.getString(R.string.consultar_))

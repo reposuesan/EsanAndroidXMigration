@@ -3,7 +3,6 @@ package pe.edu.esan.appostgrado.mixare.data;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,7 +40,6 @@ public class Json extends DataHandler {
 				dataArray = root.getJSONArray(JSonRoot);
 			if (dataArray != null) {
 
-				Log.i(TAG, "processing "+dataformat+" JSON Data Array");
 				int top = Math.min(MAX_JSON_OBJECTS, dataArray.length());
 
 				for (int i = 0; i < top; i++) {					
@@ -55,7 +53,6 @@ public class Json extends DataHandler {
 			}
 		}
 		catch (JSONException e) {
-			Log.e(TAG,e.getMessage());
 			e.printStackTrace();
 		}
 		return markers;
@@ -66,9 +63,7 @@ public class Json extends DataHandler {
 //		parametros obligatorios:
 		
 		if (jo.has("title") && jo.has("lat") && jo.has("lng") && jo.has("id") && jo.has("filtro") ) {
-			
-			Log.i(TAG, "processing Lugar JSON object");
-			
+
 			String filtro = unescapeHTML(jo.getString("filtro"), 0);
 
 			/*JSONArray jarrEnlaces = null;
@@ -120,7 +115,6 @@ public class Json extends DataHandler {
 			return imagen;
 
 		} catch (IOException e) {
-			Log.e(TAG,"ERRROR:"+e.getMessage());
 			return null;
 		}
 	}

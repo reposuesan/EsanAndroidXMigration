@@ -53,7 +53,6 @@ public class DownloadManager implements Runnable {
 	}
 
 	public void run() {
-		Log.v("HILO", "hilo - run" + Thread.currentThread().getId());
 		String jobId;
 		DownloadRequest request;
 		DownloadResult result;
@@ -111,7 +110,6 @@ public class DownloadManager implements Runnable {
 		}
 		// Do stop
 		state = STOPPED;
-		Log.v("ARPUCP-HILO", "hilo - stop" + Thread.currentThread().getId());
 	}
 
 	public int checkForConnection() {
@@ -150,11 +148,7 @@ public class DownloadManager implements Runnable {
 					// try loading JSON DATA
 					try {
 
-						Log.v(PrincipalRAActivity.TAG, "try to load JSON data: "+tmp);
-
 						JSONObject root = new JSONObject(tmp);
-
-						Log.d(PrincipalRAActivity.TAG, "loading JSON data");
 
 						List<Marker> markers = layer.load(root, request.format);
 						result.setMarkers(markers);
@@ -165,9 +159,6 @@ public class DownloadManager implements Runnable {
 						result.errorMsg = null;
 
 					} catch (JSONException e) {
-
-						Log.v(PrincipalRAActivity.TAG, "no JSON data");
-//						Log.v(ScheduleDetailsActivity.TAG, "try to load XML data");
 //
 //						try {
 //							DocumentBuilder builder = DocumentBuilderFactory
@@ -180,7 +171,6 @@ public class DownloadManager implements Runnable {
 //
 //							XMLHandler xml = new XMLHandler();
 //
-//							Log.i(ScheduleDetailsActivity.TAG, "loading XML data");
 //
 //							List<Marker> markers = xml.load(doc);
 //							result.setMarkers(markers);
@@ -222,9 +212,6 @@ public class DownloadManager implements Runnable {
 		if (job != null) {
 			String jobId = "ID_" + (id++);
 			todoList.put(jobId, job);
-			Log.i(PrincipalRAActivity.TAG, "Submitted Job with " + jobId + ", format: "
-					+ job.format + ", params: " + job.params + ", url: "
-					+ job.url);
 			return jobId;
 		}
 		return null;

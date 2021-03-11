@@ -13,9 +13,6 @@ interface ControlRoomDao {
     @Query("SELECT * FROM control_room")
     fun getAll(): List<ControlRoomEntity>
 
-    //@Query("SELECT currentUsuario FROM control_room")
-    //fun loadCurrentUsuario(): ArrayList<Any>
-
     @Query("SELECT currentUsuarioGeneral FROM control_room")
     fun loadCurrentUsuarioGeneral(): UsuarioGeneral?
 

@@ -73,10 +73,10 @@ class ConfiguracionActivity : AppCompatActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 val mispreferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
                 //val user = mispreferencias.getString("code", "")
-                val user = mispreferencias.getString("userWithFingerprint", "")
+                val user = Utilitarios.stringDesencriptar(mispreferencias.getString("userWithFingerprint", "") ?: "", this)
                 val agreetouchId = mispreferencias.getBoolean("touchid", false)
                 //println(user)
-                Log.i(LOG, user)
+                Log.i(LOG, user ?: "")
                 //println(ControlUsuario.instance.currentUsuarioGeneral?.usuario)
                 Log.i(LOG, ControlUsuario.instance.currentUsuarioGeneral?.usuario.toString())
 

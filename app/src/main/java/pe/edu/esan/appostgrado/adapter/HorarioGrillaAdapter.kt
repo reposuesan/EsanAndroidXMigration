@@ -34,7 +34,7 @@ class HorarioGrillaAdapter(val listaHorario: List<HorarioGrilla>): androidx.recy
 
             if (horario.actual) {
                 val positiony: Float
-                //Log.e("HorarioGrillaAdapter", "Minuto de Horario: ${horario.minuto}")
+
                 if (horario.minuto >= 50) {
                     //positiony = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 69f, itemView.context.resources.displayMetrics)
                     positiony = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 99f, itemView.context.resources.displayMetrics)

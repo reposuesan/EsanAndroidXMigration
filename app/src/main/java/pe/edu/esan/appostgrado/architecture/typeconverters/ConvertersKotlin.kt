@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import pe.edu.esan.appostgrado.architecture.adapter.AbstractElementAdapter
-import pe.edu.esan.appostgrado.control.CustomArrayList
 import pe.edu.esan.appostgrado.entidades.*
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -57,18 +56,6 @@ class ConvertersKotlin {
         val type = object : TypeToken<ArrayList<Horario>>(){}.type
         return gson.toJson(listHorario,type)
     }
-
-    /*@TypeConverter
-    fun fromStringToCustomArrayListHorario(stringInput: String): CustomArrayList<Horario> {
-        val type = object : TypeToken<CustomArrayList<Horario>>(){}.type
-        return gson.fromJson(stringInput, type)
-    }
-
-    @TypeConverter
-    fun fromCustomArrayListHorarioToString(listHorario: CustomArrayList<Horario>): String {
-        val type = object : TypeToken<CustomArrayList<Horario>>(){}.type
-        return gson.toJson(listHorario,type)
-    }*/
 
     @TypeConverter
     fun fromStringToUnmodifiedArrayListHorario(stringInput: String): CopyOnWriteArrayList<Horario> {

@@ -25,7 +25,6 @@ class LauncherActivity : AppCompatActivity() {
     private fun crearAnimacion() {
 
         object : CountDownTimer(milisegundo.toLong(), 1000) {
-            //var i: Intent? = null
 
             override fun onTick(millisUntilFinished: Long) {
 
@@ -33,7 +32,7 @@ class LauncherActivity : AppCompatActivity() {
 
             override fun onFinish() {
                 val i = Intent(applicationContext, SecondLauncherActivity::class.java)
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 startActivity(i)
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
                 finish()

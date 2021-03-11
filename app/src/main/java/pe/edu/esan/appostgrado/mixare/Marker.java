@@ -20,7 +20,6 @@ package pe.edu.esan.appostgrado.mixare;
 
 import android.graphics.Color;
 import android.location.Location;
-import android.util.Log;
 
 import java.text.DecimalFormat;
 
@@ -205,14 +204,6 @@ abstract public class Marker implements Comparable<Marker> {
 		pPt.y = Math.abs(pPt.y);
 //		distX = Math.abs(distX);
 //		distY = Math.abs(distY);
-//		Log.d(ScheduleDetailsActivity.TAG, "-----------");
-//		Log.d(ScheduleDetailsActivity.TAG, "Click en: " + x + ", " + y);
-//		Log.d(ScheduleDetailsActivity.TAG, "POI en: " + signMarker.x + ", " + signMarker.y);
-//		Log.d(ScheduleDetailsActivity.TAG, "-----------");
-//		Log.d(ScheduleDetailsActivity.TAG, "PPT: " + pPt.x + ", " + pPt.y);
-//		Log.d(ScheduleDetailsActivity.TAG, "Dist: " + distX + ", " + distY);
-//		Log.d(ScheduleDetailsActivity.TAG, "radius: " + radius);
-//		Log.d(ScheduleDetailsActivity.TAG, "-----------");
 		if ((pPt.x <= radius*probError) && (pPt.y <= radius*probError)){
 			return true;
 		} else {
@@ -287,7 +278,6 @@ abstract public class Marker implements Comparable<Marker> {
 
 		if (isClickValid(x, y)) {
 //			evtHandled = state.handleEvent(ctx, URL);
-			Log.e("MARKER","CLICK----------------------------------------------------");
 			evtHandled = state.handleEvent(ctx, this);
 		}
 		return evtHandled;

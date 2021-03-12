@@ -295,10 +295,14 @@ class MasFragment : androidx.fragment.app.Fragment() {
                         activity!!.startActivity(masOpcion.intent)
                     }
                 } else {
-                    //TODO: SHOW DIALOG TO AVOID ERROR IN LINKS DE INTERES
+                    rvOpciones_fmas.visibility = View.INVISIBLE
+                    rvOpciones_fmas.isEnabled = false
+                    rvOpciones_fmas.isClickable = false
+                    CustomDialog.instance.showDialogLoad(activity!!)
                     if (invitado) {
                         ControlUsuario.instance.currentUsuario.clear()
                         ControlUsuario.instance.statusLogout = 1
+                        dismissDialog()
                         activity!!.finish()
                     } else {
                         if(!cerrandoSesion) {
@@ -312,6 +316,13 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
 
         rvOpciones_fmas.adapter = opcionesAdapter
+    }
+
+    private fun dismissDialog() {
+        if (CustomDialog.instance.dialogoCargando != null) {
+            CustomDialog.instance.dialogoCargando?.dismiss()
+            CustomDialog.instance.dialogoCargando = null
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -337,12 +348,13 @@ class MasFragment : androidx.fragment.app.Fragment() {
             }
         } else {
             Log.e(LOG, "Error en cierre de sesión")
+            rvOpciones_fmas.visibility = View.VISIBLE
+            rvOpciones_fmas.isEnabled = true
+            rvOpciones_fmas.isClickable = true
         }
     }
 
     private fun onCerrarSesion(url: String, request: JSONObject) {
-
-        CustomDialog.instance.showDialogLoad(activity!!)
 
         requestQueue = Volley.newRequestQueue(activity!!)
         val jsObjectRequest = JsonObjectRequest(
@@ -353,15 +365,12 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
                 controlViewModel.proceedLogoutPublic.observe(viewLifecycleOwner, Observer<Boolean> { value ->
                     if(value){
-                        CustomDialog.instance.dialogoCargando?.dismiss()
-                        CustomDialog.instance.dialogoCargando = null
                         ControlUsuario.instance.statusLogout = 1
 
                         val respuesta = Utilitarios.stringDesencriptar(response["ActualizarTokenResult"] as String, activity!!)
 
                         if (respuesta == "true") {
                             borrarPreferencias()
-
                         } else {
                             Toast.makeText(activity!!, "No pudo cerrar sesion", Toast.LENGTH_SHORT).show()
 
@@ -370,7 +379,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
                         //UNSUBSCRIBE FROM TOPICS
                         /*unsubscribeUserFromTopics()*/
                         activity!!.finish()
-
                     }
                 })
 
@@ -378,8 +386,10 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
             },
             { error ->
-                CustomDialog.instance.dialogoCargando?.dismiss()
-                CustomDialog.instance.dialogoCargando = null
+                rvOpciones_fmas.visibility = View.VISIBLE
+                rvOpciones_fmas.isEnabled = true
+                rvOpciones_fmas.isClickable = true
+                dismissDialog()
                 ControlUsuario.instance.statusLogout = 1
                 borrarDatos()
 
@@ -802,13 +812,14 @@ class MasFragment : androidx.fragment.app.Fragment() {
         super.onPause()
     }
 
+    override fun onDestroyView() {
+        dismissDialog()
+        super.onDestroyView()
+    }
 
     override fun onDestroy() {
         listaUsuarios.clear()
-        if(CustomDialog.instance.dialogoCargando != null){
-            CustomDialog.instance.dialogoCargando?.dismiss()
-            CustomDialog.instance.dialogoCargando = null
-        }
+        dismissDialog()
         super.onDestroy()
     }
 

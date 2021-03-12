@@ -53,7 +53,6 @@ public class InternationalScheduleFragment extends Fragment {
 
 
     private void getLoadHorario(){
-        Log.i("TAG","getLoadHorario");
         //final String url = "http://172.59.1.17/internationalweek/service.svc/getHorario.php";
         final String url = "http://wssi.ue.edu.pe/internationalweek/service.svc/getHorario.php";
         //final String url = Configuracion.urlServicio2 + Configuracion.method_menucomedor + "1";
@@ -86,22 +85,20 @@ public class InternationalScheduleFragment extends Fragment {
                                     listaDetalle.add(new IWDetalleHorario(curso,profesor,idioma,aula));
                                 }
                                 Horario.add(new IWCabeceraHorario(titulo,descripcion,listaDetalle));
-                                Log.i("ADD","llenahorario");
+
                             }
 
                             adapter = new IWHorarioAdapter((AppCompatActivity) getActivity(),Horario);
                             listaHorario.setAdapter(adapter);
 
                         }catch (JSONException e) {
-                            Log.i("JSONException","Error JSON");
+
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.i("JSONException","Error JSON: "+ error.toString());
-                        Log.i("JSONException","Error JSON: "+ error.getMessage());
                     }
                 }
         );

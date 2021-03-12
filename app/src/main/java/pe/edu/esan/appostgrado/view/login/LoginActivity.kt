@@ -197,7 +197,6 @@ class LoginActivity : AppCompatActivity(),
         intentMenuPrincipal.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intentMenuPrincipal.putExtra("login_invitado", "es_invitado")
         startActivity(intentMenuPrincipal)
-
     }
 
 
@@ -1055,10 +1054,7 @@ class LoginActivity : AppCompatActivity(),
                         )
                         iniciandoSesion = false
                     }
-                    if (CustomDialog.instance.dialogoCargando != null) {
-                        CustomDialog.instance.dialogoCargando?.dismiss()
-                        CustomDialog.instance.dialogoCargando = null
-                    }
+                    dismissDialog()
                 },
                 {
 
@@ -1068,10 +1064,7 @@ class LoginActivity : AppCompatActivity(),
                         getString(R.string.error_no_conexion),
                         null
                     )
-                    if (CustomDialog.instance.dialogoCargando != null) {
-                        CustomDialog.instance.dialogoCargando?.dismiss()
-                        CustomDialog.instance.dialogoCargando = null
-                    }
+                    dismissDialog()
                     iniciandoSesion = false
                 }
             )
@@ -1372,10 +1365,7 @@ class LoginActivity : AppCompatActivity(),
     }
 
     override fun onDestroy() {
-        if (CustomDialog.instance.dialogoCargando != null) {
-            CustomDialog.instance.dialogoCargando?.dismiss()
-            CustomDialog.instance.dialogoCargando = null
-        }
+        dismissDialog()
         super.onDestroy()
     }
 
@@ -1408,6 +1398,8 @@ class LoginActivity : AppCompatActivity(),
         cerroSesion = misPreferencias.getBoolean("cerrosesion", true)
 
         if (cerroSesion) {
+            enableLoginOption(true)
+            enableGuestOption(true)
             if (agreetouchid) {
                 if (fingerFragmentDialog == null) {
                     if (getManagers()) {
@@ -1469,6 +1461,8 @@ class LoginActivity : AppCompatActivity(),
 
             }
         } else {
+            enableGuestOption(false)
+            enableLoginOption(false)
             if (!iniciandoSesion) {
                 callLogin()
             } else {
@@ -1476,6 +1470,21 @@ class LoginActivity : AppCompatActivity(),
             }
         }
 
+    }
+
+    private fun dismissDialog(){
+        if (CustomDialog.instance.dialogoCargando != null) {
+            CustomDialog.instance.dialogoCargando?.dismiss()
+            CustomDialog.instance.dialogoCargando = null
+        }
+    }
+
+    private fun enableGuestOption(enable: Boolean) {
+        btnSincuenta_login.isEnabled = enable
+    }
+
+    private fun enableLoginOption(enable: Boolean){
+        btnIngresar_login.isEnabled = enable
     }
 
 

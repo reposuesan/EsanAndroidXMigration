@@ -23,7 +23,7 @@ class InternationalPiscoActivity : AppCompatActivity() {
         }
 
         /*toolbar_international_controller_party_pisco.setNavigationOnClickListener {
-            print("click")
+
         }*/
 
         //wv_international_party_pisco.loadUrl("https://esan.sfo2.digitaloceanspaces.com/FiestaPisco.html")

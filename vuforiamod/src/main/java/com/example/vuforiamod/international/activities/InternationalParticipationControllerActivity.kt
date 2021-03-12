@@ -74,7 +74,6 @@ class InternationalParticipationControllerActivity : AppCompatActivity() {
             if(PermissionHelper.getCamera(this@InternationalParticipationControllerActivity)){
                 //val intentVuforia = Intent().setClass(applicationContext,  VideoPlayback::class.java)
                 //val intentVuforia = Intent().setClass(applicationContext,  AboutScreen::class.java)
-                Log.e("International",packageName)
                 val intentVuforia = Intent().setClassName("appostgrado.esan.edu.pe",  "com.example.vuforiamod.international.activities.engine.Video.app.VideoPlayback.VideoPlayback")
                 //val intentVuforia = Intent().setClassName("appostgrado.esan.edu.pe",  "com.example.vuforiamod.international.activities.engine.Video.ui.ActivityList.AboutScreen")
                 startActivity(intentVuforia)

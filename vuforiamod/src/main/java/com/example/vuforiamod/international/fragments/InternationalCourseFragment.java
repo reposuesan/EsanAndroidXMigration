@@ -98,7 +98,7 @@ public class InternationalCourseFragment extends Fragment {
                             rvCursos.setAdapter(adapter);
 
                         }catch (JSONException ex) {
-                            Log.i("EE",ex.toString());
+
                         }
                         progressDialog.dismiss();
                     }
@@ -106,7 +106,6 @@ public class InternationalCourseFragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.i("RR",error.toString());
                         progressDialog.dismiss();
                     }
                 }

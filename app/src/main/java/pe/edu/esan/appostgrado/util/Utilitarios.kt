@@ -163,15 +163,16 @@ class Utilitarios {
         val mostrarDetalleMarker = false
 
         private val ReleasePortal = true
+        private val Release = true
+
         private val DominioPortal = "https://restws.esan.edu.pe"
         private val DominioPortalTest = "https://devrestws.esan.edu.pe"
-        //CONEXION
-        fun isNetworkAvailable (context: Context) : Boolean {
 
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
-            val activeNetworkInfo = connectivityManager!!.activeNetworkInfo
-            return activeNetworkInfo != null
-        }
+        private val DominioUE = "https://intranetmovil.ue.edu.pe"
+        private val DominioUETest = "https://devintranetmovil.ue.edu.pe"
+
+        private val DominioESAN = "http://intranetmovil.esan.edu.pe"
+        private val DominioESANTest = "http://devintranetmovil.esan.edu.pe"
 
         fun getUrl(url: URL) : String {
 
@@ -244,23 +245,22 @@ class Utilitarios {
                 URL.PREG_LAB_VERIFICAR_TIPO_POLITICA -> return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionSeguridad/Politicas/PoliticaUsoPortal.svc/VerificarTipoPoliticaPortal"
                 URL.PREG_LAB_ACEPTAR_TIPO_POLITICA -> return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionSeguridad/Politicas/PoliticaUsoPortal.svc/AceptarTipoPolitica"
 
-                URL.MENU_COMEDOR ->                 return "http://intranetmovil.ue.edu.pe/Service/AlumnoService.svc/menuComedor/"
-                /*URL.MENU_COMEDOR ->                 return "http://devintranetmovil.ue.edu.pe/Service/AlumnoService.svc/menuComedor/"*/
+                URL.MENU_COMEDOR ->                 return (if (Release) DominioUE else DominioUETest) + "/Service/AlumnoService.svc/menuComedor/"
 
                 //REALIDAD AUMENTADA
-                URL.RA_FACULTADES ->                return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/facultades"
-                URL.RA_EDIFICIOS ->                 return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/edificios"
-                URL.RA_CAFETERIAS ->                return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/cafeterias"
-                URL.RA_DEPORTES ->                  return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/deportes"
-                URL.RA_BIBLIOTECAS ->               return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/bibliotecas"
-                URL.RA_LABORATORIOS ->              return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/laboratorios"
-                URL.RA_AUDITORIOS ->                return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/auditorios"
-                URL.RA_LIBRERIAS ->                 return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/librerias"
-                URL.RA_OFICINAS ->                  return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/oficinas"
-                URL.RA_AULAS ->                     return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/aulas"
-                URL.RA_VARIOS ->                    return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambientegrupo/varios"
-                URL.RA_BYID ->                      return "http://intranetmovil.esan.edu.pe/DataUsuario.svc/ambiente/"
-                URL.RA_IMAGEN ->                    return "http://intranetmovil.esan.edu.pe/recursos/img/"
+                URL.RA_FACULTADES ->                return (if (Release) DominioESAN else DominioESANTest) + "/DataUsuario.svc/ambientegrupo/facultades"
+                URL.RA_EDIFICIOS ->                 return (if (Release) DominioESAN else DominioESANTest) + "/DataUsuario.svc/ambientegrupo/edificios"
+                URL.RA_CAFETERIAS ->                return (if (Release) DominioESAN else DominioESANTest) + "/DataUsuario.svc/ambientegrupo/cafeterias"
+                URL.RA_DEPORTES ->                  return (if (Release) DominioESAN else DominioESANTest) + "/DataUsuario.svc/ambientegrupo/deportes"
+                URL.RA_BIBLIOTECAS ->               return (if (Release) DominioESAN else DominioESANTest) + "/DataUsuario.svc/ambientegrupo/bibliotecas"
+                URL.RA_LABORATORIOS ->              return (if (Release) DominioESAN else DominioESANTest) + "/DataUsuario.svc/ambientegrupo/laboratorios"
+                URL.RA_AUDITORIOS ->                return (if (Release) DominioESAN else DominioESANTest) + "/DataUsuario.svc/ambientegrupo/auditorios"
+                URL.RA_LIBRERIAS ->                 return (if (Release) DominioESAN else DominioESANTest) + "/DataUsuario.svc/ambientegrupo/librerias"
+                URL.RA_OFICINAS ->                  return (if (Release) DominioESAN else DominioESANTest) + "/DataUsuario.svc/ambientegrupo/oficinas"
+                URL.RA_AULAS ->                     return (if (Release) DominioESAN else DominioESANTest) + "/DataUsuario.svc/ambientegrupo/aulas"
+                URL.RA_VARIOS ->                    return (if (Release) DominioESAN else DominioESANTest) + "/DataUsuario.svc/ambientegrupo/varios"
+                URL.RA_BYID ->                      return (if (Release) DominioESAN else DominioESANTest) + "/DataUsuario.svc/ambiente/"
+                URL.RA_IMAGEN ->                    return (if (Release) DominioESAN else DominioESANTest) + "/recursos/img/"
                 else -> return ""
             }
 
@@ -272,7 +272,7 @@ class Utilitarios {
          * @return String URL
          */
         fun getUrlFoto(codigo: String, size: Int): String {
-            return "http://fotos.ue.edu.pe/Inicio/MostrarFotoActorxCodigo/?codigo=$codigo&width=$size"
+            return "https://fotos.ue.edu.pe/Inicio/MostrarFotoActorxCodigo/?codigo=$codigo&width=$size"
         }
 
         /** Obtener la url para generar código de barras a partir del codigo del usuario
@@ -289,7 +289,7 @@ class Utilitarios {
          * @return String URL
          */
         fun getBoletasPreUrl(codigo: String): String {
-            return "http://recibos.ue.edu.pe/recibos/$codigo.pdf"
+            return "https://recibos.ue.edu.pe/recibos/$codigo.pdf"
         }
 
         fun getQRUrl(size: Int, valor: String): String {

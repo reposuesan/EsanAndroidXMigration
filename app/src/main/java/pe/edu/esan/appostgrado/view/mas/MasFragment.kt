@@ -436,12 +436,10 @@ class MasFragment : androidx.fragment.app.Fragment() {
         val agreetouchid = misPresferencias.getBoolean("touchid", false)
         val editor = misPresferencias.edit()
         if (agreetouchid) {
-
             editor.putString("code", "")
             editor.putString("password", "")
             editor.putString("tipoperfil", "")
             editor.putBoolean("cerrosesion", true)
-
         } else {
             editor.putString("code", "")
             editor.putString("password", "")

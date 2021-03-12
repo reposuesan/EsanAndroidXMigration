@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config cleartextTrafficPermitted="false">
-        <!--<domain includeSubdomains="true">pe.edu.esan.appostgrado</domain>-->
         <domain includeSubdomains="true">restws.esan.edu.pe</domain>
         <domain includeSubdomains="true">devrestws.esan.edu.pe</domain>
-    </domain-config>
-    <domain-config cleartextTrafficPermitted="true">
-        <!--<domain includeSubdomains="true">restws.esan.edu.pe</domain>-->
-        <domain includeSubdomains="true">intranetmovil.ue.edu.pe</domain>
-        <domain includeSubdomains="true">intranetmovil.esan.edu.pe</domain>
         <domain includeSubdomains="true">fotos.ue.edu.pe</domain>
         <domain includeSubdomains="true">recibos.ue.edu.pe</domain>
+        <domain includeSubdomains="true">intranetmovil.ue.edu.pe</domain>
+        <!--TODO:CHANGE TO HTTPS AFTER PROJECT MIGRATION TO NEW SERVER-->
+        <!--<domain includeSubdomains="true">intranetmovil.esan.edu.pe</domain>-->
     </domain-config>
-    <!--<base-config cleartextTrafficPermitted="true"/>-->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">devintranetmovil.ue.edu.pe</domain>
+        <domain includeSubdomains="true">intranetmovil.esan.edu.pe</domain>
+        <domain includeSubdomains="true">devintranetmovil.esan.edu.pe</domain>
+    </domain-config>
 </network-security-config>

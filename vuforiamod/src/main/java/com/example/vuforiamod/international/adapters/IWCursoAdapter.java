@@ -73,7 +73,7 @@ public class IWCursoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             detalleView.getVista().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.i("L","CLICKKK");
+
                     Intent detalle = new Intent().setClass(context, InternationalCourseControllerActivity.class);
                     detalle.putExtra("curso", curso.getCurso());
                     detalle.putExtra("cursodetalle", curso.getDescripcioncurso());

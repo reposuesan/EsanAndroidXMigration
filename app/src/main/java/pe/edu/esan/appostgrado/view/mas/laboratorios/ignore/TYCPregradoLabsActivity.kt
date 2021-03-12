@@ -119,42 +119,42 @@ class TYCPregradoLabsActivity : AppCompatActivity() {
             }
 
             override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
-                Log.e(LOG, "onReceivedHttpError: ${errorResponse.toString()}")
+
                 super.onReceivedHttpError(view, request, errorResponse)
             }
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                    Log.e(LOG, "onReceivedError: ${error.toString()}")
+
                     super.onReceivedError(view, request, error)
             }
 
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
-                Log.e(LOG, "onReceivedSslError: ${error.toString()}")
+
                 super.onReceivedSslError(view, handler, error)
             }
 
             override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
-                Log.i(LOG, "shouldInterceptRequest: ${request.toString()}")
+
                 return super.shouldInterceptRequest(view, request)
             }
 
             override fun onRenderProcessGone(view: WebView?, detail: RenderProcessGoneDetail?): Boolean {
-                Log.i(LOG, "onRenderProcessGone: ${detail.toString()}")
+
                 return super.onRenderProcessGone(view, detail)
             }
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                Log.i(LOG, "onPageStarted: ${url.toString()}")
+
                 super.onPageStarted(view, url, favicon)
             }
 
             override fun onPageCommitVisible(view: WebView?, url: String?) {
-                Log.i(LOG, "onPageCommitVisible: ${url.toString()}")
+
                 super.onPageCommitVisible(view, url)
             }
 
             override fun onLoadResource(view: WebView?, url: String?) {
-                Log.i(LOG, "onLoadResource: ${url.toString()}")
+
                 super.onLoadResource(view, url)
             }
 
@@ -162,7 +162,7 @@ class TYCPregradoLabsActivity : AppCompatActivity() {
 
         /*webview_tyc.webChromeClient = object: WebChromeClient() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
-                Log.i(LOG, "onProgressChanged: $newProgress")
+
                 super.onProgressChanged(view, newProgress)
             }
         }*/

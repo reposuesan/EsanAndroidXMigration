@@ -53,15 +53,12 @@ class ConfiguracionActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "mainSetup() was called")
                         mainSetup()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
     }
 
@@ -72,13 +69,8 @@ class ConfiguracionActivity : AppCompatActivity() {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 val mispreferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
-                //val user = mispreferencias.getString("code", "")
                 val user = Utilitarios.stringDesencriptar(mispreferencias.getString("userWithFingerprint", "") ?: "", this)
                 val agreetouchId = mispreferencias.getBoolean("touchid", false)
-                //println(user)
-                Log.i(LOG, user ?: "")
-                //println(ControlUsuario.instance.currentUsuarioGeneral?.usuario)
-                Log.i(LOG, ControlUsuario.instance.currentUsuarioGeneral?.usuario.toString())
 
                 if(agreetouchId){
                     if (user == ControlUsuario.instance.currentUsuarioGeneral?.usuario) {
@@ -107,9 +99,6 @@ class ConfiguracionActivity : AppCompatActivity() {
 
     private fun getOpcionesConfiguracion(): List<MasOpcion> {
         val listaOpciones = ArrayList<MasOpcion>()
-
-        /*Log.e(LOG,"The version code is ${Build.VERSION_CODES.P}")
-        Log.e(LOG,"The version code is ${Build.VERSION.SDK_INT}")*/
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             listaOpciones.add(MasOpcion(1, Intent(this, HuellaDigitalActivityPAndUp::class.java), resources.getString(R.string.huella_digital), "", ContextCompat.getDrawable(this, R.drawable.ico_huella)!!))

@@ -58,15 +58,12 @@ class PRConfirmarQRActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "createCameraSource() was called")
                         createCameraSource()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
 
     }
@@ -111,14 +108,10 @@ class PRConfirmarQRActivity : AppCompatActivity() {
                 val barcodes = p0?.detectedItems
                 if (barcodes != null){
                     if (barcodes.size() > 0) {
-                        /*println("LLEGOOOOOOOOoo---->")
-                        println(barcodes)
-                        println(barcodes.size())*/
 
                         //if (barcodes.size() > 0) {
                         val valor = barcodes.valueAt(0)
                         //cameraSource.stop()
-                        //println(valor.displayValue)
                         //getValorObtenido(barcodes.valueAt(0).displayValue)
 
                         lblTexto_prconfirmaqr.post(Runnable {
@@ -134,7 +127,6 @@ class PRConfirmarQRActivity : AppCompatActivity() {
     }
 
     private fun getValorObtenido(valorQR: Barcode) {
-        println("VALOR: ${valorQR.displayValue}")
 
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             val user = ControlUsuario.instance.currentUsuario[0]
@@ -146,7 +138,7 @@ class PRConfirmarQRActivity : AppCompatActivity() {
                     request.put("CodQR", valorQR.displayValue)
                     request.put("IdReservaConfirmar", 0)
                     request.put("IdReservaEliminar", 0)
-                    println(request.toString())
+
                     val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
                     if (requestEncriptado != null) {
                         onConfirmarReservaQR(Utilitarios.getUrl(Utilitarios.URL.PR_CONFIRMAR_RESERVA), requestEncriptado, valorQR.displayValue)
@@ -176,63 +168,53 @@ class PRConfirmarQRActivity : AppCompatActivity() {
         val jsObjectRequest = JsonObjectRequest(
                 url,
                 request,
-                Response.Listener { response ->
-                    prbCargando_prconfirmarqr.visibility = View.GONE
-                    try {
-                        if (!response.isNull("ConfirmarReservaAlumnoResult")) {
-                            val jsRespuesta = Utilitarios.stringDesencriptar(response["ConfirmarReservaAlumnoResult"] as String, this)
-                            if (jsRespuesta != null) {
-                                val arrayRespuesta = jsRespuesta.split("|")
-                                val idRespuesta = arrayRespuesta[0].toInt()
-                                val idReserva = arrayRespuesta[1].toInt()
-                                val mensaje = arrayRespuesta[2]
+            { response ->
+                prbCargando_prconfirmarqr.visibility = View.GONE
+                try {
+                    if (!response.isNull("ConfirmarReservaAlumnoResult")) {
+                        val jsRespuesta = Utilitarios.stringDesencriptar(response["ConfirmarReservaAlumnoResult"] as String, this)
+                        if (jsRespuesta != null) {
+                            val arrayRespuesta = jsRespuesta.split("|")
+                            val idRespuesta = arrayRespuesta[0].toInt()
+                            val idReserva = arrayRespuesta[1].toInt()
+                            val mensaje = arrayRespuesta[2]
 
-                                if (idRespuesta == 1) {
-                                    val alertaExito = AlertDialog.Builder(this)
-                                            .setTitle(resources.getString(R.string.exito))
-                                            .setMessage(mensaje)
-                                            .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i -> finish() })
-                                            .create()
-                                    alertaExito.show()
-                                } else if (idRespuesta == 0) {
-                                    val alertaMensaje = AlertDialog.Builder(this)
-                                            .setTitle(resources.getString(R.string.mensaje))
-                                            .setMessage(mensaje)
-                                            .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i -> finish() })
-                                            .create()
-                                    alertaMensaje.show()
-                                } else if (idRespuesta == -1) {
-                                    val alertaMensaje = AlertDialog.Builder(this)
-                                            .setTitle(resources.getString(R.string.mensaje))
-                                            .setMessage(mensaje)
-                                            .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i ->
-                                                setCambiarReserva(idReserva, idReservaConfirmar)
-                                            })
-                                            .setNegativeButton(resources.getString(R.string.cancelar), DialogInterface.OnClickListener { dialogInterface, i ->  finish() })
-                                            .create()
-                                    alertaMensaje.show()
-                                }
-
-                            } else {
-                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
-                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
-                                snack.show()
-                                finish()
+                            if (idRespuesta == 1) {
+                                val alertaExito = AlertDialog.Builder(this)
+                                        .setTitle(resources.getString(R.string.exito))
+                                        .setMessage(mensaje)
+                                        .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i -> finish() })
+                                        .create()
+                                alertaExito.show()
+                            } else if (idRespuesta == 0) {
+                                val alertaMensaje = AlertDialog.Builder(this)
+                                        .setTitle(resources.getString(R.string.mensaje))
+                                        .setMessage(mensaje)
+                                        .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i -> finish() })
+                                        .create()
+                                alertaMensaje.show()
+                            } else if (idRespuesta == -1) {
+                                val alertaMensaje = AlertDialog.Builder(this)
+                                        .setTitle(resources.getString(R.string.mensaje))
+                                        .setMessage(mensaje)
+                                        .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i ->
+                                            setCambiarReserva(idReserva, idReservaConfirmar)
+                                        })
+                                        .setNegativeButton(resources.getString(R.string.cancelar), DialogInterface.OnClickListener { dialogInterface, i ->  finish() })
+                                        .create()
+                                alertaMensaje.show()
                             }
+
+                        } else {
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
+                            snack.show()
+                            finish()
                         }
-                    } catch (jex: JSONException) {
-                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                        snack.show()
-                        finish()
                     }
-                },
-                Response.ErrorListener { error ->
-                    prbCargando_prconfirmarqr.visibility = View.GONE
+                } catch (jex: JSONException) {
                     val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
                     snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
@@ -240,6 +222,16 @@ class PRConfirmarQRActivity : AppCompatActivity() {
                     snack.show()
                     finish()
                 }
+            },
+            { error ->
+                prbCargando_prconfirmarqr.visibility = View.GONE
+                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                snack.show()
+                finish()
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
@@ -284,52 +276,42 @@ class PRConfirmarQRActivity : AppCompatActivity() {
         val jsObjectRequest = JsonObjectRequest(
                 url,
                 request,
-                Response.Listener { response ->
-                    prbCargando_prconfirmarqr.visibility = View.GONE
-                    try {
-                        if (!response.isNull("ConfirmarReservaAlumnoResult")) {
-                            val jsRespuesta = Utilitarios.stringDesencriptar(response["ConfirmarReservaAlumnoResult"] as String, this)
-                            if (jsRespuesta != null) {
-                                val arrayRespuesta = jsRespuesta.split("|")
-                                val idRespuesta = arrayRespuesta[0].toInt()
-                                val mensaje = arrayRespuesta[1]
+            { response ->
+                prbCargando_prconfirmarqr.visibility = View.GONE
+                try {
+                    if (!response.isNull("ConfirmarReservaAlumnoResult")) {
+                        val jsRespuesta = Utilitarios.stringDesencriptar(response["ConfirmarReservaAlumnoResult"] as String, this)
+                        if (jsRespuesta != null) {
+                            val arrayRespuesta = jsRespuesta.split("|")
+                            val idRespuesta = arrayRespuesta[0].toInt()
+                            val mensaje = arrayRespuesta[1]
 
-                                if (idRespuesta == 1) {
-                                    val alertaExito = AlertDialog.Builder(this)
-                                            .setTitle(resources.getString(R.string.exito))
-                                            .setMessage(mensaje)
-                                            .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i -> finish() })
-                                            .create()
-                                    alertaExito.show()
-                                } else if (idRespuesta == 0) {
-                                    val alertaMensaje = AlertDialog.Builder(this)
-                                            .setTitle(resources.getString(R.string.mensaje))
-                                            .setMessage(mensaje)
-                                            .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i -> finish() })
-                                            .create()
-                                    alertaMensaje.show()
-                                }
-
-                            } else {
-                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
-                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
-                                snack.show()
-                                finish()
+                            if (idRespuesta == 1) {
+                                val alertaExito = AlertDialog.Builder(this)
+                                        .setTitle(resources.getString(R.string.exito))
+                                        .setMessage(mensaje)
+                                        .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i -> finish() })
+                                        .create()
+                                alertaExito.show()
+                            } else if (idRespuesta == 0) {
+                                val alertaMensaje = AlertDialog.Builder(this)
+                                        .setTitle(resources.getString(R.string.mensaje))
+                                        .setMessage(mensaje)
+                                        .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i -> finish() })
+                                        .create()
+                                alertaMensaje.show()
                             }
+
+                        } else {
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
+                            snack.show()
+                            finish()
                         }
-                    } catch (jex: JSONException) {
-                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                        snack.show()
-                        finish()
                     }
-                },
-                Response.ErrorListener { error ->
-                    prbCargando_prconfirmarqr.visibility = View.GONE
+                } catch (jex: JSONException) {
                     val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
                     snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
@@ -337,6 +319,16 @@ class PRConfirmarQRActivity : AppCompatActivity() {
                     snack.show()
                     finish()
                 }
+            },
+            { error ->
+                prbCargando_prconfirmarqr.visibility = View.GONE
+                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                snack.show()
+                finish()
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

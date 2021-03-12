@@ -50,12 +50,6 @@
                 android:name=".view.mas.laboratorios.PregradoLabsPrincipalActivity"
                 android:screenOrientation="portrait" />
         <activity
-                android:name=".view.puntosreunion.pregrado.ignore.SecondDummyActivity"
-                android:screenOrientation="portrait" />
-        <activity
-                android:name=".view.puntosreunion.pregrado.ignore.FirstDummyActivity"
-                android:screenOrientation="portrait" />
-        <activity
                 android:name=".view.puntosreunion.pregrado.PregradoCubsHistorialActivity"
                 android:screenOrientation="portrait" />
         <activity

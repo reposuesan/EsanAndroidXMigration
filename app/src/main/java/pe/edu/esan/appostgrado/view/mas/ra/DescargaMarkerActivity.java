@@ -169,7 +169,6 @@ public class DescargaMarkerActivity extends AppCompatActivity {
 
             // ok, file is downloaded,
             if (exito && !interrumpir) {
-                //Log.d(PrincipalAulaAR.TAG + "-HILO", "Terminó carga con éxito");
                 return true;
             } else {
                 if (!interrumpir) { //exito y !interrumpir
@@ -178,11 +177,9 @@ public class DescargaMarkerActivity extends AppCompatActivity {
                     if (markerList == null) { //error de conexión
                         return false;
                     } else {
-                        //Log.d(PrincipalAulaAR.TAG + "-HILO", "No se encontraron resultados");
                         return true;
                     }
                 }
-                //Log.d(PrincipalAulaAR.TAG, "TERMINOOO");
             }
             return false;
         }

@@ -88,7 +88,7 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
         //DELETE LATER
         //horaActualRespuestaServidor = 22
 
-        listaAlumnosIntegrantes = intent.getStringExtra("lista_alumnos_integrantes_grupo")
+        listaAlumnosIntegrantes = intent.getStringExtra("lista_alumnos_integrantes_grupo") ?: ""
 
         codigosAlumnos = intent.getStringExtra("codAlumnos")
 
@@ -99,8 +99,6 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
         tv_fecha_prereserva.text = getString(R.string.fecha_de_prereserva_text, fechaPrereserva)
 
         val language = Locale.getDefault().displayLanguage
-
-        Log.i(LOG, language)
 
         var mensaje = grupoPrereserva.mensajeVerificacion
         val horasDisp = grupoPrereserva.horasDisp.toInt()
@@ -231,13 +229,7 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
 
     fun registraPrereservaServicio(url: String, request: JSONObject) {
 
-        Log.i(LOG, url)
-
-        Log.i(LOG, request.toString())
-
         val fRequest = Utilitarios.jsObjectEncrypted(request, this)
-
-        Log.i(LOG, fRequest.toString())
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -245,16 +237,14 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
-                    Log.i(LOG, response.toString())
+                { response ->
                     if (!response.isNull("RegistraPreReservaResult")) {
                         val jsResponse = Utilitarios.jsObjectDesencriptar(
                             response.getString("RegistraPreReservaResult"),
                             this@PregradoCubsHorarioActivity
                         )
-                        Log.i(LOG, jsResponse!!.toString())
                         try {
-                            val mensaje = jsResponse.getString("Mensaje")
+                            val mensaje = jsResponse!!.getString("Mensaje")
                             val idCubiculo = jsResponse.getString("IdCubiculo")
 
                             val success = idCubiculo.toInt() > 0
@@ -262,13 +252,6 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                             showWarningOrSuccessMessage(mensaje, success)
 
                         } catch (e: Exception) {
-                            /*val snack = Snackbar.make(
-                                findViewById(android.R.id.content),
-                                getString(R.string.error_servidor_extraccion_datos),
-                                Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
-                            snack.view.findViewById<TextView>(android.support.design.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
-                            snack.show()*/
                             progress_bar_horario_cubs.visibility = View.GONE
                             main_container_horario_cubs.visibility = View.GONE
                             empty_text_view_horario.visibility = View.VISIBLE
@@ -276,16 +259,9 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                         }
                     }
                 },
-                Response.ErrorListener { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
+                { error ->
+                    error.printStackTrace()
 
-                    /*val showAlertHelper = ShowAlertHelper(this)
-                    showAlertHelper.showAlertError(
-                        getString(R.string.error),
-                        getString(R.string.error_no_conexion),
-                        null
-                    )*/
                     progress_bar_horario_cubs.visibility = View.GONE
                     main_container_horario_cubs.visibility = View.GONE
                     empty_text_view_horario.visibility = View.VISIBLE
@@ -307,7 +283,7 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
 
     }
 
-    fun showWarningOrSuccessMessage(mensaje: String, successfulResponse: Boolean){
+    private fun showWarningOrSuccessMessage(mensaje: String, successfulResponse: Boolean){
 
         progress_bar_horario_cubs.visibility = View.GONE
         main_container_horario_cubs.visibility = View.VISIBLE
@@ -375,11 +351,8 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
 
         if (itemSelected && listHorasSeleccionadas.count() <= horasPermitidas) {
             listHorasSeleccionadas.put(position.toString(), rangoHora)
-            Log.i(LOG, "Item agregado a lista: $position y $rangoHora")
-
         } else if (!itemSelected) {
             listHorasSeleccionadas.remove(position.toString())
-            Log.i(LOG, "Item removido de lista: $position y $rangoHora")
         } else {
             Log.i(LOG, "Máximo número de horas alcanzado")
         }
@@ -392,7 +365,7 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
     }
 
 
-    fun determinarHoraParaScreenSegundoFormato(horaRecibida: Int): String {
+    private fun determinarHoraParaScreenSegundoFormato(horaRecibida: Int): String {
 
         return when (horaRecibida) {
             0 -> "00:00"

@@ -49,15 +49,12 @@ class GenerateQRCodeActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "dataWasRetrievedForActivityPublic.observe()")
-                        Log.w(LOG, "generateQRCodeIW()")
                         generateQRCodeIW()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom()")
         }
 
     }
@@ -69,7 +66,7 @@ class GenerateQRCodeActivity : AppCompatActivity() {
 
             image_view_for_qr_code.setImageBitmap(bitmapQR)
         } catch (e: Exception){
-            Log.e(LOG, "Exception during generateQRCodeIW()")
+            e.printStackTrace()
         }
     }
 

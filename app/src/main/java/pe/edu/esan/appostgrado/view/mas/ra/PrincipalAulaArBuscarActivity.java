@@ -63,7 +63,6 @@ public class PrincipalAulaArBuscarActivity extends AppCompatActivity implements 
         //dataView = f_comedor.dataView;
         mixContext = dataView.getContext();
 
-        Log.i("principalAulaArBusca","CANTIDAD: " + dataView.getDataHandler().getMarkerCount());
         List<Marker> listaMarker = dataView.getDataHandler().getMarkerList();
 
         for(int i = 0; i< dataView.getDataHandler().getMarkerCount(); i++){

@@ -70,15 +70,12 @@ class MallaCurricularActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
     }
 
@@ -88,7 +85,7 @@ class MallaCurricularActivity : AppCompatActivity() {
             is Alumno -> {
                 val request = JSONObject()
                 request.put("CodAlumno", user.codigo)
-                println(request)
+
                 val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
                 if (requestEncriptado != null) {
                     onMallaCurricular(Utilitarios.getUrl(Utilitarios.URL.MALLA_CURRICULAR), requestEncriptado)
@@ -103,167 +100,155 @@ class MallaCurricularActivity : AppCompatActivity() {
 
     private fun onHistoricoResumen(url: String, request: JSONObject) {
         CustomDialog.instance.showDialogLoad(this)
-        println(url)
-        println(request)
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
+            { response ->
 
-                    CustomDialog.instance.dialogoCargando?.dismiss()
-                    try {
-                        println(response)
-                        val historicoJArray = Utilitarios.jsObjectDesencriptar(response["ListarResumenAcademicoAlumnoPreResult"] as String, this)
-                        println(historicoJArray)
-                        if (historicoJArray != null) {
-                            val creditosAprobados = historicoJArray["CreditosAprobados"] as Int
-                            val cursosAprobados = historicoJArray["CursosAprobados"] as Int
-                            val creditosPendientes = historicoJArray["CreditosPendientes"] as Int
-                            val cursosPendientes = historicoJArray["CursosPendientes"] as Int
-                        }
+                CustomDialog.instance.dialogoCargando?.dismiss()
+                try {
+                    val historicoJArray = Utilitarios.jsObjectDesencriptar(response["ListarResumenAcademicoAlumnoPreResult"] as String, this)
 
-                    } catch (jex: JSONException) {
-                        println(jex)
-                        /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                        lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
-                    } catch (ccax: ClassCastException) {
-                        println(ccax)
-                        /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                        lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
+                    if (historicoJArray != null) {
+                        val creditosAprobados = historicoJArray["CreditosAprobados"] as Int
+                        val cursosAprobados = historicoJArray["CursosAprobados"] as Int
+                        val creditosPendientes = historicoJArray["CreditosPendientes"] as Int
+                        val cursosPendientes = historicoJArray["CursosPendientes"] as Int
                     }
 
-                    //prbCargando_historiconotaspre.visibility = View.GONE
-                },
-                Response.ErrorListener { error ->
-                    println(error.toString())
-                    //prbCargando_historiconotaspre.visibility = View.GONE
+                } catch (jex: JSONException) {
+                    /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                    lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
+                } catch (ccax: ClassCastException) {
                     /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
                     lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                 }
+
+                //prbCargando_historiconotaspre.visibility = View.GONE
+            },
+            { error ->
+                //prbCargando_historiconotaspre.visibility = View.GONE
+                /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
 
     private fun onMallaCurricular(url: String, request: JSONObject) {
-        println(url)
-        println(request.toString())
         prbCargando_mallacurricular.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest(
                 url,
                 request,
-                Response.Listener { response ->
-                    android.util.Log.v("response", response.toString())
-                    prbCargando_mallacurricular.visibility = View.GONE
-                    try {
-                        if (!response.isNull("ListarAvanceCurricularAlumnoPreResult")) {
-                            val mallaCurricularJSArray = Utilitarios.jsObjectDesencriptar(response["ListarAvanceCurricularAlumnoPreResult"] as String, this)
-                            if (mallaCurricularJSArray != null) {
-                                println(mallaCurricularJSArray)
-                                val mallJArray = mallaCurricularJSArray["Malla"] as JSONArray
-                                val electivoJArray = mallaCurricularJSArray["Electivo"] as JSONArray
-                                val listaMalla = ArrayList<MallaPre>()
+            { response ->
+                prbCargando_mallacurricular.visibility = View.GONE
+                try {
+                    if (!response.isNull("ListarAvanceCurricularAlumnoPreResult")) {
+                        val mallaCurricularJSArray = Utilitarios.jsObjectDesencriptar(response["ListarAvanceCurricularAlumnoPreResult"] as String, this)
+                        if (mallaCurricularJSArray != null) {
+                            val mallJArray = mallaCurricularJSArray["Malla"] as JSONArray
+                            val electivoJArray = mallaCurricularJSArray["Electivo"] as JSONArray
+                            val listaMalla = ArrayList<MallaPre>()
 
-                                for (i in 0 until mallJArray.length()) {
-                                    val cursosJObject = mallJArray[i] as JSONObject
-                                    val modulo = cursosJObject["Modulo"] as String
-                                    val cursosJArray = cursosJObject["Cursos"] as JSONArray
+                            for (i in 0 until mallJArray.length()) {
+                                val cursosJObject = mallJArray[i] as JSONObject
+                                val modulo = cursosJObject["Modulo"] as String
+                                val cursosJArray = cursosJObject["Cursos"] as JSONArray
 
-                                    val listaCurso = ArrayList<CursosPre>()
-
-                                    for (j in 0 until cursosJArray.length()) {
-                                        val cursoJObject = cursosJArray[j] as JSONObject
-                                        val ciclo = cursoJObject["Ciclo"] as? String ?: ""
-                                        val creditos = cursoJObject["Creditos"] as? Int ?: 0
-                                        val estado = cursoJObject["Estado"] as? String ?: ""
-                                        val nombre = cursoJObject["Nombre"] as? String ?: ""
-                                        val nota = cursoJObject["Nota"] as? String ?: ""
-                                        val veces = cursoJObject["Veces"] as? Int ?: 0
-                                        val esIngles = cursoJObject["Esingles"] as? Int ?: 0 != 0
-                                        val requisitoJArray = cursoJObject["Cursosrequisitos"] as JSONArray
-                                        val listaRequisitos = ArrayList<CursoRequisito>()
-                                        for (cr in 0 until requisitoJArray.length()) {
-                                            val requisitoJObject = requisitoJArray[cr] as JSONObject
-                                            val cursorq = requisitoJObject["Nombre"] as? String ?: ""
-                                            val estadorq = requisitoJObject["Estadoreq"] as? String ?: ""
-                                            listaRequisitos.add(CursoRequisito(cursorq, estadorq))
-                                        }
-                                        listaCurso.add(CursosPre(nombre, nota, creditos, veces, ciclo, estado, "", esIngles, listaRequisitos))
-                                    }
-                                    listaMalla.add(MallaPre(String.format(resources.getString(R.string.ciclo_), modulo), listaCurso))
-                                }
                                 val listaCurso = ArrayList<CursosPre>()
-                                for (k in 0 until electivoJArray.length()) {
-                                    val electivoJObject = electivoJArray[k] as JSONObject
-                                    val cursosJArray = electivoJObject["Cursos"] as JSONArray
-                                    for (l in 0 until cursosJArray.length()) {
-                                        val cursoJObject = cursosJArray[l] as JSONObject
-                                        val ciclo = cursoJObject["Ciclo"] as? String ?: ""
-                                        val creditos = cursoJObject["Creditos"] as? Int ?: 0
-                                        val estado = cursoJObject["Estado"] as? String ?: ""
-                                        val nombre = cursoJObject["Nombre"] as? String ?: ""
-                                        val nota = cursoJObject["Nota"] as? String ?: ""
-                                        val tipo = cursoJObject["Tipo"] as? String ?: ""
-                                        val veces = cursoJObject["Veces"] as? Int ?: 0
-                                        val esIngles = cursoJObject["Esingles"] as? Int ?: 0 != 0
-                                        val requisitoJArray = cursoJObject["Cursosrequisitos"] as JSONArray
-                                        val listaRequisitos = ArrayList<CursoRequisito>()
-                                        for (cr in 0 until requisitoJArray.length()) {
-                                            val requisitoJObject = requisitoJArray[cr] as JSONObject
-                                            val cursorq = requisitoJObject["Nombre"] as? String ?: ""
-                                            val estadorq = requisitoJObject["Estadoreq"] as? String ?: ""
-                                            listaRequisitos.add(CursoRequisito(cursorq, estadorq))
-                                        }
-                                        listaCurso.add(CursosPre(nombre, nota, creditos, veces, ciclo, estado, tipo, esIngles, listaRequisitos))
+
+                                for (j in 0 until cursosJArray.length()) {
+                                    val cursoJObject = cursosJArray[j] as JSONObject
+                                    val ciclo = cursoJObject["Ciclo"] as? String ?: ""
+                                    val creditos = cursoJObject["Creditos"] as? Int ?: 0
+                                    val estado = cursoJObject["Estado"] as? String ?: ""
+                                    val nombre = cursoJObject["Nombre"] as? String ?: ""
+                                    val nota = cursoJObject["Nota"] as? String ?: ""
+                                    val veces = cursoJObject["Veces"] as? Int ?: 0
+                                    val esIngles = cursoJObject["Esingles"] as? Int ?: 0 != 0
+                                    val requisitoJArray = cursoJObject["Cursosrequisitos"] as JSONArray
+                                    val listaRequisitos = ArrayList<CursoRequisito>()
+                                    for (cr in 0 until requisitoJArray.length()) {
+                                        val requisitoJObject = requisitoJArray[cr] as JSONObject
+                                        val cursorq = requisitoJObject["Nombre"] as? String ?: ""
+                                        val estadorq = requisitoJObject["Estadoreq"] as? String ?: ""
+                                        listaRequisitos.add(CursoRequisito(cursorq, estadorq))
                                     }
+                                    listaCurso.add(CursosPre(nombre, nota, creditos, veces, ciclo, estado, "", esIngles, listaRequisitos))
                                 }
-                                listaMalla.add(MallaPre(resources.getString(R.string.electivos), listaCurso))
-
-                                val mallaAdapter = MallaPreAdapter(listaMalla) { cursosPre ->
-                                    println("CLICK EN EL DETALLE")
-                                    var mensaje = ""
-                                    for (curso in cursosPre.listaCursoRequisito) {
-                                        println(curso.nombre + " - " + curso.estado)
-                                        mensaje += "- " + curso.nombre + " (" + curso.estado + ")\n"
-                                    }
-
-                                    val cursosRequisitos = AlertDialog.Builder(this)
-                                        .setTitle(cursosPre.nombreCurso + ", cursos requisitos:")
-                                        .setMessage(mensaje)
-                                        .create()
-
-                                    cursosRequisitos.show()
-                                    //cursosRequisitos.getButton(android.app.Dialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.esan_rojo))
-                                    cursosRequisitos.findViewById<TextView>(android.R.id.message)?.typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.LIGHT)
-                                }
-                                rvCursos_mallacurricular.layoutManager =
-                                    androidx.recyclerview.widget.LinearLayoutManager(
-                                        this
-                                    )
-                                rvCursos_mallacurricular.adapter = mallaAdapter
-                            } else {
-                                lblMensaje_mallacurricular.visibility = View.VISIBLE
-                                lblMensaje_mallacurricular.text = resources.getText(R.string.error_desencriptar)
+                                listaMalla.add(MallaPre(String.format(resources.getString(R.string.ciclo_), modulo), listaCurso))
                             }
+                            val listaCurso = ArrayList<CursosPre>()
+                            for (k in 0 until electivoJArray.length()) {
+                                val electivoJObject = electivoJArray[k] as JSONObject
+                                val cursosJArray = electivoJObject["Cursos"] as JSONArray
+                                for (l in 0 until cursosJArray.length()) {
+                                    val cursoJObject = cursosJArray[l] as JSONObject
+                                    val ciclo = cursoJObject["Ciclo"] as? String ?: ""
+                                    val creditos = cursoJObject["Creditos"] as? Int ?: 0
+                                    val estado = cursoJObject["Estado"] as? String ?: ""
+                                    val nombre = cursoJObject["Nombre"] as? String ?: ""
+                                    val nota = cursoJObject["Nota"] as? String ?: ""
+                                    val tipo = cursoJObject["Tipo"] as? String ?: ""
+                                    val veces = cursoJObject["Veces"] as? Int ?: 0
+                                    val esIngles = cursoJObject["Esingles"] as? Int ?: 0 != 0
+                                    val requisitoJArray = cursoJObject["Cursosrequisitos"] as JSONArray
+                                    val listaRequisitos = ArrayList<CursoRequisito>()
+                                    for (cr in 0 until requisitoJArray.length()) {
+                                        val requisitoJObject = requisitoJArray[cr] as JSONObject
+                                        val cursorq = requisitoJObject["Nombre"] as? String ?: ""
+                                        val estadorq = requisitoJObject["Estadoreq"] as? String ?: ""
+                                        listaRequisitos.add(CursoRequisito(cursorq, estadorq))
+                                    }
+                                    listaCurso.add(CursosPre(nombre, nota, creditos, veces, ciclo, estado, tipo, esIngles, listaRequisitos))
+                                }
+                            }
+                            listaMalla.add(MallaPre(resources.getString(R.string.electivos), listaCurso))
+
+                            val mallaAdapter = MallaPreAdapter(listaMalla) { cursosPre ->
+                                var mensaje = ""
+                                for (curso in cursosPre.listaCursoRequisito) {
+                                    mensaje += "- " + curso.nombre + " (" + curso.estado + ")\n"
+                                }
+
+                                val cursosRequisitos = AlertDialog.Builder(this)
+                                    .setTitle(cursosPre.nombreCurso + ", cursos requisitos:")
+                                    .setMessage(mensaje)
+                                    .create()
+
+                                cursosRequisitos.show()
+                                //cursosRequisitos.getButton(android.app.Dialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this, R.color.esan_rojo))
+                                cursosRequisitos.findViewById<TextView>(android.R.id.message)?.typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.LIGHT)
+                            }
+                            rvCursos_mallacurricular.layoutManager =
+                                androidx.recyclerview.widget.LinearLayoutManager(
+                                    this
+                                )
+                            rvCursos_mallacurricular.adapter = mallaAdapter
                         } else {
                             lblMensaje_mallacurricular.visibility = View.VISIBLE
-                            lblMensaje_mallacurricular.text = resources.getText(R.string.error_respuesta_server)
+                            lblMensaje_mallacurricular.text = resources.getText(R.string.error_desencriptar)
                         }
-                    } catch (jex: JSONException) {
-                        lblMensaje_mallacurricular.visibility = View.VISIBLE
-                        lblMensaje_mallacurricular.text = resources.getText(R.string.error_respuesta_server)
-                    } catch (ccx: ClassCastException) {
+                    } else {
                         lblMensaje_mallacurricular.visibility = View.VISIBLE
                         lblMensaje_mallacurricular.text = resources.getText(R.string.error_respuesta_server)
                     }
-                },
-                Response.ErrorListener { error ->
-                    prbCargando_mallacurricular.visibility = View.GONE
+                } catch (jex: JSONException) {
                     lblMensaje_mallacurricular.visibility = View.VISIBLE
-                    lblMensaje_mallacurricular.text = resources.getString(R.string.error_no_conexion)
+                    lblMensaje_mallacurricular.text = resources.getText(R.string.error_respuesta_server)
+                } catch (ccx: ClassCastException) {
+                    lblMensaje_mallacurricular.visibility = View.VISIBLE
+                    lblMensaje_mallacurricular.text = resources.getText(R.string.error_respuesta_server)
                 }
+            },
+            { error ->
+                prbCargando_mallacurricular.visibility = View.GONE
+                lblMensaje_mallacurricular.visibility = View.VISIBLE
+                lblMensaje_mallacurricular.text = resources.getString(R.string.error_no_conexion)
+            }
         )
 
         requestQueue?.add(jsObjectRequest)

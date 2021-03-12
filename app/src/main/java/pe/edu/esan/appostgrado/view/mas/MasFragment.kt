@@ -71,13 +71,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Log.w(LOG, "onCreate()")
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.w(LOG, "onCreateView()")
         return inflater.inflate(R.layout.fragment_mas, container, false)
     }
 
@@ -86,10 +82,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
         controlViewModel = activity?.run {
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-
-        Log.w(LOG, "onViewCreated()")
-        Log.w(LOG, "ViewModel is: $controlViewModel")
-
 
         if(ControlUsuario.instance.currentUsuarioGeneral != null && ControlUsuario.instance.currentUsuario.size != 0){
             mainSetupMasFragment(view)
@@ -120,30 +112,25 @@ class MasFragment : androidx.fragment.app.Fragment() {
         controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
             Observer<Boolean> { value ->
                 if(value){
-                    Log.w(LOG, "operationFinishedMasPublic.observe()")
                     mainSetupMasFragment(view)
                     setupAdapters()
                     //TODO: QR INTERNATIONAL WEEK
                     /*checkQRFeatureForIW(view)*/
                 }
             })
-        Log.w(LOG, "controlViewModel.refreshData()")
         controlViewModel.refreshDataForFragment(true)
     }
 
     //TODO: QR INTERNATIONAL WEEK
     /*fun checkQRFeatureForIW(view: View){
-        Log.w(LOG, "checkQRFeatureForIW()")
         /*controlViewModel.showQRFeaturePublic.observe(this,
             Observer<Boolean> { value ->
                 showQRForIW = value
-                Log.w(LOG,"Value of showQRForIW is: $showQRForIW")
                 mainSetupMasFragment(view)
                 setupAdapters()
         })*/
         val misPreferencias = activity?.getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
         generateQRForIW = misPreferencias?.getBoolean("qr_code_iw",false)
-        Log.w(LOG,"Value of showQRForIW is: $generateQRForIW")
 
         mainSetupMasFragment(view)
         setupAdapters()
@@ -277,7 +264,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
         rvUsuario_fmas.adapter = UsuarioAdapter(listaUsuarios) { userSelected, cantidadPerfiles, _ , tipo ->
             if (cantidadPerfiles == 1) {
                 /**Un solo usuario*/
-                Log.w(LOG, "Usuario solo tiene un perfil")
             } else if (cantidadPerfiles == 2) {
 
                 val preferencias = activity!!.getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
@@ -310,7 +296,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     }
                 } else {
                     //TODO: SHOW DIALOG TO AVOID ERROR IN LINKS DE INTERES
-                    Log.w(LOG, "Usuario presionó Salir o Cerrar Sesión")
                     if (invitado) {
                         ControlUsuario.instance.currentUsuario.clear()
                         ControlUsuario.instance.statusLogout = 1
@@ -331,9 +316,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        Log.w(LOG, "onActivityCreated()")
-
     }
 
     private fun setCerrarSesion() {
@@ -343,8 +325,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 is UserEsan -> {
                     val request = JSONObject()
                     request.put("CodAlumno", usuario.codigo)
-
-                    Log.i(LOG, request.toString())
 
                     val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
                     if (requestEncriptado != null) {
@@ -362,9 +342,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
     private fun onCerrarSesion(url: String, request: JSONObject) {
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         CustomDialog.instance.showDialogLoad(activity!!)
 
         requestQueue = Volley.newRequestQueue(activity!!)
@@ -376,17 +353,11 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
                 controlViewModel.proceedLogoutPublic.observe(viewLifecycleOwner, Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "proceedLogoutPublic.observe()")
-
                         CustomDialog.instance.dialogoCargando?.dismiss()
                         CustomDialog.instance.dialogoCargando = null
                         ControlUsuario.instance.statusLogout = 1
 
-                        Log.i(LOG, response.toString())
-
                         val respuesta = Utilitarios.stringDesencriptar(response["ActualizarTokenResult"] as String, activity!!)
-
-                        Log.w(LOG, "Respuesta del servidor: ${respuesta.toString()}")
 
                         if (respuesta == "true") {
                             borrarPreferencias()
@@ -412,8 +383,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 ControlUsuario.instance.statusLogout = 1
                 borrarDatos()
 
-                Log.e(LOG, "Error en el servicio")
-
                 activity!!.finish()
             }
         )
@@ -422,7 +391,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun borrarDatos() {
-        Log.i(LOG, "Datos de ControlUsuario fueron borrados")
         ControlUsuario.instance.currentUsuarioGeneral = null
         ControlUsuario.instance.currentUsuario.clear()
         ControlUsuario.instance.entroEncuesta = false
@@ -454,7 +422,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun borrarPreferencias() {
-        Log.w(LOG, "Preferencias fueron borradas")
         val misPresferencias = activity!!.getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
         val agreetouchid = misPresferencias.getBoolean("touchid", false)
         val editor = misPresferencias.edit()
@@ -757,7 +724,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
     override fun onStart() {
         super.onStart()
-        Log.w(LOG, "onStart()")
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             val usuario = ControlUsuario.instance.currentUsuario[0]
             when (usuario) {
@@ -765,9 +731,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     val request = JSONObject()
                     request.put("Facultad", if (usuario.tipoAlumno == Utilitarios.PRE) "2" else "1")
                     request.put("Usuario", usuario.codigo)
-
-                    Log.i(LOG, request.toString())
-
 
                     val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
                     if (requestEncriptado != null) {
@@ -780,8 +743,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     val request = JSONObject()
                     request.put("Facultad", "0")
                     request.put("Usuario", usuario.codigo)
-
-                    Log.i(LOG, request.toString())
 
                     val requestEncriptado = Utilitarios.jsObjectEncrypted(request, context!!)
                     if (requestEncriptado != null) {
@@ -800,7 +761,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
             Request.Method.POST,
             url,
             request,
-            Response.Listener { response ->
+            { response ->
                 try {
                     val respuesta = Utilitarios.stringDesencriptar(
                         response["ObtenerNotificacionPendientePorUsuarioResult"] as String,
@@ -811,19 +772,15 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     }
                 } catch (jex: JSONException) {
 
-                    Log.e(LOG, "Error en respuesta JSON")
                 } catch (caax: ClassCastException) {
 
-                    Log.e(LOG, "Error: " + caax.message)
                 } catch (ex: ParseException) {
 
-                    Log.e(LOG, "Error: " + ex.message)
                 }
 
             },
-            Response.ErrorListener { error ->
-
-                Log.e(LOG, "Error: " + error.message)
+            { error ->
+                error.printStackTrace()
             }
         )
         jsObjectRequest.tag = TAG
@@ -835,22 +792,18 @@ class MasFragment : androidx.fragment.app.Fragment() {
     override fun onStop() {
         super.onStop()
         requestQueueCantMensaje?.cancelAll(TAG)
-        Log.w(LOG, "onStop()")
     }
 
     override fun onResume() {
-        Log.w(LOG, "onResume()")
         super.onResume()
     }
 
     override fun onPause() {
-        Log.w(LOG, "onPause()")
         super.onPause()
     }
 
 
     override fun onDestroy() {
-        Log.w(LOG, "onDestroy()")
         listaUsuarios.clear()
         if(CustomDialog.instance.dialogoCargando != null){
             CustomDialog.instance.dialogoCargando?.dismiss()
@@ -879,7 +832,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 if (!task.isSuccessful) {
                     msg = "Error during unsubscription"
                 }
-                Log.i(LOG, msg)
             }
     }*/
 

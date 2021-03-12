@@ -115,7 +115,7 @@ class SecondLauncherActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                Log.e(LOG, "Volley error:  " + error.message.toString())
+                error.printStackTrace()
 
                 val crashlytics = FirebaseCrashlytics.getInstance()
 

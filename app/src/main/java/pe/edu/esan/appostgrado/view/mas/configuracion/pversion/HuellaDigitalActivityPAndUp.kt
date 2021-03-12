@@ -104,7 +104,6 @@ class HuellaDigitalActivityPAndUp : AppCompatActivity(), BiometricHelper.Biometr
 
     override fun onAuthenticationSuccesful(result: BiometricPrompt.AuthenticationResult?) {
 
-        Log.i(LOG,"Success in Fingerprint")
         lblMensaje_huelladigital.text = resources.getString(R.string.huella_digital_habilitada)
         val preferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
         val edit = preferencias.edit()
@@ -127,7 +126,6 @@ class HuellaDigitalActivityPAndUp : AppCompatActivity(), BiometricHelper.Biometr
 
     override fun onAuthenticationHelp(helpCode: Int, helpString: CharSequence?) {
         fingerprintActionWasSuccessful = false
-        Log.e(LOG,"helpCode is: $helpCode")
         lblMensaje_huelladigital.text = helpString.toString()
         fingerprintActionError = false
         swActivar_huelladigital.isChecked = false
@@ -137,7 +135,6 @@ class HuellaDigitalActivityPAndUp : AppCompatActivity(), BiometricHelper.Biometr
         if(errorCode != BiometricPrompt.BIOMETRIC_ERROR_USER_CANCELED && errorCode != BiometricPrompt.BIOMETRIC_ERROR_CANCELED){
             //lblMensaje_huelladigital.text = resources.getString(R.string.huella_error_lector)
             //lblMensaje_huelladigital.text = errString.toString()
-            Log.e(LOG,"errorCode is: $errorCode")
             if(errorCode == BiometricPrompt.BIOMETRIC_ERROR_NO_BIOMETRICS){
                 lblMensaje_huelladigital.text = getString(R.string.porfavor_registre_huella_digital_en_dispositivo)
             } else {

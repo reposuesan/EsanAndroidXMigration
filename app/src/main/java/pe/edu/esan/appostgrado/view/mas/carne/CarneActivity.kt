@@ -94,15 +94,12 @@ class CarneActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
 
             progress_bar_carnet.visibility = View.VISIBLE
             empty_text_view_carnet.visibility = View.GONE
@@ -114,7 +111,6 @@ class CarneActivity : AppCompatActivity() {
     }
 
     private fun sendRequest(){
-
 
         val usuario = ControlUsuario.instance.currentUsuario[0] as UserEsan
 
@@ -134,9 +130,6 @@ class CarneActivity : AppCompatActivity() {
 
     private fun consultarMatriculaAlumno(url: String, request: JSONObject){
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest (
             url,
@@ -146,7 +139,6 @@ class CarneActivity : AppCompatActivity() {
                 try {
                     val cursosJArray = Utilitarios.jsArrayDesencriptar(response["ListarNotasActualesAlumnoPreResult"] as String, applicationContext)
                     if (cursosJArray != null) {
-                        Log.i(LOG, cursosJArray.toString())
                         if (cursosJArray.length() > 0) {
 
                             for (curso in 0 until cursosJArray.length()) {
@@ -182,7 +174,6 @@ class CarneActivity : AppCompatActivity() {
             },
 
             { error ->
-                Log.e(LOG, error.message.toString())
                 empty_text_view_carnet.text = resources.getText(R.string.error_respuesta_server)
                 ocultarCarnet()
             }

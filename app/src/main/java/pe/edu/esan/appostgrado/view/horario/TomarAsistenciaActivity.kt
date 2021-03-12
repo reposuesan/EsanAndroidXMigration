@@ -112,86 +112,81 @@ class TomarAsistenciaActivity : AppCompatActivity() {
 
     private fun onEstadoAsistenciaSeccion(url: String, request: JSONObject, laanterior: Boolean) {
         prbCargando_tomarasistencia.visibility = View.VISIBLE
-        //println(url)
-        Log.i(LOG, url)
-        //println(request)
-        Log.i(LOG, request.toString())
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest(
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        var consultarAnterior = false
-                        if (!response.isNull("ListarAsistenciaAlumnosxSeccionResult")) {
-                            val listaAlumnoJArray = response["ListarAsistenciaAlumnosxSeccionResult"] as JSONArray
-                            if (listaAlumnoJArray.length() > 0) {
-                                listaAlumnos = ArrayList()
+            { response ->
+                try {
+                    var consultarAnterior = false
+                    if (!response.isNull("ListarAsistenciaAlumnosxSeccionResult")) {
+                        val listaAlumnoJArray = response["ListarAsistenciaAlumnosxSeccionResult"] as JSONArray
+                        if (listaAlumnoJArray.length() > 0) {
+                            listaAlumnos = ArrayList()
 
-                                for (z in 0 until listaAlumnoJArray.length()) {
-                                    val alumnoJObject = listaAlumnoJArray[z] as JSONObject
-                                    //println(alumnoJObject)
-                                    Log.i(LOG, alumnoJObject.toString())
-                                    val codigo = alumnoJObject["CodAlumno"] as String
-                                    val email = alumnoJObject["Email"] as String
-                                    val estadonombre = (alumnoJObject["EstadoNombre"] as String).trim()
-                                    val nombrecompleto = alumnoJObject["Alumno"] as String
-                                    val idactor = alumnoJObject["IdAlumno"] as Int
-                                    val estadoAsistencia = (alumnoJObject["Asistencia"] as String).trim()
-                                    val cantiFaltas = alumnoJObject["CantFalta"] as Int
-                                    val procInhabilitado = alumnoJObject["PorcxInasistencia"] as Int
-                                    val totalSesiones = alumnoJObject["TotalSesiones"] as Int
-                                    val procActual = cantiFaltas.toFloat() * 100 / totalSesiones.toFloat()
+                            for (z in 0 until listaAlumnoJArray.length()) {
+                                val alumnoJObject = listaAlumnoJArray[z] as JSONObject
 
-                                    consultarAnterior = estadoAsistencia.isEmpty()
-                                    llenarMasivoAsistencia = estadoAsistencia.isEmpty()
+                                val codigo = alumnoJObject["CodAlumno"] as String
+                                val email = alumnoJObject["Email"] as String
+                                val estadonombre = (alumnoJObject["EstadoNombre"] as String).trim()
+                                val nombrecompleto = alumnoJObject["Alumno"] as String
+                                val idactor = alumnoJObject["IdAlumno"] as Int
+                                val estadoAsistencia = (alumnoJObject["Asistencia"] as String).trim()
+                                val cantiFaltas = alumnoJObject["CantFalta"] as Int
+                                val procInhabilitado = alumnoJObject["PorcxInasistencia"] as Int
+                                val totalSesiones = alumnoJObject["TotalSesiones"] as Int
+                                val procActual = cantiFaltas.toFloat() * 100 / totalSesiones.toFloat()
+
+                                consultarAnterior = estadoAsistencia.isEmpty()
+                                llenarMasivoAsistencia = estadoAsistencia.isEmpty()
 
 
-                                    val alumno = Alumno(codigo, idactor, nombrecompleto, email, estadonombre, procActual, procInhabilitado)
-                                    alumno.estadoAsistencia = estadoAsistencia
-                                    listaAlumnos.add(alumno)
+                                val alumno = Alumno(codigo, idactor, nombrecompleto, email, estadonombre, procActual, procInhabilitado)
+                                alumno.estadoAsistencia = estadoAsistencia
+                                listaAlumnos.add(alumno)
 
+                            }
+                            if (laanterior) {
+                                for (alumno in listaAlumnos) {
+                                    alumno.actualizoEstadoAsistencia = true
                                 }
-                                if (laanterior) {
-                                    for (alumno in listaAlumnos) {
-                                        alumno.actualizoEstadoAsistencia = true
-                                    }
+                                adapterAsistencia = AsistenciaAdapter(listaAlumnos)
+                                rvAlumno_tomarasistencia.adapter = adapterAsistencia
+                            } else {
+                                if (!consultarAnterior) {
                                     adapterAsistencia = AsistenciaAdapter(listaAlumnos)
                                     rvAlumno_tomarasistencia.adapter = adapterAsistencia
                                 } else {
-                                    if (!consultarAnterior) {
-                                        adapterAsistencia = AsistenciaAdapter(listaAlumnos)
-                                        rvAlumno_tomarasistencia.adapter = adapterAsistencia
-                                    } else {
-                                        getEstadoAsistenciaSeccion(true)
-                                    }
+                                    getEstadoAsistenciaSeccion(true)
                                 }
-                            } else {
-                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.advertencia_no_informacion), Snackbar.LENGTH_LONG)
-                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
-                                snack.show()
                             }
                         } else {
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_intentelo_mas_tarde), Snackbar.LENGTH_LONG)
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.advertencia_no_informacion), Snackbar.LENGTH_LONG)
                             snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
                             snack.show()
                         }
-                    } catch (jex: JSONException) {
-                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    } else {
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_intentelo_mas_tarde), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
                         snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
                         snack.show()
                     }
-                    prbCargando_tomarasistencia.visibility = View.GONE
-                },
-                Response.ErrorListener { error ->
-                    prbCargando_tomarasistencia.visibility = View.GONE
+                } catch (jex: JSONException) {
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
                 }
+                prbCargando_tomarasistencia.visibility = View.GONE
+            },
+            { error ->
+                prbCargando_tomarasistencia.visibility = View.GONE
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
@@ -226,10 +221,6 @@ class TomarAsistenciaActivity : AppCompatActivity() {
     }
 
     private fun onAsistencia(re: JSONObject, request: JSONObject, url: String) {
-        //println(url)
-        Log.i(LOG, url)
-        //println(request.toString())
-        Log.i(LOG, request.toString())
 
         CustomDialog.instance.showDialogLoad(this)
         requestQueueRegAsis = Volley.newRequestQueue(this)
@@ -237,59 +228,57 @@ class TomarAsistenciaActivity : AppCompatActivity() {
         val jsObjectRequest = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
-                    CustomDialog.instance.dialogoCargando?.dismiss()
+            { response ->
+                CustomDialog.instance.dialogoCargando?.dismiss()
 
-                    val respuesta = if (llenarMasivoAsistencia)
-                        Utilitarios.stringDesencriptar(response["RegistrarAsistenciaMasivaAlumnoResult"] as String, this)
-                    else
-                        Utilitarios.stringDesencriptar(response["RegistrarAsistenciaAlumnoResult"] as String, this)
+                val respuesta = if (llenarMasivoAsistencia)
+                    Utilitarios.stringDesencriptar(response["RegistrarAsistenciaMasivaAlumnoResult"] as String, this)
+                else
+                    Utilitarios.stringDesencriptar(response["RegistrarAsistenciaAlumnoResult"] as String, this)
 
-                    if (respuesta != null) {
-                        if (respuesta == "true") {
-                            if (llenarMasivoAsistencia) {
-                                ControlUsuario.instance.tomoAsistenciaMasica = true
+                if (respuesta != null) {
+                    if (respuesta == "true") {
+                        if (llenarMasivoAsistencia) {
+                            ControlUsuario.instance.tomoAsistenciaMasica = true
+                            ControlUsuario.instance.recargaHorarioProfesor = true
+                            ControlUsuario.instance.cambioPantalla = false
+                            ControlUsuario.instance.pantallaSuspendida = false
+                            finish()
+                        } else {
+                            if (ControlUsuario.instance.copiarListHorario.size > 0) {
+                                copiarAsistenciaSesionesSuperiores(0, re)
+                            } else {
                                 ControlUsuario.instance.recargaHorarioProfesor = true
                                 ControlUsuario.instance.cambioPantalla = false
                                 ControlUsuario.instance.pantallaSuspendida = false
                                 finish()
-                            } else {
-                                if (ControlUsuario.instance.copiarListHorario.size > 0) {
-                                    copiarAsistenciaSesionesSuperiores(0, re)
-                                } else {
-                                    ControlUsuario.instance.recargaHorarioProfesor = true
-                                    ControlUsuario.instance.cambioPantalla = false
-                                    ControlUsuario.instance.pantallaSuspendida = false
-                                    finish()
-                                }
                             }
-                        } else {
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_marco_asistencia_alumnos), Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
-                            snack.show()
                         }
                     } else {
-                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
-                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_marco_asistencia_alumnos), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
                         snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
                         snack.show()
                     }
-
-                },
-                Response.ErrorListener { error ->
-                    //println(error.toString())
-                    Log.e(LOG, error.message.toString())
-                    CustomDialog.instance.dialogoCargando?.dismiss()
-
-                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                } else {
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
                     snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
                     snack.show()
                 }
+
+            },
+            { error ->
+                CustomDialog.instance.dialogoCargando?.dismiss()
+
+                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                snack.show()
+            }
         )
         jsObjectRequest.tag = TAG
 
@@ -311,33 +300,32 @@ class TomarAsistenciaActivity : AppCompatActivity() {
                 val jsObjectRequest = JsonObjectRequest(
                         url,
                         requestEncriptado,
-                        Response.Listener { response ->
-                            CustomDialog.instance.dialogoCargando?.dismiss()
+                    { response ->
+                        CustomDialog.instance.dialogoCargando?.dismiss()
 
-                            val respuesta = Utilitarios.stringDesencriptar(response["RegistrarAsistenciaAlumnoResult"] as String, this)
+                        val respuesta = Utilitarios.stringDesencriptar(response["RegistrarAsistenciaAlumnoResult"] as String, this)
 
-                            if (respuesta != null) {
-                                if (respuesta == "true") {
-                                    copiarAsistenciaSesionesSuperiores(id + 1, request)
-                                }
+                        if (respuesta != null) {
+                            if (respuesta == "true") {
+                                copiarAsistenciaSesionesSuperiores(id + 1, request)
                             }
-
-                            ControlUsuario.instance.recargaHorarioProfesor = true
-                            ControlUsuario.instance.cambioPantalla = false
-                            ControlUsuario.instance.pantallaSuspendida = false
-                            finish()
-
-                        },
-                        Response.ErrorListener { error ->
-                            //println(error.toString())
-                            Log.e(LOG, error.message.toString())
-                            CustomDialog.instance.dialogoCargando?.dismiss()
-
-                            ControlUsuario.instance.recargaHorarioProfesor = true
-                            ControlUsuario.instance.cambioPantalla = false
-                            ControlUsuario.instance.pantallaSuspendida = false
-                            finish()
                         }
+
+                        ControlUsuario.instance.recargaHorarioProfesor = true
+                        ControlUsuario.instance.cambioPantalla = false
+                        ControlUsuario.instance.pantallaSuspendida = false
+                        finish()
+
+                    },
+                    { error ->
+
+                        CustomDialog.instance.dialogoCargando?.dismiss()
+
+                        ControlUsuario.instance.recargaHorarioProfesor = true
+                        ControlUsuario.instance.cambioPantalla = false
+                        ControlUsuario.instance.pantallaSuspendida = false
+                        finish()
+                    }
                 )
                 jsObjectRequest.tag = TAG
 
@@ -351,8 +339,6 @@ class TomarAsistenciaActivity : AppCompatActivity() {
                 finish()
             }
         } else {
-            //println("FIN REGRESAR")
-            Log.i(LOG, "FIN - REGRESAR")
             CustomDialog.instance.dialogoCargando?.dismiss()
 
             ControlUsuario.instance.recargaHorarioProfesor = true
@@ -369,9 +355,6 @@ class TomarAsistenciaActivity : AppCompatActivity() {
         if (valores.puedeenviar) {
             val asistenciaAlumnos = valores.asistencias
             if (asistenciaAlumnos != null) {
-                //println(asistenciaAlumnos.toString())
-                Log.i(LOG, asistenciaAlumnos.toString())
-
                 val alertConfirmar = AlertDialog.Builder(this)
                         .setTitle(resources.getString(R.string.confirmar))
                         .setMessage(String.format(resources.getString(R.string.mensaje_confirmar_asistencia),

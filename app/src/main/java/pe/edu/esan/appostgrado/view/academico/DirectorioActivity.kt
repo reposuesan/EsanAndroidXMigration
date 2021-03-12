@@ -68,54 +68,50 @@ class DirectorioActivity : AppCompatActivity() {
     }
 
     private fun onAlumnos(url: String, request: JSONObject) {
-        println(url)
-        println(request)
         prbCargando_directorio.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
-                    println(response.toString())
-                    prbCargando_directorio.visibility = View.GONE
-                    try {
-                        val directorioJArray = response["DirectorioAlumnosResult"] as JSONArray
-                        val listaAlumnos = ArrayList<Alumno>()
-                        for (i in 0 until directorioJArray.length()) {
-                            val directorioJObject = directorioJArray[i] as JSONObject
-                            val codigo = directorioJObject["codigo"] as String
-                            var email = directorioJObject["email"] as String
-                            val estadonombre = directorioJObject["estadonombre"] as String
-                            val nombrecompleto = directorioJObject["nombrecompleto"] as String
-                            val idactor = directorioJObject["idactor"] as Int
-                            if (!(email.contains("@esan.edu.pe") || email.contains("@ue.edu.pe"))) {
-                                email = ""
-                            }
-                            if (estadonombre == "Activo") {
-                                listaAlumnos.add(Alumno(codigo, idactor, nombrecompleto, email))
-                            }
+            { response ->
+                prbCargando_directorio.visibility = View.GONE
+                try {
+                    val directorioJArray = response["DirectorioAlumnosResult"] as JSONArray
+                    val listaAlumnos = ArrayList<Alumno>()
+                    for (i in 0 until directorioJArray.length()) {
+                        val directorioJObject = directorioJArray[i] as JSONObject
+                        val codigo = directorioJObject["codigo"] as String
+                        var email = directorioJObject["email"] as String
+                        val estadonombre = directorioJObject["estadonombre"] as String
+                        val nombrecompleto = directorioJObject["nombrecompleto"] as String
+                        val idactor = directorioJObject["idactor"] as Int
+                        if (!(email.contains("@esan.edu.pe") || email.contains("@ue.edu.pe"))) {
+                            email = ""
                         }
-
-                        if (listaAlumnos.isNotEmpty()) {
-                            rvAlumno_directorio.adapter = ContactoAdapter(listaAlumnos)
-                        } else {
-                            lblMensaje_directorio.visibility = View.VISIBLE
-                            lblMensaje_directorio.text = resources.getString(R.string.info_noalumnosmatriculados)
+                        if (estadonombre == "Activo") {
+                            listaAlumnos.add(Alumno(codigo, idactor, nombrecompleto, email))
                         }
-                    } catch (jex: JSONException) {
-                        lblMensaje_directorio.visibility = View.VISIBLE
-                        lblMensaje_directorio.text = resources.getString(R.string.error_no_conexion)
-                    } catch (ccax : ClassCastException) {
-                        lblMensaje_directorio.visibility = View.VISIBLE
-                        lblMensaje_directorio.text = resources.getString(R.string.error_no_conexion)
                     }
-                },
-                Response.ErrorListener { error ->
-                    println(error.toString())
-                    prbCargando_directorio.visibility = View.GONE
+
+                    if (listaAlumnos.isNotEmpty()) {
+                        rvAlumno_directorio.adapter = ContactoAdapter(listaAlumnos)
+                    } else {
+                        lblMensaje_directorio.visibility = View.VISIBLE
+                        lblMensaje_directorio.text = resources.getString(R.string.info_noalumnosmatriculados)
+                    }
+                } catch (jex: JSONException) {
+                    lblMensaje_directorio.visibility = View.VISIBLE
+                    lblMensaje_directorio.text = resources.getString(R.string.error_no_conexion)
+                } catch (ccax : ClassCastException) {
                     lblMensaje_directorio.visibility = View.VISIBLE
                     lblMensaje_directorio.text = resources.getString(R.string.error_no_conexion)
                 }
+            },
+            { error ->
+                prbCargando_directorio.visibility = View.GONE
+                lblMensaje_directorio.visibility = View.VISIBLE
+                lblMensaje_directorio.text = resources.getString(R.string.error_no_conexion)
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

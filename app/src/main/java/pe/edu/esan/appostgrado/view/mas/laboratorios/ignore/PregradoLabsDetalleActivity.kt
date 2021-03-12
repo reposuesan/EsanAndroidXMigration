@@ -42,15 +42,12 @@ class PregradoLabsDetalleActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "mainSetup() was called")
                         mainSetup()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
 
     }

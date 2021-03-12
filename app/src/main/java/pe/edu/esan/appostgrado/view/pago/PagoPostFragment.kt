@@ -50,7 +50,7 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
         controlViewModel = activity?.run {
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-        Log.w(LOG, "ViewModel is: $controlViewModel")
+
         view.lblMensaje_fpagopost.typeface = Utilitarios.getFontRoboto(context!!, Utilitarios.TypeFont.REGULAR)
 
         view.swPago_fpagopost.setOnRefreshListener(this)
@@ -83,13 +83,10 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
             controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedPagoPostPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
-            Log.w(LOG, "controlViewModel.refreshData() was called")
             controlViewModel.refreshDataForFragment(true)
 
         }
@@ -113,10 +110,6 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
 
     private fun onPagoPost(url: String, request: JSONObject) {
 
-        Log.i(LOG, url)
-
-        Log.i(LOG, request.toString())
-
         prbCargando_fpagopost.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity!!)
 
@@ -126,11 +119,8 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
                 request,
             { response ->
                 try {
-
-                    Log.i(LOG, response.toString())
                     val pagopostJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPosgradoResult"] as String, activity!!)
 
-                    Log.i(LOG, pagopostJArray.toString())
                     if (pagopostJArray != null) {
                         if (pagopostJArray.length() > 0) {
                             val listaPago = ArrayList<PagoPost>()
@@ -178,7 +168,6 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
                 swPago_fpagopost.isRefreshing = false
             },
             { error ->
-                Log.e(LOG, error.message.toString())
                 prbCargando_fpagopost.visibility = View.GONE
                 rvPago_fpagopost.visibility = View.GONE
                 swPago_fpagopost.isRefreshing = false

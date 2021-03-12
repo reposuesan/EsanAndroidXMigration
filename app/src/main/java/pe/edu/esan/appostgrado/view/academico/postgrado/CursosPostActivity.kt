@@ -108,15 +108,12 @@ class CursosPostActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
     }
 
@@ -129,7 +126,7 @@ class CursosPostActivity : AppCompatActivity() {
         request.put("CodPromocion", codigoPromo)
 
         val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
-        Log.i(LOG, requestEncriptado.toString())
+
         if (requestEncriptado != null)
             onEncuestaPorPrograma(Utilitarios.getUrl(Utilitarios.URL.VALIDA_ENCUESTA_PROGRAMA), requestEncriptado, codigoPromo)
         else {
@@ -147,7 +144,6 @@ class CursosPostActivity : AppCompatActivity() {
                 url,
                 request,
             { response ->
-                Log.i(LOG, response.toString())
                 try {
                     val listaEncuestas = ArrayList<SeccionEncuestaPos>()
                     val encuestaJArray = Utilitarios.jsArrayDesencriptar(response["ListarEncuestasProfesorPostResult"] as String, this)
@@ -192,7 +188,6 @@ class CursosPostActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                Log.e(LOG, error.message.toString())
                 lblMensaje_acursospost.visibility = View.VISIBLE
                 lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
             }
@@ -227,273 +222,251 @@ class CursosPostActivity : AppCompatActivity() {
     //ESTE MÉTODO DEVUELVE LOS CURSOS Y LOS ORDENA POR PROGRAMA
     private fun onCursos(url: String, request: JSONObject, listaEncuesta: ArrayList<SeccionEncuestaPos>) {
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         prbCargando_acursospost.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest(
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        /*val cursosJArray = response["ListarHistoricoNotasAlumnoPostResult"] as JSONArray*/
-                        val cursosJArray = Utilitarios.jsArrayDesencriptar(response["ListarHistoricoNotasAlumnoPostResult"] as String, this)
-                        if (cursosJArray != null) {
-                            if (cursosJArray.length() > 0) {
+            { response ->
+                try {
+                    /*val cursosJArray = response["ListarHistoricoNotasAlumnoPostResult"] as JSONArray*/
+                    val cursosJArray = Utilitarios.jsArrayDesencriptar(response["ListarHistoricoNotasAlumnoPostResult"] as String, this)
+                    if (cursosJArray != null) {
+                        if (cursosJArray.length() > 0) {
 
-                                var ultimoModulo = 0
-                                val listaModuloCursos = ArrayList<CursoPostModulo>()
-                                var listaCursos = ArrayList<CursosPost?>()
+                            var ultimoModulo = 0
+                            val listaModuloCursos = ArrayList<CursoPostModulo>()
+                            var listaCursos = ArrayList<CursosPost?>()
 
-                                val language = Locale.getDefault().displayLanguage
+                            val language = Locale.getDefault().displayLanguage
 
-                                for (cursoItemFromArray in 0 until cursosJArray.length()) {
+                            for (cursoItemFromArray in 0 until cursosJArray.length()) {
 
-                                    val cursoJson = cursosJArray[cursoItemFromArray] as JSONObject
-
-                                    Log.i(LOG, cursoJson.toString())
-
-                                    val nombreCurso = cursoJson["cursoNombre"] as String
-                                    val idCurso = cursoJson["IdCurso"] as Int
-                                    var promedioCondicion = (cursoJson["PromedioCondicion"] as String).toUpperCase()
-                                    val promedioFinal = cursoJson["PromedioFinal"] as String
-                                    val idSeccion = cursoJson["idseccion"] as Int
-                                    val codigoSeccion = cursoJson["SeccionCodigo"] as String
-                                    val modulo = cursoJson["Modulo"] as Int
-                                    val cursoActual = cursoJson["CursoActual"] as Boolean
-
-                                    if (promedioCondicion.contains("NO REGISTRADA")){
-                                        if(language.equals("English")) {
-                                            promedioCondicion = "PENDING GRADE"
-                                        } else {
-                                            promedioCondicion = "NOTA NO\nREGISTRADA"
-                                        }
-                                    }
+                                val cursoJson = cursosJArray[cursoItemFromArray] as JSONObject
 
 
-                                    val cursoPost = CursosPost(modulo, idCurso, nombreCurso, promedioCondicion, promedioFinal, idSeccion, codigoSeccion, cursoActual)
+                                val nombreCurso = cursoJson["cursoNombre"] as String
+                                val idCurso = cursoJson["IdCurso"] as Int
+                                var promedioCondicion = (cursoJson["PromedioCondicion"] as String).toUpperCase()
+                                val promedioFinal = cursoJson["PromedioFinal"] as String
+                                val idSeccion = cursoJson["idseccion"] as Int
+                                val codigoSeccion = cursoJson["SeccionCodigo"] as String
+                                val modulo = cursoJson["Modulo"] as Int
+                                val cursoActual = cursoJson["CursoActual"] as Boolean
 
-                                    val lstEncuesta = ArrayList<SeccionEncuestaPos>()
-
-                                    for (encuesta in listaEncuesta) {
-                                        if (encuesta.idSeccion == idSeccion) {
-                                            cursoPost.encuesta = true
-                                            lstEncuesta.add(encuesta)
-                                            /*listaEncuesta.remove(encuesta)*/
-                                        }
-                                    }
-
-                                    cursoPost.listaSeccionEncuesta = lstEncuesta
-
-                                    if (cursoItemFromArray == 0) {
-
-                                        Log.i(LOG, "Primer modulo en JSON Response: $modulo")
-                                        ultimoModulo = modulo
-                                        listaCursos = ArrayList()
-                                        listaCursos.add(cursoPost)
-
+                                if (promedioCondicion.contains("NO REGISTRADA")){
+                                    if(language.equals("English")) {
+                                        promedioCondicion = "PENDING GRADE"
                                     } else {
-                                        if (ultimoModulo == modulo) {
-
-                                            Log.i(LOG, "Seguimos en el mismo modulo")
-                                            listaCursos.add(cursoPost)
-                                        } else {
-
-                                            listaModuloCursos.add(CursoPostModulo(ultimoModulo, listaCursos))
-
-                                            Log.i(LOG, "Siguiente Modulo en JSON Response: $modulo")
-                                            ultimoModulo = modulo
-                                            listaCursos = ArrayList()
-                                            listaCursos.add(cursoPost)
-                                        }
+                                        promedioCondicion = "NOTA NO\nREGISTRADA"
                                     }
                                 }
 
-                                Log.i(LOG, "Agregar ultimo modulo")
 
-                                listaModuloCursos.add(CursoPostModulo(ultimoModulo, listaCursos))
-                                cursoAdapter = CursoPostAdapter(listaModuloCursos , {codigoSeccion ->
+                                val cursoPost = CursosPost(modulo, idCurso, nombreCurso, promedioCondicion, promedioFinal, idSeccion, codigoSeccion, cursoActual)
 
-                                    Log.i(LOG, "Asistencia")
-                                    Log.i(LOG, codigoSeccion)
+                                val lstEncuesta = ArrayList<SeccionEncuestaPos>()
 
-                                    this.getAsistenciaCurso(codigoSeccion)
+                                for (encuesta in listaEncuesta) {
+                                    if (encuesta.idSeccion == idSeccion) {
+                                        cursoPost.encuesta = true
+                                        lstEncuesta.add(encuesta)
+                                        /*listaEncuesta.remove(encuesta)*/
+                                    }
+                                }
 
-                                }) { posAdapter, posModulo, posCurso, cursosPost, encuestar ->
-                                    if (encuestar) {
-                                        Log.i(LOG, "IR A ENCUESTA")
-                                        /*cursosPost.listaSeccionEncuesta*/
-                                        ControlUsuario.instance.currentCursoPost = cursosPost
-                                        /*ControlUsuario.instance.encuestasPost = cursosPost.listaSeccionEncuesta*/
-                                        val intentEncuesta = Intent(this, EncuestaActivity::class.java)
-                                        intentEncuesta.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                        startActivity(intentEncuesta)
+                                cursoPost.listaSeccionEncuesta = lstEncuesta
 
+                                if (cursoItemFromArray == 0) {
+                                    ultimoModulo = modulo
+                                    listaCursos = ArrayList()
+                                    listaCursos.add(cursoPost)
+
+                                } else {
+                                    if (ultimoModulo == modulo) {
+                                        listaCursos.add(cursoPost)
                                     } else {
-                                        //SI LA LISTA ESTÁ EXPANDIDA
-                                        if (cursosPost.expandible) {
-                                            listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = true
-                                            /*updateAdater(posAdapter)*/
 
-                                            val totalNotas = listaModuloCursos[posModulo].listaCursos[posCurso]?.detalleNotas?.size
+                                        listaModuloCursos.add(CursoPostModulo(ultimoModulo, listaCursos))
 
-                                            if (totalNotas != null)
-                                                for (x in (totalNotas - 1) downTo 0) {
-                                                    listaModuloCursos[posModulo].listaCursos.removeAt(posCurso + x + 1)
-                                                    /*removeAdapter(posCurso + x + 1)*/
-                                                }
+                                        ultimoModulo = modulo
+                                        listaCursos = ArrayList()
+                                        listaCursos.add(cursoPost)
+                                    }
+                                }
+                            }
 
-                                            listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
-                                            listaModuloCursos[posModulo].listaCursos[posCurso]?.expandible = false
-                                            /*updateAdater(posAdapter)*/
-                                            refreshAdapter()
-                                        //SI LA LISTA NO ESTÁ EXPANDIDA
-                                        } else {
-                                            listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = true
-                                            /*updateAdater(posAdapter)*/
-                                            refreshAdapter()
+                            listaModuloCursos.add(CursoPostModulo(ultimoModulo, listaCursos))
+                            cursoAdapter = CursoPostAdapter(listaModuloCursos , {codigoSeccion ->
+                                this.getAsistenciaCurso(codigoSeccion)
 
-                                            if (ControlUsuario.instance.currentUsuario.size == 1) {
-                                                val usuario = ControlUsuario.instance.currentUsuario[0] as UserEsan
+                            }) { posAdapter, posModulo, posCurso, cursosPost, encuestar ->
+                                if (encuestar) {
+                                    /*cursosPost.listaSeccionEncuesta*/
+                                    ControlUsuario.instance.currentCursoPost = cursosPost
+                                    /*ControlUsuario.instance.encuestasPost = cursosPost.listaSeccionEncuesta*/
+                                    val intentEncuesta = Intent(this, EncuestaActivity::class.java)
+                                    intentEncuesta.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                    startActivity(intentEncuesta)
 
-                                                val req = JSONObject()
-                                                req.put("CodAlumno", usuario.codigo)
-                                                req.put("CodSeccion", cursosPost.seccionCodigo)
+                                } else {
+                                    //SI LA LISTA ESTÁ EXPANDIDA
+                                    if (cursosPost.expandible) {
+                                        listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = true
+                                        /*updateAdater(posAdapter)*/
 
-                                                val requestEncriptado = Utilitarios.jsObjectEncrypted(req, this)
-                                                if (requestEncriptado != null) {
+                                        val totalNotas = listaModuloCursos[posModulo].listaCursos[posCurso]?.detalleNotas?.size
 
-                                                    val jsObjectRequest = JsonObjectRequest(
-                                                        Request.Method.POST,
-                                                        Utilitarios.getUrl(Utilitarios.URL.NOTAS_POST),
-                                                        requestEncriptado,
-                                                        Response.Listener { response ->
-                                                            Log.i(LOG, response.toString())
-                                                            try {
-                                                                /*val notasJArray = response["ListarDetalleNotaHistoricoResult"] as JSONArray*/
-                                                                val notasJArray = Utilitarios.jsArrayDesencriptar(response["ListarDetalleNotaHistoricoResult"] as String, this)
-                                                                if (notasJArray != null) {
-                                                                    if (notasJArray.length() > 0) {
-                                                                        val notasCurso = ArrayList<NotasPost>()
-                                                                        for (i in 0 until notasJArray.length()) {
-                                                                            val notasJson = notasJArray[i] as JSONObject
-                                                                            val tipo = notasJson["NotaNombre"] as String
-                                                                            val peso = notasJson["Peso"] as String
-                                                                            val nota = notasJson["Nota"] as String
+                                        if (totalNotas != null)
+                                            for (x in (totalNotas - 1) downTo 0) {
+                                                listaModuloCursos[posModulo].listaCursos.removeAt(posCurso + x + 1)
+                                                /*removeAdapter(posCurso + x + 1)*/
+                                            }
 
-                                                                            notasCurso.add(NotasPost(tipo, peso, nota))
-                                                                        }
-                                                                        listaModuloCursos[posModulo].listaCursos[posCurso]?.detalleNotas = notasCurso
-                                                                        listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
-                                                                        listaModuloCursos[posModulo].listaCursos[posCurso]?.expandible = true
-                                                                        /*updateAdater(posAdapter)*/
+                                        listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
+                                        listaModuloCursos[posModulo].listaCursos[posCurso]?.expandible = false
+                                        /*updateAdater(posAdapter)*/
+                                        refreshAdapter()
+                                    //SI LA LISTA NO ESTÁ EXPANDIDA
+                                    } else {
+                                        listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = true
+                                        /*updateAdater(posAdapter)*/
+                                        refreshAdapter()
 
-                                                                        var contadorAdd = posCurso
-                                                                        /*contadorPos = posAdapter*/
-                                                                        for (x in 0 until notasCurso.size) {
-                                                                            /*contadorAdd += 1
-                                                                            contadorPos += 1*/
-                                                                            listaModuloCursos[posModulo].listaCursos.add(++contadorAdd, null)
-                                                                            /*insertAdapter(++contadorPos)*/
-                                                                            Log.w(LOG, "contadorAdd: $contadorAdd")
-                                                                            Log.w(LOG, "contadorPos: $posAdapter")
-                                                                            Log.w(LOG, "contadorAdd - contadorPos: $contadorAdd  - $posAdapter")
-                                                                        }
+                                        if (ControlUsuario.instance.currentUsuario.size == 1) {
+                                            val usuario = ControlUsuario.instance.currentUsuario[0] as UserEsan
 
-                                                                    } else {
-                                                                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.no_mayor_detalle), Snackbar.LENGTH_LONG)
-                                                                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.info))
-                                                                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                                                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.info_text))
-                                                                        snack.show()
-                                                                        listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
-                                                                        /*updateAdater(posAdapter)*/
+                                            val req = JSONObject()
+                                            req.put("CodAlumno", usuario.codigo)
+                                            req.put("CodSeccion", cursosPost.seccionCodigo)
+
+                                            val requestEncriptado = Utilitarios.jsObjectEncrypted(req, this)
+                                            if (requestEncriptado != null) {
+
+                                                val jsObjectRequest = JsonObjectRequest(
+                                                    Request.Method.POST,
+                                                    Utilitarios.getUrl(Utilitarios.URL.NOTAS_POST),
+                                                    requestEncriptado,
+                                                    { response ->
+                                                        try {
+                                                            /*val notasJArray = response["ListarDetalleNotaHistoricoResult"] as JSONArray*/
+                                                            val notasJArray = Utilitarios.jsArrayDesencriptar(response["ListarDetalleNotaHistoricoResult"] as String, this)
+                                                            if (notasJArray != null) {
+                                                                if (notasJArray.length() > 0) {
+                                                                    val notasCurso = ArrayList<NotasPost>()
+                                                                    for (i in 0 until notasJArray.length()) {
+                                                                        val notasJson = notasJArray[i] as JSONObject
+                                                                        val tipo = notasJson["NotaNombre"] as String
+                                                                        val peso = notasJson["Peso"] as String
+                                                                        val nota = notasJson["Nota"] as String
+
+                                                                        notasCurso.add(NotasPost(tipo, peso, nota))
                                                                     }
-                                                                    refreshAdapter()
+                                                                    listaModuloCursos[posModulo].listaCursos[posCurso]?.detalleNotas = notasCurso
+                                                                    listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
+                                                                    listaModuloCursos[posModulo].listaCursos[posCurso]?.expandible = true
+                                                                    /*updateAdater(posAdapter)*/
+
+                                                                    var contadorAdd = posCurso
+                                                                    /*contadorPos = posAdapter*/
+                                                                    for (x in 0 until notasCurso.size) {
+                                                                        /*contadorAdd += 1
+                                                                        contadorPos += 1*/
+                                                                        listaModuloCursos[posModulo].listaCursos.add(++contadorAdd, null)
+                                                                        /*insertAdapter(++contadorPos)*/
+                                                                    }
+
                                                                 } else {
-                                                                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
-                                                                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                                                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.no_mayor_detalle), Snackbar.LENGTH_LONG)
+                                                                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.info))
                                                                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                                                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                                                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.info_text))
                                                                     snack.show()
+                                                                    listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
+                                                                    /*updateAdater(posAdapter)*/
                                                                 }
-                                                            } catch (jex: JSONException) {
-                                                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_intentelo_mas_tarde), Snackbar.LENGTH_LONG)
-                                                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                                                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                                                                snack.show()
-                                                            } catch (ccax: ClassCastException) {
-                                                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_intentelo_mas_tarde), Snackbar.LENGTH_LONG)
+                                                                refreshAdapter()
+                                                            } else {
+                                                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
                                                                 snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
                                                                 snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
                                                                 snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
                                                                 snack.show()
                                                             }
-                                                        },
-                                                        Response.ErrorListener { error ->
-                                                            Log.e(LOG,error.message.toString())
-                                                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                                                        } catch (jex: JSONException) {
+                                                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_intentelo_mas_tarde), Snackbar.LENGTH_LONG)
                                                             snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
                                                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
                                                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
                                                             snack.show()
-                                                            listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
-                                                            /*updateAdater(posAdapter)*/
-                                                            refreshAdapter()
+                                                        } catch (ccax: ClassCastException) {
+                                                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_intentelo_mas_tarde), Snackbar.LENGTH_LONG)
+                                                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                                            snack.show()
                                                         }
-                                                    )
-                                                    jsObjectRequest.tag = TAG
-                                                    requestQueue?.add(jsObjectRequest)
-                                                } else {
-                                                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_encriptar), Snackbar.LENGTH_LONG)
-                                                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                                                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                                                    snack.show()
-                                                }
+                                                    },
+                                                    { error ->
+                                                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                                                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                                        snack.show()
+                                                        listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
+                                                        /*updateAdater(posAdapter)*/
+                                                        refreshAdapter()
+                                                    }
+                                                )
+                                                jsObjectRequest.tag = TAG
+                                                requestQueue?.add(jsObjectRequest)
                                             } else {
-                                                val alerta = AlertDialog.Builder(this)
-                                                    .setTitle(resources.getString(R.string.error))
-                                                    .setMessage(resources.getString(R.string.error_ingreso))
-                                                    .create()
-                                                alerta.show()
-                                                listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
-                                                /*updateAdater(posAdapter)*/
-                                                refreshAdapter()
+                                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_encriptar), Snackbar.LENGTH_LONG)
+                                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                                snack.show()
                                             }
+                                        } else {
+                                            val alerta = AlertDialog.Builder(this)
+                                                .setTitle(resources.getString(R.string.error))
+                                                .setMessage(resources.getString(R.string.error_ingreso))
+                                                .create()
+                                            alerta.show()
+                                            listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
+                                            /*updateAdater(posAdapter)*/
+                                            refreshAdapter()
                                         }
                                     }
                                 }
-
-                                rvCurso_acursospost.adapter = cursoAdapter
-
-                            } else {
-                                lblMensaje_acursospost.visibility = View.VISIBLE
-                                lblMensaje_acursospost.text = resources.getText(R.string.error_curso_no)
                             }
+
+                            rvCurso_acursospost.adapter = cursoAdapter
+
                         } else {
                             lblMensaje_acursospost.visibility = View.VISIBLE
-                            lblMensaje_acursospost.text = resources.getText(R.string.error_desencriptar)
+                            lblMensaje_acursospost.text = resources.getText(R.string.error_curso_no)
                         }
-                    } catch (jex: JSONException) {
-                        lblMensaje_acursospost.visibility = View.VISIBLE
-                        lblMensaje_acursospost.text = resources.getText(R.string.error_desencriptar)
-                    } catch (ccax: ClassCastException) {
+                    } else {
                         lblMensaje_acursospost.visibility = View.VISIBLE
                         lblMensaje_acursospost.text = resources.getText(R.string.error_desencriptar)
                     }
-
-                    prbCargando_acursospost.visibility = View.GONE
-                },
-                Response.ErrorListener { error ->
-                    Log.e(LOG, error.message.toString())
-                    prbCargando_acursospost.visibility = View.GONE
+                } catch (jex: JSONException) {
                     lblMensaje_acursospost.visibility = View.VISIBLE
-                    lblMensaje_acursospost.text = resources.getText(R.string.error_no_conexion)
+                    lblMensaje_acursospost.text = resources.getText(R.string.error_desencriptar)
+                } catch (ccax: ClassCastException) {
+                    lblMensaje_acursospost.visibility = View.VISIBLE
+                    lblMensaje_acursospost.text = resources.getText(R.string.error_desencriptar)
                 }
+
+                prbCargando_acursospost.visibility = View.GONE
+            },
+            { error ->
+                prbCargando_acursospost.visibility = View.GONE
+                lblMensaje_acursospost.visibility = View.VISIBLE
+                lblMensaje_acursospost.text = resources.getText(R.string.error_no_conexion)
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
@@ -509,7 +482,7 @@ class CursosPostActivity : AppCompatActivity() {
             request.put("CodSeccion", codigoSeccion)
 
             val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
-            Log.i(LOG, requestEncriptado.toString())
+
             if (requestEncriptado != null)
                 onAsistenciaCurso(Utilitarios.getUrl(Utilitarios.URL.ASIS_ALUMNO_POST), requestEncriptado)
             else {
@@ -529,9 +502,6 @@ class CursosPostActivity : AppCompatActivity() {
         windowManager.defaultDisplay.getMetrics(displaymetrics)
         anchoPantalla = displaymetrics.widthPixels
         densidad = displaymetrics.density
-
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
 
         CustomDialog.instance.showDialogLoad(this)
         requestQueueAsistencia = Volley.newRequestQueue(this)

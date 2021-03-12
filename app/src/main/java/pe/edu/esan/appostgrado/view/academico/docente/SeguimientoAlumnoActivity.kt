@@ -63,8 +63,6 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
         windowManager.defaultDisplay.getMetrics(displaymetrics)
         anchoPantalla = displaymetrics.widthPixels
         densidad = displaymetrics.density
-        println(displaymetrics.densityDpi)
-
 
         lblMensaje_seguimientoalumno.typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.THIN)
         lblSeccion_seguiminetoalumno.typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.THIN)
@@ -90,51 +88,48 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
     private fun onAlumnosAsistencia(url: String, request: JSONObject) {
         prbCargando_seguimientoalumno.visibility = View.VISIBLE
         lblMensaje_seguimientoalumno.visibility = View.GONE
-        println(url)
-        println(request.toString())
+
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectReques = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
-                    println(response.toString())
-                    prbCargando_seguimientoalumno.visibility = View.GONE
-                    try {
-                        val alumnosJArray = response["ListarRecordAsistenciaPorAlumnoResult"] as JSONArray
-                        if (alumnosJArray.length() > 0) {
-                            val listaAlumnos = ArrayList<AlumnoShort>()
-                            for (i in 0 until alumnosJArray.length()) {
-                                val alumnosJObject = alumnosJArray[i] as JSONObject
-                                val codigo = alumnosJObject["codigo"] as String
-                                val nombre = alumnosJObject["Nombrecompleto"] as String
-                                val cantAsis = alumnosJObject["asistencia"] as Int
-                                val cantTard = alumnosJObject["tardanza"] as Int
-                                val cantFalt = alumnosJObject["falta"] as Int
-                                val total = alumnosJObject["TotalSesiones"] as Int
+            { response ->
+                prbCargando_seguimientoalumno.visibility = View.GONE
+                try {
+                    val alumnosJArray = response["ListarRecordAsistenciaPorAlumnoResult"] as JSONArray
+                    if (alumnosJArray.length() > 0) {
+                        val listaAlumnos = ArrayList<AlumnoShort>()
+                        for (i in 0 until alumnosJArray.length()) {
+                            val alumnosJObject = alumnosJArray[i] as JSONObject
+                            val codigo = alumnosJObject["codigo"] as String
+                            val nombre = alumnosJObject["Nombrecompleto"] as String
+                            val cantAsis = alumnosJObject["asistencia"] as Int
+                            val cantTard = alumnosJObject["tardanza"] as Int
+                            val cantFalt = alumnosJObject["falta"] as Int
+                            val total = alumnosJObject["TotalSesiones"] as Int
 
-                                listaAlumnos.add(AlumnoShort(codigo, nombre, cantAsis, cantTard, cantFalt, total))
-                            }
-
-                            //rvAlumno_seguimientoalumno.adapter = SeguimientoAlumnoAdapter(listaAlumnos, anchoPantalla, densidad)
-                            lstAlumno_seguimientoalumno.adapter = SeguimientoAlumnoLinearAdapter(this, listaAlumnos,  anchoPantalla, densidad)
-                        } else {
-                            lblMensaje_seguimientoalumno.visibility = View.VISIBLE
-                            lblMensaje_seguimientoalumno.text = resources.getString(R.string.info_noalumnosmatriculados)
+                            listaAlumnos.add(AlumnoShort(codigo, nombre, cantAsis, cantTard, cantFalt, total))
                         }
-                    } catch (jex: JSONException) {
+
+                        //rvAlumno_seguimientoalumno.adapter = SeguimientoAlumnoAdapter(listaAlumnos, anchoPantalla, densidad)
+                        lstAlumno_seguimientoalumno.adapter = SeguimientoAlumnoLinearAdapter(this, listaAlumnos,  anchoPantalla, densidad)
+                    } else {
                         lblMensaje_seguimientoalumno.visibility = View.VISIBLE
-                        lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
-                    } catch (ccax: ClassCastException) {
-                        lblMensaje_seguimientoalumno.visibility = View.VISIBLE
-                        lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
+                        lblMensaje_seguimientoalumno.text = resources.getString(R.string.info_noalumnosmatriculados)
                     }
-                },
-                Response.ErrorListener { error ->
-                    println(error)
-                    prbCargando_seguimientoalumno.visibility = View.GONE
+                } catch (jex: JSONException) {
+                    lblMensaje_seguimientoalumno.visibility = View.VISIBLE
+                    lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
+                } catch (ccax: ClassCastException) {
                     lblMensaje_seguimientoalumno.visibility = View.VISIBLE
                     lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
                 }
+            },
+            { error ->
+                prbCargando_seguimientoalumno.visibility = View.GONE
+                lblMensaje_seguimientoalumno.visibility = View.VISIBLE
+                lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
+            }
         )
         jsObjectReques.tag = TAG
         requestQueue?.add(jsObjectReques)

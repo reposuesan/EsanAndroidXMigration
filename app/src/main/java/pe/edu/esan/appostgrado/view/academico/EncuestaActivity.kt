@@ -80,15 +80,12 @@ class EncuestaActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
     }
 
@@ -104,7 +101,6 @@ class EncuestaActivity : AppCompatActivity() {
 
                 if (user.tipoAlumno == Utilitarios.PRE) {
 
-                    println("PREGRADO")
                     val cursoPre = ControlUsuario.instance.currentCursoPre
                     if (cursoPre != null) {
 
@@ -126,7 +122,6 @@ class EncuestaActivity : AppCompatActivity() {
                         finish()
                     }
                 } else {
-                    println("POSTGRADO")
                     val cursoPost = ControlUsuario.instance.currentCursoPost
                     if (cursoPost != null) {
                         totalEncuesta = cursoPost.listaSeccionEncuesta.size
@@ -152,93 +147,89 @@ class EncuestaActivity : AppCompatActivity() {
     }
 
     private fun onPreguntasEncuesta(url: String, request: JSONObject) {
-        println(url)
-        println(request)
         puedeEnviar = false
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
-                    println(response.toString())
-                    try {
-                        val preguntasJArray = Utilitarios.jsArrayDesencriptar(response["ListarEncuestaPreguntaResult"] as String, this)
-                        if (preguntasJArray != null) {
-                            println(preguntasJArray.toString())
-                            if (preguntasJArray.length() > 0) {
-                                val listaPreguntas = ArrayList<PreguntaEncuesta>()
-                                var header = ""
-                                //var orden = 0
-                                for (i in 0 until preguntasJArray.length()) {
-                                    val preguntaJObject = preguntasJArray[i] as JSONObject
-                                    val esTexto = preguntaJObject["EsTexto"] as Boolean
-                                    val tipoPregunta = if (esTexto) Utilitarios.TipoPreguntaEncuesta.PREGUNTADOS else Utilitarios.TipoPreguntaEncuesta.PREGUNTAUNO
-                                    val cabecera = (preguntaJObject["GrupoNombre"] as String).trim()
-                                    val grupoOrden = preguntaJObject["GrupoOrden"] as Int
-                                    val idEncuesta = preguntaJObject["IdEncuesta"] as Int
-                                    val idPregunta = preguntaJObject["IdPregunta"] as Int
-                                    val pregunta = (preguntaJObject["Pregunta"] as String).trim()
-                                    val preguntaOrden = preguntaJObject["PreguntaOrden"] as Int
+            { response ->
+                try {
+                    val preguntasJArray = Utilitarios.jsArrayDesencriptar(response["ListarEncuestaPreguntaResult"] as String, this)
+                    if (preguntasJArray != null) {
+                        if (preguntasJArray.length() > 0) {
+                            val listaPreguntas = ArrayList<PreguntaEncuesta>()
+                            var header = ""
+                            //var orden = 0
+                            for (i in 0 until preguntasJArray.length()) {
+                                val preguntaJObject = preguntasJArray[i] as JSONObject
+                                val esTexto = preguntaJObject["EsTexto"] as Boolean
+                                val tipoPregunta = if (esTexto) Utilitarios.TipoPreguntaEncuesta.PREGUNTADOS else Utilitarios.TipoPreguntaEncuesta.PREGUNTAUNO
+                                val cabecera = (preguntaJObject["GrupoNombre"] as String).trim()
+                                val grupoOrden = preguntaJObject["GrupoOrden"] as Int
+                                val idEncuesta = preguntaJObject["IdEncuesta"] as Int
+                                val idPregunta = preguntaJObject["IdPregunta"] as Int
+                                val pregunta = (preguntaJObject["Pregunta"] as String).trim()
+                                val preguntaOrden = preguntaJObject["PreguntaOrden"] as Int
 
-                                    if (header == "") {
+                                if (header == "") {
+                                    header = cabecera
+                                    //orden = grupoOrden
+
+                                    listaPreguntas.add(PreguntaEncuesta(Utilitarios.TipoPreguntaEncuesta.CABECERA, header, grupoOrden, 0, 0, "", 0))
+                                    listaPreguntas.add(PreguntaEncuesta(tipoPregunta, "", grupoOrden, idEncuesta, idPregunta, pregunta, preguntaOrden))
+                                } else {
+                                    if (header == cabecera) {
+                                        listaPreguntas.add(PreguntaEncuesta(tipoPregunta, "", grupoOrden, idEncuesta, idPregunta, pregunta, preguntaOrden))
+                                    } else {
                                         header = cabecera
                                         //orden = grupoOrden
 
                                         listaPreguntas.add(PreguntaEncuesta(Utilitarios.TipoPreguntaEncuesta.CABECERA, header, grupoOrden, 0, 0, "", 0))
                                         listaPreguntas.add(PreguntaEncuesta(tipoPregunta, "", grupoOrden, idEncuesta, idPregunta, pregunta, preguntaOrden))
-                                    } else {
-                                        if (header == cabecera) {
-                                            listaPreguntas.add(PreguntaEncuesta(tipoPregunta, "", grupoOrden, idEncuesta, idPregunta, pregunta, preguntaOrden))
-                                        } else {
-                                            header = cabecera
-                                            //orden = grupoOrden
-
-                                            listaPreguntas.add(PreguntaEncuesta(Utilitarios.TipoPreguntaEncuesta.CABECERA, header, grupoOrden, 0, 0, "", 0))
-                                            listaPreguntas.add(PreguntaEncuesta(tipoPregunta, "", grupoOrden, idEncuesta, idPregunta, pregunta, preguntaOrden))
-                                        }
                                     }
                                 }
-
-                                adapterEncuesta = EncuestaAdapter(listaPreguntas) {
-                                    if (listaPreguntas.size > 0) {
-                                        var cantResueltas = 0
-                                        var cantFaltan = 0
-                                        for (pregunta in listaPreguntas) {
-                                            if (pregunta.tipo == Utilitarios.TipoPreguntaEncuesta.PREGUNTAUNO) {
-                                                if (pregunta.puntaje.trim() == "0") cantFaltan++
-                                                else cantResueltas++
-                                            } else if (pregunta.tipo == Utilitarios.TipoPreguntaEncuesta.PREGUNTADOS) {
-                                                if (pregunta.respuesta.trim() == "") cantFaltan++
-                                                else cantResueltas++
-                                            }
-                                        }
-                                        val porcentaje = (cantResueltas * 100) / (cantFaltan + cantResueltas)
-                                        when (porcentaje) {
-                                            //in 0..49 -> lblPorcentaje_encuesta.setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                                            in 0..99 -> lblPorcentaje_encuesta.setTextColor(ContextCompat.getColor(this, R.color.incompleto))
-                                            else -> lblPorcentaje_encuesta.setTextColor(ContextCompat.getColor(this, R.color.completo))
-                                        }
-                                        lblPorcentaje_encuesta.text = porcentaje.toString() + "%"
-                                    } else {
-                                        lblPorcentaje_encuesta.visibility = View.GONE
-                                    }
-                                }
-                                rvPreguntas_encuesta.visibility = View.VISIBLE
-                                rvPreguntas_encuesta.adapter = adapterEncuesta
-                                puedeEnviar = true
                             }
-                        } else {
 
+                            adapterEncuesta = EncuestaAdapter(listaPreguntas) {
+                                if (listaPreguntas.size > 0) {
+                                    var cantResueltas = 0
+                                    var cantFaltan = 0
+                                    for (pregunta in listaPreguntas) {
+                                        if (pregunta.tipo == Utilitarios.TipoPreguntaEncuesta.PREGUNTAUNO) {
+                                            if (pregunta.puntaje.trim() == "0") cantFaltan++
+                                            else cantResueltas++
+                                        } else if (pregunta.tipo == Utilitarios.TipoPreguntaEncuesta.PREGUNTADOS) {
+                                            if (pregunta.respuesta.trim() == "") cantFaltan++
+                                            else cantResueltas++
+                                        }
+                                    }
+                                    val porcentaje = (cantResueltas * 100) / (cantFaltan + cantResueltas)
+                                    when (porcentaje) {
+                                        //in 0..49 -> lblPorcentaje_encuesta.setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                        in 0..99 -> lblPorcentaje_encuesta.setTextColor(ContextCompat.getColor(this, R.color.incompleto))
+                                        else -> lblPorcentaje_encuesta.setTextColor(ContextCompat.getColor(this, R.color.completo))
+                                    }
+                                    lblPorcentaje_encuesta.text = porcentaje.toString() + "%"
+                                } else {
+                                    lblPorcentaje_encuesta.visibility = View.GONE
+                                }
+                            }
+                            rvPreguntas_encuesta.visibility = View.VISIBLE
+                            rvPreguntas_encuesta.adapter = adapterEncuesta
+                            puedeEnviar = true
                         }
-                    } catch (jex: JSONException) {
-
-                    } catch (ccex: ClassCastException) {
+                    } else {
 
                     }
-                },
-                Response.ErrorListener { error ->
-                    println(error.toString())
+                } catch (jex: JSONException) {
+
+                } catch (ccex: ClassCastException) {
+
                 }
+            },
+            { error ->
+                error.printStackTrace()
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
@@ -341,63 +332,59 @@ class EncuestaActivity : AppCompatActivity() {
     }
 
     private fun onEnviarEncuesta (url: String, request: JSONObject, esPregrado: Boolean) {
-        println(url)
-        println(request)
         CustomDialog.instance.showDialogLoad(this)
 
         requestQueueEnviar = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
-                    CustomDialog.instance.dialogoCargando?.dismiss()
-                    try {
-                        println(response.toString())
-                        val respuesta = Utilitarios.stringDesencriptar(response["RegistrarEncuestaRespuestaByAlumnoResult"] as String, this)
-                        println(respuesta)
-                        println("----------------------------------------")
-                        if (respuesta != null) {
-                            if (respuesta == "true") {
-                                lblPorcentaje_encuesta.setTextColor(ContextCompat.getColor(this, R.color.incompleto))
-                                lblPorcentaje_encuesta.text = "0 %"
+            { response ->
+                CustomDialog.instance.dialogoCargando?.dismiss()
+                try {
+                    val respuesta = Utilitarios.stringDesencriptar(response["RegistrarEncuestaRespuestaByAlumnoResult"] as String, this)
 
-                                verificarEncuestas(esPregrado)
-                            } else {
-                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.advertencia_no_registro_encuesta), Snackbar.LENGTH_LONG)
-                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
-                                snack.show()
-                            }
+                    if (respuesta != null) {
+                        if (respuesta == "true") {
+                            lblPorcentaje_encuesta.setTextColor(ContextCompat.getColor(this, R.color.incompleto))
+                            lblPorcentaje_encuesta.text = "0 %"
+
+                            verificarEncuestas(esPregrado)
                         } else {
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.advertencia_no_registro_encuesta), Snackbar.LENGTH_LONG)
                             snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
                             snack.show()
                         }
-                    } catch (jex: JSONException) {
-                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
-                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    } else {
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
                         snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                        snack.show()
-                    } catch (ccax: ClassCastException) {
-                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
-                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
                         snack.show()
                     }
-                },
-                Response.ErrorListener { error ->
-                    CustomDialog.instance.dialogoCargando?.dismiss()
+                } catch (jex: JSONException) {
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                } catch (ccax: ClassCastException) {
                     val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
                     snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
                     snack.show()
                 }
+            },
+            { error ->
+                CustomDialog.instance.dialogoCargando?.dismiss()
+                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
+                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                snack.show()
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueueEnviar?.add(jsObjectRequest)
@@ -405,8 +392,6 @@ class EncuestaActivity : AppCompatActivity() {
 
     private fun verificarEncuestas(esPregrado: Boolean) {
         contador += 1
-        println(contador)
-        println(totalEncuesta)
         if (contador == totalEncuesta) {
             puedeEnviar = false
             rvPreguntas_encuesta.visibility = View.GONE

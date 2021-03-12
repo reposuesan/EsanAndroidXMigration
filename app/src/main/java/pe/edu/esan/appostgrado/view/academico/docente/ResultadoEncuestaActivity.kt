@@ -81,15 +81,12 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest(seccion)
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
 
     }
@@ -102,7 +99,6 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
         request.put("Seccion", seccion)
         request.put("IdEncuesta", 0)
         request.put("IdProgramacion", 0)
-        println(request);
 
         val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
         if (requestEncriptado != null) {
@@ -114,53 +110,48 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
     }
 
     private fun onResultadoEncuestaCabecera(url: String, request: JSONObject) {
-        println(url)
-        println(request)
         prbCargando_resultadoencuesta.visibility = View.VISIBLE
         lblMensaje_resultadoencuesta.visibility = View.GONE
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest(
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        val cabeceraEncuestaJObject = Utilitarios.jsObjectDesencriptar(response["ObtenerEncuestaPorProfesorResult"] as String, this)
-                        println(response)
-                        println(cabeceraEncuestaJObject)
-                        if (cabeceraEncuestaJObject != null) {
-                            val ap = cabeceraEncuestaJObject["APIndiceAprobacion"] as Double
-                            val dp = cabeceraEncuestaJObject["DPIndiceDesaprobacion"] as Double
-                            val avg = cabeceraEncuestaJObject["PromedioEvaluacion"] as Double
+            { response ->
+                try {
+                    val cabeceraEncuestaJObject = Utilitarios.jsObjectDesencriptar(response["ObtenerEncuestaPorProfesorResult"] as String, this)
 
-                            val totalPorEvaluar = cabeceraEncuestaJObject["TotalEvaluadores"] as Int
-                            val siEvaluaron = cabeceraEncuestaJObject["TotalEvaluaron"] as Int
-                            val noEvaluaron = cabeceraEncuestaJObject["TotalNoEvaluaron"] as Int
+                    if (cabeceraEncuestaJObject != null) {
+                        val ap = cabeceraEncuestaJObject["APIndiceAprobacion"] as Double
+                        val dp = cabeceraEncuestaJObject["DPIndiceDesaprobacion"] as Double
+                        val avg = cabeceraEncuestaJObject["PromedioEvaluacion"] as Double
 
-                            Log.d(LOG ,"TotalEvaluadores => $totalPorEvaluar / TotalEvaluaron => $siEvaluaron/ TotalNoEvaluaron => $noEvaluaron")
+                        val totalPorEvaluar = cabeceraEncuestaJObject["TotalEvaluadores"] as Int
+                        val siEvaluaron = cabeceraEncuestaJObject["TotalEvaluaron"] as Int
+                        val noEvaluaron = cabeceraEncuestaJObject["TotalNoEvaluaron"] as Int
 
-                            val resultadoEncuesta = ResultadoEncuesta(Utilitarios.TipoFila.CABECERA, resources.getString(R.string.resumen), totalPorEvaluar, siEvaluaron, noEvaluaron, ap, dp, avg)
+                        val resultadoEncuesta = ResultadoEncuesta(Utilitarios.TipoFila.CABECERA, resources.getString(R.string.resumen), totalPorEvaluar, siEvaluaron, noEvaluaron, ap, dp, avg)
 
-                            onResultadoEncuestaDetalle(Utilitarios.getUrl(Utilitarios.URL.RESULTADO_ENCUESTA_DETALLE), request, resultadoEncuesta)
-                        } else {
-                            lblMensaje_resultadoencuesta.text = resources.getString(R.string.no_existe_resultado_encuesta)
-                            lblMensaje_resultadoencuesta.visibility = View.VISIBLE
-                            prbCargando_resultadoencuesta.visibility = View.GONE
-                        }
-                    } catch (jex: JSONException) {
-                        lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
-                        lblMensaje_resultadoencuesta.visibility = View.VISIBLE
-                        prbCargando_resultadoencuesta.visibility = View.GONE
-                    } catch (cca: ClassCastException) {
-                        lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                        onResultadoEncuestaDetalle(Utilitarios.getUrl(Utilitarios.URL.RESULTADO_ENCUESTA_DETALLE), request, resultadoEncuesta)
+                    } else {
+                        lblMensaje_resultadoencuesta.text = resources.getString(R.string.no_existe_resultado_encuesta)
                         lblMensaje_resultadoencuesta.visibility = View.VISIBLE
                         prbCargando_resultadoencuesta.visibility = View.GONE
                     }
-                },
-                Response.ErrorListener { error ->
+                } catch (jex: JSONException) {
+                    lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                    lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                    prbCargando_resultadoencuesta.visibility = View.GONE
+                } catch (cca: ClassCastException) {
                     lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
                     lblMensaje_resultadoencuesta.visibility = View.VISIBLE
                     prbCargando_resultadoencuesta.visibility = View.GONE
                 }
+            },
+            { error ->
+                lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                prbCargando_resultadoencuesta.visibility = View.GONE
+            }
         )
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
@@ -168,79 +159,72 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
     }
 
     private fun onResultadoEncuestaDetalle(url: String, request: JSONObject, resultadoEncuesta: ResultadoEncuesta) {
-        println(url)
-        println(request)
 
         val jsObjectRequest = JsonObjectRequest(
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        val resultadoEncuestaJArray = Utilitarios.jsArrayDesencriptar(response["ListarEncuestaRespuestaPorProfesorResult"] as String, this)
-                        if (resultadoEncuestaJArray != null) {
-                            if (resultadoEncuestaJArray.length() > 0) {
-                                var ultimoGrupo = ""
-                                val grupoPreguntas = ArrayList<GrupoPregunta>()
-                                for (i in 0 until resultadoEncuestaJArray.length()) {
-                                    val detalleJObject = resultadoEncuestaJArray[i] as JSONObject
-                                    val grupo = detalleJObject["GrupoNombre"] as String
-                                    val pregunta = detalleJObject["Pregunta"] as String
-                                    val ap = detalleJObject["APIndiceAprobacion"] as Double
-                                    val dp = detalleJObject["DPIndiceDesaprobacion"] as Double
-                                    val avg = detalleJObject["AVGPuntaje"] as Double
+            { response ->
+                try {
+                    val resultadoEncuestaJArray = Utilitarios.jsArrayDesencriptar(response["ListarEncuestaRespuestaPorProfesorResult"] as String, this)
+                    if (resultadoEncuestaJArray != null) {
+                        if (resultadoEncuestaJArray.length() > 0) {
+                            var ultimoGrupo = ""
+                            val grupoPreguntas = ArrayList<GrupoPregunta>()
+                            for (i in 0 until resultadoEncuestaJArray.length()) {
+                                val detalleJObject = resultadoEncuestaJArray[i] as JSONObject
+                                val grupo = detalleJObject["GrupoNombre"] as String
+                                val pregunta = detalleJObject["Pregunta"] as String
+                                val ap = detalleJObject["APIndiceAprobacion"] as Double
+                                val dp = detalleJObject["DPIndiceDesaprobacion"] as Double
+                                val avg = detalleJObject["AVGPuntaje"] as Double
 
-                                    if (ultimoGrupo == "") {
+                                if (ultimoGrupo == "") {
+                                    ultimoGrupo = grupo
+                                    grupoPreguntas.add(GrupoPregunta(Utilitarios.TipoFila.CABECERA, ultimoGrupo))
+                                    grupoPreguntas.add(GrupoPregunta(Utilitarios.TipoFila.DETALLE, pregunta, ap, dp, avg))
+                                } else {
+                                    if (ultimoGrupo == grupo) {
+                                        grupoPreguntas.add(GrupoPregunta(Utilitarios.TipoFila.DETALLE, pregunta, ap, dp, avg))
+                                    } else {
                                         ultimoGrupo = grupo
                                         grupoPreguntas.add(GrupoPregunta(Utilitarios.TipoFila.CABECERA, ultimoGrupo))
                                         grupoPreguntas.add(GrupoPregunta(Utilitarios.TipoFila.DETALLE, pregunta, ap, dp, avg))
-                                    } else {
-                                        if (ultimoGrupo == grupo) {
-                                            grupoPreguntas.add(GrupoPregunta(Utilitarios.TipoFila.DETALLE, pregunta, ap, dp, avg))
-                                        } else {
-                                            ultimoGrupo = grupo
-                                            grupoPreguntas.add(GrupoPregunta(Utilitarios.TipoFila.CABECERA, ultimoGrupo))
-                                            grupoPreguntas.add(GrupoPregunta(Utilitarios.TipoFila.DETALLE, pregunta, ap, dp, avg))
-                                        }
                                     }
                                 }
-                                resultadoEncuesta.preguntas = grupoPreguntas
-
-                                val displaymetrisc = DisplayMetrics()
-                                windowManager.defaultDisplay.getMetrics(displaymetrisc)
-
-
-                                rvResultadoEncuesta.adapter = ResultadoEncuestaAdapter(resultadoEncuesta, displaymetrisc.densityDpi)
-                                prbCargando_resultadoencuesta.visibility = View.GONE
-                            } else {
-                                println("NO HAY DETALLE")
-                                lblMensaje_resultadoencuesta.text = resources.getString(R.string.no_existe_resultado_encuesta)
-                                lblMensaje_resultadoencuesta.visibility = View.VISIBLE
-                                prbCargando_resultadoencuesta.visibility = View.GONE
                             }
+                            resultadoEncuesta.preguntas = grupoPreguntas
+
+                            val displaymetrisc = DisplayMetrics()
+                            windowManager.defaultDisplay.getMetrics(displaymetrisc)
+
+
+                            rvResultadoEncuesta.adapter = ResultadoEncuestaAdapter(resultadoEncuesta, displaymetrisc.densityDpi)
+                            prbCargando_resultadoencuesta.visibility = View.GONE
                         } else {
-                            println("NULL DETALLE")
                             lblMensaje_resultadoencuesta.text = resources.getString(R.string.no_existe_resultado_encuesta)
                             lblMensaje_resultadoencuesta.visibility = View.VISIBLE
                             prbCargando_resultadoencuesta.visibility = View.GONE
                         }
-                    } catch (jex: JSONException) {
-                        println("ERROR JSON")
-                        lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
-                        lblMensaje_resultadoencuesta.visibility = View.VISIBLE
-                        prbCargando_resultadoencuesta.visibility = View.GONE
-                    } catch (cce: ClassCastException) {
-                        println("ERROR JSON")
-                        lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                    } else {
+                        lblMensaje_resultadoencuesta.text = resources.getString(R.string.no_existe_resultado_encuesta)
                         lblMensaje_resultadoencuesta.visibility = View.VISIBLE
                         prbCargando_resultadoencuesta.visibility = View.GONE
                     }
-                },
-                Response.ErrorListener { error ->
-                    println("ERROR SERVICIO")
+                } catch (jex: JSONException) {
+                    lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                    lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                    prbCargando_resultadoencuesta.visibility = View.GONE
+                } catch (cce: ClassCastException) {
                     lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
                     lblMensaje_resultadoencuesta.visibility = View.VISIBLE
                     prbCargando_resultadoencuesta.visibility = View.GONE
                 }
+            },
+            { error ->
+                lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                prbCargando_resultadoencuesta.visibility = View.GONE
+            }
         )
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG

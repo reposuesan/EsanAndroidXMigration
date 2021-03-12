@@ -159,8 +159,6 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
             //LISTAR DESDE LA HORA ACTUAL
             generarHorarioLabs(horaActualRespuestaServidor, 2300)
         } else {
-            Log.d(LOG,"Fuera del rango permitido. El alumno desea reservar después de las 23:00 horas.")
-
             horarioList.clear()
         }
 
@@ -222,12 +220,7 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
 
     fun revisarDisponibilidadLaboratoriosServicio(url: String, request: JSONObject) {
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         val fRequest = Utilitarios.jsObjectEncrypted(request, this@PregradoLabsHorarioActivity)
-
-        Log.i(LOG, fRequest.toString())
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -235,8 +228,7 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
-                    Log.i(LOG, response.toString())
+                { response ->
 
                     if (!response.isNull("ConsultarProgramasxHorarioResult")) {
 
@@ -245,11 +237,9 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                             this@PregradoLabsHorarioActivity
                         )
 
-                        Log.i(LOG, jsResponse!!.toString())
-
                         try {
                             //JSON Parsing
-                            if (jsResponse.length() > 0) {
+                            if (jsResponse!!.length() > 0) {
                                 if (programasList.isEmpty()) {
                                     for (i in 0..jsResponse.length() - 1) {
                                         val programaItem = jsResponse.getJSONObject(i)
@@ -288,7 +278,7 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
 
                                     dispositivo = "Android-$version"
                                 } catch (e: PackageManager.NameNotFoundException) {
-                                    Log.e(LOG, e.message.toString())
+                                    e.printStackTrace()
                                 }
 
                                 val intent = Intent(this, PregradoLabsSelectSoftwareActivity::class.java)
@@ -304,7 +294,6 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(intent)
                             } else {
-                                Log.e(LOG, "Response is empty")
 
                                 val intent = Intent(this, PregradoLabsSelectSoftwareActivity::class.java)
                                 intent.putExtra("empty_response", true)
@@ -313,7 +302,6 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                             }
 
                         } catch (e: Exception) {
-                            Log.e(LOG, e.message.toString())
 
                             main_container_horario_lab.visibility = View.GONE
                             progress_bar_horario_lab.visibility = View.GONE
@@ -332,9 +320,7 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
 
                     }
                 },
-                Response.ErrorListener { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
+                { error ->
 
                     main_container_horario_lab.visibility = View.GONE
                     progress_bar_horario_lab.visibility = View.GONE
@@ -391,11 +377,9 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
     override fun itemClick(position: Int, itemSelected: Boolean, rangoHora: String) {
         if (itemSelected && listHorasSeleccionadas.count() <= horasPermitidas * 2) {
             listHorasSeleccionadas.put(position.toString(), rangoHora)
-            Log.i(LOG, "Item agregado a lista: $position y $rangoHora")
 
         } else if (!itemSelected) {
             listHorasSeleccionadas.remove(position.toString())
-            Log.i(LOG, "Item removido de lista: $position y $rangoHora")
         } else {
             Log.i(LOG, "Máximo número de horas alcanzado")
         }
@@ -510,12 +494,7 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
 
     private fun verificarCambioHorarioServicio(url: String, request: JSONObject) {
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         val fRequest = Utilitarios.jsObjectEncrypted(request, this@PregradoLabsHorarioActivity)
-
-        Log.i(LOG, fRequest.toString())
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -523,18 +502,15 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
-                    Log.i(LOG, response.toString())
+                { response ->
                     if (!response.isNull("VerificarAlumnoReservaResult")) {
                         val jsResponse = Utilitarios.jsObjectDesencriptar(
                             response.getString("VerificarAlumnoReservaResult"),
                             this@PregradoLabsHorarioActivity
                         )
 
-                        Log.i(LOG, jsResponse!!.toString())
-
                         try {
-                            val horasDisp = jsResponse.optString("HorasDisp")
+                            val horasDisp = jsResponse!!.optString("HorasDisp")
                             val mensaje = jsResponse.optString("Mensaje")
                             //true es error y false es una operación exitosa
                             val indicador = jsResponse.optString("Indicador")
@@ -575,18 +551,13 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                             }
 
                         } catch (e: Exception) {
-                            Log.e(LOG, e.message.toString())
                             main_container_horario_lab.visibility = View.GONE
                             tv_consultando_disp_lab.text = getString(R.string.error_recuperacion_datos)
                             tv_consultando_disp_lab.visibility = View.VISIBLE
                         }
-
-                        Log.i(LOG, "IdConfiguracion es: $configuracionID")
                     }
                 },
-                Response.ErrorListener { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
+                { error ->
                     main_container_horario_lab.visibility = View.GONE
                     tv_consultando_disp_lab.text = getString(R.string.no_respuesta_desde_servidor)
                     tv_consultando_disp_lab.visibility = View.VISIBLE

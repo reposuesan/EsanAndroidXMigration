@@ -85,13 +85,7 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
 
     fun listaPrereservasPorAlumnoServicio(url: String, request: JSONObject) {
 
-        Log.i(LOG, url)
-
-        Log.i(LOG, request.toString())
-
         val fRequest = Utilitarios.jsObjectEncrypted(request, this)
-
-        Log.i(LOG, fRequest.toString())
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -99,16 +93,13 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
-                    Log.i(LOG, response.toString())
+                { response ->
                     if (!response.isNull("ListaPreReservasxAlumnoResult")) {
                         val jsResponse = Utilitarios.jsArrayDesencriptar(response.getString("ListaPreReservasxAlumnoResult"), this@PregradoCubsHistorialActivity)
 
-                        Log.i(LOG, jsResponse!!.toString())
-
                         try {
 
-                            if(jsResponse.length() > 0){
+                            if(jsResponse!!.length() > 0){
 
                             for (i in 0..jsResponse.length() - 1) {
                                 val reservaItem = jsResponse.getJSONObject(i)
@@ -153,7 +144,6 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
                             }
 
                         } catch (e: Exception) {
-                            Log.e(LOG, e.message.toString())
                             val snack = Snackbar.make(
                                 findViewById(android.R.id.content),
                                 getString(R.string.error_servidor_extraccion_datos),
@@ -169,9 +159,8 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
                         }
                     }
                 },
-                Response.ErrorListener { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
+                { error ->
+                    error.printStackTrace()
 
                     progress_bar_historial.visibility = View.GONE
                     tv_cargando_integrantes.visibility = View.GONE
@@ -217,14 +206,8 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
     }
 
     fun muestraIntegrantesDeGrupoServicio(url: String, request: JSONObject){
-        Log.i(LOG, url)
-
-        Log.i(LOG, request.toString())
 
         val fRequest = Utilitarios.jsObjectEncrypted(request, this)
-
-        Log.i(LOG, fRequest.toString())
-
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -232,15 +215,12 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
-                    Log.i(LOG, response.toString())
+                { response ->
                     if (!response.isNull("ListaAlumnosxGrupoResult")) {
                         val jsResponse = Utilitarios.jsArrayDesencriptar(response.getString("ListaAlumnosxGrupoResult"), this@PregradoCubsHistorialActivity)
 
-                        Log.i(LOG, jsResponse!!.toString())
-
                         try {
-                            if(jsResponse.length() > 0){
+                            if(jsResponse!!.length() > 0){
 
                                 val stringBuilder = StringBuilder()
                                 val creadorLabel = getString(R.string.creador_text_for_historial)
@@ -272,19 +252,16 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
                                 showMiembrosDelGrupo(messageString.substring(0, messageString.length - 2),true)
 
                             } else {
-                                Log.e(LOG,"Response is empty")
                                 showMiembrosDelGrupo(getString(R.string.error_recuperacion_datos),false)
                             }
 
                         } catch (e: Exception) {
-                            Log.e(LOG, e.message.toString())
                             showMiembrosDelGrupo(getString(R.string.error_recuperacion_datos),false)
                         }
                     }
                 },
-                Response.ErrorListener { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
+                { error ->
+                    error.printStackTrace()
                     showMiembrosDelGrupo(getString(R.string.no_respuesta_desde_servidor),false)
                 }
             )

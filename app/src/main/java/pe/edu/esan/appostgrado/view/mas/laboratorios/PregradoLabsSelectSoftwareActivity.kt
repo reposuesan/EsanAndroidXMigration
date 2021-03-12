@@ -406,11 +406,7 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
 
     fun registrarPrereservaLabServicio(url: String, request: JSONObject){
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         val fRequest = Utilitarios.jsObjectEncrypted(request, this@PregradoLabsSelectSoftwareActivity)
-        Log.i(LOG, fRequest.toString())
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -418,19 +414,16 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
-                    Log.i(LOG, response.toString())
+                { response ->
                     if (!response.isNull("RegistrarPreReservaLaboratorioResult")) {
                         val jsResponse = Utilitarios.jsObjectDesencriptar(response.getString("RegistrarPreReservaLaboratorioResult"), this@PregradoLabsSelectSoftwareActivity)
-
-                        Log.i(LOG, jsResponse!!.toString())
 
                         progress_bar_select_software_lab.visibility = View.GONE
                         tv_empty_select_software_lab.visibility = View.GONE
                         select_software_lab_container.visibility = View.VISIBLE
 
                         try {
-                            val maquinaId = jsResponse.optString("IdMaquina")
+                            val maquinaId = jsResponse!!.optString("IdMaquina")
                             var mensajeRespuesta = jsResponse.optString("Mensaje")
 
                             val language = Locale.getDefault().displayLanguage
@@ -475,7 +468,6 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
                             showDialogWithOption(mensajeRespuesta, successMessage)
 
                         } catch (e: Exception) {
-                            Log.e(LOG, e.message.toString())
                             tv_empty_select_software_lab.text = getString(R.string.error_recuperacion_datos)
                             tv_empty_select_software_lab.visibility = View.VISIBLE
                             select_software_lab_container.visibility = View.GONE
@@ -484,9 +476,7 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
 
                     }
                 },
-                Response.ErrorListener { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
+                { error ->
                     tv_empty_select_software_lab.text = getString(R.string.no_respuesta_desde_servidor)
                     tv_empty_select_software_lab.visibility = View.VISIBLE
                     select_software_lab_container.visibility = View.GONE
@@ -554,13 +544,11 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
             //Agrega programa a la lista de items seleccionados
             programsIdsList.add(programaId)
             countForAdapter++
-            Log.i(LOG, "Item con id $programaId added to the list of ids")
         } else {
             //Remueve programa de la lista de items seleccionados
             if(programsIdsList.size != 0) {
                 programsIdsList.remove(programaId)
                 countForAdapter--
-                Log.i(LOG, "Item con id $programaId removed from the list of ids")
             }
         }
 

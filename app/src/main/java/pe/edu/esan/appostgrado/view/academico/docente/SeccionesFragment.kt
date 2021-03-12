@@ -48,8 +48,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        //println(TAG)
+        //Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_secciones, container, false)
     }
 
@@ -58,7 +57,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         controlViewModel = activity?.run {
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-        Log.w(LOG, "ViewModel is: $controlViewModel")
+
         view.swCurso_fseccion.setOnRefreshListener(this)
         view.swCurso_fseccion.setColorSchemeResources(
             R.color.s1,
@@ -75,7 +74,6 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        println(TAG)
         showSecciones()
     }
 
@@ -86,13 +84,10 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
             controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedSeccionesPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
-            Log.w(LOG, "controlViewModel.refreshData() was called")
             controlViewModel.refreshDataForFragment(true)
 
         }
@@ -105,8 +100,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         request.put("CodigoProfesor", usuario.codigo)
 
         val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
-        println(request)
-        println(requestEncriptado)
+
         if (requestEncriptado != null) {
             onSecciones(Utilitarios.getUrl(Utilitarios.URL.SECCIONES), requestEncriptado)
         } else {
@@ -116,8 +110,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
     }
 
     private fun onSecciones(url: String, request: JSONObject) {
-        println(url)
-        println(request.toString())
+
         prbCargando_fseccion.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity)
         val jsObjectRequest = JsonObjectRequest(
@@ -128,7 +121,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                     try {
                         val seccionJArray = Utilitarios.jsArrayDesencriptar(response["ListarSeccionesActualesPorProfesorResult"] as String, activity!!)
                         if (seccionJArray != null) {
-                            println(seccionJArray)
+
                             if (seccionJArray.length() > 0) {
 
                                 val listSecciones = ArrayList<Seccion>()
@@ -145,7 +138,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                                 }
 
                                 val adapter = SeccionAdapter(listSecciones) { seccion ->
-                                    //println(seccion.nombreCurso)
+
                                     ControlUsuario.instance.currentSeccion = seccion
                                     val intentOpciones = Intent(activity, SeccionOpcionesActivity::class.java)
                                     intentOpciones.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -174,7 +167,6 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                     prbCargando_fseccion.visibility = View.GONE
                 },
                 Response.ErrorListener { error ->
-                    println(error.message)
                     swCurso_fseccion.isRefreshing = false
                     prbCargando_fseccion.visibility = View.GONE
                     lblMensaje_fseccion.visibility = View.VISIBLE
@@ -192,7 +184,6 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
     }
 
     override fun onRefresh() {
-        println("REFRESH")
     }
 
 }// Required empty public constructor

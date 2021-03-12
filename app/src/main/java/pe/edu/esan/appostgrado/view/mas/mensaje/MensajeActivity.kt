@@ -74,15 +74,12 @@ class MensajeActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
     }
 
@@ -134,8 +131,6 @@ class MensajeActivity : AppCompatActivity() {
     private fun onMensaje(url: String, request: JSONObject) {
         prbCargando_mensaje.visibility = View.VISIBLE
         rvMensaje_mensaje.visibility = View.GONE
-        println(url)
-        println(request)
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest (
                 url,
@@ -150,7 +145,7 @@ class MensajeActivity : AppCompatActivity() {
                                 val mensajeJObject = mensajeJArray[i] as JSONObject
                                 val noleido = mensajeJObject["Activo"] as Boolean
                                 val mensaje = mensajeJObject["Descripcion"] as String
-                                println(mensajeJObject["FechaCreacion"] as String)
+
                                 val fechaCreacion = Utilitarios.getStringToStringddMMyyyyHHmmThree(mensajeJObject["FechaCreacion"] as String)
                                 val idSeguimiento = mensajeJObject["IdSeguimiento"] as String
                                 val titulo = mensajeJObject["Titulo"] as String
@@ -160,7 +155,7 @@ class MensajeActivity : AppCompatActivity() {
                             }
 
                             mensajeAdapter = MensajeAdapter(ListaMensajes) { mensaje, position ->
-                                println("Mensaje")
+
                                 val alertReturn = AlertDialog.Builder(this)
                                     .setTitle(mensaje.titulo)
                                     .setMessage(mensaje.mensaje)

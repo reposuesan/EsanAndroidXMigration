@@ -148,12 +148,7 @@ class PregradoCubsRegistroActivity : AppCompatActivity() {
 
     fun verificarGrupoAlumnosReservaServicio(url: String, request: JSONObject){
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         val fRequest = Utilitarios.jsObjectEncrypted(request, this)
-
-        Log.i(LOG, fRequest.toString())
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -161,19 +156,15 @@ class PregradoCubsRegistroActivity : AppCompatActivity() {
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
-                    Log.i(LOG, response.toString())
+                { response ->
                     if (!response.isNull("VerificarGrupoAlumnosReservaResult")) {
                         val jsResponse = Utilitarios.jsObjectDesencriptar(response.getString("VerificarGrupoAlumnosReservaResult"), this@PregradoCubsRegistroActivity)
                         try {
-                            if(jsResponse != null) {
-                                Log.i(LOG, jsResponse.toString())
-                            }
 
                             val horasDisp = jsResponse!!.getString("HorasDisp")
                             val mensajeRespuesta = jsResponse.getString("Mensaje")
                             val indicador = jsResponse.getString("Indicador")
-                            Log.w(LOG, "Indicador es: $indicador")
+
                             /*
                             if(horasDisp.toInt() > 0) {
                             if(indicador.equals("False")) {
@@ -236,9 +227,8 @@ class PregradoCubsRegistroActivity : AppCompatActivity() {
 
                     }
                 },
-                Response.ErrorListener { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
+                { error ->
+                    error.printStackTrace()
 
                     main_container_registro_cubs.visibility = View.GONE
                     progress_bar_registro_prereserva_pp.visibility = View.GONE

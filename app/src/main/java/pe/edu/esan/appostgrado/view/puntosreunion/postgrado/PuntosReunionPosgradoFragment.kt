@@ -52,7 +52,6 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        println("****************** PUNTOS DE REUNION ****************")
         val view = inflater.inflate(R.layout.fragment_puntos_reunion_postgrado, container, false)
 
         view.rvOpciones_fpuntosreunion.layoutManager =
@@ -68,7 +67,6 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
         controlViewModel = activity?.run {
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-        Log.w(LOG, "ViewModel is: $controlViewModel")
         view.rvOpciones_fpuntosreunion.layoutManager =
             androidx.recyclerview.widget.LinearLayoutManager(activity!!)
         view.rvOpciones_fpuntosreunion.adapter = null
@@ -102,13 +100,10 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
             controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedPuntosReunionPostPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
-            Log.w(LOG, "controlViewModel.refreshData() was called")
             controlViewModel.refreshDataForFragment(true)
         }
     }
@@ -119,8 +114,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
         val request = JSONObject()
         request.put("CodAlumno", usuario.codigo)
         request.put("Facultad", if (usuario.tipoAlumno.equals(Utilitarios.POS)) 1 else 2)
-        println("PROMOCION-------------******")
-        println(request)
+
         val requestEncritado = Utilitarios.jsObjectEncrypted(request, activity!!)
 
         if (requestEncritado != null)
@@ -132,8 +126,6 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun onPromocion(url: String, request: JSONObject) {
-        println(url)
-        println(request.toString())
 
         prbCargando_fpuntosreunion.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity!!)
@@ -141,71 +133,70 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        if (!response.isNull("ListarPromocionxAlumnoResult")) {
-                            val promocionJArray = Utilitarios.jsArrayDesencriptar(response["ListarPromocionxAlumnoResult"] as String, context!!)
-                            println(promocionJArray)
-                            if (promocionJArray != null) {
-                                if (promocionJArray.length() > 0) {
-                                    val listaPromocion = ArrayList<Promocion>()
-                                    for (i in 0 until promocionJArray.length()) {
-                                        val promocionJObject = promocionJArray[i] as JSONObject
-                                        val idPromo = promocionJObject["IdPromocion"] as Int
-                                        val codigo = promocionJObject["PromocionCodigo"] as String
-                                        val nombre = promocionJObject["PromocionNombre"] as String
-                                        val idGrupoPromo = promocionJObject["IdGrupo"] as Int
+            { response ->
+                try {
+                    if (!response.isNull("ListarPromocionxAlumnoResult")) {
+                        val promocionJArray = Utilitarios.jsArrayDesencriptar(response["ListarPromocionxAlumnoResult"] as String, context!!)
 
-                                        listaPromocion.add(Promocion(idPromo, codigo, nombre, idGrupoPromo))
+                        if (promocionJArray != null) {
+                            if (promocionJArray.length() > 0) {
+                                val listaPromocion = ArrayList<Promocion>()
+                                for (i in 0 until promocionJArray.length()) {
+                                    val promocionJObject = promocionJArray[i] as JSONObject
+                                    val idPromo = promocionJObject["IdPromocion"] as Int
+                                    val codigo = promocionJObject["PromocionCodigo"] as String
+                                    val nombre = promocionJObject["PromocionNombre"] as String
+                                    val idGrupoPromo = promocionJObject["IdGrupo"] as Int
+
+                                    listaPromocion.add(Promocion(idPromo, codigo, nombre, idGrupoPromo))
+                                }
+
+                                val promocionAdapter = PromocionArrayAdapter(activity!!, listaPromocion)
+                                cmbPromocion_fpuntosreunion.adapter = promocionAdapter
+                                cmbPromocion_fpuntosreunion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                                    override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                                        lblMensaje_fpuntosreunion.visibility = View.GONE
+                                        showTipoGrupo(parent.getItemAtPosition(position) as Promocion)
                                     }
 
-                                    val promocionAdapter = PromocionArrayAdapter(activity!!, listaPromocion)
-                                    cmbPromocion_fpuntosreunion.adapter = promocionAdapter
-                                    cmbPromocion_fpuntosreunion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                                        override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                                            lblMensaje_fpuntosreunion.visibility = View.GONE
-                                            showTipoGrupo(parent.getItemAtPosition(position) as Promocion)
-                                        }
+                                    override fun onNothingSelected(parent: AdapterView<*>) {
 
-                                        override fun onNothingSelected(parent: AdapterView<*>) {
-
-                                        }
                                     }
+                                }
 
-                                    if (listaPromocion.size > 1) {
-                                        viewPrograma_fpuntosreunion.visibility = View.VISIBLE
-                                    } else {
-                                        showTipoGrupo(listaPromocion[0])
-                                    }
+                                if (listaPromocion.size > 1) {
+                                    viewPrograma_fpuntosreunion.visibility = View.VISIBLE
                                 } else {
-                                    lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                                    lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_permiso_opcion)
+                                    showTipoGrupo(listaPromocion[0])
                                 }
                             } else {
                                 lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_desencriptar)
+                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_permiso_opcion)
                             }
                         } else {
                             lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                            lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_permiso_opcion)
+                            lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_desencriptar)
                         }
-                    } catch (jex: JSONException) {
-                        rvOpciones_fpuntosreunion.visibility = View.GONE
+                    } else {
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
-                    } catch (ccex: ClassCastException) {
-                        rvOpciones_fpuntosreunion.visibility = View.GONE
-                        lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                        lblMensaje_fpuntosreunion.text = context!!.resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_permiso_opcion)
                     }
-                    prbCargando_fpuntosreunion.visibility = View.GONE
-                },
-                Response.ErrorListener { error ->
-                    println(error.message)
-                    prbCargando_fpuntosreunion.visibility = View.GONE
+                } catch (jex: JSONException) {
+                    rvOpciones_fpuntosreunion.visibility = View.GONE
                     lblMensaje_fpuntosreunion.visibility = View.VISIBLE
                     lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                } catch (ccex: ClassCastException) {
+                    rvOpciones_fpuntosreunion.visibility = View.GONE
+                    lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                    lblMensaje_fpuntosreunion.text = context!!.resources.getText(R.string.error_respuesta_server)
                 }
+                prbCargando_fpuntosreunion.visibility = View.GONE
+            },
+            { error ->
+                prbCargando_fpuntosreunion.visibility = View.GONE
+                lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
@@ -218,8 +209,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
         val request = JSONObject()
         request.put("IdPromocion", promocion.id)
         request.put("IdGrupo", promocion.idgrupo)
-        println("TIPO GRUPO-------------******")
-        println(request)
+
         val requestEncriptado = Utilitarios.jsObjectEncrypted(request, context!!)
 
         if (requestEncriptado != null)
@@ -231,72 +221,42 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun onTipoGrupo(url: String, request: JSONObject, idPromocion: Int, idGrupo: Int) {
-        println(url)
-        println(request.toString())
+
         prbCargando_fpuntosreunion.visibility = View.VISIBLE
         requestQueue2 = Volley.newRequestQueue(activity!!)
         val jsObjectRequest = JsonObjectRequest(
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        if (!response.isNull("ListarConfiguracionPromocionxAlumnoResult")) {
+            { response ->
+                try {
+                    if (!response.isNull("ListarConfiguracionPromocionxAlumnoResult")) {
 
-                            val tipogrupoJArray = Utilitarios.jsArrayDesencriptar(response["ListarConfiguracionPromocionxAlumnoResult"] as String, context!!)
-                            println(tipogrupoJArray)
-                            if (tipogrupoJArray != null) {
-                                if (tipogrupoJArray.length() > 0) {
-                                    val listaTipoGrupo = ArrayList<TipoGrupo>()
-                                    for (i in 0 until tipogrupoJArray.length()) {
-                                        val tipogrupoJObject = tipogrupoJArray[i] as JSONObject
-                                        val creagrupos = tipogrupoJObject["CreaGrupos"] as? Int ?: 0
-                                        val idConfiguracion = tipogrupoJObject["IdConfiguracion"] as Int
-                                        val tipoGrupo = tipogrupoJObject["ValTabla"] as String
-                                        val cantMaxAlumno = tipogrupoJObject["CantMaxAlumnos"] as Int
-                                        println("CANTIDAD: $cantMaxAlumno")
-                                        listaTipoGrupo.add(TipoGrupo(idConfiguracion, idPromocion, idGrupo, creagrupos, tipoGrupo, cantMaxAlumno))
-                                    }
+                        val tipogrupoJArray = Utilitarios.jsArrayDesencriptar(response["ListarConfiguracionPromocionxAlumnoResult"] as String, context!!)
 
-                                    val tipogrupoAdapter = TipoGrupoArrayAdapter(context!!, listaTipoGrupo)
-                                    cmbTipoGrupo_fpuntosreunion.adapter = tipogrupoAdapter
-                                    cmbTipoGrupo_fpuntosreunion.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-                                        override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                                            lblMensaje_fpuntosreunion.visibility = View.GONE
-                                            if (listaTipoGrupo[p2].creagrupo == 1) {
-                                                println("CREA GRUPO")
-                                                ControlUsuario.instance.prPromocionConfig = listaTipoGrupo[p2]
-                                                val listaOpciones = ArrayList<MasOpcion>()
-                                                listaOpciones.add(MasOpcion(1, Intent(activity!!, PRMiGrupoActivity::class.java), context!!.resources.getString(R.string.grupos), context!!.resources.getString(R.string.sub_grupos), activity!!.resources.getDrawable(R.drawable.tab_grupo)))
+                        if (tipogrupoJArray != null) {
+                            if (tipogrupoJArray.length() > 0) {
+                                val listaTipoGrupo = ArrayList<TipoGrupo>()
+                                for (i in 0 until tipogrupoJArray.length()) {
+                                    val tipogrupoJObject = tipogrupoJArray[i] as JSONObject
+                                    val creagrupos = tipogrupoJObject["CreaGrupos"] as? Int ?: 0
+                                    val idConfiguracion = tipogrupoJObject["IdConfiguracion"] as Int
+                                    val tipoGrupo = tipogrupoJObject["ValTabla"] as String
+                                    val cantMaxAlumno = tipogrupoJObject["CantMaxAlumnos"] as Int
 
-                                                val puntosAdapter = PuntosReunionOpcionAdapter(listaOpciones) { masOpcion ->
-                                                    masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                                    activity!!.startActivity(masOpcion.intent)
-                                                }
+                                    listaTipoGrupo.add(TipoGrupo(idConfiguracion, idPromocion, idGrupo, creagrupos, tipoGrupo, cantMaxAlumno))
+                                }
 
-                                                rvOpciones_fpuntosreunion.adapter = puntosAdapter
-                                                rvOpciones_fpuntosreunion.visibility = View.VISIBLE
-                                            } else {
-                                                showDetalleAlumno(listaTipoGrupo[p2].idConfiguracion)
-                                            }
-                                        }
+                                val tipogrupoAdapter = TipoGrupoArrayAdapter(context!!, listaTipoGrupo)
+                                cmbTipoGrupo_fpuntosreunion.adapter = tipogrupoAdapter
+                                cmbTipoGrupo_fpuntosreunion.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+                                    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                                        lblMensaje_fpuntosreunion.visibility = View.GONE
+                                        if (listaTipoGrupo[p2].creagrupo == 1) {
 
-                                        override fun onNothingSelected(p0: AdapterView<*>?) {
-
-                                        }
-                                    }
-
-
-
-                                    if (listaTipoGrupo.size > 1) {
-                                        viewTipoGrupo_fpuntosreunion.visibility = View.VISIBLE
-                                    } else {
-                                        if (listaTipoGrupo[0].creagrupo == 1) {
-                                            viewTipoGrupo_fpuntosreunion.visibility = View.GONE
+                                            ControlUsuario.instance.prPromocionConfig = listaTipoGrupo[p2]
                                             val listaOpciones = ArrayList<MasOpcion>()
-
-                                            ControlUsuario.instance.prPromocionConfig = listaTipoGrupo[0]
-                                            listaOpciones.add(MasOpcion(1, Intent(activity!!, PRMiGrupoActivity::class.java), context!!.resources.getString(R.string.grupos), context!!.resources.getString(R.string.sub_grupos), activity!!.resources.getDrawable( R.drawable.tab_grupo)))
+                                            listaOpciones.add(MasOpcion(1, Intent(activity!!, PRMiGrupoActivity::class.java), context!!.resources.getString(R.string.grupos), context!!.resources.getString(R.string.sub_grupos), activity!!.resources.getDrawable(R.drawable.tab_grupo)))
 
                                             val puntosAdapter = PuntosReunionOpcionAdapter(listaOpciones) { masOpcion ->
                                                 masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -306,33 +266,61 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                                             rvOpciones_fpuntosreunion.adapter = puntosAdapter
                                             rvOpciones_fpuntosreunion.visibility = View.VISIBLE
                                         } else {
-                                            showDetalleAlumno(listaTipoGrupo[0].idConfiguracion)
+                                            showDetalleAlumno(listaTipoGrupo[p2].idConfiguracion)
                                         }
                                     }
+
+                                    override fun onNothingSelected(p0: AdapterView<*>?) {
+
+                                    }
+                                }
+
+
+
+                                if (listaTipoGrupo.size > 1) {
+                                    viewTipoGrupo_fpuntosreunion.visibility = View.VISIBLE
                                 } else {
-                                    lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                                    lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_permiso_opcion)
+                                    if (listaTipoGrupo[0].creagrupo == 1) {
+                                        viewTipoGrupo_fpuntosreunion.visibility = View.GONE
+                                        val listaOpciones = ArrayList<MasOpcion>()
+
+                                        ControlUsuario.instance.prPromocionConfig = listaTipoGrupo[0]
+                                        listaOpciones.add(MasOpcion(1, Intent(activity!!, PRMiGrupoActivity::class.java), context!!.resources.getString(R.string.grupos), context!!.resources.getString(R.string.sub_grupos), activity!!.resources.getDrawable( R.drawable.tab_grupo)))
+
+                                        val puntosAdapter = PuntosReunionOpcionAdapter(listaOpciones) { masOpcion ->
+                                            masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                            activity!!.startActivity(masOpcion.intent)
+                                        }
+
+                                        rvOpciones_fpuntosreunion.adapter = puntosAdapter
+                                        rvOpciones_fpuntosreunion.visibility = View.VISIBLE
+                                    } else {
+                                        showDetalleAlumno(listaTipoGrupo[0].idConfiguracion)
+                                    }
                                 }
                             } else {
                                 lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_desencriptar)
+                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_permiso_opcion)
                             }
                         } else {
                             lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                            lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_permiso_opcion)
+                            lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_desencriptar)
                         }
-                    }catch (jex: JSONException) {
+                    } else {
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_permiso_opcion)
                     }
-                    prbCargando_fpuntosreunion.visibility = View.GONE
-                },
-                Response.ErrorListener { error ->
-                    println(error.message)
-                    prbCargando_fpuntosreunion.visibility = View.GONE
+                }catch (jex: JSONException) {
                     lblMensaje_fpuntosreunion.visibility = View.VISIBLE
                     lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
                 }
+                prbCargando_fpuntosreunion.visibility = View.GONE
+            },
+            { error ->
+                prbCargando_fpuntosreunion.visibility = View.GONE
+                lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+            }
         )
 
         jsObjectRequest.tag = TAG
@@ -347,8 +335,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
             request.put("CodAlumno", usuario.codigo)
             request.put("IdConfiguracion", idConfiguracion)
             request.put("Fecha", "0")
-            println("DETALLE ALUMNO-------------******")
-            println(request)
+
             val requestEncriptar = Utilitarios.jsObjectEncrypted(request, context!!)
             if (requestEncriptar != null)
                 onDetalleAlumno(Utilitarios.getUrl(Utilitarios.URL.PR_DETALLEGRUPO), idConfiguracion, requestEncriptar)
@@ -363,8 +350,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun onDetalleAlumno (url: String, idConfiguracion: Int, request: JSONObject) {
-        println(url)
-        println(request.toString())
+
         prbCargando_fpuntosreunion.visibility = View.VISIBLE
 
         requestQueue3 = Volley.newRequestQueue(activity!!)
@@ -372,59 +358,58 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        if (!response.isNull("ListarHorasxAlumnoResult")) {
-                            val detalleJArray = Utilitarios.jsArrayDesencriptar(response["ListarHorasxAlumnoResult"] as String, context!!)
-                            if (detalleJArray != null) {
-                                if (detalleJArray.length() == 1) {
-                                    val detalleJObject = detalleJArray[0] as JSONObject
-                                    println(detalleJObject)
-                                    val grupo = detalleJObject["NomGrupo"] as String
-                                    val cantHorasAntici = detalleJObject["CantHorasAnticipa"] as Int
-                                    val cantHorasReserv = detalleJObject["CantHorasReserva"] as Int
-                                    val cantHorasRestan = cantHorasReserv - detalleJObject["CantHorasUtil"] as Int
+            { response ->
+                try {
+                    if (!response.isNull("ListarHorasxAlumnoResult")) {
+                        val detalleJArray = Utilitarios.jsArrayDesencriptar(response["ListarHorasxAlumnoResult"] as String, context!!)
+                        if (detalleJArray != null) {
+                            if (detalleJArray.length() == 1) {
+                                val detalleJObject = detalleJArray[0] as JSONObject
 
-                                    ControlUsuario.instance.prconfiguracion = PRConfiguracion(idConfiguracion, grupo, cantHorasAntici, cantHorasReserv, cantHorasRestan)
+                                val grupo = detalleJObject["NomGrupo"] as String
+                                val cantHorasAntici = detalleJObject["CantHorasAnticipa"] as Int
+                                val cantHorasReserv = detalleJObject["CantHorasReserva"] as Int
+                                val cantHorasRestan = cantHorasReserv - detalleJObject["CantHorasUtil"] as Int
 
-                                    val listaOpciones = ArrayList<MasOpcion>()
-                                    listaOpciones.add(MasOpcion(1, Intent(activity!!, PRReservaPrimeraActivity::class.java), context!!.resources.getString(R.string.reservar), context!!.resources.getString(R.string.sub_reservar), activity!!.resources.getDrawable( R.drawable.tab_clock)))
-                                    listaOpciones.add(MasOpcion(2, Intent(activity!!, PRConfirmarActivity::class.java), context!!.resources.getString(R.string.confirmar_reserva), context!!.resources.getString(R.string.sub_confirmar_reserva), activity!!.resources.getDrawable( R.drawable.tab_check)))
-                                    listaOpciones.add(MasOpcion(3, Intent(activity!!, PRMisReservasActivity::class.java), context!!.resources.getString(R.string.mis_reservas), context!!.resources.getString(R.string.sub_mis_reservas), activity!!.resources.getDrawable( R.drawable.tab_note)))
-                                    //listaOpciones.add(MasOpcion(3, Intent(), context!!.resources.getString(R.string.mis_reservas), context!!.resources.getString(R.string.sub_mis_reservas), ContextCompat.getDrawable(activity!!, R.drawable.tab_note)))
-                                    //listaOpciones.add(MasOpcion(4, Intent(), context!!.resources.getString(R.string.disponibilidad_pr), context!!.resources.getString(R.string.sub_disponibilidad_pr), ContextCompat.getDrawable(activity!!, R.drawable.tab_grid)))
+                                ControlUsuario.instance.prconfiguracion = PRConfiguracion(idConfiguracion, grupo, cantHorasAntici, cantHorasReserv, cantHorasRestan)
 
-                                    val puntosAdapter = PuntosReunionOpcionAdapter(listaOpciones) { masOpcion ->
-                                        masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                        activity!!.startActivity(masOpcion.intent)
-                                    }
+                                val listaOpciones = ArrayList<MasOpcion>()
+                                listaOpciones.add(MasOpcion(1, Intent(activity!!, PRReservaPrimeraActivity::class.java), context!!.resources.getString(R.string.reservar), context!!.resources.getString(R.string.sub_reservar), activity!!.resources.getDrawable( R.drawable.tab_clock)))
+                                listaOpciones.add(MasOpcion(2, Intent(activity!!, PRConfirmarActivity::class.java), context!!.resources.getString(R.string.confirmar_reserva), context!!.resources.getString(R.string.sub_confirmar_reserva), activity!!.resources.getDrawable( R.drawable.tab_check)))
+                                listaOpciones.add(MasOpcion(3, Intent(activity!!, PRMisReservasActivity::class.java), context!!.resources.getString(R.string.mis_reservas), context!!.resources.getString(R.string.sub_mis_reservas), activity!!.resources.getDrawable( R.drawable.tab_note)))
+                                //listaOpciones.add(MasOpcion(3, Intent(), context!!.resources.getString(R.string.mis_reservas), context!!.resources.getString(R.string.sub_mis_reservas), ContextCompat.getDrawable(activity!!, R.drawable.tab_note)))
+                                //listaOpciones.add(MasOpcion(4, Intent(), context!!.resources.getString(R.string.disponibilidad_pr), context!!.resources.getString(R.string.sub_disponibilidad_pr), ContextCompat.getDrawable(activity!!, R.drawable.tab_grid)))
 
-                                    rvOpciones_fpuntosreunion.adapter = puntosAdapter
-                                    rvOpciones_fpuntosreunion.visibility = View.VISIBLE
-                                } else {
-                                    lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                                    lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.advertencia_pr_notienegrupo)
+                                val puntosAdapter = PuntosReunionOpcionAdapter(listaOpciones) { masOpcion ->
+                                    masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                    activity!!.startActivity(masOpcion.intent)
                                 }
+
+                                rvOpciones_fpuntosreunion.adapter = puntosAdapter
+                                rvOpciones_fpuntosreunion.visibility = View.VISIBLE
                             } else {
                                 lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_desencriptar)
+                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.advertencia_pr_notienegrupo)
                             }
                         } else {
                             lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                            lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.advertencia_pr_notienegrupo)
+                            lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_desencriptar)
                         }
-                    } catch (jex: JSONException) {
+                    } else {
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.advertencia_pr_notienegrupo)
                     }
-                    prbCargando_fpuntosreunion.visibility = View.GONE
-                },
-                Response.ErrorListener { error ->
-                    println(error.message)
-                    prbCargando_fpuntosreunion.visibility = View.GONE
+                } catch (jex: JSONException) {
                     lblMensaje_fpuntosreunion.visibility = View.VISIBLE
                     lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
                 }
+                prbCargando_fpuntosreunion.visibility = View.GONE
+            },
+            { error ->
+                prbCargando_fpuntosreunion.visibility = View.GONE
+                lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue3?.add(jsObjectRequest)
@@ -437,4 +422,4 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
         requestQueue2?.cancelAll(TAG)
         requestQueue3?.cancelAll(TAG)
     }
-}// Required empty public constructor
+}

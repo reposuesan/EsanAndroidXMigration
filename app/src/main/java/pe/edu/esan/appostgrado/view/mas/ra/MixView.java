@@ -687,8 +687,6 @@ public class MixView extends AppCompatActivity implements SensorEventListener,Lo
         try {
             killOnError();
             location.setAltitude(0.0f);
-            Log.v(PrincipalRAActivity.TAG,"Location Changed: "+location.getProvider()+" lat: "+location.getLatitude()+" lon: "+location.getLongitude()+" alt: "+location.getAltitude()+" acc: "+location.getAccuracy());
-
 
             mixContext.setLocationAtLastDownload(location);
 
@@ -700,7 +698,6 @@ public class MixView extends AppCompatActivity implements SensorEventListener,Lo
                 if (!PrincipalRAActivity.dataView.isFrozen())
                     PrincipalRAActivity.dataView.getDataHandler().onLocationChanged(location);
 
-                //Log.d(PrincipalAulaAR.TAG, "Cambiando ubicacion actual en ar");
             }
             // setGpsEnabled(true);
             if ((!DataView.viendoUnicoMarker) && (pd.isShowing()))	{
@@ -831,7 +828,6 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
 
                 //preview form factor
                 float ff = (float)w/h;
-                Log.e("Mixare", "Screen res: w:"+ w + " h:" + h + " aspect ratio:" + ff);
 
                 //holder for the best form factor and size
                 float bff = 0;
@@ -854,18 +850,15 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
                     //preview width should be less than screen width
                     //preview width should be more than current bestw
                     //this combination will ensure that the highest resolution will win
-                    Log.e("Mixare", "Candidate camera element: w:"+ element.width + " h:" + element.height + " aspect ratio:" + cff);
                     if ((ff-cff <= ff-bff) && (element.width <= w) && (element.width >= bestw)) {
                         bff=cff;
                         bestw = element.width;
                         besth = element.height;
                     }
                 }
-                Log.e("Mixare", "Chosen camera element: w:"+ bestw + " h:" + besth + " aspect ratio:" + bff);
                 //Some Samsung phones will end up with bestw and besth = 0 because their minimum preview size is bigger then the screen size.
                 //In this case, we use the default values: 480x320
                 if ((bestw == 0) || (besth == 0)){
-                    Log.e("Mixare", "Using default camera parameters!");
                     bestw = 480;
                     besth = 320;
                 }
@@ -877,7 +870,6 @@ class CameraSurface extends SurfaceView implements SurfaceHolder.Callback {
             camera.setParameters(parameters);
             camera.startPreview();
         } catch (Exception ex) {
-            Log.e(PrincipalRAActivity.TAG,"surfaceChanged:"+ex.getMessage());
             ex.printStackTrace();
         }
     }
@@ -945,7 +937,6 @@ class AugmentedView extends View {
             PrincipalRAActivity.dataView.draw(MixView.dWindow);
 
         } catch (Exception ex) {
-            Log.e(PrincipalRAActivity.TAG,"AugmentedView: "+ex.getMessage());
             app.doError(ex);
         }
     }

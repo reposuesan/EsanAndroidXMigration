@@ -54,7 +54,6 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         controlViewModel = activity?.run {
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-        Log.w(LOG, "ViewModel is: $controlViewModel")
         view.swPrograma_fprograma.setOnRefreshListener(this)
         view.swPrograma_fprograma.setColorSchemeResources(
             R.color.s1,
@@ -83,13 +82,10 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
             controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedProgramasPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
-            Log.w(LOG, "refreshDataForFragment() from Programas")
             controlViewModel.refreshDataForFragment(true)
         }
     }
@@ -102,7 +98,7 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         request.put("FiltroProg", "TP")
 
         val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
-        println(requestEncriptado)
+
         if (requestEncriptado != null)
             onProgramas(Utilitarios.getUrl(Utilitarios.URL.PROGRAMAS), requestEncriptado)
         else {
@@ -112,62 +108,58 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
     }
 
     private fun onProgramas(url: String, request: JSONObject) {
-        println(url)
-        println(request.toString())
         prbCargando_fprograma.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity)
         val jsObjectRequest = JsonObjectRequest(
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        val programaJArray = Utilitarios.jsArrayDesencriptar(response["ListarProgramasPostResult"] as String, activity!!)
-                        //val programaJArray = response["ListarProgramasPostResult"] as JSONArray
-                        if (programaJArray != null) {
-                            if (programaJArray.length() > 0) {
-                                val listProgramas = ArrayList<Programa>()
-                                for (p in 0 until programaJArray.length()) {
-                                    val programaJson = programaJArray[p] as JSONObject
-                                    val codigo = programaJson["PromocionCodigo"] as String
-                                    val nombre = programaJson["PromocionNombre"] as String
-                                    listProgramas.add(Programa(codigo, nombre))
-                                }
-
-                                val adapter = ProgramaAdapter(listProgramas) { programa ->
-                                    println(programa.codigo)
-
-                                    //getEncuestaPorPrograma (programa)
-                                    val intent = Intent(activity, CursosPostActivity::class.java)
-                                    intent.putExtra("KEY_CODIGO_PROGRAMA", programa.codigo)
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    startActivity(intent)
-                                }
-
-                                rvPrograma_fprograma.adapter = adapter
-                                lblMensaje_fprograma.visibility = View.GONE
-                            } else {
-                                lblMensaje_fprograma.visibility = View.VISIBLE
-                                lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_programa_no)
+            { response ->
+                try {
+                    val programaJArray = Utilitarios.jsArrayDesencriptar(response["ListarProgramasPostResult"] as String, activity!!)
+                    //val programaJArray = response["ListarProgramasPostResult"] as JSONArray
+                    if (programaJArray != null) {
+                        if (programaJArray.length() > 0) {
+                            val listProgramas = ArrayList<Programa>()
+                            for (p in 0 until programaJArray.length()) {
+                                val programaJson = programaJArray[p] as JSONObject
+                                val codigo = programaJson["PromocionCodigo"] as String
+                                val nombre = programaJson["PromocionNombre"] as String
+                                listProgramas.add(Programa(codigo, nombre))
                             }
+
+                            val adapter = ProgramaAdapter(listProgramas) { programa ->
+
+                                //getEncuestaPorPrograma (programa)
+                                val intent = Intent(activity, CursosPostActivity::class.java)
+                                intent.putExtra("KEY_CODIGO_PROGRAMA", programa.codigo)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                startActivity(intent)
+                            }
+
+                            rvPrograma_fprograma.adapter = adapter
+                            lblMensaje_fprograma.visibility = View.GONE
                         } else {
                             lblMensaje_fprograma.visibility = View.VISIBLE
-                            lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_desencriptar)
+                            lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_programa_no)
                         }
-                    } catch (jex: JSONException) {
+                    } else {
                         lblMensaje_fprograma.visibility = View.VISIBLE
-                        lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_desencriptar)
                     }
-                    swPrograma_fprograma.isRefreshing = false
-                    prbCargando_fprograma.visibility = View.GONE
-                },
-                Response.ErrorListener { error ->
-                    println(error.message)
-                    swPrograma_fprograma.isRefreshing = false
-                    prbCargando_fprograma.visibility = View.GONE
+                } catch (jex: JSONException) {
                     lblMensaje_fprograma.visibility = View.VISIBLE
-                    lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+                    lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_respuesta_server)
                 }
+                swPrograma_fprograma.isRefreshing = false
+                prbCargando_fprograma.visibility = View.GONE
+            },
+            { error ->
+                swPrograma_fprograma.isRefreshing = false
+                prbCargando_fprograma.visibility = View.GONE
+                lblMensaje_fprograma.visibility = View.VISIBLE
+                lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+            }
         )
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(1500, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
@@ -184,7 +176,6 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
     */
 
     override fun onRefresh() {
-        println("REFRESH")
         swPrograma_fprograma.isRefreshing = true
         showProgramas()
     }

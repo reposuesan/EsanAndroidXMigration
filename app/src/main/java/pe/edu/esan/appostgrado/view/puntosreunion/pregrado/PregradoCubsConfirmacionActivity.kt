@@ -1,19 +1,17 @@
 package pe.edu.esan.appostgrado.view.puntosreunion.pregrado
 
 import android.graphics.PorterDuff
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.content.ContextCompat
-import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
-import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_pregrado_cubs_confirmacion.*
 import org.json.JSONObject
 import pe.edu.esan.appostgrado.R
@@ -57,13 +55,8 @@ class PregradoCubsConfirmacionActivity : AppCompatActivity() {
     }
 
     fun confirmarPrereservaServicio(url: String, request: JSONObject) {
-        Log.i(LOG, url)
-
-        Log.i(LOG, request.toString())
 
         val fRequest = Utilitarios.jsObjectEncrypted(request, this)
-
-        Log.i(LOG, fRequest.toString())
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -71,17 +64,15 @@ class PregradoCubsConfirmacionActivity : AppCompatActivity() {
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
-                    Log.i(LOG, response.toString())
+                { response ->
                     if (!response.isNull("ConfirmarPreReservaResult")) {
                         val jsResponse = Utilitarios.jsObjectDesencriptar(
                             response.getString("ConfirmarPreReservaResult"),
                             this@PregradoCubsConfirmacionActivity
                         )
-                        Log.i(LOG, jsResponse!!.toString())
 
                         try {
-                            val codRespuesta = jsResponse.optString("CodRespuesta")
+                            val codRespuesta = jsResponse!!.optString("CodRespuesta")
                             val mensaje = jsResponse.optString("Mensaje")
                             val idReservaRes = jsResponse.optString("IdReservaRes")
 
@@ -104,10 +95,8 @@ class PregradoCubsConfirmacionActivity : AppCompatActivity() {
 
                     }
                 },
-                Response.ErrorListener { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
-                    Log.e(LOG, error.toString())
+                { error ->
+                    error.printStackTrace()
 
                     val showAlertHelper = ShowAlertHelper(this)
                     showAlertHelper.showAlertError(

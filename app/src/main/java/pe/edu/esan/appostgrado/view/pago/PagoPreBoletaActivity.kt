@@ -43,7 +43,6 @@ class PagoPreBoletaActivity : AppCompatActivity() {
         if (extras != null) {
 
             val codigo = extras["KEY_CODBOLETA"] as String
-            println(codigo)
             getCargaPDF(codigo)
         }
     }

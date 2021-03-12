@@ -104,7 +104,7 @@ class ScanQRCodeActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                Log.e(LOG, "Volley error:  " + error.message.toString())
+                error.printStackTrace()
                 val crashlytics = FirebaseCrashlytics.getInstance()
                 crashlytics.log("E/ScanQRCodeActivity: ${error.message.toString()}")
                 FirebaseCrashlytics.getInstance().recordException(Exception("Volley Exception: ${error.message.toString()}"))

@@ -52,13 +52,7 @@ class PregradoLabsConfirmacionActivity : AppCompatActivity() {
 
     fun confirmarPrereservaServicio(url: String, request: JSONObject){
 
-        Log.i(LOG, url)
-
-        Log.i(LOG, request.toString())
-
         val fRequest = Utilitarios.jsObjectEncrypted(request, this)
-
-        Log.i(LOG, fRequest.toString())
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -66,15 +60,12 @@ class PregradoLabsConfirmacionActivity : AppCompatActivity() {
                 Request.Method.POST,
                 url,
                 fRequest,
-                Response.Listener { response ->
-                    Log.i(LOG, response.toString())
+                { response ->
                     if (!response.isNull("ConfirmarPreReservaLaboratorioResult")) {
                         val jsResponse = Utilitarios.jsObjectDesencriptar(response.getString("ConfirmarPreReservaLaboratorioResult"), this@PregradoLabsConfirmacionActivity)
 
-                        Log.i(LOG, jsResponse!!.toString())
-
                         try {
-                            val rpta = jsResponse.optString("Rpta")
+                            val rpta = jsResponse!!.optString("Rpta")
                             val mensaje = jsResponse.optString("Mensaje")
 
                             val esConfirmacionCorrecta= rpta.toInt() > 0
@@ -82,15 +73,12 @@ class PregradoLabsConfirmacionActivity : AppCompatActivity() {
                             mostrarMensajeConfirmacion(esConfirmacionCorrecta, mensaje)
 
                         } catch (e: Exception) {
-                            Log.e(LOG, e.message.toString())
                             tv_mensaje_confirmacion_prereserva_lab.text = getString(R.string.error_recuperacion_datos)
                         }
 
                     }
                 },
-                Response.ErrorListener { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
+                { error ->
                     tv_mensaje_confirmacion_prereserva_lab.text = getString(R.string.no_respuesta_desde_servidor)
                 }
             )

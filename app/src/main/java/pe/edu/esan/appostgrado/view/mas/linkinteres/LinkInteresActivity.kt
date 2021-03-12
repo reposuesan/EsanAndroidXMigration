@@ -57,15 +57,12 @@ class LinkInteresActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
     }
 
@@ -114,10 +111,8 @@ class LinkInteresActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
-        Log.w(LOG,"onStop()")
         if (ControlUsuario.instance.currentUsuario.size != 0  && ControlUsuario.instance.currentUsuarioGeneral != null) {
             controlViewModel.insertDataToRoom()
-            Log.w(LOG,"onStop() with insertDataToRoom()")
         }
         super.onStop()
     }

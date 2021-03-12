@@ -105,15 +105,12 @@ class CargaAcademicaActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
     }
 
@@ -139,74 +136,71 @@ class CargaAcademicaActivity : AppCompatActivity() {
     }
 
     private fun onCargaAcademica(url: String, request: JSONObject) {
-        println(url)
-        println(request.toString())
         rvHoras_cargacademica.visibility = View.GONE
         prbCargando_cargacademica.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        val cargacademicaJArray = Utilitarios.jsArrayDesencriptar(response["ListarCargaAcademicaResult"] as String, this)
-                        if (cargacademicaJArray != null) {
-                            if (cargacademicaJArray.length() > 0) {
-                                var totalCarga = 0.0
-                                val listaCargaAcademica = ArrayList<TipoCargaAcademica>()
-                                for (i in 0 until cargacademicaJArray.length()) {
-                                    val cargacademicaJObject = cargacademicaJArray[i] as JSONObject
-                                    val tipocarga = cargacademicaJObject["TipoCarga"] as String
-                                    val totaltipo = cargacademicaJObject["SumaTipoCarga"] as Double
-                                    val actividadesJArray = cargacademicaJObject["actividadTipo"] as JSONArray
-                                    val listaActividades = ArrayList<Actividad>()
-                                    for (j in 0 until actividadesJArray.length()) {
-                                        val actividadJObject = actividadesJArray[j] as JSONObject
-                                        val actividad = actividadJObject["NombreActividad"] as String
-                                        val totalActi = actividadJObject["SumaSesionActividad"] as Double
-                                        val detalleActiJArray = actividadJObject["detalleActividad"] as JSONArray
-                                        val listaDetalle = ArrayList<ActividadDetalle>()
-                                        for (k in 0 until detalleActiJArray.length()) {
-                                            val detalleActJObject = detalleActiJArray[k] as JSONObject
-                                            val curso = detalleActJObject["CursoNombre"] as String
-                                            val fecha = detalleActJObject["Fecha"] as String
-                                            val grupo = detalleActJObject["Grupo"] as Int
-                                            val promocion = detalleActJObject["PromocionCodigo"] as String
-                                            val valorSesion = detalleActJObject["ValorSesion"] as Double
-                                            listaDetalle.add(ActividadDetalle(curso, promocion, grupo.toString(), fecha, valorSesion))
-                                        }
-                                        listaActividades.add(Actividad(actividad, totalActi, false, listaDetalle))
+            { response ->
+                try {
+                    val cargacademicaJArray = Utilitarios.jsArrayDesencriptar(response["ListarCargaAcademicaResult"] as String, this)
+                    if (cargacademicaJArray != null) {
+                        if (cargacademicaJArray.length() > 0) {
+                            var totalCarga = 0.0
+                            val listaCargaAcademica = ArrayList<TipoCargaAcademica>()
+                            for (i in 0 until cargacademicaJArray.length()) {
+                                val cargacademicaJObject = cargacademicaJArray[i] as JSONObject
+                                val tipocarga = cargacademicaJObject["TipoCarga"] as String
+                                val totaltipo = cargacademicaJObject["SumaTipoCarga"] as Double
+                                val actividadesJArray = cargacademicaJObject["actividadTipo"] as JSONArray
+                                val listaActividades = ArrayList<Actividad>()
+                                for (j in 0 until actividadesJArray.length()) {
+                                    val actividadJObject = actividadesJArray[j] as JSONObject
+                                    val actividad = actividadJObject["NombreActividad"] as String
+                                    val totalActi = actividadJObject["SumaSesionActividad"] as Double
+                                    val detalleActiJArray = actividadJObject["detalleActividad"] as JSONArray
+                                    val listaDetalle = ArrayList<ActividadDetalle>()
+                                    for (k in 0 until detalleActiJArray.length()) {
+                                        val detalleActJObject = detalleActiJArray[k] as JSONObject
+                                        val curso = detalleActJObject["CursoNombre"] as String
+                                        val fecha = detalleActJObject["Fecha"] as String
+                                        val grupo = detalleActJObject["Grupo"] as Int
+                                        val promocion = detalleActJObject["PromocionCodigo"] as String
+                                        val valorSesion = detalleActJObject["ValorSesion"] as Double
+                                        listaDetalle.add(ActividadDetalle(curso, promocion, grupo.toString(), fecha, valorSesion))
                                     }
-                                    listaCargaAcademica.add(TipoCargaAcademica(tipocarga, totaltipo, listaActividades))
-                                    totalCarga += totaltipo
+                                    listaActividades.add(Actividad(actividad, totalActi, false, listaDetalle))
                                 }
-                                lblMensaje_cargacademica.visibility = View.GONE
-                                rvHoras_cargacademica.visibility = View.VISIBLE
-                                val cargaAcademica = CargaAcademica (g_smes, g_agno.toString(), swAcumulado_cargacademica.isChecked, totalCarga, listaCargaAcademica)
-                                rvHoras_cargacademica.adapter = CargaAcademicaAdapter(cargaAcademica)
-                            } else {
-                                lblMensaje_cargacademica.visibility = View.VISIBLE
-                                lblMensaje_cargacademica.text = resources.getText(R.string.advertencia_nocargaacademica)
+                                listaCargaAcademica.add(TipoCargaAcademica(tipocarga, totaltipo, listaActividades))
+                                totalCarga += totaltipo
                             }
+                            lblMensaje_cargacademica.visibility = View.GONE
+                            rvHoras_cargacademica.visibility = View.VISIBLE
+                            val cargaAcademica = CargaAcademica (g_smes, g_agno.toString(), swAcumulado_cargacademica.isChecked, totalCarga, listaCargaAcademica)
+                            rvHoras_cargacademica.adapter = CargaAcademicaAdapter(cargaAcademica)
                         } else {
                             lblMensaje_cargacademica.visibility = View.VISIBLE
-                            lblMensaje_cargacademica.text = resources.getText(R.string.error_desencriptar)
+                            lblMensaje_cargacademica.text = resources.getText(R.string.advertencia_nocargaacademica)
                         }
-                    } catch (jex: JSONException) {
+                    } else {
                         lblMensaje_cargacademica.visibility = View.VISIBLE
-                        lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
-                    } catch (ccax: ClassCastException) {
-                        lblMensaje_cargacademica.visibility = View.VISIBLE
-                        lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
+                        lblMensaje_cargacademica.text = resources.getText(R.string.error_desencriptar)
                     }
-                    prbCargando_cargacademica.visibility = View.GONE
-                },
-                Response.ErrorListener { error ->
-                    println(error.toString())
-                    prbCargando_cargacademica.visibility = View.GONE
+                } catch (jex: JSONException) {
+                    lblMensaje_cargacademica.visibility = View.VISIBLE
+                    lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
+                } catch (ccax: ClassCastException) {
                     lblMensaje_cargacademica.visibility = View.VISIBLE
                     lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
                 }
+                prbCargando_cargacademica.visibility = View.GONE
+            },
+            { error ->
+                prbCargando_cargacademica.visibility = View.GONE
+                lblMensaje_cargacademica.visibility = View.VISIBLE
+                lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

@@ -58,9 +58,6 @@ class PRReservaSegundaActivity : AppCompatActivity() {
         if(bundle!=null) {
             stateReser = bundle.getInt("TipoCubiculo")
         }
-        //println("TipoCubiculo")
-        //println(stateReser)
-        Log.i(LOG,"TipoCubiculo: ${stateReser}")
 
         val toolbar = main_prreservasegunda as Toolbar
         toolbar.toolbar_title.typeface = Utilitarios.getFontRoboto(applicationContext, Utilitarios.TypeFont.BLACK)
@@ -131,15 +128,12 @@ class PRReservaSegundaActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest(fecha, hinicio, hfin, cantHoras, emergencia)
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
 
             /*val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_ingreso), Snackbar.LENGTH_LONG)
             snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
@@ -166,8 +160,7 @@ class PRReservaSegundaActivity : AppCompatActivity() {
                 request.put("TipoCubiculo", stateReser)
                 request.put("Dispositivo", "Android-" + version+ "-"+ApiAndroid)
                 request.put("IdConfiguracion", ControlUsuario.instance.prconfiguracion?.idConfiguracion)
-                //println(request.toString())
-                Log.i(LOG, request.toString())
+
                 val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
                 if (requestEncriptado != null)
                     onConfirmarReserva(Utilitarios.getUrl(Utilitarios.URL.PR_REGISTRAR_RESERVA), requestEncriptado)
@@ -183,11 +176,7 @@ class PRReservaSegundaActivity : AppCompatActivity() {
     }
 
     private fun onConfirmarReserva(url: String, request: JSONObject) {
-        //println(url)
-        Log.i(LOG, url)
-        //println(request)
-        Log.i(LOG, request.toString())
-        //prbCargando_itemprreservasegunda.visibility = View.VISIBLE
+
         CustomDialog.instance.showDialogLoad(this)
         btnConfirmar_itemprreservasegunda.isEnabled = false
         requestQueueConfirmar = Volley.newRequestQueue(this)
@@ -195,67 +184,61 @@ class PRReservaSegundaActivity : AppCompatActivity() {
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    //prbCargando_itemprreservasegunda.visibility = View.GONE
-                    CustomDialog.instance.dialogoCargando?.dismiss()
-                    btnConfirmar_itemprreservasegunda.isEnabled = true
-                    try {
-                        //println(response)
-                        Log.i(LOG, response.toString())
-                        if (!response.isNull("RegistraReservaAmbienteResult")) {
-                            val jsRespuesta = Utilitarios.stringDesencriptar(response["RegistraReservaAmbienteResult"] as String, this)
-                            if (jsRespuesta != null) {
-                                val arrayRespuesta = jsRespuesta.split("|")
-                                //println(arrayRespuesta.toString())
-                                Log.i(LOG, arrayRespuesta.toString())
-                                val alertaMensaje = AlertDialog.Builder(this)
-                                        .setTitle(resources.getString(R.string.mensaje))
-                                        .setMessage(arrayRespuesta[1])
-                                        .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i ->
-                                            ControlUsuario.instance.esReservaExitosa = (arrayRespuesta[0] != "00" || arrayRespuesta[0] != "0")
-                                            finish()
-                                        })
-                                        .create()
-                                alertaMensaje.show()
-                            } else {
-                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
-                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
-                                snack.show()
-                            }
+            { response ->
+                CustomDialog.instance.dialogoCargando?.dismiss()
+                btnConfirmar_itemprreservasegunda.isEnabled = true
+                try {
+
+                    if (!response.isNull("RegistraReservaAmbienteResult")) {
+                        val jsRespuesta = Utilitarios.stringDesencriptar(response["RegistraReservaAmbienteResult"] as String, this)
+                        if (jsRespuesta != null) {
+                            val arrayRespuesta = jsRespuesta.split("|")
+
+                            val alertaMensaje = AlertDialog.Builder(this)
+                                    .setTitle(resources.getString(R.string.mensaje))
+                                    .setMessage(arrayRespuesta[1])
+                                    .setPositiveButton(resources.getString(R.string.aceptar), DialogInterface.OnClickListener { dialogInterface, i ->
+                                        ControlUsuario.instance.esReservaExitosa = (arrayRespuesta[0] != "00" || arrayRespuesta[0] != "0")
+                                        finish()
+                                    })
+                                    .create()
+                            alertaMensaje.show()
                         } else {
-                            val jsRespuesta = Utilitarios.stringDesencriptar(response["RegistraReservaAmbienteResult"] as String, this)
-                            //println(jsRespuesta)
-                            Log.i(LOG, jsRespuesta)
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
                             snack.show()
                         }
-                    } catch (jex: JSONException) {
+                    } else {
                         val jsRespuesta = Utilitarios.stringDesencriptar(response["RegistraReservaAmbienteResult"] as String, this)
-                        //println(jsRespuesta)
-                        Log.e(LOG, jsRespuesta)
+
                         val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
                         snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
                         snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
                         snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
                         snack.show()
                     }
-                },
-                Response.ErrorListener { error ->
-                    Log.e("message", error.message.toString())
-                    //prbCargando_itemprreservasegunda.visibility = View.GONE
-                    CustomDialog.instance.dialogoCargando?.dismiss()
-                    btnConfirmar_itemprreservasegunda.isEnabled = true
+                } catch (jex: JSONException) {
+                    val jsRespuesta = Utilitarios.stringDesencriptar(response["RegistraReservaAmbienteResult"] as String, this)
+
                     val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
                     snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
                     snack.show()
                 }
+            },
+            { error ->
+
+                CustomDialog.instance.dialogoCargando?.dismiss()
+                btnConfirmar_itemprreservasegunda.isEnabled = true
+                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                snack.show()
+            }
         )
         jsObjectRequest.tag = TAG
         jsObjectRequest.setRetryPolicy( DefaultRetryPolicy(
@@ -332,8 +315,6 @@ class PRReservaSegundaActivity : AppCompatActivity() {
                 }
             } else {
                 if (horario != null) {
-                    //println(horario.horaInicio)
-                    Log.i(LOG, horario.horaInicio)
                     val confirmarCambioDialog = AlertDialog.Builder(this)
                         .setTitle(resources.getString(R.string.confirmar_reserva))
                         .setMessage(String.format(resources.getString(R.string.mensajeconfirmacion_cambiohora), horario.horaInicio, horario.horaFin))
@@ -358,68 +339,65 @@ class PRReservaSegundaActivity : AppCompatActivity() {
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        if (!response.isNull("ListarDisponibilidadOtrasSalaResult")) {
-                            val jsarrayHorarios = Utilitarios.jsArrayDesencriptar(response["ListarDisponibilidadOtrasSalaResult"] as String, this)
-                            //println(jsarrayHorarios)
-                            Log.i(LOG, jsarrayHorarios.toString())
-                            if (jsarrayHorarios != null) {
-                                val listaOtroHorarios = ArrayList<PRHorarioOtro>()
-                                for (i in 0 until jsarrayHorarios.length()) {
-                                    val jsobjHorario = jsarrayHorarios[i] as JSONObject
-                                    if (jsobjHorario["Estado"] as Boolean) {
-                                        val horaIni = jsobjHorario["HoraIni"] as String
-                                        val horaFin = jsobjHorario["HoraFin"] as String
-                                        val fecha = jsobjHorario["Fecha"] as String
-                                        val hInicio = jsobjHorario["HInicio"] as String
-                                        val hFin = jsobjHorario["HFin"] as String
-                                        val emergencia = jsobjHorario["Emergencia"] as Int
+            { response ->
+                try {
+                    if (!response.isNull("ListarDisponibilidadOtrasSalaResult")) {
+                        val jsarrayHorarios = Utilitarios.jsArrayDesencriptar(response["ListarDisponibilidadOtrasSalaResult"] as String, this)
 
-                                        listaOtroHorarios.add(PRHorarioOtro(horaIni, horaFin, fecha, ControlUsuario.instance.prreserva!!.time, hInicio, hFin, cantHoras, emergencia))
-                                    }
+                        if (jsarrayHorarios != null) {
+                            val listaOtroHorarios = ArrayList<PRHorarioOtro>()
+                            for (i in 0 until jsarrayHorarios.length()) {
+                                val jsobjHorario = jsarrayHorarios[i] as JSONObject
+                                if (jsobjHorario["Estado"] as Boolean) {
+                                    val horaIni = jsobjHorario["HoraIni"] as String
+                                    val horaFin = jsobjHorario["HoraFin"] as String
+                                    val fecha = jsobjHorario["Fecha"] as String
+                                    val hInicio = jsobjHorario["HInicio"] as String
+                                    val hFin = jsobjHorario["HFin"] as String
+                                    val emergencia = jsobjHorario["Emergencia"] as Int
+
+                                    listaOtroHorarios.add(PRHorarioOtro(horaIni, horaFin, fecha, ControlUsuario.instance.prreserva!!.time, hInicio, hFin, cantHoras, emergencia))
                                 }
-                                if (listaOtroHorarios.isNotEmpty()) {
-                                    otroshorariosmostrados = true
-                                    otrosHorariosAdapter?.addHorarios(listaOtroHorarios)
-                                } else {
-                                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
-                                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.info))
-                                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.info_text))
-                                    snack.show()
-                                }
+                            }
+                            if (listaOtroHorarios.isNotEmpty()) {
+                                otroshorariosmostrados = true
+                                otrosHorariosAdapter?.addHorarios(listaOtroHorarios)
                             } else {
-                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
-                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
+                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
+                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.info))
                                 snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.info_text))
                                 snack.show()
                             }
                         } else {
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
                             snack.show()
                         }
-                    } catch (jex: JSONException) {
+                    } else {
                         val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
                         snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
                         snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
                         snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
                         snack.show()
                     }
-                },
-                Response.ErrorListener { error ->
-                    //println(error.message)
-                    Log.e(LOG, error.message.toString())
+                } catch (jex: JSONException) {
                     val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
                     snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
                     snack.show()
                 }
+            },
+            { error ->
+                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                snack.show()
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

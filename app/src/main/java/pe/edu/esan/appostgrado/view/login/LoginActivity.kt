@@ -116,8 +116,6 @@ class LoginActivity : AppCompatActivity(),
         imgInternationalWeek.requestLayout()
         imgInternationalWeek.layoutParams.width = (width * 4) / 10
 
-        Log.w(LOG, "onCreate()")
-
         try {
             val pInfo = packageManager.getPackageInfo(packageName, 0)
             val version = pInfo.versionName
@@ -205,7 +203,6 @@ class LoginActivity : AppCompatActivity(),
 
     override fun onStart() {
         super.onStart()
-        Log.w(LOG, "onStart()")
     }
 
 
@@ -311,14 +308,10 @@ class LoginActivity : AppCompatActivity(),
 
     private fun onLogin(url: String, request: JSONObject, usuario: String, clave: String) {
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         CustomDialog.instance.showDialogLoad(this)
 
         val fRequest = Utilitarios.jsObjectEncrypted(request, this)
 
-        Log.i(LOG, fRequest.toString())
         if (fRequest != null) {
             requestQueue = Volley.newRequestQueue(this)
             //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
@@ -331,14 +324,12 @@ class LoginActivity : AppCompatActivity(),
                     try {
                         ControlUsuario.instance.currentUsuario = ArrayList()
 
-                        Log.i(LOG, response.toString())
                         if (!response.isNull("AutenticarUsuarioResult")) {
                             val jsResponse = Utilitarios.jsObjectDesencriptar(
                                 response.getString("AutenticarUsuarioResult"),
                                 this@LoginActivity
                             )
 
-                            Log.i(LOG, jsResponse.toString())
                             if (jsResponse != null) {
 
                                 val jsObjDatosPersonales =
@@ -514,7 +505,6 @@ class LoginActivity : AppCompatActivity(),
                                 //ALUMNO Y DOCENTE, AMBOS
                                 if (esAlumno && esDocente) {
 
-                                    Log.i(LOG, "ALUMNO Y PROFESOR")
                                     ControlUsuario.instance.statusLogout = 0
                                     this.esAlumnoProfesor = true
                                     //TODO: CONSULTAR SI UN ALUMNO PUEDE SER DE PREGRADO Y POSTGRADO Y ADEMÁS DOCENTE
@@ -828,8 +818,6 @@ class LoginActivity : AppCompatActivity(),
                                     //ALUMNO PREGRADO Y POSTGRADO, AMBOS
                                     if (esAlumnoPre && esAlumnoPost) {
 
-                                        Log.i(LOG, "ALUMNO PRE Y POST")
-
                                         ControlUsuario.instance.statusLogout = 0
                                         this.esPreyPost = true
                                         ControlUsuario.instance.currentUsuarioGeneral!!.validarFacultad =
@@ -1059,8 +1047,6 @@ class LoginActivity : AppCompatActivity(),
                             iniciandoSesion = false
                         }
                     } catch (jex: JSONException) {
-                        Log.e(LOG, "Error JSON")
-                        Log.e(LOG, jex.toString())
                         val showAlertHelpe = ShowAlertHelper(this)
                         showAlertHelpe.showAlertError(
                             getString(R.string.error),
@@ -1076,7 +1062,6 @@ class LoginActivity : AppCompatActivity(),
                 },
                 {
 
-                    Log.e(LOG, "Error Volley")
                     val showAlertHelpe = ShowAlertHelper(this)
                     showAlertHelpe.showAlertError(
                         getString(R.string.error),
@@ -1228,7 +1213,6 @@ class LoginActivity : AppCompatActivity(),
     }
 
     override fun onErrorFingerprint(errorId: Int) {
-        Log.w(LOG, "The error code is: $errorId")
 
         if (fingerFragmentDialog != null) {
             if (errorId != FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
@@ -1364,7 +1348,6 @@ class LoginActivity : AppCompatActivity(),
 
 
     override fun onStop() {
-        Log.w(LOG, "onStop()")
         requestQueue?.cancelAll(TAG)
         super.onStop()
     }
@@ -1374,7 +1357,6 @@ class LoginActivity : AppCompatActivity(),
             fingerFragmentDialog?.dismiss()
             fingerFragmentDialog = null
         }
-        Log.w(LOG, "onPause()")
 
         if (dialogoPerfil != null) {
             dialogoPerfil?.dismiss()
@@ -1394,7 +1376,6 @@ class LoginActivity : AppCompatActivity(),
             CustomDialog.instance.dialogoCargando?.dismiss()
             CustomDialog.instance.dialogoCargando = null
         }
-        Log.w(LOG, "onDestroy()")
         super.onDestroy()
     }
 
@@ -1414,7 +1395,6 @@ class LoginActivity : AppCompatActivity(),
     override fun onResume() {
         super.onResume()
         iniciandoSesion = false
-        Log.w(LOG, "onResume()")
         val misPreferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
 
         if (checkRemovedPreferences()) {

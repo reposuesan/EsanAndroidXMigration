@@ -321,7 +321,6 @@ class HuellaDigitalActivity : AppCompatActivity(), FingerprintAuthenticationDial
 
     override fun onPurchased(withFingerprint: Boolean, cryptopObject: FingerprintManager.CryptoObject?) {
         if (withFingerprint) {
-            Log.i(LOG, "Success in Fingerprint")
             lblMensaje_huelladigital.text = resources.getString(R.string.huella_digital_habilitada)
             val preferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
             val edit = preferencias.edit()

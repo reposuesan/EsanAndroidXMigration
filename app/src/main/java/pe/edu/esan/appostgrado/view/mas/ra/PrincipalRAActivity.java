@@ -182,7 +182,6 @@ public class PrincipalRAActivity extends AppCompatActivity {
         if (accion.equals("individual")) {
             //Mostrar un solo punto
             JSonCabecera = "ListarDescripcionAmbienteResult";
-            Log.i(TAG, buscar);
             Intent i = new Intent(getContext(), DescargaMarkerActivity.class);
             i.putExtra(PutExtraAR, "poi2");
             i.putExtra("idPOI", buscar);
@@ -192,7 +191,6 @@ public class PrincipalRAActivity extends AppCompatActivity {
         } else if(accion.equals("busqueda")){
             //Descarga todos los puntos importantes para mostrarlos posteriormente
             JSonCabecera = "ListarDescripcionAmbienteGrupoResult";
-            Log.i(TAG, "MOSTRAR TODOS LOS PUNTOS IMPORTANTES");
             Intent i = new Intent(getContext(), DescargaMarkerActivity.class);
             i.putExtra(PutExtraAR, "arbuscar");
             startActivity(i);
@@ -200,7 +198,6 @@ public class PrincipalRAActivity extends AppCompatActivity {
         } else {
             //Mostrar todos los puntos importantes
             JSonCabecera = "ListarDescripcionAmbienteGrupoResult";
-            Log.i(TAG, "MOSTRAR TODOS LOS PUNTOS IMPORTANTES");
             Intent i = new Intent(getContext(), DescargaMarkerActivity.class);
             i.putExtra(PutExtraAR, "ar");
             startActivity(i);
@@ -220,7 +217,6 @@ public class PrincipalRAActivity extends AppCompatActivity {
         clearCache(mixContext, 0);
         /*if(dataView.getContext() != null){
             dataView.setMixContext();
-            Log.d(LOG,"MixContext is null now");
         }*/
         super.onDestroy();
     }
@@ -229,8 +225,8 @@ public class PrincipalRAActivity extends AppCompatActivity {
         try {
             dataView.changeState(MixState.NOT_STARTED);
             dataView.getDataHandler().clearMarkers();
-        }catch (Exception e){
-            Log.e(LOG,"ERROR: " + e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -270,7 +266,7 @@ public class PrincipalRAActivity extends AppCompatActivity {
                     }
                 }
             } catch (Exception e) {
-                Log.e(LOG, String.format("Failed to clean the cache, error %s", e.getMessage()));
+                e.printStackTrace();
             }
         }
         return deletedFiles;
@@ -281,11 +277,6 @@ public class PrincipalRAActivity extends AppCompatActivity {
      * means all files.
      */
     public static void clearCache(final Context context, final int numDays) {
-        /*Log.i(TAG, String.format(
-                "Starting cache prune, deleting files older than %d days",
-                numDays));*/
         int numDeletedFiles = clearCacheFolder(context.getCacheDir(), numDays);
-        /*Log.i(TAG, String.format("Cache pruning completed, %d files deleted",
-                numDeletedFiles));*/
     }
 }

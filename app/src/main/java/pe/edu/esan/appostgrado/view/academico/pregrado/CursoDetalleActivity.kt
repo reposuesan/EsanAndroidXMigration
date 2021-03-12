@@ -66,15 +66,12 @@ class CursoDetalleActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "continueSetup() was called")
                         continueSetup()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
     }
 
@@ -150,7 +147,7 @@ class CursoDetalleActivity : AppCompatActivity() {
 
             val request = JSONObject()
             request.put("CodAlumno", usuario.codigo)
-            println(request)
+
             val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
             if (requestEncriptado != null)
                 onBarraAsistencia(Utilitarios.getUrl(Utilitarios.URL.ASIS_ALUMNO_PRE), requestEncriptado, codigoSeccion)
@@ -165,8 +162,6 @@ class CursoDetalleActivity : AppCompatActivity() {
     }*/
 
     /*private fun onBarraAsistencia(url: String, request: JSONObject, codSeccion: String) {
-        println(url)
-        println(request)
         //ResumenAsistenciaAlumnoPregradoResult
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest (
@@ -175,7 +170,7 @@ class CursoDetalleActivity : AppCompatActivity() {
                 Response.Listener { response ->
                     try {
                         val historicoJArray = Utilitarios.jsArrayDesencriptar(response["ResumenAsistenciaAlumnoPregradoResult"] as String, this)
-                        println(historicoJArray)
+
                         if (historicoJArray != null) {
                             if (historicoJArray.length() > 0) {
 
@@ -184,7 +179,7 @@ class CursoDetalleActivity : AppCompatActivity() {
 
 
                                     val codigoSeccion = historicoJObject["SeccionCodigo"] as String
-                                    println(codSeccion)
+
                                     if (codSeccion == codigoSeccion) {
                                         val tardanza = historicoJObject["CantTardanzas"] as Int
                                         val asistencia = historicoJObject["CantAsistencias"] as Int
@@ -216,18 +211,18 @@ class CursoDetalleActivity : AppCompatActivity() {
                             lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                         }
                     } catch (jex: JSONException) {
-                        println(jex)
+
                         /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
                         lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                     } catch (ccax: ClassCastException) {
-                        println(ccax)
+
                         /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
                         lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                     }
                     //prbCargando_historiconotaspre.visibility = View.GONE
                 },
                 Response.ErrorListener { error ->
-                    println(error.toString())
+
                     /*prbCargando_historiconotaspre.visibility = View.GONE
                     lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
                     lblMensaje_historiconotaspre.visibility = View.VISIBLE*/

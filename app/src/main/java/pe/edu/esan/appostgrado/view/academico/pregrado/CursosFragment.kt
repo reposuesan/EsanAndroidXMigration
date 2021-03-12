@@ -53,14 +53,10 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
-        Log.w(LOG,"onCreate()")
     }
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        Log.w(LOG,"onCreateView()")
 
         val view: View?
 
@@ -78,7 +74,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
         controlViewModel = activity?.run {
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-        Log.w(LOG, "ViewModel is: $controlViewModel")
 
         view.swCurso_fcurso.setOnRefreshListener(this)
         view.swCurso_fcurso.setColorSchemeResources(
@@ -106,7 +101,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
 
     override fun onResume() {
-        Log.w(LOG,"onResume()")
         super.onResume()
         if (ControlUsuario.instance.entroEncuesta) {
             ControlUsuario.instance.entroEncuesta = false
@@ -118,27 +112,22 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.w(LOG,"onActivityCreated()")
         showCursos()
     }
 
 
 
     private fun showCursos() {
-        Log.w(LOG,"showCursos()")
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             sendRequest()
         } else {
             controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedCursosPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
-            Log.w(LOG, "controlViewModel.refreshData() was called")
             controlViewModel.refreshDataForFragment(true)
 
         }
@@ -168,10 +157,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
     private fun onCursos(url: String, request: JSONObject) {
 
-        Log.i(LOG, url)
-
-        Log.i(LOG, request.toString())
-
         prbCargando_fcurso.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity)
         val jsObjectRequest = JsonObjectRequest(
@@ -190,7 +175,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                     }
                     if (cursosJArray != null) {
 
-                        Log.i(LOG, cursosJArray.toString())
                         if (cursosJArray.length() > 0) {
 
                             val listCursosPre = ArrayList<CursosPre>()
@@ -372,7 +356,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
             },
             { error ->
 
-                Log.e(LOG, error.message.toString())
                 if(view != null) {
                     view!!.swCurso_fcurso.isRefreshing = false
                     view!!.prbCargando_fcurso.visibility = View.GONE
@@ -395,8 +378,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
             val request = JSONObject()
             request.put("CodAlumno", usuario.codigo)
-
-            Log.i(LOG,request.toString())
 
             var requestEncriptado:JSONObject? = null
 
@@ -427,10 +408,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
     private fun onAsistencias(url: String, request: JSONObject, codSeccion: String, alumnoRetirado: Boolean) {
 
-        Log.i(LOG,url)
-
-        Log.i(LOG, request.toString())
-
         if(activity != null) {
             CustomDialog.instance.showDialogLoad(activity!!)
         }
@@ -448,7 +425,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                         )
                     }
 
-                    Log.i(LOG, historicoJArray.toString())
                     if (historicoJArray != null) {
                         if (historicoJArray.length() > 0) {
 
@@ -458,7 +434,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
                                 val CodigoSeccion = historicoJObject["SeccionCodigo"] as String
 
-                                Log.i(LOG, codSeccion)
                                 if (codSeccion == CodigoSeccion) {
                                     val tardanza = historicoJObject["CantTardanzas"] as Double
                                     val asistencia = historicoJObject["CantAsistencias"] as Double
@@ -489,13 +464,11 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                     }
                 } catch (jex: JSONException) {
 
-                    Log.e(LOG, jex.message)
                     /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
                     lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                     ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
                 } catch (ccax: ClassCastException) {
 
-                    Log.e(LOG, ccax.message)
                     /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
                     lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                     ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
@@ -514,7 +487,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                 }
             },
             { error ->
-                Log.e(LOG, error.message.toString())
                 /*prbCargando_historiconotaspre.visibility = View.GONE
                 lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
                 lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
@@ -582,7 +554,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
 
     override fun onRefresh() {
-        Log.w(LOG, "Refresh Data")
         swCurso_fcurso.isRefreshing = true
         prbCargando_fcurso.visibility = View.GONE
         lblMensaje_fcurso.visibility = View.VISIBLE
@@ -592,13 +563,11 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
 
     override fun onStop() {
-        Log.w(LOG,"onStop()")
         super.onStop()
         requestQueue?.cancelAll(TAG)
     }
 
     override fun onDestroy() {
-        Log.w(LOG,"onDestroy()")
         if(CustomDialog.instance.dialogoCargando != null){
             CustomDialog.instance.dialogoCargando?.dismiss()
             CustomDialog.instance.dialogoCargando = null
@@ -609,7 +578,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
 
     override fun onPause() {
-        Log.w(LOG,"onPause()")
         super.onPause()
     }
 }// Required empty public constructor

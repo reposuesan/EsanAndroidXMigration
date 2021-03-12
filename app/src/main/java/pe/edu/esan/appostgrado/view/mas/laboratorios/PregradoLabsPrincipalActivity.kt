@@ -170,15 +170,12 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
 
     }
@@ -238,7 +235,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
 
                     dispositivo = "Android-$version"
                 } catch (e: PackageManager.NameNotFoundException) {
-                    Log.e(LOG, e.message.toString())
+                    e.printStackTrace()
                 }
 
                 requestTYC.put("Dispositivo", dispositivo)
@@ -274,12 +271,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
 
     private fun verificarAlumnoReservaServicio(url: String, request: JSONObject) {
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         val fRequest = Utilitarios.jsObjectEncrypted(request, this@PregradoLabsPrincipalActivity)
-
-        Log.i(LOG, fRequest.toString())
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -288,14 +280,11 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                 url,
                 fRequest,
                 { response ->
-                    Log.i(LOG, response.toString())
                     if (!response.isNull("VerificarAlumnoReservaResult")) {
                         val jsResponse = Utilitarios.jsObjectDesencriptar(response.getString("VerificarAlumnoReservaResult"), this@PregradoLabsPrincipalActivity)
 
-                        Log.i(LOG, jsResponse!!.toString())
-
                         try {
-                            val horasDisp = jsResponse.optString("HorasDisp")
+                            val horasDisp = jsResponse!!.optString("HorasDisp")
                             val mensaje = jsResponse.optString("Mensaje")
                             //True es error y false es respuesta exitosa
                             val indicador = jsResponse.optString("Indicador")
@@ -362,20 +351,15 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                             }
 
                         } catch (e: Exception) {
-                            Log.e(LOG, e.message.toString())
                             linear_layout_container_lab.visibility = View.GONE
                             progress_bar_principal_labs.visibility = View.GONE
                             empty_text_view_lab.text = getString(R.string.error_recuperacion_datos)
                             empty_text_view_lab.visibility = View.VISIBLE
                             checkbox_terminos_condiciones.visibility = View.GONE
                         }
-
-                        Log.i(LOG, "IdConfiguracion es: $configuracionID")
                     }
                 },
                 { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
                     linear_layout_container_lab.visibility = View.GONE
                     progress_bar_principal_labs.visibility = View.GONE
                     empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
@@ -399,12 +383,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
 
     fun verificarTipoPoliticaPortal(url: String, request: JSONObject) {
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         val fRequest = Utilitarios.jsObjectEncrypted(request, this@PregradoLabsPrincipalActivity)
-
-        Log.i(LOG, fRequest.toString())
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -413,14 +392,11 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                 url,
                 fRequest,
                 { response ->
-                    Log.i(LOG, response.toString())
                     if (!response.isNull("VerificarTipoPoliticaPortalResult")) {
                         val jsResponse = Utilitarios.jsObjectDesencriptar(response.getString("VerificarTipoPoliticaPortalResult"), this@PregradoLabsPrincipalActivity)
 
-                        Log.i(LOG, jsResponse!!.toString())
-
                         try{
-                            val tycAccepted = jsResponse.optString("AceptoPolitica")
+                            val tycAccepted = jsResponse!!.optString("AceptoPolitica")
                             val urlPolitica = jsResponse.optString("UrlPolitica")
 
                             urlForPolicy = urlPolitica
@@ -449,7 +425,6 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                             }
 
                         } catch (e: Exception) {
-                            Log.e(LOG, e.message.toString())
                             linear_layout_container_lab.visibility = View.GONE
                             empty_text_view_lab.text = getString(R.string.error_recuperacion_datos)
                             empty_text_view_lab.visibility = View.VISIBLE
@@ -460,8 +435,6 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
                     linear_layout_container_lab.visibility = View.GONE
                     empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
                     empty_text_view_lab.visibility = View.VISIBLE
@@ -486,12 +459,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
 
     fun aceptarTipoPolitica(url: String, request: JSONObject){
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         val fRequest = Utilitarios.jsObjectEncrypted(request, this@PregradoLabsPrincipalActivity)
-
-        Log.i(LOG, fRequest.toString())
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -500,14 +468,11 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                 url,
                 fRequest,
                 { response ->
-                    Log.i(LOG, response.toString())
                     if (!response.isNull("AceptarTipoPoliticaResult")) {
                         val jsResponse = Utilitarios.jsObjectDesencriptar(response.getString("AceptarTipoPoliticaResult"), this@PregradoLabsPrincipalActivity)
 
-                        Log.i(LOG, jsResponse!!.toString())
-
                         try{
-                            val mensaje = jsResponse.optString("Mensaje")
+                            val mensaje = jsResponse!!.optString("Mensaje")
                             val rpta = jsResponse.optString("Rpta")
 
                             if(rpta.toInt() > 0 ){
@@ -532,7 +497,6 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                                 progress_bar_principal_labs.visibility = View.GONE
                             }
                         } catch (e: Exception) {
-                            Log.e(LOG, e.message.toString())
                             linear_layout_container_lab.visibility = View.GONE
                             empty_text_view_lab.text = getString(R.string.error_recuperacion_datos)
                             empty_text_view_lab.visibility = View.VISIBLE
@@ -543,8 +507,6 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
                     linear_layout_container_lab.visibility = View.GONE
                     empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
                     empty_text_view_lab.visibility = View.VISIBLE

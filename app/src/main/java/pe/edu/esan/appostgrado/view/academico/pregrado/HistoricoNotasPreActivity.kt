@@ -69,15 +69,12 @@ class HistoricoNotasPreActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
     }
 
@@ -97,61 +94,55 @@ class HistoricoNotasPreActivity : AppCompatActivity() {
     }
 
     private fun onHistoricoNotas(url: String, request: JSONObject) {
-        println(url)
-        println(request.toString())
         prbCargando_historiconotaspre.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        val historicoJArray = Utilitarios.jsArrayDesencriptar(response["ListarHistoricoNotasAlumnoPreResult"] as String, this)
-                        //println(historicoJArray)
-                        Log.w(LOG, historicoJArray.toString())
-                        if (historicoJArray != null) {
-                            if (historicoJArray.length() > 0) {
-                                val listaCursos = ArrayList<CursosPre>()
-                                for (i in 0 until historicoJArray.length()) {
-                                    val historicoJObject = historicoJArray[i] as JSONObject
-                                    val proceso = historicoJObject["ProcesoCodigo"] as String
-                                    val curso = historicoJObject["CursoNombre"] as String
-                                    val promedio = historicoJObject["Promedio"] as? String ?: ""
-                                    val estado = historicoJObject["PromedioCondicion"] as String
-                                    val esIngles = historicoJObject["EsIngles"] as Boolean
-                                    val credito = historicoJObject["CursoCredito"] as String
+            { response ->
+                try {
+                    val historicoJArray = Utilitarios.jsArrayDesencriptar(response["ListarHistoricoNotasAlumnoPreResult"] as String, this)
 
-                                    //val esretirado = (retirado.toUpperCase() == "RETIRADO")
-                                    listaCursos.add(CursosPre(curso, promedio, estado, proceso, proceso.isNotEmpty(), esIngles, credito))
-                                }
+                    if (historicoJArray != null) {
+                        if (historicoJArray.length() > 0) {
+                            val listaCursos = ArrayList<CursosPre>()
+                            for (i in 0 until historicoJArray.length()) {
+                                val historicoJObject = historicoJArray[i] as JSONObject
+                                val proceso = historicoJObject["ProcesoCodigo"] as String
+                                val curso = historicoJObject["CursoNombre"] as String
+                                val promedio = historicoJObject["Promedio"] as? String ?: ""
+                                val estado = historicoJObject["PromedioCondicion"] as String
+                                val esIngles = historicoJObject["EsIngles"] as Boolean
+                                val credito = historicoJObject["CursoCredito"] as String
 
-                                rvCurso_historiconotaspre.adapter = HistoricoNotaPreAdapter(listaCursos)
-
-                            } else {
-                                lblMensaje_historiconotaspre.text = resources.getText(R.string.advertencia_no_informacion)
-                                lblMensaje_historiconotaspre.visibility = View.VISIBLE
+                                //val esretirado = (retirado.toUpperCase() == "RETIRADO")
+                                listaCursos.add(CursosPre(curso, promedio, estado, proceso, proceso.isNotEmpty(), esIngles, credito))
                             }
+
+                            rvCurso_historiconotaspre.adapter = HistoricoNotaPreAdapter(listaCursos)
+
                         } else {
-                            lblMensaje_historiconotaspre.text = resources.getText(R.string.error_desencriptar)
+                            lblMensaje_historiconotaspre.text = resources.getText(R.string.advertencia_no_informacion)
                             lblMensaje_historiconotaspre.visibility = View.VISIBLE
                         }
-                    } catch (jex: JSONException) {
-                        println(jex)
-                        lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                        lblMensaje_historiconotaspre.visibility = View.VISIBLE
-                    } catch (ccax: ClassCastException) {
-                        println(ccax)
-                        lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                    } else {
+                        lblMensaje_historiconotaspre.text = resources.getText(R.string.error_desencriptar)
                         lblMensaje_historiconotaspre.visibility = View.VISIBLE
                     }
-                    prbCargando_historiconotaspre.visibility = View.GONE
-                },
-                Response.ErrorListener { error ->
-                    println(error.toString())
-                    prbCargando_historiconotaspre.visibility = View.GONE
+                } catch (jex: JSONException) {
+                    lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                    lblMensaje_historiconotaspre.visibility = View.VISIBLE
+                } catch (ccax: ClassCastException) {
                     lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
                     lblMensaje_historiconotaspre.visibility = View.VISIBLE
                 }
+                prbCargando_historiconotaspre.visibility = View.GONE
+            },
+            { error ->
+                prbCargando_historiconotaspre.visibility = View.GONE
+                lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                lblMensaje_historiconotaspre.visibility = View.VISIBLE
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

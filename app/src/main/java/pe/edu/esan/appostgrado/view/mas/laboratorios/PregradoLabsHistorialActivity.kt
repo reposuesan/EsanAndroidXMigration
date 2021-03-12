@@ -88,15 +88,12 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "mainSetup() was called")
                         listaPrereservasPorAlumnoServicio(URL_TEST, request)
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
 
             /*tv_empty_historial_lab.visibility = View.VISIBLE
             recycler_view_historial_lab.visibility = View.GONE
@@ -111,13 +108,7 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
 
     fun listaPrereservasPorAlumnoServicio(url: String, request: JSONObject) {
 
-        Log.i(LOG, url)
-
-        Log.i(LOG, request.toString())
-
         val fRequest = Utilitarios.jsObjectEncrypted(request, this)
-
-        Log.i(LOG, fRequest.toString())
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
@@ -126,16 +117,12 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
                 url,
                 fRequest,
                 { response ->
-                    Log.i(LOG, response.toString())
                     if (!response.isNull("ListarPreReservasxAlumnoResult")) {
                         val jsResponse = Utilitarios.jsArrayDesencriptar(response.getString("ListarPreReservasxAlumnoResult"), this@PregradoLabsHistorialActivity)
 
-                        Log.i(LOG, jsResponse!!.toString())
-
                         try {
-                            Log.i(LOG, "try block")
 
-                            if(jsResponse.length() > 0) {
+                            if(jsResponse!!.length() > 0) {
                                 for (i in 0..jsResponse.length() - 1) {
 
                                     val reservaItem = jsResponse.getJSONObject(i)
@@ -174,7 +161,6 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
                                 tv_direccion_historial_lab.visibility = View.GONE
                             }
                         } catch (e: Exception) {
-                            Log.e(LOG, e.message.toString())
                             tv_empty_historial_lab.visibility = View.VISIBLE
                             tv_empty_historial_lab.text = getString(R.string.error_recuperacion_datos)
                             recycler_view_historial_lab.visibility = View.GONE
@@ -186,8 +172,6 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    Log.e(LOG, "Error durante el request de Volley")
-                    Log.e(LOG, error.message.toString())
                     tv_empty_historial_lab.visibility = View.VISIBLE
                     tv_empty_historial_lab.text = getString(R.string.no_respuesta_desde_servidor)
                     recycler_view_historial_lab.visibility = View.GONE

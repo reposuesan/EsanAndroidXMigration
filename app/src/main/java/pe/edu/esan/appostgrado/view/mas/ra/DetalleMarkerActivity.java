@@ -117,7 +117,7 @@ public class DetalleMarkerActivity extends AppCompatActivity {
         markerList.add(oneMarker);
 
         List<Marker> markerListActual = PrincipalRAActivity.dataView.getDataHandler().getMarkerList();
-        Log.e(LOG,"Cantidad:"+ PrincipalRAActivity.dataView.getDataHandler().getMarkerCount());
+
         markerListTemporal = new ArrayList<>();
         //PrincipalAulaAR.markerListTemporalPrincipal = new ArrayList<>();
         for(Marker mark : markerListActual){
@@ -141,14 +141,12 @@ public class DetalleMarkerActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        //Log.e("TAGG","ghghghghghghghghghghghghghghghghghgh");
         if (DataView.volverInicio)	{
             finish();
             return;
         }
 
         if (DataView.viendoUnicoMarker)	{
-            //Log.e("TAGG","mmmmmmmmmmmmmmmjjjmjmjmjmjmjjmjm");
             PrincipalRAActivity.dataView.getDataHandler().setMarkerList(markerListTemporal);
             markerListTemporal = null;
             DataView.viendoUnicoMarker = false;
@@ -194,7 +192,6 @@ public class DetalleMarkerActivity extends AppCompatActivity {
             HacerTiempoTask = null;
             //progressDialog.dismiss();
             try {
-                Log.e("TAGG","ESPERANDOOO");
                 Thread.sleep(1000);
                 if(opcion==0) {
                     verAR(false);

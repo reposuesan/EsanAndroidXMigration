@@ -64,14 +64,12 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
     private lateinit var controlViewModel: ControlViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.w(LOG,"onCreate()")
         setHasOptionsMenu(true)
         super.onCreate(savedInstanceState)
     }
 
 
     override fun onResume() {
-        Log.w(LOG,"onResume()")
         super.onResume()
     }
 
@@ -81,24 +79,15 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.w(LOG,"onCreateView()")
-        Log.i(LOG, "Puntos de reunión - pregrado")
-
-        //val view = inflater.inflate(R.layout.fragment_puntos_reunion_pregrado, container, false)
-
-        //return view
-
         return inflater.inflate(R.layout.fragment_puntos_reunion_pregrado, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        //super.onViewCreated(view, savedInstanceState)
-        Log.w(LOG,"onViewCreated()")
 
         controlViewModel = activity?.run {
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-        Log.w(LOG, "ViewModel is: $controlViewModel")
+
         view.linear_layout_container.visibility = View.GONE
         view.empty_text_view.visibility = View.GONE
         view.progress_bar_pp_pregrado.visibility = View.VISIBLE
@@ -199,20 +188,16 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.w(LOG,"onActivityCreated()")
         if(ControlUsuario.instance.currentUsuarioGeneral != null){
             sendRequest()
         } else {
             controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedPuntosReunionPrePublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
-            Log.w(LOG, "controlViewModel.refreshData() was called")
             controlViewModel.refreshDataForFragment(true)
         }
 
@@ -286,7 +271,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                 dispositivo = "Android-$version"
                             }
                         } catch (e: PackageManager.NameNotFoundException) {
-                            Log.e(LOG, e.message.toString())
+                            e.printStackTrace()
                         }
 
                         requestTYC.put("Dispositivo", dispositivo)
@@ -323,13 +308,8 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
 
     fun obtenerConfiguracionIdServicio(url: String, request: JSONObject) {
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         if(activity != null) {
             val fRequest = Utilitarios.jsObjectEncrypted(request, activity!!.applicationContext)
-
-            Log.i(LOG, fRequest.toString())
 
             if (fRequest != null) {
                 mRequestQueue = Volley.newRequestQueue(activity!!.applicationContext)
@@ -338,7 +318,6 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                     url,
                     fRequest,
                     { response ->
-                        Log.i(LOG, response.toString())
                         if (!response.isNull("ObtenerConfiguracionAlumnoResult")) {
                             var jsResponse: JSONObject? = null
                             if (activity != null) {
@@ -348,7 +327,6 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                 )
                             }
                             if (jsResponse != null) {
-                                Log.i(LOG, jsResponse.toString())
 
                                 try {
                                     configuracionID = jsResponse.optString("IdConfiguracion")
@@ -406,7 +384,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                     }
 
                                 } catch (e: Exception) {
-                                    Log.e(LOG, e.message.toString())
+                                    e.printStackTrace()
 
                                     if (view != null) {
                                         view!!.linear_layout_container.visibility = View.GONE
@@ -416,8 +394,6 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                         view!!.progress_bar_pp_pregrado.visibility = View.GONE
                                     }
                                 }
-
-                                Log.i(LOG, "IdConfiguracion es: $configuracionID")
                             } else {
                                 if (view != null) {
                                     view!!.linear_layout_container.visibility = View.GONE
@@ -430,8 +406,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                         }
                     },
                     { error ->
-                        Log.e(LOG, "Error durante el request de Volley")
-                        Log.e(LOG, error.message.toString())
+                        error.printStackTrace()
 
                         if (view != null) {
                             view!!.linear_layout_container.visibility = View.GONE
@@ -460,14 +435,8 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
 
     fun verificarTipoPoliticaPortal(url: String, request: JSONObject) {
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         if(activity != null) {
             val fRequest = Utilitarios.jsObjectEncrypted(request, activity!!.applicationContext)
-
-            Log.i(LOG, fRequest.toString())
-
             if (fRequest != null) {
                 mRequestQueue = Volley.newRequestQueue(activity!!.applicationContext)
                 val jsonObjectRequest = JsonObjectRequest(
@@ -475,7 +444,6 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                     url,
                     fRequest,
                     { response ->
-                        Log.i(LOG, response.toString())
                         if (!response.isNull("VerificarTipoPoliticaPortalResult")) {
                             var jsResponse: JSONObject? = null
                             if(activity != null) {
@@ -486,7 +454,6 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                             }
 
                             if (jsResponse != null) {
-                                Log.i(LOG, jsResponse.toString())
 
                                 try {
                                     val tycAccepted = jsResponse.optString("AceptoPolitica")
@@ -533,7 +500,6 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                     }
 
                                 } catch (e: Exception) {
-                                    Log.e(LOG, e.message.toString())
                                     if (view != null) {
                                         view!!.linear_layout_container.visibility = View.GONE
                                         view!!.empty_text_view.text =
@@ -555,8 +521,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                         }
                     },
                     { error ->
-                        Log.e(LOG, "Error durante el request de Volley")
-                        Log.e(LOG, error.message.toString())
+                        error.printStackTrace()
                         if (view != null) {
                             view!!.linear_layout_container.visibility = View.GONE
                             view!!.empty_text_view.text =
@@ -583,13 +548,8 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
 
     fun aceptarTipoPolitica(url: String, request: JSONObject){
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         if(activity != null) {
             val fRequest = Utilitarios.jsObjectEncrypted(request, activity!!.applicationContext)
-
-            Log.i(LOG, fRequest.toString())
 
             if (fRequest != null) {
                 mRequestQueue = Volley.newRequestQueue(activity!!.applicationContext)
@@ -598,7 +558,6 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                     url,
                     fRequest,
                     { response ->
-                        Log.i(LOG, response.toString())
                         if (!response.isNull("AceptarTipoPoliticaResult")) {
                             var jsResponse: JSONObject? = null
                             if(activity != null) {
@@ -609,7 +568,6 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                             }
 
                             if (jsResponse != null) {
-                                Log.i(LOG, jsResponse.toString())
 
                                 try {
                                     val mensaje = jsResponse.optString("Mensaje")
@@ -663,7 +621,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                         }
                                     }
                                 } catch (e: Exception) {
-                                    Log.e(LOG, e.message.toString())
+                                    e.printStackTrace()
                                     if (view != null) {
                                         view!!.linear_layout_container.visibility = View.GONE
                                         view!!.empty_text_view.text =
@@ -685,8 +643,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                         }
                     },
                     { error ->
-                        Log.e(LOG, "Error durante el request de Volley")
-                        Log.e(LOG, error.message.toString())
+                        error.printStackTrace()
                         if (view != null) {
                             view!!.linear_layout_container.visibility = View.GONE
                             view!!.empty_text_view.text =
@@ -711,18 +668,15 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
     }
 
     override fun onStop() {
-        Log.w(LOG,"onStop()")
         super.onStop()
         mRequestQueue?.cancelAll(TAG)
     }
 
     override fun onPause() {
-        Log.w(LOG,"onPause()")
         super.onPause()
     }
 
     override fun onDestroy() {
-        Log.w(LOG,"onDestroy()")
         super.onDestroy()
     }
 

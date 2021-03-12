@@ -220,15 +220,12 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest(seccion)
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
     }
 
@@ -243,77 +240,73 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
     }
 
     private fun onHistorialAsistencia(url: String, request: JSONObject) {
-        println(url)
-        println(request.toString())
         prbCargando_histoasistprof.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest (
                 url,
                 request,
-                Response.Listener { response ->
-                    println(response.toString())
-                    try {
-                        val recordAsistenciaJArray = response["ListarRecordAsistenciaDocentexSeccionResult"] as JSONArray
-                        if (recordAsistenciaJArray.length() > 0 ){
-                            var cantidadSiMarco = 0
-                            var cantidadNoMarco = 0
-                            var cantidadProximo = 0
+            { response ->
+                try {
+                    val recordAsistenciaJArray = response["ListarRecordAsistenciaDocentexSeccionResult"] as JSONArray
+                    if (recordAsistenciaJArray.length() > 0 ){
+                        var cantidadSiMarco = 0
+                        var cantidadNoMarco = 0
+                        var cantidadProximo = 0
 
-                            for (r in 0 until recordAsistenciaJArray.length()) {
-                                val recordAsistenciaJObject = recordAsistenciaJArray[r] as JSONObject
-                                val fecha = recordAsistenciaJObject["FECHA"] as String
-                                val hfin = recordAsistenciaJObject["FIN"] as String
-                                val hmarco = recordAsistenciaJObject["HORA"] as String
-                                val hinicio = recordAsistenciaJObject["INICIO"] as String
-                                val marco = recordAsistenciaJObject["MARCOASISTENCIA"] as Int
-                                val fechasesion = Utilitarios.getStringToDateddMMyyyyHHmm("$fecha $hfin")
-                                var estado = 0
-                                if (fechasesion != null) {
-                                    if (fechasesion.before(Date())) {
-                                        if (marco == 1) {
-                                            estado = 1
-                                            cantidadSiMarco += 1
-                                        } else {
-                                            estado = 0
-                                            cantidadNoMarco += 1
-                                        }
+                        for (r in 0 until recordAsistenciaJArray.length()) {
+                            val recordAsistenciaJObject = recordAsistenciaJArray[r] as JSONObject
+                            val fecha = recordAsistenciaJObject["FECHA"] as String
+                            val hfin = recordAsistenciaJObject["FIN"] as String
+                            val hmarco = recordAsistenciaJObject["HORA"] as String
+                            val hinicio = recordAsistenciaJObject["INICIO"] as String
+                            val marco = recordAsistenciaJObject["MARCOASISTENCIA"] as Int
+                            val fechasesion = Utilitarios.getStringToDateddMMyyyyHHmm("$fecha $hfin")
+                            var estado = 0
+                            if (fechasesion != null) {
+                                if (fechasesion.before(Date())) {
+                                    if (marco == 1) {
+                                        estado = 1
+                                        cantidadSiMarco += 1
                                     } else {
-                                        if (marco == 1) {
-                                            estado = 1
-                                            cantidadSiMarco += 1
-                                        } else {
-                                            cantidadProximo += 1
-                                            estado = 2
-                                        }
+                                        estado = 0
+                                        cantidadNoMarco += 1
                                     }
                                 } else {
                                     if (marco == 1) {
-                                        cantidadSiMarco += 1
                                         estado = 1
+                                        cantidadSiMarco += 1
                                     } else {
-                                        cantidadNoMarco += 1
-                                        estado = 0
+                                        cantidadProximo += 1
+                                        estado = 2
                                     }
                                 }
-
-                                listaSeccionHistorial.add(SeccionHistorial(fecha, hinicio, hfin, marco, hmarco, estado))
+                            } else {
+                                if (marco == 1) {
+                                    cantidadSiMarco += 1
+                                    estado = 1
+                                } else {
+                                    cantidadNoMarco += 1
+                                    estado = 0
+                                }
                             }
-                            adapter = HistoricoAsistenciaProfesorAdapter(listaSeccionHistorial)
-                            rvSesiones_histoasistprof.adapter = adapter
-                            getDetalle(listaSeccionHistorial.size, cantidadSiMarco, cantidadNoMarco, cantidadProximo)
-                        } else {
-                            lblMensaje_histoasistprof.text = resources.getString(R.string.advertencia_nosesiones)
+
+                            listaSeccionHistorial.add(SeccionHistorial(fecha, hinicio, hfin, marco, hmarco, estado))
                         }
-                    } catch (e: Exception) {
-                        lblMensaje_histoasistprof.text = resources.getString(R.string.error_respuesta_server)
+                        adapter = HistoricoAsistenciaProfesorAdapter(listaSeccionHistorial)
+                        rvSesiones_histoasistprof.adapter = adapter
+                        getDetalle(listaSeccionHistorial.size, cantidadSiMarco, cantidadNoMarco, cantidadProximo)
+                    } else {
+                        lblMensaje_histoasistprof.text = resources.getString(R.string.advertencia_nosesiones)
                     }
-                    prbCargando_histoasistprof.visibility = View.GONE
-                },
-                Response.ErrorListener { error ->
-                    println(error.toString())
-                    prbCargando_histoasistprof.visibility = View.GONE
-                    lblMensaje_histoasistprof.text = resources.getString(R.string.error_default)
+                } catch (e: Exception) {
+                    lblMensaje_histoasistprof.text = resources.getString(R.string.error_respuesta_server)
                 }
+                prbCargando_histoasistprof.visibility = View.GONE
+            },
+            { error ->
+                prbCargando_histoasistprof.visibility = View.GONE
+                lblMensaje_histoasistprof.text = resources.getString(R.string.error_default)
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

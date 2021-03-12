@@ -75,15 +75,12 @@ class PRMisReservasActivity : AppCompatActivity() {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
 
     }
@@ -109,82 +106,76 @@ class PRMisReservasActivity : AppCompatActivity() {
 
     private fun onMisReservas(url: String, request: JSONObject) {
         prbCargando_prmisreservas.visibility = View.VISIBLE
-        println(url)
-        println(request)
         requestQueue = Volley.newRequestQueue(this)
         val jsObjectRequest = JsonObjectRequest(
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    prbCargando_prmisreservas.visibility = View.GONE
-                    try {
+            { response ->
+                prbCargando_prmisreservas.visibility = View.GONE
+                try {
 
-                        if (!response.isNull("ListarReservasxConfiguracionAlumnoResult")) {
-                            val datosMisReservasJArray = Utilitarios.jsArrayDesencriptar(response["ListarReservasxConfiguracionAlumnoResult"] as String, this)
+                    if (!response.isNull("ListarReservasxConfiguracionAlumnoResult")) {
+                        val datosMisReservasJArray = Utilitarios.jsArrayDesencriptar(response["ListarReservasxConfiguracionAlumnoResult"] as String, this)
 
-                            if (datosMisReservasJArray != null) {
-                                if (datosMisReservasJArray.length() > 0) {
-                                    var ultimaFecha = ""
-                                    val listaMisReservas = ArrayList<PRMiReserva>()
+                        if (datosMisReservasJArray != null) {
+                            if (datosMisReservasJArray.length() > 0) {
+                                var ultimaFecha = ""
+                                val listaMisReservas = ArrayList<PRMiReserva>()
 
-                                    for (z in 0 until datosMisReservasJArray.length()) {
-                                        val miReservaJson = datosMisReservasJArray[z] as JSONObject
+                                for (z in 0 until datosMisReservasJArray.length()) {
+                                    val miReservaJson = datosMisReservasJArray[z] as JSONObject
 
-                                        val fecha = miReservaJson["FechaReserva"] as String
-                                        val hInicio = miReservaJson["HoraIni"] as String
-                                        val hFin = miReservaJson["HoraFin"] as String
-                                        val estado = miReservaJson["ValTabla"] as String
-                                        val cubiculo = miReservaJson["NomCubiculo"] as String
-                                        val descripcion = miReservaJson["RefUbicacion"] as String
+                                    val fecha = miReservaJson["FechaReserva"] as String
+                                    val hInicio = miReservaJson["HoraIni"] as String
+                                    val hFin = miReservaJson["HoraFin"] as String
+                                    val estado = miReservaJson["ValTabla"] as String
+                                    val cubiculo = miReservaJson["NomCubiculo"] as String
+                                    val descripcion = miReservaJson["RefUbicacion"] as String
 
-                                        if (ultimaFecha.isEmpty()) {
+                                    if (ultimaFecha.isEmpty()) {
+                                        ultimaFecha = fecha
+                                        listaMisReservas.add(PRMiReserva(1, ultimaFecha))
+                                        listaMisReservas.add(PRMiReserva(2, ultimaFecha, cubiculo, hInicio, hFin, descripcion, estado))
+
+                                    } else {
+                                        if (ultimaFecha == fecha) {
+                                            listaMisReservas.add(PRMiReserva(2, ultimaFecha, cubiculo, hInicio, hFin, descripcion, estado))
+                                        } else {
                                             ultimaFecha = fecha
                                             listaMisReservas.add(PRMiReserva(1, ultimaFecha))
                                             listaMisReservas.add(PRMiReserva(2, ultimaFecha, cubiculo, hInicio, hFin, descripcion, estado))
-
-                                        } else {
-                                            if (ultimaFecha == fecha) {
-                                                listaMisReservas.add(PRMiReserva(2, ultimaFecha, cubiculo, hInicio, hFin, descripcion, estado))
-                                            } else {
-                                                ultimaFecha = fecha
-                                                listaMisReservas.add(PRMiReserva(1, ultimaFecha))
-                                                listaMisReservas.add(PRMiReserva(2, ultimaFecha, cubiculo, hInicio, hFin, descripcion, estado))
-                                            }
                                         }
                                     }
-
-                                    rvMisReservas.adapter = PRMiReservaAdapter(listaMisReservas)
-                                } else {
-                                    lblMensaje_prmisreservas.visibility = View.VISIBLE
-                                    lblMensaje_prmisreservas.text = resources.getString(R.string.mensaje_prsin_reservas)
                                 }
+
+                                rvMisReservas.adapter = PRMiReservaAdapter(listaMisReservas)
                             } else {
                                 lblMensaje_prmisreservas.visibility = View.VISIBLE
-                                lblMensaje_prmisreservas.text = resources.getString(R.string.error_desencriptar)
+                                lblMensaje_prmisreservas.text = resources.getString(R.string.mensaje_prsin_reservas)
                             }
                         } else {
-                            println("Error 1")
                             lblMensaje_prmisreservas.visibility = View.VISIBLE
-                            lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
+                            lblMensaje_prmisreservas.text = resources.getString(R.string.error_desencriptar)
                         }
-                    } catch (jex: JSONException) {
-                        println("Error 2")
-                        lblMensaje_prmisreservas.visibility = View.VISIBLE
-                        lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
-                    } catch (caax: ClassCastException) {
-                        println("Error 3")
+                    } else {
                         lblMensaje_prmisreservas.visibility = View.VISIBLE
                         lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
                     }
-
-                },
-                Response.ErrorListener { error ->
-                    println("Error E")
-                    prbCargando_prmisreservas.visibility = View.GONE
+                } catch (jex: JSONException) {
+                    lblMensaje_prmisreservas.visibility = View.VISIBLE
+                    lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
+                } catch (caax: ClassCastException) {
                     lblMensaje_prmisreservas.visibility = View.VISIBLE
                     lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
                 }
+
+            },
+            { error ->
+                prbCargando_prmisreservas.visibility = View.GONE
+                lblMensaje_prmisreservas.visibility = View.VISIBLE
+                lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
+            }
         )
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

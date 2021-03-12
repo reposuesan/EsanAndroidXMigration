@@ -137,7 +137,6 @@ class MenuPrincipalActivity : AppCompatActivity() {
                 lblTituloActivity!!.text = tab!!.text.toString()
 
                 if (tab.text.toString() != resources.getString(TAB_MAS)){
-                    println(tab.text.toString())
                     sendAnalyticsOption(tipoUsuario, tab.text.toString())
                 }
             }
@@ -201,9 +200,8 @@ class MenuPrincipalActivity : AppCompatActivity() {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         when (usuario) {
             is Alumno -> {
-                println("ES ALUMNO")
                 if (usuario.tipoAlumno.equals(Utilitarios.POS)) {
-                    println("ALUMNO POS")
+
                     lblTituloActivity!!.text = resources.getString(TAB_HORARIO)
                     adapter.addFragment(HorarioFragment(), resources.getString(TAB_HORARIO))
                     adapter.addFragment(ProgramasFragment(), resources.getString(TAB_PROGRAMAS))
@@ -211,7 +209,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
                     adapter.addFragment(PuntosReunionPosgradoFragment(), resources.getString(TAB_PUNTOSREUNION))
                     adapter.addFragment(MasFragment(), resources.getString(TAB_MAS))
                 } else {
-                    println("ALUMNO PRE")
+
                     lblTituloActivity!!.text = resources.getString(TAB_HORARIO)
                     adapter.addFragment(HorarioFragment(), resources.getString(TAB_HORARIO))
                     adapter.addFragment(CursosFragment(), resources.getString(TAB_CURSOS))
@@ -221,14 +219,14 @@ class MenuPrincipalActivity : AppCompatActivity() {
                 }
             }
             is Profesor -> {
-                println("ES PROFESOR")
+
                 lblTituloActivity!!.text = resources.getString(TAB_HORARIO)
                 adapter.addFragment(HorarioFragment(), resources.getString(TAB_HORARIO))
                 adapter.addFragment(SeccionesFragment(), resources.getString(TAB_SECCIONES))
                 adapter.addFragment(MasFragment(), resources.getString(TAB_MAS))
             }
             else -> {
-                println("INVITADO")
+
                 lblTituloActivity!!.text = resources.getString(TAB_MAS)
                 adapter.addFragment(MasFragment(), resources.getString(TAB_MAS))
             }
@@ -250,9 +248,9 @@ class MenuPrincipalActivity : AppCompatActivity() {
 
         when (usuario) {
             is Alumno -> {
-                println("ES ALUMNO")
+
                 if (usuario.tipoAlumno.equals(Utilitarios.POS)) {
-                    println("ALUMNO POS")
+
                     tipoUsuario = "AlumnoPosgrado"
 
                     val poshorario= LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
@@ -282,7 +280,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
                     tabs.getTabAt(4)!!.customView = (posmas)
 
                 } else {
-                    println("ALUMNO PRE")
+
                     tipoUsuario = "AlumnoPregrado"
                     val poshorario = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
                     poshorario.text = resources.getString(T_HORARIO)
@@ -313,7 +311,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
                 }
             }
             is Profesor -> {
-                println("ES PROFESOR")
+
                 tipoUsuario = "Profesor"
                 val poshorario = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
                 poshorario.text = resources.getString(T_HORARIO)
@@ -332,7 +330,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
                 tabs.getTabAt(2)?.customView = profmas
             }
             else -> {
-                println("INVITADO")
+
                 tipoUsuario = "Invitado"
 
                 val invmas = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView

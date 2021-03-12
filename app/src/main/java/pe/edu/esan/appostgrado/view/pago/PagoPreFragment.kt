@@ -42,7 +42,6 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
     private lateinit var controlViewModel: ControlViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Log.w(LOG, "onCreateView()")
         val view: View?
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -59,7 +58,6 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         controlViewModel = activity?.run {
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-        Log.w(LOG, "ViewModel is: $controlViewModel")
         view.lblMensaje_fpagopre.typeface = Utilitarios.getFontRoboto(context!!, Utilitarios.TypeFont.REGULAR)
 
         view.swPago_fpagopre.setOnRefreshListener(this)
@@ -81,7 +79,6 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.w(LOG, "onActivityCreated()")
         showPagoPre()
     }
 
@@ -92,13 +89,10 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             controlViewModel.dataWasRetrievedForFragmentPublic.observe(viewLifecycleOwner,
                 Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedPagoPrePublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
-            Log.w(LOG, "controlViewModel.refreshData() was called")
             controlViewModel.refreshDataForFragment(true)
         }
     }
@@ -120,10 +114,6 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     private fun onPagoPre(url: String, request: JSONObject) {
 
-        Log.i(LOG,url)
-
-        Log.i(LOG, request.toString())
-
         prbCargando_fpagopre.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity)
         val jsObjectRequest = JsonObjectRequest(
@@ -133,7 +123,7 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             { response ->
                 try {
                     val pagopreJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPregradoResult"] as String, activity!!.applicationContext)
-                    Log.i(LOG, pagopreJArray.toString())
+
                     if (pagopreJArray != null) {
                         if (pagopreJArray.length() > 0) {
                             val listPago = ArrayList<PagoPre>()
@@ -164,7 +154,6 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                             }
                             val adapter = PagoPreAdapter(listPago) { pagoPre ->
 
-                                Log.i(LOG, pagoPre.monto)
                                 if (pagoPre.codigo?.trim() != "") {
 
                                     val webpageRecibo: Uri = Uri.parse(Utilitarios.getBoletasPreUrl(pagoPre.codigo!!))
@@ -204,7 +193,6 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                 swPago_fpagopre.isRefreshing = false
             },
             { error ->
-                Log.e(LOG, error.message.toString())
                 rvPago_fpagopre.visibility = View.GONE
                 prbCargando_fpagopre.visibility = View.GONE
                 swPago_fpagopre.isRefreshing = false
@@ -219,19 +207,16 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
     }
 
     override fun onStop() {
-        Log.w(LOG, "onStop()")
         super.onStop()
         requestQueue?.cancelAll(TAG)
     }
 
     override fun onRefresh() {
-        Log.i(LOG, "REFRESH")
         swPago_fpagopre.isRefreshing = true
         showPagoPre()
     }
 
     override fun onDestroy() {
-        Log.w(LOG, "onDestroy()")
         super.onDestroy()
     }
 

@@ -65,7 +65,6 @@ public class FingerprintAuthenticationLoginDialogFragment extends DialogFragment
         mCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i(LOG,"Acción Cancelar");
                 /*mActivity.onCancel();*/
                 callback.onCancel();
                 //dismiss();
@@ -126,7 +125,6 @@ public class FingerprintAuthenticationLoginDialogFragment extends DialogFragment
 
     @Override
     public void onError(int errorId) {
-        Log.i(LOG,"Error, la huella digital no se pudo reconocer");
         // Fingerprint is not used anymore. Stop listening for it.
         mFingerprintUiHelper.stopListening();
         /*mActivity.onErrorFingerprint();*/

@@ -221,9 +221,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     private fun onHorario(url: String, request: JSONObject, currentUsuario: Any) {
 
-        Log.i(LOG, url)
-        Log.i(LOG, request.toString())
-
         prbCargando_fhorario.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity!!)
         val jsObjectRequest = JsonObjectRequest(
@@ -360,9 +357,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                 }
             },
             { volleyError ->
-
-                Log.e(LOG, volleyError.message.toString())
-                Log.e(LOG, "Error en Volley request")
 
                 if (view != null) {
                     view!!.rvHorario_fhorario.visibility = View.GONE

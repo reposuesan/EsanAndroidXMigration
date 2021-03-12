@@ -105,15 +105,12 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
             controlViewModel.dataWasRetrievedForActivityPublic.observe(this,
                 androidx.lifecycle.Observer<Boolean> { value ->
                     if(value){
-                        Log.w(LOG, "operationFinishedActivityPublic.observe() was called")
-                        Log.w(LOG, "sendRequest() was called")
                         sendRequest()
                     }
                 }
             )
 
             controlViewModel.getDataFromRoom()
-            Log.w(LOG, "controlViewModel.getDataFromRoom() was called")
         }
 
     }
@@ -146,20 +143,11 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                 is Profesor -> {
                     if (eshoy) {
                         for (horario in ControlUsuario.instance.currentListHorarioSelect) {
-                            //Utilitarios.getDateToStringddMMyyyy()
                             val hActual = try {
                                 horario.horaConsulta.split(" ")[1]
                             } catch (e: IndexOutOfBoundsException) {
                                 ""
                             }
-                            //val hActual = "19:00"
-                            //println(".---------------------------------->")
-                            //println(hActual)
-                            //println(horario.horaConsulta)
-                            Log.i(LOG, ".---------------------------------->")
-                            Log.i(LOG, hActual)
-                            Log.i(LOG, horario.horaConsulta)
-
 
                             val fini = Utilitarios.getStringToDateHHmm(horario.horaInicio)
                             val ffin = Utilitarios.getStringToDateHHmm(horario.horaFin)
@@ -170,14 +158,10 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                                 val finni = Utilitarios.addMinutesToDate(fini, -31)
                                 var ffinn = Utilitarios.addMinutesToDate(ffin, 11)
                                 if (finni.before(factual) && ffinn.after(factual)) {
-                                    //println("DENTRO DE HORA")
-                                    Log.i(LOG, "DENTRO DE HORA")
                                     horario.tipoHorario = 3
                                 } else {
                                     ffinn = Utilitarios.addMinutesToDate(ffinn, -1)
                                     if (ffinn.before(factual)) {
-                                        //println("ANTES DE HORA")
-                                        Log.i(LOG, "ANTES DE HORA")
                                         horario.tipoHorario = 4
                                     }
                                 }
@@ -248,11 +232,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                                                             .setPositiveButton(resources.getString(R.string.pegar), DialogInterface.OnClickListener { dialogInterface, i ->
                                                                 if (idSesion != -1) {
                                                                     //mOnClickListener.onItemClick(codSeccion, idSesion, idHorario, sesion);
-                                                                    println(horario.seccionCodigo)
-                                                                    println(horario.idSesion)
-                                                                    println(horario.idHorario)
-                                                                    println(idSesion)
-                                                                    println("INDEX: "+ i)
 
                                                                     val request = JSONObject()
                                                                     request.put("CodSeccion", horario.seccionCodigo)
@@ -356,7 +335,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                 }
             },
             { error ->
-                Log.e(LOG, error.message.toString())
                 ControlUsuario.instance.indexActualiza = -1
                 val snack = Snackbar.make(
                     findViewById(android.R.id.content),
@@ -413,7 +391,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                                 valores.put("CodSeccion", horario.seccionCodigo)
                                 valores.put("IdHorario", horario.idHorario)
                                 valores.put("IdSesion", if (horario.esPregrado == 1) -1 else horario.idSesion)
-                                Log.i(LOG, valores.toString())
                                 val requestEncriptado = Utilitarios.jsObjectEncrypted(valores, this)
                                 if (requestEncriptado != null)
                                     getConsultarAsistenciaProfesor(
@@ -429,10 +406,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                     }
                 }
             }
-            Log.i(
-                LOG,
-                horario.curso + " --- " + horario.horaFin + " <> " + horario.horaInicio + " -- " + horario.horaConsulta
-            )
         }
     }
 
@@ -496,7 +469,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                 }
             },
             { error ->
-                Log.e(LOG, error.message.toString())
                 ControlUsuario.instance.indexActualiza = -1
                 val snack = Snackbar.make(
                     findViewById(android.R.id.content),
@@ -619,7 +591,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                 }
             },
             { error ->
-                Log.e(LOG, error.message.toString())
                 val snack = Snackbar.make(
                     findViewById(android.R.id.content),
                     resources.getString(R.string.error_no_conexion),
@@ -763,7 +734,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
 
     override fun onPause() {
         super.onPause()
-        Log.i(LOG, "onPause")
         try {
             locationmanager?.removeUpdates(this)
         } catch (se: SecurityException) {
@@ -774,7 +744,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
 
     override fun onStop() {
         super.onStop()
-        Log.i(LOG, "onStop")
         requestQueue?.cancelAll(TAG)
         requestQueueRegAsisProf?.cancelAll(TAG)
         requestQueueRegCopiaAsisAlumno?.cancelAll(TAG)

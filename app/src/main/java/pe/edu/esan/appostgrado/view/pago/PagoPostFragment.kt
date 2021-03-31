@@ -15,6 +15,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.fragment_cursos.view.*
 import kotlinx.android.synthetic.main.fragment_pago_post.*
 import kotlinx.android.synthetic.main.fragment_pago_post.view.*
 import org.json.JSONException
@@ -27,6 +28,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.Alumno
 import pe.edu.esan.appostgrado.entidades.PagoPost
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 
 /**
@@ -112,8 +115,9 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
 
         prbCargando_fpagopost.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity!!)
-
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -168,14 +172,40 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
                 swPago_fpagopost.isRefreshing = false
             },
             { error ->
-                prbCargando_fpagopost.visibility = View.GONE
-                rvPago_fpagopost.visibility = View.GONE
-                swPago_fpagopost.isRefreshing = false
-                lblMensaje_fpagopost.visibility = View.VISIBLE
-                lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default);
-                /*lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_no_conexion)*/
+                if(error.networkResponse.statusCode == 401) {
+
+                    requireActivity().renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onPagoPost(url, request)
+                        } else {
+                            if(view != null) {
+                                prbCargando_fpagopost.visibility = View.GONE
+                                rvPago_fpagopost.visibility = View.GONE
+                                swPago_fpagopost.isRefreshing = false
+                                lblMensaje_fpagopost.visibility = View.VISIBLE
+                                lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default)
+                            }
+                        }
+                    }
+                } else {
+                    if(view != null) {
+                        prbCargando_fpagopost.visibility = View.GONE
+                        rvPago_fpagopost.visibility = View.GONE
+                        swPago_fpagopost.isRefreshing = false
+                        lblMensaje_fpagopost.visibility = View.VISIBLE
+                        lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default)
+                    }
+                }
+
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return requireActivity().getHeaderForJWT()
+            }
+        }
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

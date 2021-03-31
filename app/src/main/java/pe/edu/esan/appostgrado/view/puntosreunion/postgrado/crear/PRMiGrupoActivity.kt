@@ -21,6 +21,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_mi_grupo.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONException
@@ -32,6 +33,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.control.CustomDialog
 import pe.edu.esan.appostgrado.entidades.Alumno
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class PRMiGrupoActivity : AppCompatActivity() {
 
@@ -131,7 +134,9 @@ class PRMiGrupoActivity : AppCompatActivity() {
         prbCargando_prmigrupo.visibility = View.VISIBLE
 
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -183,14 +188,36 @@ class PRMiGrupoActivity : AppCompatActivity() {
 
             },
             { error ->
-                prbCargando_prmigrupo.visibility = View.GONE
-                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onVerificarGrupo(url, request)
+                        } else {
+                            prbCargando_prmigrupo.visibility = View.GONE
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    }
+                } else {
+                    prbCargando_prmigrupo.visibility = View.GONE
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -217,7 +244,9 @@ class PRMiGrupoActivity : AppCompatActivity() {
         prbCargando_prmigrupo.visibility = View.VISIBLE
 
         requestQueueGrupo = Volley.newRequestQueue(this)
-        val jsonObjectResquest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsonObjectRequest = object: JsonObjectRequest(
+        /*val jsonObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -288,16 +317,38 @@ class PRMiGrupoActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                prbCargando_prmigrupo.visibility = View.GONE
-                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onMiGrupo(url, request)
+                        } else {
+                            prbCargando_prmigrupo.visibility = View.GONE
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    }
+                } else {
+                    prbCargando_prmigrupo.visibility = View.GONE
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                }
+
             }
         )
-        jsonObjectResquest.tag = TAG
-        requestQueueGrupo?.add(jsonObjectResquest)
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
+        jsonObjectRequest.tag = TAG
+        requestQueueGrupo?.add(jsonObjectRequest)
     }
 
     fun setEliminarAlumnoGrupo(idGrupo: Int?, codigoAlumnoElimina: String, position: Int) {
@@ -344,7 +395,9 @@ class PRMiGrupoActivity : AppCompatActivity() {
         CustomDialog.instance.showDialogLoad(this)
 
         requestQueueEliminar = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -413,14 +466,36 @@ class PRMiGrupoActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                CustomDialog.instance.dialogoCargando?.dismiss()
-                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onEliminarAlumnoGrupo(url, request, position)
+                        } else {
+                            CustomDialog.instance.dialogoCargando?.dismiss()
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    }
+                } else {
+                    CustomDialog.instance.dialogoCargando?.dismiss()
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueueEliminar?.add(jsObjectRequest)
     }

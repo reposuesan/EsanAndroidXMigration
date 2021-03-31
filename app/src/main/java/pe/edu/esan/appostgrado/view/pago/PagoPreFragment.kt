@@ -29,6 +29,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.Alumno
 import pe.edu.esan.appostgrado.entidades.PagoPre
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 
 class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener {
@@ -116,7 +118,9 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
         prbCargando_fpagopre.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -193,14 +197,37 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                 swPago_fpagopre.isRefreshing = false
             },
             { error ->
-                rvPago_fpagopre.visibility = View.GONE
-                prbCargando_fpagopre.visibility = View.GONE
-                swPago_fpagopre.isRefreshing = false
-                lblMensaje_fpagopre.visibility = View.VISIBLE
-                lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                if(error.networkResponse.statusCode == 401) {
+
+                    requireActivity().renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onPagoPre(url, request)
+                        } else {
+                            if(view != null) {
+                                rvPago_fpagopre.visibility = View.GONE
+                                prbCargando_fpagopre.visibility = View.GONE
+                                swPago_fpagopre.isRefreshing = false
+                                lblMensaje_fpagopre.visibility = View.VISIBLE
+                                lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                            }
+                        }                        }
+                } else {
+                    if(view != null) {
+                        rvPago_fpagopre.visibility = View.GONE
+                        prbCargando_fpagopre.visibility = View.GONE
+                        swPago_fpagopre.isRefreshing = false
+                        lblMensaje_fpagopre.visibility = View.VISIBLE
+                        lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                    }
+                }
             }
         )
-
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return requireActivity().getHeaderForJWT()
+            }
+        }
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

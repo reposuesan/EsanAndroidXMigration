@@ -15,6 +15,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_historico_notas_pre.*
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -25,6 +26,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.CursosPre
 import pe.edu.esan.appostgrado.entidades.UserEsan
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class HistoricoNotasPreActivity : AppCompatActivity() {
 
@@ -96,7 +99,9 @@ class HistoricoNotasPreActivity : AppCompatActivity() {
     private fun onHistoricoNotas(url: String, request: JSONObject) {
         prbCargando_historiconotaspre.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -139,11 +144,30 @@ class HistoricoNotasPreActivity : AppCompatActivity() {
                 prbCargando_historiconotaspre.visibility = View.GONE
             },
             { error ->
-                prbCargando_historiconotaspre.visibility = View.GONE
-                lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                lblMensaje_historiconotaspre.visibility = View.VISIBLE
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onHistoricoNotas(url, request)
+                        } else {
+                            prbCargando_historiconotaspre.visibility = View.GONE
+                            lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                            lblMensaje_historiconotaspre.visibility = View.VISIBLE
+                        }
+                    }
+                } else {
+                    prbCargando_historiconotaspre.visibility = View.GONE
+                    lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                    lblMensaje_historiconotaspre.visibility = View.VISIBLE
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

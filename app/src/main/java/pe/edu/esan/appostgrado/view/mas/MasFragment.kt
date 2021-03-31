@@ -20,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 /*import com.crashlytics.android.Crashlytics*/
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.fragment_mas.*
 import kotlinx.android.synthetic.main.fragment_mas.view.*
 import org.json.JSONException
@@ -33,6 +34,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.control.CustomDialog
 import pe.edu.esan.appostgrado.entidades.*
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import pe.edu.esan.appostgrado.view.mas.cargacademica.CargaAcademicaActivity
 import pe.edu.esan.appostgrado.view.mas.carne.CarneActivity
 import pe.edu.esan.appostgrado.view.mas.comedor.ComedorActivity
@@ -357,7 +360,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
     private fun onCerrarSesion(url: String, request: JSONObject) {
 
         requestQueue = Volley.newRequestQueue(activity!!)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
             Request.Method.POST,
             url,
             request,
@@ -386,16 +391,40 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
             },
             { error ->
-                rvOpciones_fmas.visibility = View.VISIBLE
-                rvOpciones_fmas.isEnabled = true
-                rvOpciones_fmas.isClickable = true
-                dismissDialog()
-                ControlUsuario.instance.statusLogout = 1
-                borrarDatos()
+                if(error.networkResponse.statusCode == 401) {
+                    requireActivity().renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onCerrarSesion(url, request)
+                        } else {
+                            rvOpciones_fmas.visibility = View.VISIBLE
+                            rvOpciones_fmas.isEnabled = true
+                            rvOpciones_fmas.isClickable = true
+                            dismissDialog()
+                            ControlUsuario.instance.statusLogout = 1
+                            borrarDatos()
 
-                activity!!.finish()
+                            activity!!.finish()
+                        }
+                    }
+                } else {
+                    rvOpciones_fmas.visibility = View.VISIBLE
+                    rvOpciones_fmas.isEnabled = true
+                    rvOpciones_fmas.isClickable = true
+                    dismissDialog()
+                    ControlUsuario.instance.statusLogout = 1
+                    borrarDatos()
+
+                    activity!!.finish()
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return requireActivity().getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -765,7 +794,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
     private fun onCantidadMensaje(url: String, request: JSONObject) {
         requestQueueCantMensaje = Volley.newRequestQueue(activity)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
             Request.Method.POST,
             url,
             request,
@@ -788,9 +819,25 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
             },
             { error ->
-                error.printStackTrace()
+                if(error.networkResponse.statusCode == 401) {
+                    requireActivity().renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onCantidadMensaje(url, request)
+                        } else {
+                            error.printStackTrace()
+                        }
+                    }
+                } else {
+                    error.printStackTrace()
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return requireActivity().getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueueCantMensaje?.add(jsObjectRequest)
     }

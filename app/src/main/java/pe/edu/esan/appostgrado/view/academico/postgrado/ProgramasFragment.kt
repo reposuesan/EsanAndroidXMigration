@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.fragment_cursos.view.*
 import kotlinx.android.synthetic.main.fragment_programas.*
 import kotlinx.android.synthetic.main.fragment_programas.view.*
 import org.json.JSONException
@@ -28,6 +29,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.Programa
 import pe.edu.esan.appostgrado.entidades.UserEsan
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 
 /**
@@ -110,7 +113,9 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
     private fun onProgramas(url: String, request: JSONObject) {
         prbCargando_fprograma.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -155,12 +160,37 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                 prbCargando_fprograma.visibility = View.GONE
             },
             { error ->
-                swPrograma_fprograma.isRefreshing = false
-                prbCargando_fprograma.visibility = View.GONE
-                lblMensaje_fprograma.visibility = View.VISIBLE
-                lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+                if(error.networkResponse.statusCode == 401) {
+
+                    requireActivity().renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onProgramas(url, request)
+                        } else {
+                            if(view != null) {
+                                swPrograma_fprograma.isRefreshing = false
+                                prbCargando_fprograma.visibility = View.GONE
+                                lblMensaje_fprograma.visibility = View.VISIBLE
+                                lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+                            }
+                        }
+                    }
+                } else {
+                    if(view != null) {
+                        swPrograma_fprograma.isRefreshing = false
+                        prbCargando_fprograma.visibility = View.GONE
+                        lblMensaje_fprograma.visibility = View.VISIBLE
+                        lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+                    }
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return requireActivity().getHeaderForJWT()
+            }
+        }
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(1500, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

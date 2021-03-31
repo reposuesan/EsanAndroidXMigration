@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
 import com.android.volley.DefaultRetryPolicy
@@ -19,6 +20,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_prreserva_segunda.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONArray
@@ -34,6 +36,8 @@ import pe.edu.esan.appostgrado.entidades.PRHorarioOtro
 import pe.edu.esan.appostgrado.entidades.PRHorarioReserva
 import pe.edu.esan.appostgrado.entidades.PRReserva
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class PRReservaSegundaActivity : AppCompatActivity() {
     private val TAG = "PRReservaSegundaActivity"
@@ -180,7 +184,9 @@ class PRReservaSegundaActivity : AppCompatActivity() {
         CustomDialog.instance.showDialogLoad(this)
         btnConfirmar_itemprreservasegunda.isEnabled = false
         requestQueueConfirmar = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -211,7 +217,6 @@ class PRReservaSegundaActivity : AppCompatActivity() {
                             snack.show()
                         }
                     } else {
-                        val jsRespuesta = Utilitarios.stringDesencriptar(response["RegistraReservaAmbienteResult"] as String, this)
 
                         val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
                         snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
@@ -220,7 +225,6 @@ class PRReservaSegundaActivity : AppCompatActivity() {
                         snack.show()
                     }
                 } catch (jex: JSONException) {
-                    val jsRespuesta = Utilitarios.stringDesencriptar(response["RegistraReservaAmbienteResult"] as String, this)
 
                     val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
                     snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
@@ -230,16 +234,37 @@ class PRReservaSegundaActivity : AppCompatActivity() {
                 }
             },
             { error ->
-
-                CustomDialog.instance.dialogoCargando?.dismiss()
-                btnConfirmar_itemprreservasegunda.isEnabled = true
-                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onConfirmarReserva(url, request)
+                        } else {
+                            CustomDialog.instance.dialogoCargando?.dismiss()
+                            btnConfirmar_itemprreservasegunda.isEnabled = true
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    }
+                } else {
+                    CustomDialog.instance.dialogoCargando?.dismiss()
+                    btnConfirmar_itemprreservasegunda.isEnabled = true
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         jsObjectRequest.setRetryPolicy( DefaultRetryPolicy(
                 30000,
@@ -335,7 +360,9 @@ class PRReservaSegundaActivity : AppCompatActivity() {
 
     private fun onOtrosHorarios(url: String, request: JSONObject, cantHoras: Int) {
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -392,13 +419,34 @@ class PRReservaSegundaActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onOtrosHorarios(url, request, cantHoras)
+                        } else {
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    }
+                } else {
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

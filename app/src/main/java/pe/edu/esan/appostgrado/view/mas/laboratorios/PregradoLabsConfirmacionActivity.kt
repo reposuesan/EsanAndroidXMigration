@@ -6,16 +6,20 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_pregrado_labs_confirmacion.*
 import org.json.JSONObject
 import pe.edu.esan.appostgrado.R
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import java.util.*
 
 class PregradoLabsConfirmacionActivity : AppCompatActivity() {
@@ -56,7 +60,9 @@ class PregradoLabsConfirmacionActivity : AppCompatActivity() {
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
-            val jsonObjectRequest = JsonObjectRequest(
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsonObjectRequest = object: JsonObjectRequest(
+            /*val jsonObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 fRequest,
@@ -79,9 +85,25 @@ class PregradoLabsConfirmacionActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    tv_mensaje_confirmacion_prereserva_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                    if(error.networkResponse.statusCode == 401) {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                confirmarPrereservaServicio(url, request)
+                            } else {
+                                tv_mensaje_confirmacion_prereserva_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            }
+                        }
+                    } else {
+                        tv_mensaje_confirmacion_prereserva_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                    }
                 }
             )
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return getHeaderForJWT()
+                }
+            }
 
             jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
                 15000,

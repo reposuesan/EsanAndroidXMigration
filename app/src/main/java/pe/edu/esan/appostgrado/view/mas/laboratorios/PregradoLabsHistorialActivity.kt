@@ -14,6 +14,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_pregrado_labs_historial.*
 import org.json.JSONObject
 import pe.edu.esan.appostgrado.R
@@ -23,6 +24,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.PrereservaDetalle
 import pe.edu.esan.appostgrado.entidades.UsuarioGeneral
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class PregradoLabsHistorialActivity : AppCompatActivity() {
 
@@ -112,7 +115,9 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
-            val jsonObjectRequest = JsonObjectRequest(
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsonObjectRequest = object: JsonObjectRequest(
+            /*val jsonObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 fRequest,
@@ -172,14 +177,35 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    tv_empty_historial_lab.visibility = View.VISIBLE
-                    tv_empty_historial_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                    recycler_view_historial_lab.visibility = View.GONE
-                    progress_bar_historial_lab.visibility = View.GONE
-                    tv_promocion_historial_lab.visibility = View.GONE
-                    tv_direccion_historial_lab.visibility = View.GONE
+                    if(error.networkResponse.statusCode == 401) {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                listaPrereservasPorAlumnoServicio(url, request)
+                            } else {
+                                tv_empty_historial_lab.visibility = View.VISIBLE
+                                tv_empty_historial_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                                recycler_view_historial_lab.visibility = View.GONE
+                                progress_bar_historial_lab.visibility = View.GONE
+                                tv_promocion_historial_lab.visibility = View.GONE
+                                tv_direccion_historial_lab.visibility = View.GONE
+                            }
+                        }
+                    } else {
+                        tv_empty_historial_lab.visibility = View.VISIBLE
+                        tv_empty_historial_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                        recycler_view_historial_lab.visibility = View.GONE
+                        progress_bar_historial_lab.visibility = View.GONE
+                        tv_promocion_historial_lab.visibility = View.GONE
+                        tv_direccion_historial_lab.visibility = View.GONE
+                    }
                 }
             )
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return getHeaderForJWT()
+                }
+            }
 
             jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
                 15000,
@@ -190,8 +216,6 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
 
             mRequestQueue?.add(jsonObjectRequest)
         }
-
-        progress_bar_historial_lab.visibility = View.GONE
     }
 
 

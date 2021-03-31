@@ -17,7 +17,6 @@ import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
 import com.android.volley.Request
 import com.android.volley.RequestQueue
-import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_cursos_post.*
@@ -31,6 +30,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.control.CustomDialog
 import pe.edu.esan.appostgrado.entidades.*
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import pe.edu.esan.appostgrado.view.academico.EncuestaActivity
 import java.util.*
 import kotlin.collections.ArrayList
@@ -51,6 +52,7 @@ class CursosPostActivity : AppCompatActivity() {
     private val TAG = "CursosPostActivity"
     private val LOG = CursosPostActivity::class.simpleName
     private var cursoAdapter : CursoPostAdapter? = null
+    private var listaModuloCursos = ArrayList<CursoPostModulo>()
 
     private lateinit var controlViewModel: ControlViewModel
 
@@ -140,7 +142,9 @@ class CursosPostActivity : AppCompatActivity() {
     private fun onEncuestaPorPrograma (url: String, request: JSONObject, codigoPromocion: String?) {
 
         requestQueueEncuesta = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -188,10 +192,27 @@ class CursosPostActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                lblMensaje_acursospost.visibility = View.VISIBLE
-                lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onEncuestaPorPrograma(url, request, codigoPromocion)
+                        } else {
+                            lblMensaje_acursospost.visibility = View.VISIBLE
+                            lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
+                        }
+                    }
+                } else {
+                    lblMensaje_acursospost.visibility = View.VISIBLE
+                    lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueueEncuesta?.add(jsObjectRequest)
     }
@@ -224,7 +245,9 @@ class CursosPostActivity : AppCompatActivity() {
 
         prbCargando_acursospost.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -236,7 +259,7 @@ class CursosPostActivity : AppCompatActivity() {
                         if (cursosJArray.length() > 0) {
 
                             var ultimoModulo = 0
-                            val listaModuloCursos = ArrayList<CursoPostModulo>()
+                            listaModuloCursos = ArrayList<CursoPostModulo>()
                             var listaCursos = ArrayList<CursosPost?>()
 
                             val language = Locale.getDefault().displayLanguage
@@ -314,120 +337,28 @@ class CursosPostActivity : AppCompatActivity() {
                                     //SI LA LISTA ESTÁ EXPANDIDA
                                     if (cursosPost.expandible) {
                                         listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = true
-                                        /*updateAdater(posAdapter)*/
+
 
                                         val totalNotas = listaModuloCursos[posModulo].listaCursos[posCurso]?.detalleNotas?.size
 
                                         if (totalNotas != null)
                                             for (x in (totalNotas - 1) downTo 0) {
                                                 listaModuloCursos[posModulo].listaCursos.removeAt(posCurso + x + 1)
-                                                /*removeAdapter(posCurso + x + 1)*/
+
                                             }
 
                                         listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
                                         listaModuloCursos[posModulo].listaCursos[posCurso]?.expandible = false
-                                        /*updateAdater(posAdapter)*/
+
                                         refreshAdapter()
                                     //SI LA LISTA NO ESTÁ EXPANDIDA
                                     } else {
                                         listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = true
-                                        /*updateAdater(posAdapter)*/
+
                                         refreshAdapter()
 
                                         if (ControlUsuario.instance.currentUsuario.size == 1) {
-                                            val usuario = ControlUsuario.instance.currentUsuario[0] as UserEsan
-
-                                            val req = JSONObject()
-                                            req.put("CodAlumno", usuario.codigo)
-                                            req.put("CodSeccion", cursosPost.seccionCodigo)
-
-                                            val requestEncriptado = Utilitarios.jsObjectEncrypted(req, this)
-                                            if (requestEncriptado != null) {
-
-                                                val jsObjectRequest = JsonObjectRequest(
-                                                    Request.Method.POST,
-                                                    Utilitarios.getUrl(Utilitarios.URL.NOTAS_POST),
-                                                    requestEncriptado,
-                                                    { response ->
-                                                        try {
-                                                            /*val notasJArray = response["ListarDetalleNotaHistoricoResult"] as JSONArray*/
-                                                            val notasJArray = Utilitarios.jsArrayDesencriptar(response["ListarDetalleNotaHistoricoResult"] as String, this)
-                                                            if (notasJArray != null) {
-                                                                if (notasJArray.length() > 0) {
-                                                                    val notasCurso = ArrayList<NotasPost>()
-                                                                    for (i in 0 until notasJArray.length()) {
-                                                                        val notasJson = notasJArray[i] as JSONObject
-                                                                        val tipo = notasJson["NotaNombre"] as String
-                                                                        val peso = notasJson["Peso"] as String
-                                                                        val nota = notasJson["Nota"] as String
-
-                                                                        notasCurso.add(NotasPost(tipo, peso, nota))
-                                                                    }
-                                                                    listaModuloCursos[posModulo].listaCursos[posCurso]?.detalleNotas = notasCurso
-                                                                    listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
-                                                                    listaModuloCursos[posModulo].listaCursos[posCurso]?.expandible = true
-                                                                    /*updateAdater(posAdapter)*/
-
-                                                                    var contadorAdd = posCurso
-                                                                    /*contadorPos = posAdapter*/
-                                                                    for (x in 0 until notasCurso.size) {
-                                                                        /*contadorAdd += 1
-                                                                        contadorPos += 1*/
-                                                                        listaModuloCursos[posModulo].listaCursos.add(++contadorAdd, null)
-                                                                        /*insertAdapter(++contadorPos)*/
-                                                                    }
-
-                                                                } else {
-                                                                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.no_mayor_detalle), Snackbar.LENGTH_LONG)
-                                                                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.info))
-                                                                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                                                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.info_text))
-                                                                    snack.show()
-                                                                    listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
-                                                                    /*updateAdater(posAdapter)*/
-                                                                }
-                                                                refreshAdapter()
-                                                            } else {
-                                                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
-                                                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                                                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                                                                snack.show()
-                                                            }
-                                                        } catch (jex: JSONException) {
-                                                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_intentelo_mas_tarde), Snackbar.LENGTH_LONG)
-                                                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                                                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                                                            snack.show()
-                                                        } catch (ccax: ClassCastException) {
-                                                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_intentelo_mas_tarde), Snackbar.LENGTH_LONG)
-                                                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                                                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                                                            snack.show()
-                                                        }
-                                                    },
-                                                    { error ->
-                                                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                                                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                                                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                                                        snack.show()
-                                                        listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
-                                                        /*updateAdater(posAdapter)*/
-                                                        refreshAdapter()
-                                                    }
-                                                )
-                                                jsObjectRequest.tag = TAG
-                                                requestQueue?.add(jsObjectRequest)
-                                            } else {
-                                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_encriptar), Snackbar.LENGTH_LONG)
-                                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                                                snack.show()
-                                            }
+                                            getNotasListaExpandida(cursosPost, posModulo, posCurso)
                                         } else {
                                             val alerta = AlertDialog.Builder(this)
                                                 .setTitle(resources.getString(R.string.error))
@@ -435,7 +366,7 @@ class CursosPostActivity : AppCompatActivity() {
                                                 .create()
                                             alerta.show()
                                             listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
-                                            /*updateAdater(posAdapter)*/
+
                                             refreshAdapter()
                                         }
                                     }
@@ -463,13 +394,146 @@ class CursosPostActivity : AppCompatActivity() {
                 prbCargando_acursospost.visibility = View.GONE
             },
             { error ->
-                prbCargando_acursospost.visibility = View.GONE
-                lblMensaje_acursospost.visibility = View.VISIBLE
-                lblMensaje_acursospost.text = resources.getText(R.string.error_no_conexion)
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onCursos(url, request, listaEncuesta)
+                        } else {
+                            prbCargando_acursospost.visibility = View.GONE
+                            lblMensaje_acursospost.visibility = View.VISIBLE
+                            lblMensaje_acursospost.text = resources.getText(R.string.error_no_conexion)
+                        }
+                    }
+                } else {
+                    prbCargando_acursospost.visibility = View.GONE
+                    lblMensaje_acursospost.visibility = View.VISIBLE
+                    lblMensaje_acursospost.text = resources.getText(R.string.error_no_conexion)
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
+    }
+
+    private fun getNotasListaExpandida(cursosPost: CursosPost, posModulo: Int, posCurso: Int) {
+        val usuario = ControlUsuario.instance.currentUsuario[0] as UserEsan
+
+        val req = JSONObject()
+        req.put("CodAlumno", usuario.codigo)
+        req.put("CodSeccion", cursosPost.seccionCodigo)
+
+        val requestEncriptado = Utilitarios.jsObjectEncrypted(req, this)
+        if (requestEncriptado != null) {
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsObjectRequest = object: JsonObjectRequest(
+            /*val jsObjectRequest = JsonObjectRequest(*/
+                Request.Method.POST,
+                Utilitarios.getUrl(Utilitarios.URL.NOTAS_POST),
+                requestEncriptado,
+                { response ->
+                    try {
+                        val notasJArray = Utilitarios.jsArrayDesencriptar(response["ListarDetalleNotaHistoricoResult"] as String, this)
+                        if (notasJArray != null) {
+                            if (notasJArray.length() > 0) {
+                                val notasCurso = ArrayList<NotasPost>()
+                                for (i in 0 until notasJArray.length()) {
+                                    val notasJson = notasJArray[i] as JSONObject
+                                    val tipo = notasJson["NotaNombre"] as String
+                                    val peso = notasJson["Peso"] as String
+                                    val nota = notasJson["Nota"] as String
+
+                                    notasCurso.add(NotasPost(tipo, peso, nota))
+                                }
+                                listaModuloCursos[posModulo].listaCursos[posCurso]?.detalleNotas = notasCurso
+                                listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
+                                listaModuloCursos[posModulo].listaCursos[posCurso]?.expandible = true
+
+                                var contadorAdd = posCurso
+
+                                for (x in 0 until notasCurso.size) {
+                                    listaModuloCursos[posModulo].listaCursos.add(++contadorAdd, null)
+                                }
+
+                            } else {
+                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.no_mayor_detalle), Snackbar.LENGTH_LONG)
+                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.info))
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.info_text))
+                                snack.show()
+                                listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
+
+                            }
+                            refreshAdapter()
+                        } else {
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    } catch (jex: JSONException) {
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_intentelo_mas_tarde), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    } catch (ccax: ClassCastException) {
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_intentelo_mas_tarde), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
+                },
+                { error ->
+                    if(error.networkResponse.statusCode == 401) {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                getNotasListaExpandida(cursosPost, posModulo, posCurso)
+                            } else {
+                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                snack.show()
+                                listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
+
+                                refreshAdapter()
+                            }
+                        }
+                    } else {
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                        listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
+
+                        refreshAdapter()
+                    }
+                }
+            )
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return getHeaderForJWT()
+                }
+            }
+            jsObjectRequest.tag = TAG
+            requestQueue?.add(jsObjectRequest)
+        } else {
+            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_encriptar), Snackbar.LENGTH_LONG)
+            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+            snack.show()
+        }
     }
 
 
@@ -505,55 +569,73 @@ class CursosPostActivity : AppCompatActivity() {
 
         CustomDialog.instance.showDialogLoad(this)
         requestQueueAsistencia = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    CustomDialog.instance.dialogoCargando?.dismiss()
-                    try {
-                        val asistenciaJsonPost = Utilitarios.jsObjectDesencriptar(response["ObtenerAsistenciaAlumnoSeccionResult"] as String, this)
-                        if (asistenciaJsonPost != null) {
-                            val curso = asistenciaJsonPost["Curso"] as String
-                            val porcInasistencia = asistenciaJsonPost["PorcxInasistencia"] as Int
-                            val cantFaltas = asistenciaJsonPost["CantFalta"] as Double
-                            val cantAsistencia = asistenciaJsonPost["CantAsistencias"] as Double
-                            val cantTardanza = asistenciaJsonPost["CantTardanzas"] as Double
-                            val cantSesiones = asistenciaJsonPost["CantidadSesiones"] as Int
-                            val SeccionCodigo = asistenciaJsonPost["SeccionCodigo"] as String
+            { response ->
+                CustomDialog.instance.dialogoCargando?.dismiss()
+                try {
+                    val asistenciaJsonPost = Utilitarios.jsObjectDesencriptar(response["ObtenerAsistenciaAlumnoSeccionResult"] as String, this)
+                    if (asistenciaJsonPost != null) {
+                        val curso = asistenciaJsonPost["Curso"] as String
+                        val porcInasistencia = asistenciaJsonPost["PorcxInasistencia"] as Int
+                        val cantFaltas = asistenciaJsonPost["CantFalta"] as Double
+                        val cantAsistencia = asistenciaJsonPost["CantAsistencias"] as Double
+                        val cantTardanza = asistenciaJsonPost["CantTardanzas"] as Double
+                        val cantSesiones = asistenciaJsonPost["CantidadSesiones"] as Int
+                        val SeccionCodigo = asistenciaJsonPost["SeccionCodigo"] as String
 
-                            val dialogoAsistencia = AsistenciaPostDialog()
-                            val bundle = Bundle()
+                        val dialogoAsistencia = AsistenciaPostDialog()
+                        val bundle = Bundle()
 
-                            bundle.putString("Curso", "[$SeccionCodigo] $curso")
-                            bundle.putInt("PorcxInasistencia", porcInasistencia)
-                            bundle.putInt("CantFalta", cantFaltas.roundToInt())
-                            bundle.putInt("CantAsistencias", cantAsistencia.roundToInt())
-                            bundle.putInt("CantTardanzas", cantTardanza.roundToInt())
-                            bundle.putInt("CantidadSesiones", cantSesiones)
-                            bundle.putInt("AnchoPantalla", anchoPantalla)
-                            bundle.putFloat("Densidad", densidad)
+                        bundle.putString("Curso", "[$SeccionCodigo] $curso")
+                        bundle.putInt("PorcxInasistencia", porcInasistencia)
+                        bundle.putInt("CantFalta", cantFaltas.roundToInt())
+                        bundle.putInt("CantAsistencias", cantAsistencia.roundToInt())
+                        bundle.putInt("CantTardanzas", cantTardanza.roundToInt())
+                        bundle.putInt("CantidadSesiones", cantSesiones)
+                        bundle.putInt("AnchoPantalla", anchoPantalla)
+                        bundle.putFloat("Densidad", densidad)
 
-                            dialogoAsistencia.arguments = bundle
-                            dialogoAsistencia.show(supportFragmentManager, "Asistencia Dialog")
-                        } else {
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                            snack.show()
-                        }
-                    } catch (jex: JSONException) {
-                        Log.e(LOG, jex.toString())
-                    } catch (caas: ClassCastException) {
-                        Log.e(LOG, caas.toString())
+                        dialogoAsistencia.arguments = bundle
+                        dialogoAsistencia.show(supportFragmentManager, "Asistencia Dialog")
+                    } else {
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_desencriptar), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
                     }
-                },
-                Response.ErrorListener { error ->
-                    CustomDialog.instance.dialogoCargando?.dismiss()
-
+                } catch (jex: JSONException) {
+                    Log.e(LOG, jex.toString())
+                } catch (caas: ClassCastException) {
+                    Log.e(LOG, caas.toString())
                 }
+            },
+            { error ->
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onAsistenciaCurso(url, request)
+                        } else {
+                            CustomDialog.instance.dialogoCargando?.dismiss()
+                        }
+                    }
+                } else {
+                    CustomDialog.instance.dialogoCargando?.dismiss()
+                }
+
+            }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueueAsistencia?.add(jsObjectRequest)
     }

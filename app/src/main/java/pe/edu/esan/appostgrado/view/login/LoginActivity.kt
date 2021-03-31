@@ -31,7 +31,6 @@ import android.widget.TextView
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
-import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -331,6 +330,8 @@ class LoginActivity : AppCompatActivity(),
 
                             if (jsResponse != null) {
 
+                                val jwtToken = jsResponse["TokenJWT"] as? String?
+
                                 val jsObjDatosPersonales =
                                     jsResponse["ObjDatosPersonal"] as? JSONObject
 
@@ -458,6 +459,13 @@ class LoginActivity : AppCompatActivity(),
 
                                 val agreetouchid = misPreferencias.getBoolean("touchid", false)
                                 val editor = misPreferencias.edit()
+
+                                //JSON WEB TOKEN
+                                if(!jwtToken.isNullOrEmpty()){
+                                    editor.putString("jwt", jwtToken)
+                                } else {
+                                    editor.putString("jwt", "")
+                                }
 
                                 if (!agreetouchid) {
                                     //Si la opción de huella digital está apagada

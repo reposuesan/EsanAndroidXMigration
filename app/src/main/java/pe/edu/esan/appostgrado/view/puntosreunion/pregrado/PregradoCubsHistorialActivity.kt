@@ -26,6 +26,9 @@ import pe.edu.esan.appostgrado.entidades.PrereservaDetalle
 import pe.edu.esan.appostgrado.helpers.ShowAlertHelper
 import pe.edu.esan.appostgrado.util.Utilitarios
 import androidx.appcompat.app.AlertDialog
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import kotlin.text.StringBuilder
 
 class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHistorialAdapter.HistorialListener , PregradoPrereservasHistorialAdapter.HistorialMapaListener{
@@ -89,7 +92,9 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
-            val jsonObjectRequest = JsonObjectRequest(
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsonObjectRequest = object: JsonObjectRequest(
+            /*val jsonObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 fRequest,
@@ -160,23 +165,45 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
                     }
                 },
                 { error ->
-                    error.printStackTrace()
+                    if(error.networkResponse.statusCode == 401) {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                listaPrereservasPorAlumnoServicio(url, request)
+                            } else {
+                                progress_bar_historial.visibility = View.GONE
+                                tv_cargando_integrantes.visibility = View.GONE
+                                tv_direccion_historial.visibility = View.GONE
+                                tv_promocion_historial.visibility = View.GONE
 
-                    progress_bar_historial.visibility = View.GONE
-                    tv_cargando_integrantes.visibility = View.GONE
-                    tv_direccion_historial.visibility = View.GONE
-                    tv_promocion_historial.visibility = View.GONE
+                                val showAlertHelper = ShowAlertHelper(this)
+                                showAlertHelper.showAlertError(
+                                    getString(R.string.error),
+                                    getString(R.string.error_no_conexion),
+                                    null
+                                )
+                            }
+                        }
+                    } else {
+                        progress_bar_historial.visibility = View.GONE
+                        tv_cargando_integrantes.visibility = View.GONE
+                        tv_direccion_historial.visibility = View.GONE
+                        tv_promocion_historial.visibility = View.GONE
 
-                    val showAlertHelper = ShowAlertHelper(this)
-                    showAlertHelper.showAlertError(
-                        getString(R.string.error),
-                        getString(R.string.error_no_conexion),
-                        null
-                    )
-
+                        val showAlertHelper = ShowAlertHelper(this)
+                        showAlertHelper.showAlertError(
+                            getString(R.string.error),
+                            getString(R.string.error_no_conexion),
+                            null
+                        )
+                    }
                 }
             )
-
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return getHeaderForJWT()
+                }
+            }
             jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
                 15000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
@@ -211,7 +238,9 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
-            val jsonObjectRequest = JsonObjectRequest(
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsonObjectRequest = object: JsonObjectRequest(
+            /*val jsonObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 fRequest,
@@ -261,11 +290,28 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
                     }
                 },
                 { error ->
-                    error.printStackTrace()
-                    showMiembrosDelGrupo(getString(R.string.no_respuesta_desde_servidor),false)
+                    if(error.networkResponse.statusCode == 401) {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                muestraIntegrantesDeGrupoServicio(url, request)
+                            } else {
+                                error.printStackTrace()
+                                showMiembrosDelGrupo(getString(R.string.no_respuesta_desde_servidor),false)
+                            }
+                        }
+                    } else {
+                        error.printStackTrace()
+                        showMiembrosDelGrupo(getString(R.string.no_respuesta_desde_servidor),false)
+                    }
+
                 }
             )
-
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return getHeaderForJWT()
+                }
+            }
             jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
                 15000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,

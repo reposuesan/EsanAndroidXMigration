@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.fragment_cursos.view.*
 import kotlinx.android.synthetic.main.fragment_secciones.*
 import kotlinx.android.synthetic.main.fragment_secciones.view.*
 import org.json.JSONException
@@ -28,6 +29,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.Seccion
 import pe.edu.esan.appostgrado.entidades.UserEsan
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 
 /**
@@ -113,66 +116,93 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
 
         prbCargando_fseccion.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
-                Response.Listener { response ->
-                    try {
-                        val seccionJArray = Utilitarios.jsArrayDesencriptar(response["ListarSeccionesActualesPorProfesorResult"] as String, activity!!)
-                        if (seccionJArray != null) {
+            { response ->
+                try {
+                    val seccionJArray = Utilitarios.jsArrayDesencriptar(response["ListarSeccionesActualesPorProfesorResult"] as String, activity!!)
+                    if (seccionJArray != null) {
 
-                            if (seccionJArray.length() > 0) {
+                        if (seccionJArray.length() > 0) {
 
-                                val listSecciones = ArrayList<Seccion>()
+                            val listSecciones = ArrayList<Seccion>()
 
-                                for (s in 0 until seccionJArray.length()) {
-                                    val seccionJson = seccionJArray[s] as JSONObject
-                                    val idSeccion = seccionJson["IdSeccion"] as Int
-                                    val promocion = seccionJson["PromocionNombre"] as String
-                                    val seccionCodigo = seccionJson["SeccionCodigo"] as String
-                                    val nombreCurso = seccionJson["CursoNombre"] as String
-                                    val codigoCurso = seccionJson["CursoCodigo"] as String
+                            for (s in 0 until seccionJArray.length()) {
+                                val seccionJson = seccionJArray[s] as JSONObject
+                                val idSeccion = seccionJson["IdSeccion"] as Int
+                                val promocion = seccionJson["PromocionNombre"] as String
+                                val seccionCodigo = seccionJson["SeccionCodigo"] as String
+                                val nombreCurso = seccionJson["CursoNombre"] as String
+                                val codigoCurso = seccionJson["CursoCodigo"] as String
 
-                                    listSecciones.add(Seccion(idSeccion, promocion, nombreCurso, seccionCodigo, codigoCurso))
-                                }
-
-                                val adapter = SeccionAdapter(listSecciones) { seccion ->
-
-                                    ControlUsuario.instance.currentSeccion = seccion
-                                    val intentOpciones = Intent(activity, SeccionOpcionesActivity::class.java)
-                                    intentOpciones.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    startActivity(intentOpciones)
-                                }
-
-                                rvCurso_fseccion.adapter = adapter
-                                lblMensaje_fseccion.visibility = View.GONE
-                            } else {
-                                lblMensaje_fseccion.visibility = View.VISIBLE
-                                lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_seccion_no)
+                                listSecciones.add(Seccion(idSeccion, promocion, nombreCurso, seccionCodigo, codigoCurso))
                             }
+
+                            val adapter = SeccionAdapter(listSecciones) { seccion ->
+
+                                ControlUsuario.instance.currentSeccion = seccion
+                                val intentOpciones = Intent(activity, SeccionOpcionesActivity::class.java)
+                                intentOpciones.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                startActivity(intentOpciones)
+                            }
+
+                            rvCurso_fseccion.adapter = adapter
+                            lblMensaje_fseccion.visibility = View.GONE
                         } else {
                             lblMensaje_fseccion.visibility = View.VISIBLE
-                            lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_desencriptar)
+                            lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_seccion_no)
                         }
-                    } catch (jex: JSONException) {
+                    } else {
                         lblMensaje_fseccion.visibility = View.VISIBLE
-                        lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_respuesta_server)
-                    } catch (ccex: ClassCastException) {
-                        lblMensaje_fseccion.visibility = View.VISIBLE
-                        lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_desencriptar)
                     }
-
-                    swCurso_fseccion.isRefreshing = false
-                    prbCargando_fseccion.visibility = View.GONE
-                },
-                Response.ErrorListener { error ->
-                    swCurso_fseccion.isRefreshing = false
-                    prbCargando_fseccion.visibility = View.GONE
+                } catch (jex: JSONException) {
                     lblMensaje_fseccion.visibility = View.VISIBLE
-                    lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_no_conexion)
+                    lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_respuesta_server)
+                } catch (ccex: ClassCastException) {
+                    lblMensaje_fseccion.visibility = View.VISIBLE
+                    lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_respuesta_server)
                 }
+
+                swCurso_fseccion.isRefreshing = false
+                prbCargando_fseccion.visibility = View.GONE
+            },
+            { error ->
+                if(error.networkResponse.statusCode == 401) {
+
+                    requireActivity().renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onSecciones(url, request)
+                        } else {
+                            if(view != null) {
+                                swCurso_fseccion.isRefreshing = false
+                                prbCargando_fseccion.visibility = View.GONE
+                                lblMensaje_fseccion.visibility = View.VISIBLE
+                                lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_no_conexion)
+                            }
+                        }
+                    }
+                } else {
+                    if(view != null) {
+                        swCurso_fseccion.isRefreshing = false
+                        prbCargando_fseccion.visibility = View.GONE
+                        lblMensaje_fseccion.visibility = View.VISIBLE
+                        lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_no_conexion)
+                    }
+                }
+
+            }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return requireActivity().getHeaderForJWT()
+            }
+        }
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

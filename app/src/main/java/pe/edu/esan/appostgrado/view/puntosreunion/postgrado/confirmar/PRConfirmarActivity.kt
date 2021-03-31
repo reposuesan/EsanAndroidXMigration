@@ -22,6 +22,7 @@ import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_prconfirmar.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONException
@@ -31,6 +32,8 @@ import pe.edu.esan.appostgrado.architecture.viewmodel.ControlViewModel
 import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.Alumno
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class PRConfirmarActivity : AppCompatActivity() {
 
@@ -125,7 +128,9 @@ class PRConfirmarActivity : AppCompatActivity() {
         viewContenedor_prconfirmar.visibility = View.GONE
 
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -235,14 +240,36 @@ class PRConfirmarActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                prbCargando_prconfirmar.visibility = View.GONE
-                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onConfirmarReserva(url, request, tipoAlumno)
+                        } else {
+                            prbCargando_prconfirmar.visibility = View.GONE
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    }
+                } else {
+                    prbCargando_prconfirmar.visibility = View.GONE
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

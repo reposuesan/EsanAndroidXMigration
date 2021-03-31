@@ -97,7 +97,7 @@ public class DetalleMarkerActivity extends AppCompatActivity {
             }
         });
 
-        if(!Utilitarios.Companion.getMostrarDetalleMarker()){
+        if(!Utilitarios.mostrarDetalleMarker){
             /**Si entra aqui carga automaticamente la pantalla de ver solo ese puntos y finalizamos este activity para que no vuelva a ingresar.**/
             //verAR(false);
             viewContent.setVisibility(View.GONE);
@@ -152,7 +152,7 @@ public class DetalleMarkerActivity extends AppCompatActivity {
             DataView.viendoUnicoMarker = false;
             oneMarker.setUnicoMarker(false);
             /*Regresa a lo anterior*/
-            if (!Utilitarios.Companion.getMostrarDetalleMarker()) {
+            if (!Utilitarios.mostrarDetalleMarker) {
                 HacerTiempoTask = new HacerTiempo(1);/*CERO IDA*/
                 HacerTiempoTask.execute((Void) null);
             }

@@ -19,11 +19,14 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_pregrado_cubs_registro.*
 import org.json.JSONObject
 import pe.edu.esan.appostgrado.R
 import pe.edu.esan.appostgrado.entidades.GrupoAlumnosPrereserva
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import java.util.*
 
 class PregradoCubsRegistroActivity : AppCompatActivity() {
@@ -152,7 +155,9 @@ class PregradoCubsRegistroActivity : AppCompatActivity() {
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
-            val jsonObjectRequest = JsonObjectRequest(
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsonObjectRequest = object: JsonObjectRequest(
+            /*val jsonObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 fRequest,
@@ -165,12 +170,7 @@ class PregradoCubsRegistroActivity : AppCompatActivity() {
                             val mensajeRespuesta = jsResponse.getString("Mensaje")
                             val indicador = jsResponse.getString("Indicador")
 
-                            /*
-                            if(horasDisp.toInt() > 0) {
-                            if(indicador.equals("False")) {
-                            */
                             if(indicador.equals("0")) {
-                                /*val mensaje = jsResponse.getString("Mensaje")*/
                                 main_container_registro_cubs.visibility = View.VISIBLE
                                 progress_bar_registro_prereserva_pp.visibility = View.GONE
                                 empty_text_view_registro.visibility = View.GONE
@@ -214,36 +214,36 @@ class PregradoCubsRegistroActivity : AppCompatActivity() {
                             progress_bar_registro_prereserva_pp.visibility = View.GONE
                             empty_text_view_registro.visibility = View.VISIBLE
                             empty_text_view_registro.text = getString(R.string.error_servidor_extraccion_datos)
-
-                            /*val snack = Snackbar.make(
-                                findViewById(android.R.id.content),
-                                getString(R.string.error_servidor_extraccion_datos),
-                                Snackbar.LENGTH_LONG
-                            )
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
-                            snack.view.findViewById<TextView>(android.support.design.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
-                            snack.show()*/
                         }
 
                     }
                 },
                 { error ->
-                    error.printStackTrace()
-
-                    main_container_registro_cubs.visibility = View.GONE
-                    progress_bar_registro_prereserva_pp.visibility = View.GONE
-                    empty_text_view_registro.visibility = View.VISIBLE
-                    empty_text_view_registro.text = getString(R.string.no_respuesta_desde_servidor)
-
-                    /*val showAlertHelper = ShowAlertHelper(this)
-                    showAlertHelper.showAlertError(
-                        getString(R.string.error),
-                        getString(R.string.error_no_conexion),
-                        null
-                    )*/
-
+                    if(error.networkResponse.statusCode == 401) {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                verificarGrupoAlumnosReservaServicio(url, request)
+                            } else {
+                                main_container_registro_cubs.visibility = View.GONE
+                                progress_bar_registro_prereserva_pp.visibility = View.GONE
+                                empty_text_view_registro.visibility = View.VISIBLE
+                                empty_text_view_registro.text = getString(R.string.no_respuesta_desde_servidor)
+                            }
+                        }
+                    } else {
+                        main_container_registro_cubs.visibility = View.GONE
+                        progress_bar_registro_prereserva_pp.visibility = View.GONE
+                        empty_text_view_registro.visibility = View.VISIBLE
+                        empty_text_view_registro.text = getString(R.string.no_respuesta_desde_servidor)
+                    }
                 }
             )
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return getHeaderForJWT()
+                }
+            }
 
             jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
                 15000,

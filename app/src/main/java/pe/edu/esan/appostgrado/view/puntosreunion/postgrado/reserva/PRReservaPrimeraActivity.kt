@@ -22,6 +22,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.squareup.timessquare.CalendarPickerView
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_prreserva_primera.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONException
@@ -35,6 +36,8 @@ import pe.edu.esan.appostgrado.entidades.PRConfiguracion
 import pe.edu.esan.appostgrado.entidades.PRHorarioReserva
 import pe.edu.esan.appostgrado.entidades.PRReserva
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -203,7 +206,9 @@ class PRReservaPrimeraActivity : AppCompatActivity(){
     private fun onDetalleDisponibilidad(url: String, idConfiguracion: Int, request: JSONObject) {
 
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -267,17 +272,39 @@ class PRReservaPrimeraActivity : AppCompatActivity(){
                 rvHorario_prreservaprimera.visibility = View.VISIBLE
             },
             { error ->
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onDetalleDisponibilidad(url, idConfiguracion, request)
+                        } else {
+                            prbCargando_prreservaprimera.visibility = View.GONE
+                            rvHorario_prreservaprimera.visibility = View.VISIBLE
 
-                prbCargando_prreservaprimera.visibility = View.GONE
-                rvHorario_prreservaprimera.visibility = View.VISIBLE
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    }
+                } else {
+                    prbCargando_prreservaprimera.visibility = View.GONE
+                    rvHorario_prreservaprimera.visibility = View.VISIBLE
 
-                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -542,7 +569,9 @@ class PRReservaPrimeraActivity : AppCompatActivity(){
 
     private fun onConsultarDisponibilidad(url: String, request: JSONObject, codigo: String, nombre: String) {
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -589,13 +618,34 @@ class PRReservaPrimeraActivity : AppCompatActivity(){
                 }
             },
             { error ->
-                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onConsultarDisponibilidad(url, request, codigo, nombre)
+                        } else {
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    }
+                } else {
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

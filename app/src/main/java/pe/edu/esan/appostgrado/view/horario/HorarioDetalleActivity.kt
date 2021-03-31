@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar
 import android.util.Log
 import android.view.KeyEvent
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
 import com.android.volley.Request
@@ -27,6 +28,7 @@ import com.android.volley.toolbox.Volley
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 /*import com.crashlytics.android.Crashlytics*/
 import kotlinx.android.synthetic.main.activity_horario_detalle.*
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -39,6 +41,8 @@ import pe.edu.esan.appostgrado.entidades.Alumno
 import pe.edu.esan.appostgrado.entidades.Horario
 import pe.edu.esan.appostgrado.entidades.Profesor
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
 
@@ -124,15 +128,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
         var listaHorarioDetalle = ArrayList<Horario>()
         val misPreferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
 
-        /*try {
-            var temp = ControlUsuario.instance.currentUsuario[0]
-        } catch (e: Exception) {
-            val usuario = misPreferencias?.getString("code", "")
-            val crashlytics = FirebaseCrashlytics.getInstance()
-            crashlytics.log(
-                "E/HorarioDetalleActivity: ArrayList ControlUsuario.instance.currentUsuario has 0 elements, the user is $usuario."
-            )
-        }*/
         try {
             when (ControlUsuario.instance.currentUsuario[0]) {
                 is Alumno -> {
@@ -270,7 +265,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
     }
 
 
-    private fun onClonarAsistenciaAlumnos(url: String, request: JSONObject) {
+    /*private fun onClonarAsistenciaAlumnos(url: String, request: JSONObject) {
         CustomDialog.instance.showDialogLoad(this)
 
         requestQueueRegCopiaAsisAlumno = Volley.newRequestQueue(this)
@@ -354,7 +349,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
         requestQueueRegCopiaAsisAlumno?.add(jsObjectRequest)
 
         CustomDialog.instance.dialogoCargando?.dismiss()
-    }
+    }*/
 
 
     private fun getConsultarHorarioProfesor(listaHorario: ArrayList<Horario>) {
@@ -418,7 +413,9 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
         horario: Horario?
     ) {
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
             Request.Method.POST,
             url,
             request,
@@ -469,20 +466,53 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                 }
             },
             { error ->
-                ControlUsuario.instance.indexActualiza = -1
-                val snack = Snackbar.make(
-                    findViewById(android.R.id.content),
-                    resources.getString(R.string.error_no_conexion),
-                    Snackbar.LENGTH_LONG
-                )
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
-                    Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                    .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            getConsultarAsistenciaProfesor(
+                                url,
+                                request,
+                                requestSinEncriptar,
+                                curso,
+                                horario)
+                        } else {
+                            ControlUsuario.instance.indexActualiza = -1
+                            val snack = Snackbar.make(
+                                findViewById(android.R.id.content),
+                                resources.getString(R.string.error_no_conexion),
+                                Snackbar.LENGTH_LONG
+                            )
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
+                                Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                                .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    }
+                } else {
+                    ControlUsuario.instance.indexActualiza = -1
+                    val snack = Snackbar.make(
+                        findViewById(android.R.id.content),
+                        resources.getString(R.string.error_no_conexion),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
+                        Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                        .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -520,7 +550,9 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
     private fun onRegistrarAsistenciaProfesor(url: String, request: JSONObject, horario: Horario?) {
 
         requestQueueRegAsisProf = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
             url,
             request,
             { response ->
@@ -591,19 +623,46 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                 }
             },
             { error ->
-                val snack = Snackbar.make(
-                    findViewById(android.R.id.content),
-                    resources.getString(R.string.error_no_conexion),
-                    Snackbar.LENGTH_LONG
-                )
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
-                    Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                    .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onRegistrarAsistenciaProfesor(url, request, horario)
+                        } else {
+                            val snack = Snackbar.make(
+                                findViewById(android.R.id.content),
+                                resources.getString(R.string.error_no_conexion),
+                                Snackbar.LENGTH_LONG
+                            )
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
+                                Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                                .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    }
+                } else {
+                    val snack = Snackbar.make(
+                        findViewById(android.R.id.content),
+                        resources.getString(R.string.error_no_conexion),
+                        Snackbar.LENGTH_LONG
+                    )
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
+                        Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                        .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueueRegAsisProf?.add(jsObjectRequest)
     }

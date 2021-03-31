@@ -5,14 +5,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.util.Log
 import android.view.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
-import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.fragment_cursos.*
@@ -31,6 +29,8 @@ import pe.edu.esan.appostgrado.entidades.NotasPre
 import pe.edu.esan.appostgrado.entidades.Profesor
 import pe.edu.esan.appostgrado.entidades.UserEsan
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import pe.edu.esan.appostgrado.view.academico.EncuestaActivity
 import kotlin.math.roundToInt
 
@@ -159,7 +159,9 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
         prbCargando_fcurso.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -206,7 +208,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                                 val estadoAlumno = cursoJson["Estado"] as String
                                 /*estadoAlumno = cursoJson["Estado"] as String*/
 
-                                if(esResponsable == true){
+                                if(esResponsable){
                                     if (idSeccion == idSeccionActual) {
                                         val profesor = Profesor(
                                             idProfesor,
@@ -318,12 +320,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                                     startActivity(intentEncuesta)
                                 } else {
                                     getAsistencias(curso.seccionCodigo, alumnoRetirado)
-
-                                    /*
-                                      val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
-                                      intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                      startActivity(intentDetalleCurso)
-                                                                */
                                 }
                             }
 
@@ -355,17 +351,39 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                 }
             },
             { error ->
+                if(error.networkResponse.statusCode == 401) {
 
-                if(view != null) {
-                    view!!.swCurso_fcurso.isRefreshing = false
-                    view!!.prbCargando_fcurso.visibility = View.GONE
-                    view!!.lblMensaje_fcurso.visibility = View.VISIBLE
-                    view!!.rvCurso_fcurso.visibility = View.GONE
-                    view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_default)
+                    requireActivity().renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onCursos(url, request)
+                        } else {
+                            if(view != null) {
+                                view!!.swCurso_fcurso.isRefreshing = false
+                                view!!.prbCargando_fcurso.visibility = View.GONE
+                                view!!.lblMensaje_fcurso.visibility = View.VISIBLE
+                                view!!.rvCurso_fcurso.visibility = View.GONE
+                                view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_default)
+                            }
+                        }
+                    }
+                } else {
+                    if(view != null) {
+                        view!!.swCurso_fcurso.isRefreshing = false
+                        view!!.prbCargando_fcurso.visibility = View.GONE
+                        view!!.lblMensaje_fcurso.visibility = View.VISIBLE
+                        view!!.rvCurso_fcurso.visibility = View.GONE
+                        view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_default)
+                    }
                 }
             }
         )
-        jsObjectRequest.retryPolicy = DefaultRetryPolicy(1500, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return requireActivity().getHeaderForJWT()
+            }
+        }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(3000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -387,16 +405,12 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
             if (requestEncriptado != null)
                 onAsistencias(Utilitarios.getUrl(Utilitarios.URL.ASIS_ALUMNO_PRE), requestEncriptado, codigoSeccion, alumRetirado)
             else {
-                /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_encriptar)
-                lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                 ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
                 val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
                 intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intentDetalleCurso)
             }
         } else {
-            /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_ingreso)
-            lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
             ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
             val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
             intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -412,7 +426,9 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
             CustomDialog.instance.showDialogLoad(activity!!)
         }
         requestQueue = Volley.newRequestQueue(activity)
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -432,9 +448,9 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                                 val historicoJObject = historicoJArray[i] as JSONObject
 
 
-                                val CodigoSeccion = historicoJObject["SeccionCodigo"] as String
+                                val codigoSeccion = historicoJObject["SeccionCodigo"] as String
 
-                                if (codSeccion == CodigoSeccion) {
+                                if (codSeccion == codigoSeccion) {
                                     val tardanza = historicoJObject["CantTardanzas"] as Double
                                     val asistencia = historicoJObject["CantAsistencias"] as Double
                                     val faltas = historicoJObject["CantFalta"] as Double
@@ -447,33 +463,19 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
                                     break
                                 }
-
                             }
-
-                            /*rvCurso_historiconotaspre.adapter = HistoricoNotaPreAdapter(listaCursos)*/
-
                         } else {
-                            /*lblMensaje_historiconotaspre.text = resources.getText(R.string.advertencia_no_informacion)
-                            lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                             ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
                         }
                     } else {
-                        /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_desencriptar)
-                        lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                         ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
                     }
                 } catch (jex: JSONException) {
-
-                    /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                    lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                     ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
                 } catch (ccax: ClassCastException) {
-
-                    /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                    lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
                     ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
                 }
-                /*prbCargando_historiconotaspre.visibility = View.GONE*/
+
                 CustomDialog.instance.dialogoCargando?.dismiss()
                 if(activity != null) {
                     val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
@@ -487,25 +489,54 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                 }
             },
             { error ->
-                /*prbCargando_historiconotaspre.visibility = View.GONE
-                lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
-                if(ControlUsuario.instance.currentCursoPre != null){
-                    ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
-                }
+                if(error.networkResponse.statusCode == 401) {
 
-                if(CustomDialog.instance.dialogoCargando != null){
-                    CustomDialog.instance.dialogoCargando?.dismiss()
-                }
+                    requireActivity().renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onAsistencias(url, request, codSeccion, alumnoRetirado)
+                        } else {
+                            if(view != null) {
+                                if(ControlUsuario.instance.currentCursoPre != null){
+                                    ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
+                                }
 
-                if(activity != null){
-                    val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
-                    intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    startActivity(intentDetalleCurso)
-                }
+                                if(CustomDialog.instance.dialogoCargando != null){
+                                    CustomDialog.instance.dialogoCargando?.dismiss()
+                                }
 
+                                if(activity != null){
+                                    val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+                                    intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                    startActivity(intentDetalleCurso)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if(view != null) {
+                        if(ControlUsuario.instance.currentCursoPre != null){
+                            ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
+                        }
+
+                        if(CustomDialog.instance.dialogoCargando != null){
+                            CustomDialog.instance.dialogoCargando?.dismiss()
+                        }
+
+                        if(activity != null){
+                            val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+                            intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            startActivity(intentDetalleCurso)
+                        }
+                    }
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return requireActivity().getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -575,9 +606,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
         super.onDestroy()
     }
 
-
-
     override fun onPause() {
         super.onPause()
     }
-}// Required empty public constructor
+}

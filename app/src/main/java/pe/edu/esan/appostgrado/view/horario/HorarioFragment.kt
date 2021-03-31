@@ -26,7 +26,9 @@ import pe.edu.esan.appostgrado.entidades.Horario
 import pe.edu.esan.appostgrado.entidades.HorarioGrilla
 import pe.edu.esan.appostgrado.entidades.Profesor
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
 import pe.edu.esan.appostgrado.util.isOnlineUtils
+import pe.edu.esan.appostgrado.util.renewToken
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -223,7 +225,9 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
         prbCargando_fhorario.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity!!)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
             Request.Method.POST,
             url,
             request,
@@ -356,18 +360,38 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                     view!!.prbCargando_fhorario.visibility = View.GONE
                 }
             },
-            { volleyError ->
-
-                if (view != null) {
-                    view!!.rvHorario_fhorario.visibility = View.GONE
-                    view!!.prbCargando_fhorario.visibility = View.GONE
-                    view!!.swHorario_fhorario.isRefreshing = false
-                    view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                    view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+            { error ->
+                if(error.networkResponse.statusCode == 401) {
+                                        requireActivity().renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onHorario(url, request, currentUsuario)
+                        } else {
+                            if (view != null) {
+                                view!!.rvHorario_fhorario.visibility = View.GONE
+                                view!!.prbCargando_fhorario.visibility = View.GONE
+                                view!!.swHorario_fhorario.isRefreshing = false
+                                view!!.lblMensaje_fhorario.visibility = View.VISIBLE
+                                view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+                            }
+                        }                        }
+                } else {
+                    if (view != null) {
+                        view!!.rvHorario_fhorario.visibility = View.GONE
+                        view!!.prbCargando_fhorario.visibility = View.GONE
+                        view!!.swHorario_fhorario.isRefreshing = false
+                        view!!.lblMensaje_fhorario.visibility = View.VISIBLE
+                        view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+                    }
                 }
-
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return requireActivity().getHeaderForJWT()
+            }
+        }
+
         jsObjectRequest.tag = TAG
 
         requestQueue?.add(jsObjectRequest)

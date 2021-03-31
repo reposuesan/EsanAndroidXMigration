@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import androidx.core.content.pm.PackageInfoCompat
 import android.util.Log
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
@@ -109,6 +110,12 @@ class SecondLauncherActivity : AppCompatActivity() {
                             finish()
 
                         }
+                    } else {
+                        val i = Intent(applicationContext, LoginActivity::class.java)
+                        i.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        startActivity(i)
+                        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+                        finish()
                     }
                 } catch (e: PackageManager.NameNotFoundException) {
                     e.printStackTrace()
@@ -126,6 +133,12 @@ class SecondLauncherActivity : AppCompatActivity() {
                 showAlertHelper.showAlertError(getString(R.string.error),getString(R.string.error_no_conexion), null);
             }
         )
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(
+            15000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+        jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
 

@@ -10,6 +10,10 @@ import android.net.NetworkCapabilities
 import android.nfc.FormatException
 import android.os.Build
 import android.util.Base64
+import com.android.volley.DefaultRetryPolicy
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -58,19 +62,18 @@ class Utilitarios {
      */
     enum class URL {
         LOGIN,
-        HORARIO,
         HORARIO_NEW,
         CURSOS_PRE,
-        SECCIONES, //SECCIONES PROFESOR
+        SECCIONES,
         PROGRAMAS,
-        CURSOS_POST,
-        NOTAS_POST,
         PAGO_PRE,
         PAGO_POST,
-        ASIS_PROF, // CONSULTAR ASISTENCIA PROFESOR
+        CURSOS_POST,
+        NOTAS_POST,
+        ASIS_PROF,
         ASIS_ALUMNO_PRE,
         ASIS_ALUMNO_POST,
-        REG_ASIS_PROF, // REGISTRAR ASISTENCIA PROFESOR
+        REG_ASIS_PROF,
         PR_PROMOCION,
         PR_CONFIGURACION,
         PR_DETALLEGRUPO,
@@ -78,48 +81,32 @@ class Utilitarios {
         PR_OTROSHORARIOS,
         PR_REGISTRAR_RESERVA,
         PR_CONFIRMAR_RESERVA,
-        PR_VERIFICAR_GRUPO,
         PR_MIS_RESERVAS,
+        PR_VERIFICAR_GRUPO,
         PR_MI_GRUPO,
         PR_ELIMINAR_ALUMNOGRUPO,
         PR_ALUMNOS_SINGRUPO,
         PR_AGREGAR_ALUMNOGRUPO,
         MALLA_CURRICULAR,
+        MALLA_CURRICULAR_RESUMEN,
+        VALIDA_ENCUESTA_PROGRAMA,
         LISTA_ASISTENCIA,
-        REGISTRAR_ASISTENCIA_PROFESOR,
         REGISTRAR_ASISTENCIA_ALUMNO,
         REGISTRAR_ASISTENCIA_MASIVA,
-        /*REGISTRAR_ASISTENCIA_COPIA,*/
-        VALIDA_ENCUESTA_PROGRAMA,
         PREGUNTAS_ENCUESTA,
-        REGISTRAR_ENCUESTA,
         CARGA_ACADEMICA,
         DIRECTORIO,
+        REGISTRAR_ENCUESTA,
         RECOR_ASISTENCIA_ALUMNO,
         RECOR_ASISTENCIA_PROFESOR,
         HISTORICO_NOTAS_PRE,
-        MALLA_CURRICULAR_RESUMEN,
         RESULTADO_ENCUESTA_CABECERA,
         RESULTADO_ENCUESTA_DETALLE,
         CANTIDAD_MENSAJES,
         MENSAJE,
         MENSAJE_MARCARCOMOLEIDO,
-        MENU_COMEDOR,
         CERRAR_SESION,
         VERSION_CODE,
-        RA_FACULTADES,
-        RA_EDIFICIOS,
-        RA_CAFETERIAS,
-        RA_DEPORTES,
-        RA_BIBLIOTECAS,
-        RA_LABORATORIOS,
-        RA_AUDITORIOS,
-        RA_LIBRERIAS,
-        RA_OFICINAS,
-        RA_AULAS,
-        RA_VARIOS,
-        RA_BYID,
-        RA_IMAGEN,
         PREG_PP_OBT_CONFIGURACION,
         PREG_PP_VERIFICAR_GRUPO_ALUMNOS,
         PREG_PP_REGISTRA_PRERESERVA,
@@ -134,7 +121,23 @@ class Utilitarios {
         PREG_LAB_CONFIRMAR_PRERESERVA_LABORATORIO,
         PREG_LAB_LISTAR_PRERESERVAS_LAB_X_ALUMNO,
         PREG_LAB_VERIFICAR_TIPO_POLITICA,
-        PREG_LAB_ACEPTAR_TIPO_POLITICA
+        PREG_LAB_ACEPTAR_TIPO_POLITICA,
+
+
+        MENU_COMEDOR,
+        RA_FACULTADES,
+        RA_EDIFICIOS,
+        RA_CAFETERIAS,
+        RA_DEPORTES,
+        RA_BIBLIOTECAS,
+        RA_LABORATORIOS,
+        RA_AUDITORIOS,
+        RA_LIBRERIAS,
+        RA_OFICINAS,
+        RA_AULAS,
+        RA_VARIOS,
+        RA_BYID,
+        RA_IMAGEN
     }
 
     /** Tipos de fuente ROBOTO
@@ -155,32 +158,31 @@ class Utilitarios {
     }
 
     companion object {
-        val horarioSemanaVistaMaxima = 3
-        val PRE = "pre"
-        val POS = "pos"
-        val DOC = "docente"
-        val ALU = "alumno"
-        val mostrarDetalleMarker = false
+        const val horarioSemanaVistaMaxima = 3
+        const val PRE = "pre"
+        const val POS = "pos"
+        const val DOC = "docente"
+        const val ALU = "alumno"
+        const val mostrarDetalleMarker = false
 
-        private val ReleasePortal = true
-        private val Release = true
+        private const val ReleasePortal = false
+        private const val Release = false
 
-        private val DominioPortal = "https://restws.esan.edu.pe"
-        private val DominioPortalTest = "https://devrestws.esan.edu.pe"
+        private const val DominioPortal = "https://restws.esan.edu.pe"
+        private const val DominioPortalTest = "https://devrestws.esan.edu.pe"
 
-        private val DominioUE = "https://intranetmovil.ue.edu.pe"
-        private val DominioUETest = "https://devintranetmovil.ue.edu.pe"
+        private const val DominioUE = "https://intranetmovil.ue.edu.pe"
+        private const val DominioUETest = "https://devintranetmovil.ue.edu.pe"
 
-        private val DominioESAN = "http://intranetmovil.esan.edu.pe"
-        private val DominioESANTest = "http://devintranetmovil.esan.edu.pe"
+        private const val DominioESAN = "http://intranetmovil.esan.edu.pe"
+        private const val DominioESANTest = "http://devintranetmovil.esan.edu.pe"
 
         fun getUrl(url: URL) : String {
 
             when (url) {
-                URL.LOGIN ->                        return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionSeguridad/Acceso/AutenticacionService.svc/AutenticarUsuario"
+                URL.LOGIN ->                        return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/api/login/AutenticarUsuario"
                 URL.HORARIO_NEW ->                  return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Horario/Horario.svc/HorarioFecha"
-                //URL.HORARIO_NEW ->                return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Horario/Horario.svc/HorarioFecha2"
-                URL.CURSOS_PRE ->                   return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Notas/NotasAlumno.svc/ListarNotasActualesAlumnoPre"
+                URL.CURSOS_PRE ->                   return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/api/notas/GestionAcademica/ListarNotasActualesAlumnoPre"
                 URL.SECCIONES ->                    return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Horario/Horario.svc/SeccionesXProfesor"
                 URL.PROGRAMAS ->                    return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Notas/NotasAlumno.svc/ListarProgramasPost"
                 URL.PAGO_PRE ->                     return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Pagos/CronogramaPagos.svc/CronogramaPagosPregrado"
@@ -208,7 +210,6 @@ class Utilitarios {
                 URL.MALLA_CURRICULAR_RESUMEN ->     return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Notas/NotasAlumno.svc/ListarResumenAcademicoAlumnoPre"
                 URL.VALIDA_ENCUESTA_PROGRAMA ->     return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Notas/NotasAlumno.svc/ListarEncuestasProfesorPost"
                 URL.LISTA_ASISTENCIA ->             return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAsistencia/ControlAsistencia/Asistencia.svc/ListarAsistenciaAlumnosxSeccion"
-                /*URL.REGISTRAR_ASISTENCIA_PROFESOR ->return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAsistencia/ControlAsistencia/Asistencia.svc/RegistrarAsistenciaProfesor"*/
                 URL.REGISTRAR_ASISTENCIA_ALUMNO ->  return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAsistencia/ControlAsistencia/Asistencia.svc/RegistrarAsistenciaAlumno"
                 URL.REGISTRAR_ASISTENCIA_MASIVA ->  return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAsistencia/ControlAsistencia/Asistencia.svc/RegistrarAsistenciaMasivaAlumno"
                 URL.PREGUNTAS_ENCUESTA ->           return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAcademica/Encuesta/Encuesta.svc/ListarEncuestaPregunta"
@@ -224,7 +225,7 @@ class Utilitarios {
                 URL.MENSAJE ->                      return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionNotificaciones/Notificacion/Notificacion.svc/NotificacionPorUsuario"
                 URL.MENSAJE_MARCARCOMOLEIDO ->      return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionNotificaciones/Notificacion/Notificacion.svc/DesactivarNotificacion"
                 URL.CERRAR_SESION ->                return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionSeguridad/Acceso/AutenticacionService.svc/ActualizarToken"
-                URL.VERSION_CODE ->                 return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionSeguridad/Acceso/AutenticacionService.svc/ObtenerVersionMovil"
+                URL.VERSION_CODE ->                 return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/api/login/ObtenerVersionMovil"
 
                 //PREGRADO SALAS DE ESTUDIO
                 URL.PREG_PP_OBT_CONFIGURACION ->    return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/GestionAmbiente/SalasCubiculos/ReservaPre.svc/ObtenerConfiguracionAlumno"
@@ -304,19 +305,19 @@ class Utilitarios {
          * @return fuente
          */
         fun getFontRoboto(context: Context, type: TypeFont) : Typeface {
-            when (type) {
-                TypeFont.THIN -> return Typeface.createFromAsset(context.assets, "fonts/Roboto-Thin.ttf")
-                TypeFont.THIN_ITALIC -> return Typeface.createFromAsset(context.assets, "fonts/Roboto-ThinItalic.ttf")
-                TypeFont.LIGHT -> return Typeface.createFromAsset(context.assets, "fonts/Roboto-Light.ttf")
-                TypeFont.LIGHT_ITALIC -> return Typeface.createFromAsset(context.assets, "fonts/Roboto-LightItalic.ttf")
-                TypeFont.REGULAR -> return Typeface.createFromAsset(context.assets, "fonts/Roboto-Regular.ttf")
-                TypeFont.REGULAR_ITALIC -> return Typeface.createFromAsset(context.assets, "fonts/Roboto-Italic.ttf")
-                TypeFont.MEDIUM -> return Typeface.createFromAsset(context.assets, "fonts/Roboto-Medium.ttf")
-                TypeFont.MEDIUM_ITALIC -> return Typeface.createFromAsset(context.assets, "fonts/Roboto-MediumItalic.ttf")
-                TypeFont.BOLD -> return Typeface.createFromAsset(context.assets, "fonts/Roboto-Bold.ttf")
-                TypeFont.BOLD_ITALIC -> return Typeface.createFromAsset(context.assets, "fonts/Roboto-BoldItalic.ttf")
-                TypeFont.BLACK -> return Typeface.createFromAsset(context.assets, "fonts/Roboto-Black.ttf")
-                TypeFont.BLACK_ITALIC -> return Typeface.createFromAsset(context.assets, "fonts/Roboto-BlackItalic.ttf")
+            return when (type) {
+                TypeFont.THIN -> Typeface.createFromAsset(context.assets, "fonts/Roboto-Thin.ttf")
+                TypeFont.THIN_ITALIC -> Typeface.createFromAsset(context.assets, "fonts/Roboto-ThinItalic.ttf")
+                TypeFont.LIGHT -> Typeface.createFromAsset(context.assets, "fonts/Roboto-Light.ttf")
+                TypeFont.LIGHT_ITALIC -> Typeface.createFromAsset(context.assets, "fonts/Roboto-LightItalic.ttf")
+                TypeFont.REGULAR -> Typeface.createFromAsset(context.assets, "fonts/Roboto-Regular.ttf")
+                TypeFont.REGULAR_ITALIC -> Typeface.createFromAsset(context.assets, "fonts/Roboto-Italic.ttf")
+                TypeFont.MEDIUM -> Typeface.createFromAsset(context.assets, "fonts/Roboto-Medium.ttf")
+                TypeFont.MEDIUM_ITALIC -> Typeface.createFromAsset(context.assets, "fonts/Roboto-MediumItalic.ttf")
+                TypeFont.BOLD -> Typeface.createFromAsset(context.assets, "fonts/Roboto-Bold.ttf")
+                TypeFont.BOLD_ITALIC -> Typeface.createFromAsset(context.assets, "fonts/Roboto-BoldItalic.ttf")
+                TypeFont.BLACK -> Typeface.createFromAsset(context.assets, "fonts/Roboto-Black.ttf")
+                TypeFont.BLACK_ITALIC -> Typeface.createFromAsset(context.assets, "fonts/Roboto-BlackItalic.ttf")
             }
         }
 
@@ -352,15 +353,15 @@ class Utilitarios {
 
         fun getDiaSemana(dia: Int) :Int {
             val sDia = dia - 2
-            if (sDia < 0) return 6 else return sDia
+            return if (sDia < 0) 6 else sDia
         }
 
         fun getStringToDateHHmm(hora: String) : Date?{
-            try {
+            return try {
                 val hhmm = SimpleDateFormat("HH:mm", Locale.getDefault())
-                return hhmm.parse(hora)
+                hhmm.parse(hora)
             } catch (pe: ParseException) {
-                return null
+                null
             }
         }
 
@@ -375,7 +376,7 @@ class Utilitarios {
 
         fun addMinutesToDate(fecha: Date?, minutos: Int): Date {
             val calendar = Calendar.getInstance()
-            calendar.time = fecha
+            calendar.time = fecha ?: Date()
             calendar.add(Calendar.MINUTE, minutos)
 
             return calendar.time
@@ -391,32 +392,15 @@ class Utilitarios {
             }
         }
 
-        fun getStringToStringddMMyyyyHHmm(fecha: String): String {
-            val ddMMyyyyHHmm = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-
-            var f: Date
-            try {
-                var newfecha = fecha.replace("/Date(", "")
-                newfecha = newfecha.replace(")/", "")
-                val `val` = newfecha.split("-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-                val va = java.lang.Long.parseLong(`val`[0])
-                f = Date(va)
-            } catch (e: Exception) {
-                f = Date()
-            }
-
-            return ddMMyyyyHHmm.format(f!!.time)
-        }
-
         fun getStringToDateddMMyyyy(fecha: String): Date {
-            try {
+            return try {
                 var newfecha = fecha.replace("/Date(", "")
                 newfecha = newfecha.replace(")/", "")
                 val `val` = newfecha.split("-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                 val va = java.lang.Long.parseLong(`val`[0])
-                return Date(va)
+                Date(va)
             } catch (e: Exception) {
-                return Date()
+                Date()
             }
         }
 
@@ -442,15 +426,13 @@ class Utilitarios {
 
         fun getStringToStringddMMyyyyHHmmTwo(fecha: String) : String {
             val ddMMyyyyHHmm = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
-            /*val yyyyMMddTHHmm = SimpleDateFormat("yyyy-MM-ddTHH:mm:ss", Locale.getDefault())*/
-            var f: Date
-            try {
-                f = ddMMyyyyHHmm.parse(fecha)
-            }catch (e: Exception) {
-                f = Date()
+            val f: Date? = try {
+                ddMMyyyyHHmm.parse(fecha)
+            } catch (e: Exception) {
+                Date()
             }
 
-            return ddMMyyyyHHmm.format(f.time)
+            return ddMMyyyyHHmm.format(f?.time)
         }
 
         fun getStringToStringddMMyyyyHHmmThree(fecha: String) : String {
@@ -509,9 +491,9 @@ class Utilitarios {
 
         //ENCRIPTACION
 
-        private val characterEncoding = "UTF-8"
-        private val cipherTransformation = "AES/CBC/PKCS5Padding"
-        private val aesEncryptionAlgorithm = "AES"
+        private const val characterEncoding = "UTF-8"
+        private const val cipherTransformation = "AES/CBC/PKCS5Padding"
+        private const val aesEncryptionAlgorithm = "AES"
 
         fun jsObjectEncrypted(json : JSONObject, context: Context) : JSONObject? {
             try {
@@ -687,6 +669,9 @@ fun isOnlineUtils(context: Context): Boolean{
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> {
                     return true
                 }
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN) -> {
+                    return true
+                }
             }
         }
     } else {
@@ -695,4 +680,93 @@ fun isOnlineUtils(context: Context): Boolean{
     }
 
     return false
+}
+
+fun Context.getHeaderForJWT(): HashMap<String, String> {
+
+    val misPreferencias = getSharedPreferences(
+        "PreferenciasUsuario",
+        Context.MODE_PRIVATE
+    )
+
+    val jwtToken = misPreferencias.getString("jwt", "")
+
+    val headers = HashMap<String, String>()
+    headers["Authorization"] = "Bearer $jwtToken"
+
+    return headers
+
+}
+
+fun Context.renewToken(callbackToken: (jwtNewToken: String?) -> Unit){
+
+    val tag = "RenewToken"
+
+    val misPreferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+
+    val usuario = misPreferencias.getString("code", "")
+    val clave = misPreferencias.getString("password", "")
+    val token = misPreferencias.getString("tokenID", "")
+
+    val request = JSONObject()
+    request.put("Usuario", Utilitarios.stringDesencriptar(usuario ?: "",this))
+    request.put("Password", Utilitarios.stringDesencriptar(clave ?: "",this))
+    request.put("Token", token)
+
+    val fRequest = Utilitarios.jsObjectEncrypted(request, this)
+    val url = Utilitarios.getUrl(Utilitarios.URL.LOGIN)
+
+    if (fRequest != null) {
+        val requestQueue = Volley.newRequestQueue(this)
+        val jsObjectRequest = JsonObjectRequest(
+            Request.Method.POST,
+            url,
+            fRequest,
+            { response ->
+                try {
+                    if (!response.isNull("AutenticarUsuarioResult")) {
+                        val jsResponse = Utilitarios.jsObjectDesencriptar(
+                            response.getString("AutenticarUsuarioResult"),this
+                        )
+
+                        if (jsResponse != null) {
+                            val jwtToken = jsResponse["TokenJWT"] as? String?
+
+                            val editor = misPreferencias.edit()
+
+                            if(!jwtToken.isNullOrEmpty()){
+                                editor.putString("jwt", jwtToken)
+                            } else {
+                                editor.putString("jwt", "")
+                            }
+
+                            editor.apply()
+                            callbackToken(jwtToken)
+                        }
+                    }
+                } catch (jex: JSONException) {
+                    val editor = misPreferencias.edit()
+                    editor.putString("jwt", "")
+                    editor.apply()
+                    callbackToken(null)
+                }
+            },
+            {
+                val editor = misPreferencias.edit()
+                editor.putString("jwt", "")
+                editor.apply()
+                callbackToken(null)
+            }
+        )
+
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(
+            3000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+        jsObjectRequest.tag = tag
+
+        requestQueue?.add(jsObjectRequest)
+
+    }
 }

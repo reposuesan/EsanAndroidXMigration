@@ -20,6 +20,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_encuesta.*
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -32,6 +33,8 @@ import pe.edu.esan.appostgrado.control.CustomDialog
 import pe.edu.esan.appostgrado.entidades.Alumno
 import pe.edu.esan.appostgrado.entidades.PreguntaEncuesta
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class EncuestaActivity : AppCompatActivity() {
 
@@ -149,7 +152,9 @@ class EncuestaActivity : AppCompatActivity() {
     private fun onPreguntasEncuesta(url: String, request: JSONObject) {
         puedeEnviar = false
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -219,7 +224,7 @@ class EncuestaActivity : AppCompatActivity() {
                             puedeEnviar = true
                         }
                     } else {
-
+                        Log.e(LOG,"An error occurred")
                     }
                 } catch (jex: JSONException) {
 
@@ -228,9 +233,25 @@ class EncuestaActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                error.printStackTrace()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onPreguntasEncuesta(url, request)
+                        } else {
+                            error.printStackTrace()
+                        }
+                    }
+                } else {
+                    error.printStackTrace()
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -310,7 +331,7 @@ class EncuestaActivity : AppCompatActivity() {
 
             val requestEncriptado = Utilitarios.jsArrayEncrypted(jsArray, this)
             if (requestEncriptado != null)
-                onEnviarEncuesta (Utilitarios.getUrl(Utilitarios.URL.REGISTRAR_ENCUESTA), requestEncriptado, esAlumnoPre)
+                onEnviarEncuesta(Utilitarios.getUrl(Utilitarios.URL.REGISTRAR_ENCUESTA), requestEncriptado, esAlumnoPre)
             else {
                 val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_encriptar), Snackbar.LENGTH_LONG)
                 snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
@@ -331,11 +352,13 @@ class EncuestaActivity : AppCompatActivity() {
         }
     }
 
-    private fun onEnviarEncuesta (url: String, request: JSONObject, esPregrado: Boolean) {
+    private fun onEnviarEncuesta(url: String, request: JSONObject, esPregrado: Boolean) {
         CustomDialog.instance.showDialogLoad(this)
 
         requestQueueEnviar = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -378,14 +401,36 @@ class EncuestaActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                CustomDialog.instance.dialogoCargando?.dismiss()
-                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onEnviarEncuesta(url, request, esPregrado)
+                        } else {
+                            CustomDialog.instance.dialogoCargando?.dismiss()
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    }
+                } else {
+                    CustomDialog.instance.dialogoCargando?.dismiss()
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueueEnviar?.add(jsObjectRequest)
     }

@@ -25,6 +25,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.fragment_cursos.view.*
 import kotlinx.android.synthetic.main.fragment_puntos_reunion_pregrado.*
 import kotlinx.android.synthetic.main.fragment_puntos_reunion_pregrado.view.*
 import org.json.JSONObject
@@ -34,6 +35,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.Alumno
 
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import java.util.*
 
 
@@ -313,7 +316,9 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
 
             if (fRequest != null) {
                 mRequestQueue = Volley.newRequestQueue(activity!!.applicationContext)
-                val jsonObjectRequest = JsonObjectRequest(
+                //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+                val jsonObjectRequest = object: JsonObjectRequest(
+                /*val jsonObjectRequest = JsonObjectRequest(*/
                     Request.Method.POST,
                     url,
                     fRequest,
@@ -406,18 +411,36 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                         }
                     },
                     { error ->
-                        error.printStackTrace()
+                        if(error.networkResponse.statusCode == 401) {
 
-                        if (view != null) {
-                            view!!.linear_layout_container.visibility = View.GONE
-                            view!!.empty_text_view.text =
-                                getString(R.string.no_respuesta_desde_servidor)
-                            view!!.empty_text_view.visibility = View.VISIBLE
-                            view!!.progress_bar_pp_pregrado.visibility = View.GONE
-
+                            requireActivity().renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    obtenerConfiguracionIdServicio(url, request)
+                                } else {
+                                    if(view != null) {
+                                        view!!.linear_layout_container.visibility = View.GONE
+                                        view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
+                                        view!!.empty_text_view.visibility = View.VISIBLE
+                                        view!!.progress_bar_pp_pregrado.visibility = View.GONE
+                                    }
+                                }
+                            }
+                        } else {
+                            if(view != null) {
+                                view!!.linear_layout_container.visibility = View.GONE
+                                view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
+                                view!!.empty_text_view.visibility = View.VISIBLE
+                                view!!.progress_bar_pp_pregrado.visibility = View.GONE
+                            }
                         }
                     }
                 )
+                //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+                {
+                    override fun getHeaders(): MutableMap<String, String> {
+                        return requireActivity().getHeaderForJWT()
+                    }
+                }
 
                 jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
                     15000,
@@ -439,7 +462,9 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
             val fRequest = Utilitarios.jsObjectEncrypted(request, activity!!.applicationContext)
             if (fRequest != null) {
                 mRequestQueue = Volley.newRequestQueue(activity!!.applicationContext)
-                val jsonObjectRequest = JsonObjectRequest(
+                //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+                val jsonObjectRequest = object: JsonObjectRequest(
+                /*val jsonObjectRequest = JsonObjectRequest(*/
                     Request.Method.POST,
                     url,
                     fRequest,
@@ -515,23 +540,43 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                     view!!.empty_text_view.text =
                                         getString(R.string.no_respuesta_desde_servidor)
                                     view!!.empty_text_view.visibility = View.VISIBLE
-                                    view!!.progress_bar_pp_pregrado.visibility = View.GONE
+                                    view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
                                 }
                             }
                         }
                     },
                     { error ->
-                        error.printStackTrace()
-                        if (view != null) {
-                            view!!.linear_layout_container.visibility = View.GONE
-                            view!!.empty_text_view.text =
-                                getString(R.string.no_respuesta_desde_servidor)
-                            view!!.empty_text_view.visibility = View.VISIBLE
-                            view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                        if(error.networkResponse.statusCode == 401) {
+
+                            requireActivity().renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    verificarTipoPoliticaPortal(url, request)
+                                } else {
+                                    if (view != null) {
+                                        view!!.linear_layout_container.visibility = View.GONE
+                                        view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
+                                        view!!.empty_text_view.visibility = View.VISIBLE
+                                        view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                                    }
+                                }
+                            }
+                        } else {
+                            if (view != null) {
+                                view!!.linear_layout_container.visibility = View.GONE
+                                view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
+                                view!!.empty_text_view.visibility = View.VISIBLE
+                                view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                            }
                         }
 
                     }
                 )
+                //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+                {
+                    override fun getHeaders(): MutableMap<String, String> {
+                        return requireActivity().getHeaderForJWT()
+                    }
+                }
 
                 jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
                     15000,
@@ -553,7 +598,9 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
 
             if (fRequest != null) {
                 mRequestQueue = Volley.newRequestQueue(activity!!.applicationContext)
-                val jsonObjectRequest = JsonObjectRequest(
+                //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+                val jsonObjectRequest = object: JsonObjectRequest(
+                /*val jsonObjectRequest = JsonObjectRequest(*/
                     Request.Method.POST,
                     url,
                     fRequest,
@@ -637,23 +684,45 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                     view!!.empty_text_view.text =
                                         getString(R.string.no_respuesta_desde_servidor)
                                     view!!.empty_text_view.visibility = View.VISIBLE
-                                    view!!.progress_bar_pp_pregrado.visibility = View.GONE
+                                    view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
                                 }
                             }
                         }
                     },
                     { error ->
-                        error.printStackTrace()
-                        if (view != null) {
-                            view!!.linear_layout_container.visibility = View.GONE
-                            view!!.empty_text_view.text =
-                                getString(R.string.no_respuesta_desde_servidor)
-                            view!!.empty_text_view.visibility = View.VISIBLE
-                            view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                        if(error.networkResponse.statusCode == 401) {
+
+                            requireActivity().renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    aceptarTipoPolitica(url, request)
+                                } else {
+                                    if (view != null) {
+                                        view!!.linear_layout_container.visibility = View.GONE
+                                        view!!.empty_text_view.text =
+                                            getString(R.string.no_respuesta_desde_servidor)
+                                        view!!.empty_text_view.visibility = View.VISIBLE
+                                        view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                                    }
+                                }
+                            }
+                        } else {
+                            if (view != null) {
+                                view!!.linear_layout_container.visibility = View.GONE
+                                view!!.empty_text_view.text =
+                                    getString(R.string.no_respuesta_desde_servidor)
+                                view!!.empty_text_view.visibility = View.VISIBLE
+                                view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                            }
                         }
+
                     }
                 )
-
+                //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+                {
+                    override fun getHeaders(): MutableMap<String, String> {
+                        return requireActivity().getHeaderForJWT()
+                    }
+                }
                 jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
                     15000,
                     DefaultRetryPolicy.DEFAULT_MAX_RETRIES,

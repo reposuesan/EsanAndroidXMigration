@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.fragment_cursos.view.*
 import kotlinx.android.synthetic.main.fragment_puntos_reunion_postgrado.*
 import kotlinx.android.synthetic.main.fragment_puntos_reunion_postgrado.view.*
 import org.json.JSONException
@@ -29,6 +30,8 @@ import pe.edu.esan.appostgrado.architecture.viewmodel.ControlViewModel
 import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.*
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import pe.edu.esan.appostgrado.view.puntosreunion.postgrado.confirmar.PRConfirmarActivity
 import pe.edu.esan.appostgrado.view.puntosreunion.postgrado.crear.PRMiGrupoActivity
 import pe.edu.esan.appostgrado.view.puntosreunion.postgrado.mireserva.PRMisReservasActivity
@@ -129,7 +132,9 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
 
         prbCargando_fpuntosreunion.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(activity!!)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -193,11 +198,34 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 prbCargando_fpuntosreunion.visibility = View.GONE
             },
             { error ->
-                prbCargando_fpuntosreunion.visibility = View.GONE
-                lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                if(error.networkResponse.statusCode == 401) {
+
+                    requireActivity().renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onPromocion(url, request)
+                        } else {
+                            if(view != null) {
+                                prbCargando_fpuntosreunion.visibility = View.GONE
+                                lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                            }
+                        }
+                    }
+                } else {
+                    if(view != null) {
+                        prbCargando_fpuntosreunion.visibility = View.GONE
+                        lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                    }
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return requireActivity().getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -224,7 +252,9 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
 
         prbCargando_fpuntosreunion.visibility = View.VISIBLE
         requestQueue2 = Volley.newRequestQueue(activity!!)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -317,12 +347,35 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 prbCargando_fpuntosreunion.visibility = View.GONE
             },
             { error ->
-                prbCargando_fpuntosreunion.visibility = View.GONE
-                lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                if(error.networkResponse.statusCode == 401) {
+
+                    requireActivity().renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onTipoGrupo(url, request, idPromocion, idGrupo)
+                        } else {
+                            if(view != null) {
+                                prbCargando_fpuntosreunion.visibility = View.GONE
+                                lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                            }
+                        }
+                    }
+                } else {
+                    if(view != null) {
+                        prbCargando_fpuntosreunion.visibility = View.GONE
+                        lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                    }
+                }
+
             }
         )
-
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return requireActivity().getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue2?.add(jsObjectRequest)
     }
@@ -349,12 +402,13 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
         }
     }
 
-    private fun onDetalleAlumno (url: String, idConfiguracion: Int, request: JSONObject) {
+    private fun onDetalleAlumno(url: String, idConfiguracion: Int, request: JSONObject) {
 
         prbCargando_fpuntosreunion.visibility = View.VISIBLE
-
         requestQueue3 = Volley.newRequestQueue(activity!!)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -406,11 +460,35 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 prbCargando_fpuntosreunion.visibility = View.GONE
             },
             { error ->
-                prbCargando_fpuntosreunion.visibility = View.GONE
-                lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                if(error.networkResponse.statusCode == 401) {
+
+                    requireActivity().renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onDetalleAlumno(url, idConfiguracion, request)
+                        } else {
+                            if(view != null) {
+                                prbCargando_fpuntosreunion.visibility = View.GONE
+                                lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                            }
+                        }
+                    }
+                } else {
+                    if(view != null) {
+                        prbCargando_fpuntosreunion.visibility = View.GONE
+                        lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                    }
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return requireActivity().getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue3?.add(jsObjectRequest)
     }

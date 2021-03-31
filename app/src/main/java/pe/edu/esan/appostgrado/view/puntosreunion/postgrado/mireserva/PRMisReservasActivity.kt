@@ -15,6 +15,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_prmis_reservas.*
 import kotlinx.android.synthetic.main.toolbar_menuprincipal.view.*
 import org.json.JSONException
@@ -26,6 +27,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.Alumno
 import pe.edu.esan.appostgrado.entidades.PRMiReserva
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import java.util.ArrayList
 
 class PRMisReservasActivity : AppCompatActivity() {
@@ -107,7 +110,9 @@ class PRMisReservasActivity : AppCompatActivity() {
     private fun onMisReservas(url: String, request: JSONObject) {
         prbCargando_prmisreservas.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
@@ -172,11 +177,30 @@ class PRMisReservasActivity : AppCompatActivity() {
 
             },
             { error ->
-                prbCargando_prmisreservas.visibility = View.GONE
-                lblMensaje_prmisreservas.visibility = View.VISIBLE
-                lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onMisReservas(url, request)
+                        } else {
+                            prbCargando_prmisreservas.visibility = View.GONE
+                            lblMensaje_prmisreservas.visibility = View.VISIBLE
+                            lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
+                        }
+                    }
+                } else {
+                    prbCargando_prmisreservas.visibility = View.GONE
+                    lblMensaje_prmisreservas.visibility = View.VISIBLE
+                    lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

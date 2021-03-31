@@ -92,6 +92,7 @@ class CursoDetalleActivity : AppCompatActivity() {
                     lblSPromedio_cursopredetalle.visibility = View.GONE
                     lblPromedio_cursopredetalle.visibility = View.GONE
                     alumno_retirado.visibility = View.VISIBLE
+                    alumno_retirado.text = getString(R.string.alumno_retirado_del_curso)
                 } else {
                     alumno_retirado.visibility = View.GONE
                     lblCurso_cursopredetalle.typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.BOLD)
@@ -134,8 +135,19 @@ class CursoDetalleActivity : AppCompatActivity() {
                     /*getBarraAsistencia(cursoActual.seccionCodigo)*/
                     cargarBarraAsistencia()
                 }
+            } else {
+                lblCurso_cursopredetalle.visibility = View.GONE
+                lblSPorfesor_cursopredetalle.visibility = View.GONE
+                lblProfesor_cursopredetalle.visibility = View.GONE
+                lblMensajeAsistencia_cursopredetalle.visibility = View.GONE
+                viewDetalleAsistencia_cursopredetalle.visibility = View.GONE
+                lblSNotas_cursopredetalle.visibility = View.GONE
+                rvNotas_cursopredetalle.visibility = View.GONE
+                lblSPromedio_cursopredetalle.visibility = View.GONE
+                lblPromedio_cursopredetalle.visibility = View.GONE
+                alumno_retirado.visibility = View.VISIBLE
+                alumno_retirado.text = getString(R.string.error_respuesta_server)
             }
-
         } else {
             finish()
         }

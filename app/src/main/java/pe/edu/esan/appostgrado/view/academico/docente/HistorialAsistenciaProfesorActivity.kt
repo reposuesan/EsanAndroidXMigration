@@ -17,6 +17,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_historial_asistencia_profesor.*
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -27,6 +28,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.SeccionHistorial
 import pe.edu.esan.appostgrado.entidades.UserEsan
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -242,7 +245,9 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
     private fun onHistorialAsistencia(url: String, request: JSONObject) {
         prbCargando_histoasistprof.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -304,10 +309,28 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
                 prbCargando_histoasistprof.visibility = View.GONE
             },
             { error ->
-                prbCargando_histoasistprof.visibility = View.GONE
-                lblMensaje_histoasistprof.text = resources.getString(R.string.error_default)
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onHistorialAsistencia(url, request)
+                        } else {
+                            prbCargando_histoasistprof.visibility = View.GONE
+                            lblMensaje_histoasistprof.text = resources.getString(R.string.error_default)
+                        }
+                    }
+                } else {
+                    prbCargando_histoasistprof.visibility = View.GONE
+                    lblMensaje_histoasistprof.text = resources.getString(R.string.error_default)
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

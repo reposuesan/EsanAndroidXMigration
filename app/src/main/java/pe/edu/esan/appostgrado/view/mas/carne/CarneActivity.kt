@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
 import kotlinx.android.synthetic.main.activity_carne.*
+import kotlinx.android.synthetic.main.fragment_cursos.view.*
 
 import kotlinx.android.synthetic.main.toolbar_titulo.view.toolbar_title
 import org.json.JSONException
@@ -28,6 +29,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 
 import pe.edu.esan.appostgrado.entidades.UserEsan
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -131,7 +134,9 @@ class CarneActivity : AppCompatActivity() {
     private fun consultarMatriculaAlumno(url: String, request: JSONObject){
 
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
             url,
             request,
             { response ->
@@ -172,12 +177,29 @@ class CarneActivity : AppCompatActivity() {
                     ocultarCarnet()
                 }
             },
-
             { error ->
-                empty_text_view_carnet.text = resources.getText(R.string.error_respuesta_server)
-                ocultarCarnet()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            consultarMatriculaAlumno(url, request)
+                        } else {
+                            empty_text_view_carnet.text = resources.getText(R.string.error_respuesta_server)
+                            ocultarCarnet()
+                        }
+                    }
+                } else {
+                    empty_text_view_carnet.text = resources.getText(R.string.error_respuesta_server)
+                    ocultarCarnet()
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
+
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
 

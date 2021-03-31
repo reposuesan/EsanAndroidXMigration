@@ -18,6 +18,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_mensaje.*
+import kotlinx.android.synthetic.main.fragment_cursos.view.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONException
 import org.json.JSONObject
@@ -29,6 +30,8 @@ import pe.edu.esan.appostgrado.entidades.Alumno
 import pe.edu.esan.appostgrado.entidades.Mensaje
 import pe.edu.esan.appostgrado.entidades.Profesor
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class MensajeActivity : AppCompatActivity() {
 
@@ -132,7 +135,9 @@ class MensajeActivity : AppCompatActivity() {
         prbCargando_mensaje.visibility = View.VISIBLE
         rvMensaje_mensaje.visibility = View.GONE
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -200,27 +205,56 @@ class MensajeActivity : AppCompatActivity() {
                 prbCargando_mensaje.visibility = View.GONE
             },
             { error ->
-                prbCargando_mensaje.visibility = View.GONE
-                lblMensaje_mensaje.visibility = View.VISIBLE
-                // lblMensaje_mensaje.text = resources.getText(R.string.error_no_conexion)
-                lblMensaje_mensaje.text = resources.getText(R.string.error_default)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    lblMensaje_mensaje.setCompoundDrawables(
-                        null,
-                        resources.getDrawable(R.drawable.ic_refresh_black_24dp),
-                        null,
-                        null
-                    );
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onMensaje(url, request)
+                        } else {
+                            prbCargando_mensaje.visibility = View.GONE
+                            lblMensaje_mensaje.visibility = View.VISIBLE
+                            lblMensaje_mensaje.text = resources.getText(R.string.error_default)
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                lblMensaje_mensaje.setCompoundDrawables(
+                                    null,
+                                    resources.getDrawable(R.drawable.ic_refresh_black_24dp),
+                                    null,
+                                    null
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    prbCargando_mensaje.visibility = View.GONE
+                    lblMensaje_mensaje.visibility = View.VISIBLE
+                    lblMensaje_mensaje.text = resources.getText(R.string.error_default)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        lblMensaje_mensaje.setCompoundDrawables(
+                            null,
+                            resources.getDrawable(R.drawable.ic_refresh_black_24dp),
+                            null,
+                            null
+                        )
+                    }
                 }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
+
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
 
     private fun onMarcarComoLeido(url: String, request: JSONObject, position: Int) {
         requestQueueLeido = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -238,9 +272,45 @@ class MensajeActivity : AppCompatActivity() {
                 }
             },
             { error ->
-
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onMarcarComoLeido(url, request, position)
+                        } else {
+                            prbCargando_mensaje.visibility = View.GONE
+                            lblMensaje_mensaje.visibility = View.VISIBLE
+                            lblMensaje_mensaje.text = resources.getText(R.string.error_default)
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                lblMensaje_mensaje.setCompoundDrawables(
+                                    null,
+                                    resources.getDrawable(R.drawable.ic_refresh_black_24dp),
+                                    null,
+                                    null
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    prbCargando_mensaje.visibility = View.GONE
+                    lblMensaje_mensaje.visibility = View.VISIBLE
+                    lblMensaje_mensaje.text = resources.getText(R.string.error_default)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        lblMensaje_mensaje.setCompoundDrawables(
+                            null,
+                            resources.getDrawable(R.drawable.ic_refresh_black_24dp),
+                            null,
+                            null
+                        )
+                    }
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueueLeido?.add(jsObjectRequest)
     }

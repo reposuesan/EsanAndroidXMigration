@@ -17,6 +17,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
+import kotlinx.android.synthetic.main.fragment_cursos.view.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -31,6 +32,8 @@ import pe.edu.esan.appostgrado.entidades.CursoRequisito
 import pe.edu.esan.appostgrado.entidades.CursosPre
 import pe.edu.esan.appostgrado.entidades.MallaPre
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class MallaCurricularActivity : AppCompatActivity() {
 
@@ -89,7 +92,6 @@ class MallaCurricularActivity : AppCompatActivity() {
                 val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
                 if (requestEncriptado != null) {
                     onMallaCurricular(Utilitarios.getUrl(Utilitarios.URL.MALLA_CURRICULAR), requestEncriptado)
-                    //onHistoricoResumen(Utilitarios.getUrl(Utilitarios.URL.MALLA_CURRICULAR_RESUMEN), requestEncriptado)
                 } else {
                     lblMensaje_mallacurricular.visibility = View.VISIBLE
                     lblMensaje_mallacurricular.text = resources.getString(R.string.error_encriptar)
@@ -98,10 +100,12 @@ class MallaCurricularActivity : AppCompatActivity() {
         }
     }
 
-    private fun onHistoricoResumen(url: String, request: JSONObject) {
+    /*private fun onHistoricoResumen(url: String, request: JSONObject) {
         CustomDialog.instance.showDialogLoad(this)
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -118,29 +122,42 @@ class MallaCurricularActivity : AppCompatActivity() {
                     }
 
                 } catch (jex: JSONException) {
-                    /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                    lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
+
                 } catch (ccax: ClassCastException) {
-                    /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                    lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
+
                 }
 
-                //prbCargando_historiconotaspre.visibility = View.GONE
             },
             { error ->
-                //prbCargando_historiconotaspre.visibility = View.GONE
-                /*lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                lblMensaje_historiconotaspre.visibility = View.VISIBLE*/
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onHistoricoResumen(url, request)
+                        } else {
+                            Log.e(LOG,"An error occurred")
+                        }
+                    }
+                } else {
+                    Log.e(LOG,"An error occurred")
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
-    }
+    }*/
 
     private fun onMallaCurricular(url: String, request: JSONObject) {
         prbCargando_mallacurricular.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 url,
                 request,
             { response ->
@@ -245,16 +262,35 @@ class MallaCurricularActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                prbCargando_mallacurricular.visibility = View.GONE
-                lblMensaje_mallacurricular.visibility = View.VISIBLE
-                lblMensaje_mallacurricular.text = resources.getString(R.string.error_no_conexion)
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onMallaCurricular(url, request)
+                        } else {
+                            prbCargando_mallacurricular.visibility = View.GONE
+                            lblMensaje_mallacurricular.visibility = View.VISIBLE
+                            lblMensaje_mallacurricular.text = resources.getString(R.string.error_no_conexion)
+                        }
+                    }
+                } else {
+                    prbCargando_mallacurricular.visibility = View.GONE
+                    lblMensaje_mallacurricular.visibility = View.VISIBLE
+                    lblMensaje_mallacurricular.text = resources.getString(R.string.error_no_conexion)
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
 
+        jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
 
-    private fun getResumenMalla() {
+    /*private fun getResumenMalla() {
         if (ControlUsuario.instance.currentUsuario.size == 1) {
             val user = ControlUsuario.instance.currentUsuario[0]
             when (user) {
@@ -274,7 +310,7 @@ class MallaCurricularActivity : AppCompatActivity() {
             /*lblMensaje_mallacurricular.visibility = View.VISIBLE
             lblMensaje_mallacurricular.text = resources.getString(R.string.error_ingreso)*/
         }
-    }
+    }*/
 
     /*** COMENTADO Próxima Versión DETALLE
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

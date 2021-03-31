@@ -14,6 +14,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_directorio.*
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -22,6 +23,8 @@ import pe.edu.esan.appostgrado.R
 import pe.edu.esan.appostgrado.adapter.ContactoAdapter
 import pe.edu.esan.appostgrado.entidades.Alumno
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class DirectorioActivity : AppCompatActivity() {
 
@@ -70,7 +73,9 @@ class DirectorioActivity : AppCompatActivity() {
     private fun onAlumnos(url: String, request: JSONObject) {
         prbCargando_directorio.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -108,11 +113,29 @@ class DirectorioActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                prbCargando_directorio.visibility = View.GONE
-                lblMensaje_directorio.visibility = View.VISIBLE
-                lblMensaje_directorio.text = resources.getString(R.string.error_no_conexion)
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onAlumnos(url, request)
+                        } else {
+                            prbCargando_directorio.visibility = View.GONE
+                            lblMensaje_directorio.visibility = View.VISIBLE
+                            lblMensaje_directorio.text = resources.getString(R.string.error_no_conexion)
+                        }
+                    }
+                } else {
+                    prbCargando_directorio.visibility = View.GONE
+                    lblMensaje_directorio.visibility = View.VISIBLE
+                    lblMensaje_directorio.text = resources.getString(R.string.error_no_conexion)
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

@@ -16,6 +16,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_resultado_encuesta.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONException
@@ -28,6 +29,8 @@ import pe.edu.esan.appostgrado.entidades.GrupoPregunta
 import pe.edu.esan.appostgrado.entidades.ResultadoEncuesta
 import pe.edu.esan.appostgrado.entidades.UserEsan
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class ResultadoEncuestaActivity : AppCompatActivity() {
 
@@ -113,7 +116,9 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
         prbCargando_resultadoencuesta.visibility = View.VISIBLE
         lblMensaje_resultadoencuesta.visibility = View.GONE
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 url,
                 request,
             { response ->
@@ -148,11 +153,30 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
-                lblMensaje_resultadoencuesta.visibility = View.VISIBLE
-                prbCargando_resultadoencuesta.visibility = View.GONE
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onResultadoEncuestaCabecera(url, request)
+                        } else {
+                            lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                            lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                            prbCargando_resultadoencuesta.visibility = View.GONE
+                        }
+                    }
+                } else {
+                    lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                    lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                    prbCargando_resultadoencuesta.visibility = View.GONE
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
@@ -160,7 +184,9 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
 
     private fun onResultadoEncuestaDetalle(url: String, request: JSONObject, resultadoEncuesta: ResultadoEncuesta) {
 
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 url,
                 request,
             { response ->
@@ -221,11 +247,29 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
-                lblMensaje_resultadoencuesta.visibility = View.VISIBLE
-                prbCargando_resultadoencuesta.visibility = View.GONE
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onResultadoEncuestaDetalle(url, request, resultadoEncuesta)
+                        } else {
+                            lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                            lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                            prbCargando_resultadoencuesta.visibility = View.GONE
+                        }
+                    }
+                } else {
+                    lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                    lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                    prbCargando_resultadoencuesta.visibility = View.GONE
+                }
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)

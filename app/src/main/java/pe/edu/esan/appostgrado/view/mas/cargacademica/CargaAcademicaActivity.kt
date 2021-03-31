@@ -15,6 +15,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_carga_academica.*
+import kotlinx.android.synthetic.main.fragment_cursos.view.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -26,6 +27,8 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.entidades.*
 import pe.edu.esan.appostgrado.util.MesAgnoDialog
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class CargaAcademicaActivity : AppCompatActivity() {
 
@@ -139,7 +142,9 @@ class CargaAcademicaActivity : AppCompatActivity() {
         rvHoras_cargacademica.visibility = View.GONE
         prbCargando_cargacademica.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -197,11 +202,30 @@ class CargaAcademicaActivity : AppCompatActivity() {
                 prbCargando_cargacademica.visibility = View.GONE
             },
             { error ->
-                prbCargando_cargacademica.visibility = View.GONE
-                lblMensaje_cargacademica.visibility = View.VISIBLE
-                lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onCargaAcademica(url, request)
+                        } else {
+                            prbCargando_cargacademica.visibility = View.GONE
+                            lblMensaje_cargacademica.visibility = View.VISIBLE
+                            lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
+                        }
+                    }
+                } else {
+                    prbCargando_cargacademica.visibility = View.GONE
+                    lblMensaje_cargacademica.visibility = View.VISIBLE
+                    lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

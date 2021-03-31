@@ -20,6 +20,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_pregrado_cubs_horario.*
 import org.json.JSONObject
 import pe.edu.esan.appostgrado.R
@@ -27,6 +28,8 @@ import pe.edu.esan.appostgrado.adapter.PregradoPrereservaHorarioAdapter
 import pe.edu.esan.appostgrado.entidades.GrupoAlumnosPrereserva
 import pe.edu.esan.appostgrado.entidades.PrereservaHorario
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -233,7 +236,9 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
-            val jsonObjectRequest = JsonObjectRequest(
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsonObjectRequest = object: JsonObjectRequest(
+            /*val jsonObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 fRequest,
@@ -260,16 +265,31 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                     }
                 },
                 { error ->
-                    error.printStackTrace()
-
-                    progress_bar_horario_cubs.visibility = View.GONE
-                    main_container_horario_cubs.visibility = View.GONE
-                    empty_text_view_horario.visibility = View.VISIBLE
-                    empty_text_view_horario.text = getString(R.string.no_respuesta_desde_servidor)
-
+                    if(error.networkResponse.statusCode == 401) {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                registraPrereservaServicio(url, request)
+                            } else {
+                                progress_bar_horario_cubs.visibility = View.GONE
+                                main_container_horario_cubs.visibility = View.GONE
+                                empty_text_view_horario.visibility = View.VISIBLE
+                                empty_text_view_horario.text = getString(R.string.no_respuesta_desde_servidor)
+                            }
+                        }
+                    } else {
+                        progress_bar_horario_cubs.visibility = View.GONE
+                        main_container_horario_cubs.visibility = View.GONE
+                        empty_text_view_horario.visibility = View.VISIBLE
+                        empty_text_view_horario.text = getString(R.string.no_respuesta_desde_servidor)
+                    }
                 }
             )
-
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return getHeaderForJWT()
+                }
+            }
             jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
                 15000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,

@@ -21,6 +21,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_pregrado_labs_select_software.*
 import org.json.JSONObject
 import pe.edu.esan.appostgrado.R
@@ -28,6 +29,8 @@ import pe.edu.esan.appostgrado.adapter.PregradoPrereservaSeleccionLabsAdapter
 import pe.edu.esan.appostgrado.adapter.PregradoPrereservaTagsAdapter
 import pe.edu.esan.appostgrado.entidades.ProgramaDescripcionItem
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -410,7 +413,9 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
-            val jsonObjectRequest = JsonObjectRequest(
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsonObjectRequest = object: JsonObjectRequest(
+            /*val jsonObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 fRequest,
@@ -477,12 +482,32 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
                     }
                 },
                 { error ->
-                    tv_empty_select_software_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                    tv_empty_select_software_lab.visibility = View.VISIBLE
-                    select_software_lab_container.visibility = View.GONE
-                    progress_bar_select_software_lab.visibility = View.GONE
+                    if(error.networkResponse.statusCode == 401) {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                registrarPrereservaLabServicio(url, request)
+                            } else {
+                                tv_empty_select_software_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                                tv_empty_select_software_lab.visibility = View.VISIBLE
+                                select_software_lab_container.visibility = View.GONE
+                                progress_bar_select_software_lab.visibility = View.GONE
+                            }
+                        }
+                    } else {
+                        tv_empty_select_software_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                        tv_empty_select_software_lab.visibility = View.VISIBLE
+                        select_software_lab_container.visibility = View.GONE
+                        progress_bar_select_software_lab.visibility = View.GONE
+                    }
+
                 }
             )
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return getHeaderForJWT()
+                }
+            }
 
             jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
                 15000,

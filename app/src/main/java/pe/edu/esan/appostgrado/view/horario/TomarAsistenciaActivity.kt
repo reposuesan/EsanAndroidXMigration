@@ -3,24 +3,21 @@ package pe.edu.esan.appostgrado.view.horario
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.widget.Toolbar
-import android.util.Log
 import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import com.android.volley.RequestQueue
-import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_tomar_asistencia.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONArray
@@ -31,8 +28,9 @@ import pe.edu.esan.appostgrado.adapter.AsistenciaAdapter
 import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.control.CustomDialog
 import pe.edu.esan.appostgrado.entidades.Alumno
-import pe.edu.esan.appostgrado.entidades.Horario
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class TomarAsistenciaActivity : AppCompatActivity() {
 
@@ -113,7 +111,9 @@ class TomarAsistenciaActivity : AppCompatActivity() {
     private fun onEstadoAsistenciaSeccion(url: String, request: JSONObject, laanterior: Boolean) {
         prbCargando_tomarasistencia.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
                 url,
                 request,
             { response ->
@@ -185,9 +185,26 @@ class TomarAsistenciaActivity : AppCompatActivity() {
                 prbCargando_tomarasistencia.visibility = View.GONE
             },
             { error ->
-                prbCargando_tomarasistencia.visibility = View.GONE
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onEstadoAsistenciaSeccion(url, request, laanterior)
+                        } else {
+                            prbCargando_tomarasistencia.visibility = View.GONE
+                        }
+                    }
+                } else {
+                    prbCargando_tomarasistencia.visibility = View.GONE
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -224,8 +241,9 @@ class TomarAsistenciaActivity : AppCompatActivity() {
 
         CustomDialog.instance.showDialogLoad(this)
         requestQueueRegAsis = Volley.newRequestQueue(this)
-
-        val jsObjectRequest = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -271,15 +289,38 @@ class TomarAsistenciaActivity : AppCompatActivity() {
 
             },
             { error ->
-                CustomDialog.instance.dialogoCargando?.dismiss()
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onAsistencia(re, request, url)
+                        } else {
+                            CustomDialog.instance.dialogoCargando?.dismiss()
 
-                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                    }
+                } else {
+                    CustomDialog.instance.dialogoCargando?.dismiss()
+
+                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                    snack.show()
+                }
+
             }
         )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
         jsObjectRequest.tag = TAG
 
         requestQueueRegAsis?.add(jsObjectRequest)
@@ -295,41 +336,7 @@ class TomarAsistenciaActivity : AppCompatActivity() {
 
             val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
             if (requestEncriptado != null) {
-                val url = Utilitarios.getUrl(Utilitarios.URL.REGISTRAR_ASISTENCIA_ALUMNO)
-
-                val jsObjectRequest = JsonObjectRequest(
-                        url,
-                        requestEncriptado,
-                    { response ->
-                        CustomDialog.instance.dialogoCargando?.dismiss()
-
-                        val respuesta = Utilitarios.stringDesencriptar(response["RegistrarAsistenciaAlumnoResult"] as String, this)
-
-                        if (respuesta != null) {
-                            if (respuesta == "true") {
-                                copiarAsistenciaSesionesSuperiores(id + 1, request)
-                            }
-                        }
-
-                        ControlUsuario.instance.recargaHorarioProfesor = true
-                        ControlUsuario.instance.cambioPantalla = false
-                        ControlUsuario.instance.pantallaSuspendida = false
-                        finish()
-
-                    },
-                    { error ->
-
-                        CustomDialog.instance.dialogoCargando?.dismiss()
-
-                        ControlUsuario.instance.recargaHorarioProfesor = true
-                        ControlUsuario.instance.cambioPantalla = false
-                        ControlUsuario.instance.pantallaSuspendida = false
-                        finish()
-                    }
-                )
-                jsObjectRequest.tag = TAG
-
-                requestQueueRegAsis?.add(jsObjectRequest)
+                copiarAsistencias(requestEncriptado, id, request)
             } else {
                 CustomDialog.instance.dialogoCargando?.dismiss()
 
@@ -347,6 +354,66 @@ class TomarAsistenciaActivity : AppCompatActivity() {
             finish()
         }
 
+    }
+
+    private fun copiarAsistencias(requestEncriptado: JSONObject, id: Int, request: JSONObject) {
+        val url = Utilitarios.getUrl(Utilitarios.URL.REGISTRAR_ASISTENCIA_ALUMNO)
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest(*/
+            url,
+            requestEncriptado,
+            { response ->
+                CustomDialog.instance.dialogoCargando?.dismiss()
+
+                val respuesta = Utilitarios.stringDesencriptar(response["RegistrarAsistenciaAlumnoResult"] as String, this)
+
+                if (respuesta != null) {
+                    if (respuesta == "true") {
+                        copiarAsistenciaSesionesSuperiores(id + 1, request)
+                    }
+                }
+
+                ControlUsuario.instance.recargaHorarioProfesor = true
+                ControlUsuario.instance.cambioPantalla = false
+                ControlUsuario.instance.pantallaSuspendida = false
+                finish()
+
+            },
+            { error ->
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            copiarAsistencias(requestEncriptado, id, request)
+                        } else {
+                            CustomDialog.instance.dialogoCargando?.dismiss()
+
+                            ControlUsuario.instance.recargaHorarioProfesor = true
+                            ControlUsuario.instance.cambioPantalla = false
+                            ControlUsuario.instance.pantallaSuspendida = false
+                            finish()
+                        }
+                    }
+                } else {
+                    CustomDialog.instance.dialogoCargando?.dismiss()
+
+                    ControlUsuario.instance.recargaHorarioProfesor = true
+                    ControlUsuario.instance.cambioPantalla = false
+                    ControlUsuario.instance.pantallaSuspendida = false
+                    finish()
+                }
+
+            }
+        )
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
+        jsObjectRequest.tag = TAG
+
+        requestQueueRegAsis?.add(jsObjectRequest)
     }
 
     private fun setAsistencia() {

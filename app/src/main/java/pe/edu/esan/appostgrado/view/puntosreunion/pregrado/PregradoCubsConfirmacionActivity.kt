@@ -3,6 +3,7 @@ package pe.edu.esan.appostgrado.view.puntosreunion.pregrado
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -17,6 +18,8 @@ import org.json.JSONObject
 import pe.edu.esan.appostgrado.R
 import pe.edu.esan.appostgrado.helpers.ShowAlertHelper
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 import java.util.*
 
 class PregradoCubsConfirmacionActivity : AppCompatActivity() {
@@ -60,7 +63,9 @@ class PregradoCubsConfirmacionActivity : AppCompatActivity() {
 
         if (fRequest != null) {
             mRequestQueue = Volley.newRequestQueue(this)
-            val jsonObjectRequest = JsonObjectRequest(
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsonObjectRequest = object: JsonObjectRequest(
+            /*val jsonObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 fRequest,
@@ -96,18 +101,36 @@ class PregradoCubsConfirmacionActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    error.printStackTrace()
-
-                    val showAlertHelper = ShowAlertHelper(this)
-                    showAlertHelper.showAlertError(
-                        getString(R.string.error),
-                        getString(R.string.error_no_conexion),
-                        null
-                    )
+                    if(error.networkResponse.statusCode == 401) {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                confirmarPrereservaServicio(url, request)
+                            } else {
+                                val showAlertHelper = ShowAlertHelper(this)
+                                showAlertHelper.showAlertError(
+                                    getString(R.string.error),
+                                    getString(R.string.error_no_conexion),
+                                    null
+                                )
+                            }
+                        }
+                    } else {
+                        val showAlertHelper = ShowAlertHelper(this)
+                        showAlertHelper.showAlertError(
+                            getString(R.string.error),
+                            getString(R.string.error_no_conexion),
+                            null
+                        )
+                    }
 
                 }
             )
-
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return getHeaderForJWT()
+                }
+            }
             jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
                 15000,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,

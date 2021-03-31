@@ -14,6 +14,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_seguimiento_alumno.*
 import kotlinx.android.synthetic.main.toolbar_titulo.view.*
 import org.json.JSONArray
@@ -23,6 +24,8 @@ import pe.edu.esan.appostgrado.R
 import pe.edu.esan.appostgrado.adapter.SeguimientoAlumnoLinearAdapter
 import pe.edu.esan.appostgrado.entidades.AlumnoShort
 import pe.edu.esan.appostgrado.util.Utilitarios
+import pe.edu.esan.appostgrado.util.getHeaderForJWT
+import pe.edu.esan.appostgrado.util.renewToken
 
 class SeguimientoAlumnoActivity : AppCompatActivity() {
 
@@ -90,7 +93,9 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
         lblMensaje_seguimientoalumno.visibility = View.GONE
 
         requestQueue = Volley.newRequestQueue(this)
-        val jsObjectReques = JsonObjectRequest (
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        val jsObjectRequest = object: JsonObjectRequest(
+        /*val jsObjectRequest = JsonObjectRequest (*/
                 url,
                 request,
             { response ->
@@ -126,13 +131,32 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                prbCargando_seguimientoalumno.visibility = View.GONE
-                lblMensaje_seguimientoalumno.visibility = View.VISIBLE
-                lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
+                if(error.networkResponse.statusCode == 401) {
+                    renewToken { token ->
+                        if(!token.isNullOrEmpty()){
+                            onAlumnosAsistencia(url, request)
+                        } else {
+                            prbCargando_seguimientoalumno.visibility = View.GONE
+                            lblMensaje_seguimientoalumno.visibility = View.VISIBLE
+                            lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
+                        }
+                    }
+                } else {
+                    prbCargando_seguimientoalumno.visibility = View.GONE
+                    lblMensaje_seguimientoalumno.visibility = View.VISIBLE
+                    lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
+                }
+
             }
         )
-        jsObjectReques.tag = TAG
-        requestQueue?.add(jsObjectReques)
+        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+        {
+            override fun getHeaders(): MutableMap<String, String> {
+                return getHeaderForJWT()
+            }
+        }
+        jsObjectRequest.tag = TAG
+        requestQueue?.add(jsObjectRequest)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

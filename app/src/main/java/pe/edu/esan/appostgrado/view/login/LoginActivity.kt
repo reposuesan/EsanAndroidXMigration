@@ -214,12 +214,12 @@ class LoginActivity : AppCompatActivity(),
 
             if (!usuario.isNullOrEmpty() && !clave.isNullOrEmpty()) {
                 val request = JSONObject()
-                request.put("Usuario", Utilitarios.stringDesencriptar(usuario,this))
-                request.put("Password", Utilitarios.stringDesencriptar(clave,this))
+                request.put("Usuario", usuario)
+                request.put("Password", clave)
                 request.put("Token", token)
 
                 iniciandoSesion = true
-                onLogin(Utilitarios.getUrl(Utilitarios.URL.LOGIN), request, Utilitarios.stringDesencriptar(usuario,this) ?: "",Utilitarios.stringDesencriptar(clave,this) ?: "")
+                onLogin(Utilitarios.getUrl(Utilitarios.URL.LOGIN), request, usuario, clave)
             } else {
                 Log.w(LOG, "Usuario y clave son null o están vacíos")
             }
@@ -353,10 +353,11 @@ class LoginActivity : AppCompatActivity(),
                                 val esAlumnoPost =
                                     jsObjDatosPostgrado?.getBoolean("EsAlumno") ?: false
                                 //CÓDIGO ALUMNO POSTGRADO
-                                val codAlumnoPost =
-                                    jsObjDatosPostgrado?.getString("CodAlumno") ?: ""
+                                /*val codAlumnoPost =
+                                    jsObjDatosPostgrado?.getString("CodAlumno") ?: ""*/
                                 //ONLY FOR DEBUGGING POSTGRADO
                                 /*val codAlumnoPost = txtUsuario_login.text.toString()*/
+                                val codAlumnoPost = "1302177"
 
                                 crashlytics.setUserId(codAlumnoPost)
 
@@ -469,19 +470,19 @@ class LoginActivity : AppCompatActivity(),
 
                                 if (!agreetouchid) {
                                     //Si la opción de huella digital está apagada
-                                    editor.putString("code", Utilitarios.stringEncriptar(usuario))
-                                    editor.putString("password", Utilitarios.stringEncriptar(clave))
+                                    editor.putString("code", usuario)
+                                    editor.putString("password", clave)
                                 } else {
                                     //Si la opción de huella digital está encendida
                                     val codeSaved =
                                         misPreferencias.getString("userWithFingerprint", "")
                                     if (codeSaved == usuario) {
-                                        editor.putString("code", Utilitarios.stringEncriptar(usuario))
-                                        editor.putString("password", Utilitarios.stringEncriptar(clave))
+                                        editor.putString("code", usuario)
+                                        editor.putString("password", clave)
 
                                     } else {
-                                        editor.putString("code", Utilitarios.stringEncriptar(usuario))
-                                        editor.putString("password", Utilitarios.stringEncriptar(clave))
+                                        editor.putString("code", usuario)
+                                        editor.putString("password", clave)
 
                                     }
                                 }
@@ -955,7 +956,8 @@ class LoginActivity : AppCompatActivity(),
                                     } else {
                                         //ALUMNO PREGRADO O ALUMNO POSTGRADO, PERO NO AMBOS
                                         val student = Alumno(
-                                            if (esAlumnoPre) ControlUsuario.instance.currentUsuarioGeneral!!.codigoAlumnoPre else ControlUsuario.instance.currentUsuarioGeneral!!.codigoAlumnoPost,
+                                            //if (esAlumnoPre) ControlUsuario.instance.currentUsuarioGeneral!!.codigoAlumnoPre else ControlUsuario.instance.currentUsuarioGeneral!!.codigoAlumnoPost,
+                                            "fvasquez",
                                             ControlUsuario.instance.currentUsuarioGeneral!!.nombreCompleto,
                                             ControlUsuario.instance.currentUsuarioGeneral!!.nombre,
                                             ControlUsuario.instance.currentUsuarioGeneral!!.apellido,
@@ -1035,8 +1037,8 @@ class LoginActivity : AppCompatActivity(),
 
                                 }
                             } else {
-                                val showAlertHelpe = ShowAlertHelper(this)
-                                showAlertHelpe.showAlertError(
+                                val showAlertHelper = ShowAlertHelper(this)
+                                showAlertHelper.showAlertError(
                                     getString(R.string.error),
                                     getString(R.string.error_encriptar),
                                     null
@@ -1045,8 +1047,8 @@ class LoginActivity : AppCompatActivity(),
                             }
 
                         } else {
-                            val showAlertHelpe = ShowAlertHelper(this)
-                            showAlertHelpe.showAlertError(
+                            val showAlertHelper = ShowAlertHelper(this)
+                            showAlertHelper.showAlertError(
                                 getString(R.string.error),
                                 getString(R.string.error_login_uno),
                                 null
@@ -1054,8 +1056,8 @@ class LoginActivity : AppCompatActivity(),
                             iniciandoSesion = false
                         }
                     } catch (jex: JSONException) {
-                        val showAlertHelpe = ShowAlertHelper(this)
-                        showAlertHelpe.showAlertError(
+                        val showAlertHelper = ShowAlertHelper(this)
+                        showAlertHelper.showAlertError(
                             getString(R.string.error),
                             getString(R.string.error_login_tres),
                             null
@@ -1064,14 +1066,21 @@ class LoginActivity : AppCompatActivity(),
                     }
                     dismissDialog()
                 },
-                {
-
-                    val showAlertHelpe = ShowAlertHelper(this)
-                    showAlertHelpe.showAlertError(
-                        getString(R.string.error),
-                        getString(R.string.error_no_conexion),
-                        null
-                    )
+                { error ->
+                    if(error.networkResponse.statusCode == 500){
+                        val showAlertHelper = ShowAlertHelper(this)
+                        showAlertHelper.showAlertError(
+                            getString(R.string.error),
+                            getString(R.string.error_login_uno),
+                            null
+                        )
+                    } else {
+                        val showAlertHelper = ShowAlertHelper(this)
+                        showAlertHelper.showAlertError(getString(R.string.error),
+                            getString(R.string.error_no_conexion),
+                            null
+                        )
+                    }
                     dismissDialog()
                     iniciandoSesion = false
                 }

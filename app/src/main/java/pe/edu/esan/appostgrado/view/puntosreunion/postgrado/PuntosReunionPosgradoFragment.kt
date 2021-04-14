@@ -130,7 +130,9 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
 
     private fun onPromocion(url: String, request: JSONObject) {
 
-        prbCargando_fpuntosreunion.visibility = View.VISIBLE
+        if(view != null) {
+            prbCargando_fpuntosreunion.visibility = View.VISIBLE
+        }
         requestQueue = Volley.newRequestQueue(activity!!)
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
@@ -250,7 +252,9 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
 
     private fun onTipoGrupo(url: String, request: JSONObject, idPromocion: Int, idGrupo: Int) {
 
-        prbCargando_fpuntosreunion.visibility = View.VISIBLE
+        if(view != null) {
+            prbCargando_fpuntosreunion.visibility = View.VISIBLE
+        }
         requestQueue2 = Volley.newRequestQueue(activity!!)
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
@@ -404,7 +408,9 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
 
     private fun onDetalleAlumno(url: String, idConfiguracion: Int, request: JSONObject) {
 
-        prbCargando_fpuntosreunion.visibility = View.VISIBLE
+        if(view != null){
+            prbCargando_fpuntosreunion.visibility = View.VISIBLE
+        }
         requestQueue3 = Volley.newRequestQueue(activity!!)
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(

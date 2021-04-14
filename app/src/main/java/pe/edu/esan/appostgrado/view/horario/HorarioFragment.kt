@@ -193,6 +193,11 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         val request = JSONObject()
         when (usuario) {
             is Alumno -> {
+                /*request.put("Codigo", usuario.codigo)
+                request.put("Tipo", 2)
+                request.put("Fecha", ddMMyyyy.format(fechaActual?.time))
+                request.put("Facultad", 0)*/
+
                 request.put("Codigo", usuario.codigo)
                 request.put("Tipo", 1)
                 request.put("Fecha", ddMMyyyy.format(fechaActual?.time))
@@ -223,7 +228,9 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     private fun onHorario(url: String, request: JSONObject, currentUsuario: Any) {
 
-        prbCargando_fhorario.visibility = View.VISIBLE
+        if(view != null){
+            prbCargando_fhorario.visibility = View.VISIBLE
+        }
         requestQueue = Volley.newRequestQueue(activity!!)
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(

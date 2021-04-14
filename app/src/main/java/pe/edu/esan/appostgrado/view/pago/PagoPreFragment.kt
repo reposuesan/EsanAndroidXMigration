@@ -116,7 +116,9 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
     private fun onPagoPre(url: String, request: JSONObject) {
 
-        prbCargando_fpagopre.visibility = View.VISIBLE
+        if(view != null) {
+            prbCargando_fpagopre.visibility = View.VISIBLE
+        }
         requestQueue = Volley.newRequestQueue(activity)
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(

@@ -368,27 +368,37 @@ class MasFragment : androidx.fragment.app.Fragment() {
             request,
             { response ->
 
+                val respuesta: String? = try {
+                    Utilitarios.stringDesencriptar(response["ActualizarTokenResult"] as String, activity!!)
+                } catch (e: Exception) {
+                    ""
+                }
+
                 controlViewModel.proceedLogoutPublic.observe(viewLifecycleOwner, Observer<Boolean> { value ->
                     if(value){
                         ControlUsuario.instance.statusLogout = 1
 
-                        val respuesta = Utilitarios.stringDesencriptar(response["ActualizarTokenResult"] as String, activity!!)
-
                         if (respuesta == "true") {
                             borrarPreferencias()
+                            borrarDatos()
+                            //UNSUBSCRIBE FROM TOPICS
+                            /*unsubscribeUserFromTopics()*/
+                            activity!!.finish()
                         } else {
-                            Toast.makeText(activity!!, "No pudo cerrar sesion", Toast.LENGTH_SHORT).show()
-
+                            cerrandoSesion = false
+                            Toast.makeText(activity!!, getString(R.string.error_en_cierre_sesion), Toast.LENGTH_LONG).show()
+                            controlViewModel.proceedLogoutPublic.removeObservers(viewLifecycleOwner)
                         }
-                        borrarDatos()
-                        //UNSUBSCRIBE FROM TOPICS
-                        /*unsubscribeUserFromTopics()*/
-                        activity!!.finish()
                     }
                 })
 
-                controlViewModel.deleteDataFromRoom()
-
+                if (respuesta == "true") {
+                    controlViewModel.deleteDataFromRoom()
+                } else {
+                    cerrandoSesion = false
+                    Toast.makeText(activity!!, getString(R.string.error_en_cierre_sesion), Toast.LENGTH_LONG).show()
+                    controlViewModel.proceedLogoutPublic.removeObservers(viewLifecycleOwner)
+                }
             },
             { error ->
                 if(error.networkResponse.statusCode == 401) {
@@ -400,10 +410,8 @@ class MasFragment : androidx.fragment.app.Fragment() {
                             rvOpciones_fmas.isEnabled = true
                             rvOpciones_fmas.isClickable = true
                             dismissDialog()
-                            ControlUsuario.instance.statusLogout = 1
-                            borrarDatos()
-
-                            activity!!.finish()
+                            cerrandoSesion = false
+                            Toast.makeText(activity!!, getString(R.string.error_en_cierre_sesion), Toast.LENGTH_LONG).show()
                         }
                     }
                 } else {
@@ -411,10 +419,8 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     rvOpciones_fmas.isEnabled = true
                     rvOpciones_fmas.isClickable = true
                     dismissDialog()
-                    ControlUsuario.instance.statusLogout = 1
-                    borrarDatos()
-
-                    activity!!.finish()
+                    cerrandoSesion = false
+                    Toast.makeText(activity!!, getString(R.string.error_en_cierre_sesion), Toast.LENGTH_LONG).show()
                 }
 
             }
@@ -499,6 +505,18 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     )
                 )
                 if (usuario.tipoAlumno == Utilitarios.PRE) {
+                    //TODO: REMOVE LATER
+                    listaOpciones.add(
+                        MasOpcion(
+                            4,
+                            Intent(activity!!, CargaAcademicaActivity::class.java),
+                            context!!.resources.getString(R.string.carga_academica),
+                            context!!.resources.getString(R.string.carga_academica_detalle),
+                            context!!.resources.getDrawable(R.drawable.tab_clock),
+                            false,
+                            0
+                        )
+                    )
                     listaOpciones.add(
                         MasOpcion(
                             5,

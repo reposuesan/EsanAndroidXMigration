@@ -85,10 +85,13 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
         val request = JSONObject()
         request.put("codigoSeccion", seccion)
 
-        onAlumnosAsistencia(Utilitarios.getUrl(Utilitarios.URL.RECOR_ASISTENCIA_ALUMNO), request)
+        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
+
+        //onAlumnosAsistencia(Utilitarios.getUrl(Utilitarios.URL.RECOR_ASISTENCIA_ALUMNO), request)
+        onAlumnosAsistencia(Utilitarios.getUrl(Utilitarios.URL.RECOR_ASISTENCIA_ALUMNO), requestEncriptado)
     }
 
-    private fun onAlumnosAsistencia(url: String, request: JSONObject) {
+    private fun onAlumnosAsistencia(url: String, request: JSONObject?) {
         prbCargando_seguimientoalumno.visibility = View.VISIBLE
         lblMensaje_seguimientoalumno.visibility = View.GONE
 
@@ -101,19 +104,20 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
             { response ->
                 prbCargando_seguimientoalumno.visibility = View.GONE
                 try {
-                    val alumnosJArray = response["ListarRecordAsistenciaPorAlumnoResult"] as JSONArray
-                    if (alumnosJArray.length() > 0) {
+                    //val alumnosJArray = response["ListarRecordAsistenciaPorAlumnoResult"] as JSONArray
+                    val alumnosJArray = Utilitarios.jsArrayDesencriptar(response["ListarRecordAsistenciaPorAlumnoResult"] as String, this)
+                    if (alumnosJArray!!.length() > 0) {
                         val listaAlumnos = ArrayList<AlumnoShort>()
                         for (i in 0 until alumnosJArray.length()) {
                             val alumnosJObject = alumnosJArray[i] as JSONObject
                             val codigo = alumnosJObject["codigo"] as String
                             val nombre = alumnosJObject["Nombrecompleto"] as String
-                            val cantAsis = alumnosJObject["asistencia"] as Int
-                            val cantTard = alumnosJObject["tardanza"] as Int
-                            val cantFalt = alumnosJObject["falta"] as Int
+                            val cantAsis = alumnosJObject["asistencia"] as Double
+                            val cantTard = alumnosJObject["tardanza"] as Double
+                            val cantFalt = alumnosJObject["falta"] as Double
                             val total = alumnosJObject["TotalSesiones"] as Int
 
-                            listaAlumnos.add(AlumnoShort(codigo, nombre, cantAsis, cantTard, cantFalt, total))
+                            listaAlumnos.add(AlumnoShort(codigo, nombre, cantAsis.toInt(), cantTard.toInt(), cantFalt.toInt(), total))
                         }
 
                         //rvAlumno_seguimientoalumno.adapter = SeguimientoAlumnoAdapter(listaAlumnos, anchoPantalla, densidad)

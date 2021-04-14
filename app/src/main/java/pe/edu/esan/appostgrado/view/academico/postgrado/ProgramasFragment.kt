@@ -111,7 +111,9 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
     }
 
     private fun onProgramas(url: String, request: JSONObject) {
-        prbCargando_fprograma.visibility = View.VISIBLE
+        if(view != null){
+            prbCargando_fprograma.visibility = View.VISIBLE
+        }
         requestQueue = Volley.newRequestQueue(activity)
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
@@ -156,8 +158,10 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                     lblMensaje_fprograma.visibility = View.VISIBLE
                     lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_respuesta_server)
                 }
-                swPrograma_fprograma.isRefreshing = false
-                prbCargando_fprograma.visibility = View.GONE
+                if(view != null){
+                    swPrograma_fprograma.isRefreshing = false
+                    prbCargando_fprograma.visibility = View.GONE
+                }
             },
             { error ->
                 if(error.networkResponse.statusCode == 401) {

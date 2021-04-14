@@ -157,7 +157,10 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
     private fun onCursos(url: String, request: JSONObject) {
 
-        prbCargando_fcurso.visibility = View.VISIBLE
+        if(view != null){
+            prbCargando_fcurso.visibility = View.VISIBLE
+        }
+
         requestQueue = Volley.newRequestQueue(activity)
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(

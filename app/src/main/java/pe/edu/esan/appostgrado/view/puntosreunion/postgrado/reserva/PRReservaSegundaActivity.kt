@@ -112,9 +112,11 @@ class PRReservaSegundaActivity : AppCompatActivity() {
             if (reserva.disponible) {
                 lblEstado_itemprreservasegunda.setTextColor(ContextCompat.getColor(this, R.color.green))
                 lblEstado_itemprreservasegunda.text = resources.getString(R.string.disponible)
+                btnConfirmar_itemprreservasegunda.visibility = View.VISIBLE
             } else {
                 lblEstado_itemprreservasegunda.setTextColor(ContextCompat.getColor(this, R.color.rojo_oscuro))
                 lblEstado_itemprreservasegunda.text = resources.getString(R.string.no_disponible)
+                btnConfirmar_itemprreservasegunda.visibility = View.GONE
             }
 
             btnConfirmar_itemprreservasegunda.setOnClickListener { setConfirmarReserva(reserva.fecha, hinicio, hfin, reserva.listaHorario.size, 0) }
@@ -390,7 +392,7 @@ class PRReservaSegundaActivity : AppCompatActivity() {
                                 otroshorariosmostrados = true
                                 otrosHorariosAdapter?.addHorarios(listaOtroHorarios)
                             } else {
-                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
+                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.no_hay_disponibilidad_otros_horarios), Snackbar.LENGTH_LONG)
                                 snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.info))
                                 snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
                                 snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.info_text))

@@ -67,10 +67,13 @@ class DirectorioActivity : AppCompatActivity() {
         val request = JSONObject()
         request.put("codigoSeccion", seccion)
 
-        onAlumnos(Utilitarios.getUrl(Utilitarios.URL.DIRECTORIO), request)
+        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
+
+        //onAlumnos(Utilitarios.getUrl(Utilitarios.URL.DIRECTORIO), request)
+        onAlumnos(Utilitarios.getUrl(Utilitarios.URL.DIRECTORIO), requestEncriptado)
     }
 
-    private fun onAlumnos(url: String, request: JSONObject) {
+    private fun onAlumnos(url: String, request: JSONObject?) {
         prbCargando_directorio.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
@@ -81,9 +84,10 @@ class DirectorioActivity : AppCompatActivity() {
             { response ->
                 prbCargando_directorio.visibility = View.GONE
                 try {
-                    val directorioJArray = response["DirectorioAlumnosResult"] as JSONArray
+                    //val directorioJArray = response["DirectorioAlumnosResult"] as JSONArray
+                    val directorioJArray = Utilitarios.jsArrayDesencriptar(response["DirectorioAlumnosResult"] as String, this)
                     val listaAlumnos = ArrayList<Alumno>()
-                    for (i in 0 until directorioJArray.length()) {
+                    for (i in 0 until directorioJArray!!.length()) {
                         val directorioJObject = directorioJArray[i] as JSONObject
                         val codigo = directorioJObject["codigo"] as String
                         var email = directorioJObject["email"] as String

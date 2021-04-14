@@ -114,7 +114,9 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
 
     private fun onSecciones(url: String, request: JSONObject) {
 
-        prbCargando_fseccion.visibility = View.VISIBLE
+        if(view != null) {
+            prbCargando_fseccion.visibility = View.VISIBLE
+        }
         requestQueue = Volley.newRequestQueue(activity)
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
@@ -214,6 +216,8 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
     }
 
     override fun onRefresh() {
+        swCurso_fseccion.isRefreshing = true
+        showSecciones()
     }
 
 }// Required empty public constructor

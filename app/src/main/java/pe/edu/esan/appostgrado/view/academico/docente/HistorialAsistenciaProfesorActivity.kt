@@ -239,10 +239,13 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
         request.put("seccioncodigo", seccion)
         request.put("codigo", usuario.codigo)
 
-        onHistorialAsistencia(Utilitarios.getUrl(Utilitarios.URL.RECOR_ASISTENCIA_PROFESOR), request)
+        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
+
+        //onHistorialAsistencia(Utilitarios.getUrl(Utilitarios.URL.RECOR_ASISTENCIA_PROFESOR), request)
+        onHistorialAsistencia(Utilitarios.getUrl(Utilitarios.URL.RECOR_ASISTENCIA_PROFESOR), requestEncriptado)
     }
 
-    private fun onHistorialAsistencia(url: String, request: JSONObject) {
+    private fun onHistorialAsistencia(url: String, request: JSONObject?) {
         prbCargando_histoasistprof.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
@@ -252,8 +255,9 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
                 request,
             { response ->
                 try {
-                    val recordAsistenciaJArray = response["ListarRecordAsistenciaDocentexSeccionResult"] as JSONArray
-                    if (recordAsistenciaJArray.length() > 0 ){
+                    //val recordAsistenciaJArray = response["ListarRecordAsistenciaDocentexSeccionResult"] as JSONArray
+                    val recordAsistenciaJArray = Utilitarios.jsArrayDesencriptar(response["ListarRecordAsistenciaDocentexSeccionResult"] as String, this)
+                    if (recordAsistenciaJArray!!.length() > 0 ){
                         var cantidadSiMarco = 0
                         var cantidadNoMarco = 0
                         var cantidadProximo = 0

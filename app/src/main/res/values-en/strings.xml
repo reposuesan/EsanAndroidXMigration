@@ -194,7 +194,7 @@
     <string name="advertencia">Warning</string>
     <string name="mensaje_salir_sin_enviar_asistencia">Do you want to leave without sending?, Any changes made will be lost</string>
     <string name="historico_notas">Grades Report</string>
-    <string name="salir">Exit</string>
+    <string name="salir">Close</string>
     <string name="cerrar_sesion">Logout</string>
     <string name="resultado_encuesta">Survey Result</string>
     <string name="historial_asistencia">Attendance Report</string>
@@ -470,4 +470,6 @@
     <string name="bolsa_de_trabajo">Job Exchange</string>
     <string name="libro_de_reclamaciones">Complaints Book</string>
     <string name="facturacion_electronica">Electronic Billing</string>
+    <string name="error_en_cierre_sesion">There was an error during logout process</string>
+    <string name="no_hay_disponibilidad_otros_horarios">There is no availability for other schedule</string>
 </resources>

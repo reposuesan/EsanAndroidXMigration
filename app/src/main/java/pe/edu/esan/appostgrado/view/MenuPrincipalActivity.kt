@@ -210,11 +210,16 @@ class MenuPrincipalActivity : AppCompatActivity() {
                     adapter.addFragment(MasFragment(), resources.getString(TAB_MAS))
                 } else {
 
-                    lblTituloActivity!!.text = resources.getString(TAB_HORARIO)
+                    /*lblTituloActivity!!.text = resources.getString(TAB_HORARIO)
                     adapter.addFragment(HorarioFragment(), resources.getString(TAB_HORARIO))
                     adapter.addFragment(CursosFragment(), resources.getString(TAB_CURSOS))
                     adapter.addFragment(PagoPreFragment(), resources.getString(TAB_PAGOS))
                     adapter.addFragment(PuntosReunionPregradoFragment(), resources.getString(TAB_SALAS_ESTUDIO))
+                    adapter.addFragment(MasFragment(), resources.getString(TAB_MAS))*/
+
+                    lblTituloActivity!!.text = resources.getString(TAB_HORARIO)
+                    adapter.addFragment(HorarioFragment(), resources.getString(TAB_HORARIO))
+                    adapter.addFragment(SeccionesFragment(), resources.getString(TAB_SECCIONES))
                     adapter.addFragment(MasFragment(), resources.getString(TAB_MAS))
                 }
             }
@@ -281,7 +286,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
 
                 } else {
 
-                    tipoUsuario = "AlumnoPregrado"
+                    /*tipoUsuario = "AlumnoPregrado"
                     val poshorario = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
                     poshorario.text = resources.getString(T_HORARIO)
                     poshorario.isSelected = true
@@ -306,7 +311,24 @@ class MenuPrincipalActivity : AppCompatActivity() {
                     val premas = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
                     premas.text = resources.getString(T_MAS)
                     premas.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_mas, 0, 0)
-                    tabs.getTabAt(4)?.customView = (premas)
+                    tabs.getTabAt(4)?.customView = (premas)*/
+
+                    tipoUsuario = "Profesor"
+                    val poshorario = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
+                    poshorario.text = resources.getString(T_HORARIO)
+                    poshorario.isSelected = true
+                    poshorario.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_horario, 0, 0)
+                    tabs.getTabAt(0)?.customView = poshorario
+
+                    val profseccion = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
+                    profseccion.text = resources.getString(T_SECCIONES)
+                    profseccion.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_curso, 0, 0)
+                    tabs.getTabAt(1)?.customView = profseccion
+
+                    val profmas = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
+                    profmas.text = resources.getString(T_MAS)
+                    profmas.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.selector_mas, 0, 0)
+                    tabs.getTabAt(2)?.customView = profmas
 
                 }
             }

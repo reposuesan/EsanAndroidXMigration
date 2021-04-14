@@ -622,5 +622,6 @@
     <string name="bolsa_de_trabajo">Bolsa de Trabajo</string>
     <string name="libro_de_reclamaciones">Libro de Reclamaciones</string>
     <string name="facturacion_electronica">Facturación Electrónica</string>
-
+    <string name="error_en_cierre_sesion">Ocurrió un error durante el cierre de sesión</string>
+    <string name="no_hay_disponibilidad_otros_horarios">No hay disponibilidad en otros horarios</string>
 </resources>

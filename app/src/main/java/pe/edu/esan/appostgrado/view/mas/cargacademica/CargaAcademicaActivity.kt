@@ -122,7 +122,8 @@ class CargaAcademicaActivity : AppCompatActivity() {
         val usuario = ControlUsuario.instance.currentUsuario[0] as UserEsan
 
         val request = JSONObject()
-        request.put("codigo", usuario.codigo)
+        //request.put("codigo", usuario.codigo)
+        request.put("codigo", "lbedoya")
         request.put("periodo", g_agno)
         request.put("mes", g_mes)
         request.put("esAcumulado", if (swAcumulado_cargacademica.isChecked) "1" else "0")

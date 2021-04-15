@@ -505,18 +505,6 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     )
                 )
                 if (usuario.tipoAlumno == Utilitarios.PRE) {
-                    //TODO: REMOVE LATER
-                    listaOpciones.add(
-                        MasOpcion(
-                            4,
-                            Intent(activity!!, CargaAcademicaActivity::class.java),
-                            context!!.resources.getString(R.string.carga_academica),
-                            context!!.resources.getString(R.string.carga_academica_detalle),
-                            context!!.resources.getDrawable(R.drawable.tab_clock),
-                            false,
-                            0
-                        )
-                    )
                     listaOpciones.add(
                         MasOpcion(
                             5,

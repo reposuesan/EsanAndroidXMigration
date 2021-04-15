@@ -165,11 +165,10 @@ class Utilitarios {
         const val ALU = "alumno"
         const val mostrarDetalleMarker = false
 
-        private const val ReleasePortal = false
-        private const val Release = false
+        private const val ReleasePortal = true
+        private const val Release = true
 
-        private const val DominioPortal = "https://restws.esan.edu.pe"
-        //private const val DominioPortalTest = "https://devrestws.esan.edu.pe"
+        private const val DominioPortal = "https://movilrestws.esan.edu.pe"
         private const val DominioPortalTest = "https://movilrestws.esan.edu.pe"
 
         private const val DominioUE = "https://intranetmovil.ue.edu.pe"
@@ -274,8 +273,8 @@ class Utilitarios {
          * @return String URL
          */
         fun getUrlFoto(codigo: String, size: Int): String {
-            //return "https://qasfotos.ue.edu.pe/Inicio/MostrarFotoActorxCodigo/?codigo=$codigo&width=$size"
             return "https://fotos.ue.edu.pe/Inicio/MostrarFotoActorxCodigo/?codigo=$codigo&width=$size"
+            /*return "https://qasfotos.ue.edu.pe/Inicio/MostrarFotoActorxCodigo/?codigo=$codigo&width=$size"*/
         }
 
         /** Obtener la url para generar código de barras a partir del codigo del usuario

@@ -353,11 +353,10 @@ class LoginActivity : AppCompatActivity(),
                                 val esAlumnoPost =
                                     jsObjDatosPostgrado?.getBoolean("EsAlumno") ?: false
                                 //CÓDIGO ALUMNO POSTGRADO
-                                /*val codAlumnoPost =
-                                    jsObjDatosPostgrado?.getString("CodAlumno") ?: ""*/
+                                val codAlumnoPost = jsObjDatosPostgrado?.getString("CodAlumno") ?: ""
                                 //ONLY FOR DEBUGGING POSTGRADO
                                 /*val codAlumnoPost = txtUsuario_login.text.toString()*/
-                                val codAlumnoPost = "1302177"
+                                /*val codAlumnoPost = "1302177"*/
 
                                 crashlytics.setUserId(codAlumnoPost)
 
@@ -956,8 +955,7 @@ class LoginActivity : AppCompatActivity(),
                                     } else {
                                         //ALUMNO PREGRADO O ALUMNO POSTGRADO, PERO NO AMBOS
                                         val student = Alumno(
-                                            //if (esAlumnoPre) ControlUsuario.instance.currentUsuarioGeneral!!.codigoAlumnoPre else ControlUsuario.instance.currentUsuarioGeneral!!.codigoAlumnoPost,
-                                            "fvasquez",
+                                            if (esAlumnoPre) ControlUsuario.instance.currentUsuarioGeneral!!.codigoAlumnoPre else ControlUsuario.instance.currentUsuarioGeneral!!.codigoAlumnoPost,
                                             ControlUsuario.instance.currentUsuarioGeneral!!.nombreCompleto,
                                             ControlUsuario.instance.currentUsuarioGeneral!!.nombre,
                                             ControlUsuario.instance.currentUsuarioGeneral!!.apellido,

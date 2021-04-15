@@ -193,11 +193,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         val request = JSONObject()
         when (usuario) {
             is Alumno -> {
-                /*request.put("Codigo", usuario.codigo)
-                request.put("Tipo", 2)
-                request.put("Fecha", ddMMyyyy.format(fechaActual?.time))
-                request.put("Facultad", 0)*/
-
                 request.put("Codigo", usuario.codigo)
                 request.put("Tipo", 1)
                 request.put("Fecha", ddMMyyyy.format(fechaActual?.time))
@@ -215,7 +210,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         if (requestEncriptado != null) {
             onHorario(
                 Utilitarios.getUrl(Utilitarios.URL.HORARIO_NEW),
-                //request,
                 requestEncriptado,
                 usuario
             )
@@ -240,9 +234,9 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             request,
             { response ->
                 try {
-                    //if (!response.isNull("ListarHorarioAlumnoProfesorxFecha2Result")) {
+
                     if (!response.isNull("ListarHorarioAlumnoProfesorxFechaResult")) {
-                        //val scheduleJArray = response["ListarHorarioAlumnoProfesorxFecha2Result"] as JSONArray
+
                         val stringOutput = response["ListarHorarioAlumnoProfesorxFechaResult"] as String
                         val scheduleJArray = Utilitarios.jsArrayDesencriptar(stringOutput, activity!!)
                         if (scheduleJArray!!.length() > 0) {

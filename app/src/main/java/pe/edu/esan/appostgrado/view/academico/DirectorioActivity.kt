@@ -69,7 +69,6 @@ class DirectorioActivity : AppCompatActivity() {
 
         val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
 
-        //onAlumnos(Utilitarios.getUrl(Utilitarios.URL.DIRECTORIO), request)
         onAlumnos(Utilitarios.getUrl(Utilitarios.URL.DIRECTORIO), requestEncriptado)
     }
 
@@ -84,7 +83,7 @@ class DirectorioActivity : AppCompatActivity() {
             { response ->
                 prbCargando_directorio.visibility = View.GONE
                 try {
-                    //val directorioJArray = response["DirectorioAlumnosResult"] as JSONArray
+
                     val directorioJArray = Utilitarios.jsArrayDesencriptar(response["DirectorioAlumnosResult"] as String, this)
                     val listaAlumnos = ArrayList<Alumno>()
                     for (i in 0 until directorioJArray!!.length()) {

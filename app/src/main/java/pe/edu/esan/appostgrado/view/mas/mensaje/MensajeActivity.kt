@@ -93,10 +93,9 @@ class MensajeActivity : AppCompatActivity() {
         when(usuario) {
             is Alumno -> {
                 val request = JSONObject()
-                request.put("Facultad", "1")
-                request.put("Usuario", "1302177")
-                /*request.put("Facultad", if (usuario.tipoAlumno == Utilitarios.PRE) "2" else "1")*/
-                /*request.put("Usuario", usuario.codigo)*/
+
+                request.put("Facultad", if (usuario.tipoAlumno == Utilitarios.PRE) "2" else "1")
+                request.put("Usuario", usuario.codigo)
                 request.put("TotalPorPagina", 20)
                 request.put("Pagina", 1)
 
@@ -111,6 +110,7 @@ class MensajeActivity : AppCompatActivity() {
             }
             is Profesor -> {
                 val request = JSONObject()
+
                 request.put("Facultad", "0")
                 request.put("Usuario", usuario.codigo)
                 request.put("TotalPorPagina", 10)

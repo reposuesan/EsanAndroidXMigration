@@ -99,8 +99,9 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
         val usuario = ControlUsuario.instance.currentUsuario[0] as Alumno
 
         val request = JSONObject()
-        request.put("codigo", "2014282")
-        //request.put("codigo", usuario.codigo)
+
+        request.put("codigo", usuario.codigo)
+
         val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
         if (requestEncriptado != null) {
             onPagoPost(Utilitarios.getUrl(Utilitarios.URL.PAGO_POST), requestEncriptado)
@@ -191,7 +192,6 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
                         }
                     }
                 } else {
-                    //error.printStackTrace()
                     if(view != null) {
                         prbCargando_fpagopost.visibility = View.GONE
                         rvPago_fpagopost.visibility = View.GONE

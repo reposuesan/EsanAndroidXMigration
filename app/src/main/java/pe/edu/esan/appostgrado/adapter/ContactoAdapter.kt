@@ -53,7 +53,7 @@ class ContactoAdapter (val listaAlumnos: List<Alumno>): androidx.recyclerview.wi
             }
 
             Glide.with(itemView.context)
-                    .load(Utilitarios.getUrlFoto(alumno.codigo, 100))
+                    .load(Utilitarios.getUrlFoto(alumno.codigo, 90))
                     .into(itemView.imgFoto_idirectorio)
 
             itemView.btnCorreo_idirectorio.setOnClickListener { view ->

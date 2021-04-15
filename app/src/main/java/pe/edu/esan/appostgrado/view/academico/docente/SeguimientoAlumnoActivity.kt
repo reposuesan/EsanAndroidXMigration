@@ -87,7 +87,6 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
 
         val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
 
-        //onAlumnosAsistencia(Utilitarios.getUrl(Utilitarios.URL.RECOR_ASISTENCIA_ALUMNO), request)
         onAlumnosAsistencia(Utilitarios.getUrl(Utilitarios.URL.RECOR_ASISTENCIA_ALUMNO), requestEncriptado)
     }
 
@@ -104,7 +103,7 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
             { response ->
                 prbCargando_seguimientoalumno.visibility = View.GONE
                 try {
-                    //val alumnosJArray = response["ListarRecordAsistenciaPorAlumnoResult"] as JSONArray
+
                     val alumnosJArray = Utilitarios.jsArrayDesencriptar(response["ListarRecordAsistenciaPorAlumnoResult"] as String, this)
                     if (alumnosJArray!!.length() > 0) {
                         val listaAlumnos = ArrayList<AlumnoShort>()
@@ -120,7 +119,7 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
                             listaAlumnos.add(AlumnoShort(codigo, nombre, cantAsis.toInt(), cantTard.toInt(), cantFalt.toInt(), total))
                         }
 
-                        //rvAlumno_seguimientoalumno.adapter = SeguimientoAlumnoAdapter(listaAlumnos, anchoPantalla, densidad)
+
                         lstAlumno_seguimientoalumno.adapter = SeguimientoAlumnoLinearAdapter(this, listaAlumnos,  anchoPantalla, densidad)
                     } else {
                         lblMensaje_seguimientoalumno.visibility = View.VISIBLE

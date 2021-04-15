@@ -241,7 +241,6 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
 
         val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
 
-        //onHistorialAsistencia(Utilitarios.getUrl(Utilitarios.URL.RECOR_ASISTENCIA_PROFESOR), request)
         onHistorialAsistencia(Utilitarios.getUrl(Utilitarios.URL.RECOR_ASISTENCIA_PROFESOR), requestEncriptado)
     }
 
@@ -255,7 +254,7 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
                 request,
             { response ->
                 try {
-                    //val recordAsistenciaJArray = response["ListarRecordAsistenciaDocentexSeccionResult"] as JSONArray
+
                     val recordAsistenciaJArray = Utilitarios.jsArrayDesencriptar(response["ListarRecordAsistenciaDocentexSeccionResult"] as String, this)
                     if (recordAsistenciaJArray!!.length() > 0 ){
                         var cantidadSiMarco = 0

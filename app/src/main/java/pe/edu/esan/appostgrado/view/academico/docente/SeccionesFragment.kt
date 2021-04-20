@@ -10,10 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.fragment_cursos.view.*
@@ -70,9 +67,9 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         )
 
         view.rvCurso_fseccion.layoutManager =
-            androidx.recyclerview.widget.LinearLayoutManager(activity)
+            androidx.recyclerview.widget.LinearLayoutManager(requireActivity())
         view.rvCurso_fseccion.adapter = null
-        view.lblMensaje_fseccion.typeface = Utilitarios.getFontRoboto(activity!!, Utilitarios.TypeFont.THIN)
+        view.lblMensaje_fseccion.typeface = Utilitarios.getFontRoboto(requireActivity(), Utilitarios.TypeFont.THIN)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -102,13 +99,13 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         val request = JSONObject()
         request.put("CodigoProfesor", usuario.codigo)
 
-        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
+        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, requireActivity())
 
         if (requestEncriptado != null) {
             onSecciones(Utilitarios.getUrl(Utilitarios.URL.SECCIONES), requestEncriptado)
         } else {
             lblMensaje_fseccion.visibility = View.VISIBLE
-            lblMensaje_fseccion.text = activity!!.resources.getString(R.string.error_encriptar)
+            lblMensaje_fseccion.text = requireActivity().resources.getString(R.string.error_encriptar)
         }
     }
 
@@ -117,7 +114,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         if(view != null) {
             prbCargando_fseccion.visibility = View.VISIBLE
         }
-        requestQueue = Volley.newRequestQueue(activity)
+        requestQueue = Volley.newRequestQueue(requireActivity())
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
         /*val jsObjectRequest = JsonObjectRequest(*/
@@ -126,7 +123,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                 request,
             { response ->
                 try {
-                    val seccionJArray = Utilitarios.jsArrayDesencriptar(response["ListarSeccionesActualesPorProfesorResult"] as String, activity!!)
+                    val seccionJArray = Utilitarios.jsArrayDesencriptar(response["ListarSeccionesActualesPorProfesorResult"] as String, requireActivity())
                     if (seccionJArray != null) {
 
                         if (seccionJArray.length() > 0) {
@@ -147,7 +144,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                             val adapter = SeccionAdapter(listSecciones) { seccion ->
 
                                 ControlUsuario.instance.currentSeccion = seccion
-                                val intentOpciones = Intent(activity, SeccionOpcionesActivity::class.java)
+                                val intentOpciones = Intent(requireActivity(), SeccionOpcionesActivity::class.java)
                                 intentOpciones.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(intentOpciones)
                             }
@@ -174,7 +171,14 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                 prbCargando_fseccion.visibility = View.GONE
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
+                if(error is TimeoutError){
+                    if(view != null) {
+                        swCurso_fseccion.isRefreshing = false
+                        prbCargando_fseccion.visibility = View.GONE
+                        lblMensaje_fseccion.visibility = View.VISIBLE
+                        lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_no_conexion)
+                    }
+                } else if(error.networkResponse.statusCode == 401) {
 
                     requireActivity().renewToken { token ->
                         if(!token.isNullOrEmpty()){

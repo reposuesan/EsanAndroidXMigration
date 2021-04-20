@@ -4,6 +4,7 @@ package pe.edu.esan.appostgrado.view.academico.pregrado
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.*
 import androidx.lifecycle.Observer
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.fragment_cursos.*
@@ -85,11 +87,11 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
 
         view.rvCurso_fcurso.layoutManager =
-            androidx.recyclerview.widget.LinearLayoutManager(activity)
+            androidx.recyclerview.widget.LinearLayoutManager(requireActivity())
         view.rvCurso_fcurso.adapter = null
         if(activity != null) {
             view.lblMensaje_fcurso.typeface =
-                Utilitarios.getFontRoboto(activity!!, Utilitarios.TypeFont.THIN)
+                Utilitarios.getFontRoboto(requireActivity(), Utilitarios.TypeFont.THIN)
         }
 
 
@@ -143,7 +145,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
         var requestEncriptar: JSONObject? = null
 
         if(activity != null) {
-            requestEncriptar = Utilitarios.jsObjectEncrypted(request, activity!!)
+            requestEncriptar = Utilitarios.jsObjectEncrypted(request, requireActivity())
         }
         if (requestEncriptar != null)
             onCursos(Utilitarios.getUrl(Utilitarios.URL.CURSOS_PRE), requestEncriptar)
@@ -161,7 +163,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
             prbCargando_fcurso.visibility = View.VISIBLE
         }
 
-        requestQueue = Volley.newRequestQueue(activity)
+        requestQueue = Volley.newRequestQueue(requireActivity())
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
         /*val jsObjectRequest = JsonObjectRequest(*/
@@ -175,7 +177,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                     if(activity != null) {
                         cursosJArray = Utilitarios.jsArrayDesencriptar(
                             response["ListarNotasActualesAlumnoPreResult"] as String,
-                            activity!!.applicationContext
+                            requireActivity().applicationContext
                         )
                     }
                     if (cursosJArray != null) {
@@ -318,7 +320,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                                 ControlUsuario.instance.currentCursoPre = curso
                                 if (encuestar) {
                                     curso.listProfesores = lstProfesores
-                                    val intentEncuesta = Intent(activity, EncuestaActivity::class.java)
+                                    val intentEncuesta = Intent(requireActivity(), EncuestaActivity::class.java)
                                     intentEncuesta.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                     startActivity(intentEncuesta)
                                 } else {
@@ -327,23 +329,27 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                             }
 
                             if(view != null) {
+                                view!!.rvCurso_fcurso.visibility = View.VISIBLE
                                 view!!.rvCurso_fcurso.adapter = adapter
                                 view!!.lblMensaje_fcurso.visibility = View.GONE
                             }
                         } else {
                             if(view != null) {
+                                view!!.rvCurso_fcurso.visibility = View.GONE
                                 view!!.lblMensaje_fcurso.visibility = View.VISIBLE
                                 view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_curso_no)
                             }
                         }
                     } else {
                         if(view != null) {
+                            view!!.rvCurso_fcurso.visibility = View.GONE
                             view!!.lblMensaje_fcurso.visibility = View.VISIBLE
                             view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_desencriptar)
                         }
                     }
                 } catch (jex: JSONException) {
                     if(view != null) {
+                        view!!.rvCurso_fcurso.visibility = View.GONE
                         view!!.lblMensaje_fcurso.visibility = View.VISIBLE
                         view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_default)
                     }
@@ -354,8 +360,15 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-
+                if(error is TimeoutError){
+                    if(view != null){
+                        view!!.swCurso_fcurso.isRefreshing = false
+                        view!!.prbCargando_fcurso.visibility = View.GONE
+                        view!!.lblMensaje_fcurso.visibility = View.VISIBLE
+                        view!!.rvCurso_fcurso.visibility = View.GONE
+                        view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_default)
+                    }
+                } else if(error.networkResponse.statusCode == 401) {
                     requireActivity().renewToken { token ->
                         if(!token.isNullOrEmpty()){
                             onCursos(url, request)
@@ -386,7 +399,8 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                 return requireActivity().getHeaderForJWT()
             }
         }
-        jsObjectRequest.retryPolicy = DefaultRetryPolicy(3000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -403,19 +417,19 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
             var requestEncriptado:JSONObject? = null
 
             if(activity != null) {
-                requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
+                requestEncriptado = Utilitarios.jsObjectEncrypted(request, requireActivity())
             }
             if (requestEncriptado != null)
                 onAsistencias(Utilitarios.getUrl(Utilitarios.URL.ASIS_ALUMNO_PRE), requestEncriptado, codigoSeccion, alumRetirado)
             else {
                 ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
-                val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+                val intentDetalleCurso = Intent(requireActivity(), CursoDetalleActivity::class.java)
                 intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(intentDetalleCurso)
             }
         } else {
             ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
-            val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+            val intentDetalleCurso = Intent(requireActivity(), CursoDetalleActivity::class.java)
             intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intentDetalleCurso)
         }
@@ -426,9 +440,9 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
     private fun onAsistencias(url: String, request: JSONObject, codSeccion: String, alumnoRetirado: Boolean) {
 
         if(activity != null) {
-            CustomDialog.instance.showDialogLoad(activity!!)
+            CustomDialog.instance.showDialogLoad(requireActivity())
         }
-        requestQueue = Volley.newRequestQueue(activity)
+        requestQueue = Volley.newRequestQueue(requireActivity())
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
         /*val jsObjectRequest = JsonObjectRequest (*/
@@ -440,7 +454,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                     if(activity != null) {
                         historicoJArray = Utilitarios.jsArrayDesencriptar(
                             response["ResumenAsistenciaAlumnoPregradoResult"] as String,
-                            activity!!.applicationContext
+                            requireActivity().applicationContext
                         )
                     }
 
@@ -481,7 +495,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
 
                 CustomDialog.instance.dialogoCargando?.dismiss()
                 if(activity != null) {
-                    val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+                    val intentDetalleCurso = Intent(requireActivity(), CursoDetalleActivity::class.java)
                     if (alumnoRetirado) {
                         intentDetalleCurso.putExtra("alumno_esta_retirado", true)
                     } else {
@@ -493,7 +507,6 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
             },
             { error ->
                 if(error.networkResponse.statusCode == 401) {
-
                     requireActivity().renewToken { token ->
                         if(!token.isNullOrEmpty()){
                             onAsistencias(url, request, codSeccion, alumnoRetirado)
@@ -508,7 +521,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                                 }
 
                                 if(activity != null){
-                                    val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+                                    val intentDetalleCurso = Intent(requireActivity(), CursoDetalleActivity::class.java)
                                     intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                     startActivity(intentDetalleCurso)
                                 }
@@ -526,7 +539,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                         }
 
                         if(activity != null){
-                            val intentDetalleCurso = Intent(activity, CursoDetalleActivity::class.java)
+                            val intentDetalleCurso = Intent(requireActivity(), CursoDetalleActivity::class.java)
                             intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                             startActivity(intentDetalleCurso)
                         }
@@ -540,6 +553,8 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                 return requireActivity().getHeaderForJWT()
             }
         }
+
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -569,7 +584,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_histonotas -> {
-                val historicoNotas = Intent(activity, HistoricoNotasPreActivity::class.java)
+                val historicoNotas = Intent(requireActivity(), HistoricoNotasPreActivity::class.java)
                 historicoNotas.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(historicoNotas)
                 return true

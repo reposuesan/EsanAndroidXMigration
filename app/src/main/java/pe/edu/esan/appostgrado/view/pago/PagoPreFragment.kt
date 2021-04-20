@@ -11,10 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.fragment_pago_pre.*
@@ -69,9 +66,9 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             R.color.s3,
             R.color.s4
         )
-        view.lblMensaje_fpagopre.typeface = Utilitarios.getFontRoboto(activity!!, Utilitarios.TypeFont.THIN)
+        view.lblMensaje_fpagopre.typeface = Utilitarios.getFontRoboto(requireActivity(), Utilitarios.TypeFont.THIN)
         view.rvPago_fpagopre.layoutManager =
-            androidx.recyclerview.widget.LinearLayoutManager(activity)
+            androidx.recyclerview.widget.LinearLayoutManager(requireActivity())
         view.rvPago_fpagopre.adapter = null
 
         view.lblMensaje_fpagopre.setOnClickListener {
@@ -105,12 +102,12 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         val request = JSONObject()
         request.put("codigo", usuario.codigo)
         request.put("idprocesomatricula", -1)
-        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
+        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, requireActivity())
         if (requestEncriptado != null) {
             onPagoPre(Utilitarios.getUrl(Utilitarios.URL.PAGO_PRE), requestEncriptado)
         } else {
             lblMensaje_fpagopre.visibility = View.VISIBLE
-            lblMensaje_fpagopre.text = activity!!.resources.getString(R.string.error_encriptar)
+            lblMensaje_fpagopre.text = requireActivity().resources.getString(R.string.error_encriptar)
         }
     }
 
@@ -119,7 +116,7 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         if(view != null) {
             prbCargando_fpagopre.visibility = View.VISIBLE
         }
-        requestQueue = Volley.newRequestQueue(activity)
+        requestQueue = Volley.newRequestQueue(requireActivity())
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
         /*val jsObjectRequest = JsonObjectRequest(*/
@@ -128,7 +125,7 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                 request,
             { response ->
                 try {
-                    val pagopreJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPregradoResult"] as String, activity!!.applicationContext)
+                    val pagopreJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPregradoResult"] as String, requireActivity().applicationContext)
 
                     if (pagopreJArray != null) {
                         if (pagopreJArray.length() > 0) {
@@ -170,10 +167,10 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                                     }
 
                                     //This uses a WebView which does not work well with PDF files
-                                    /*val intentBoleta = Intent().setClass(activity, PagoPreBoletaActivity::class.java!!)
+                                    /*val intentBoleta = Intent().setClass(requireActivity(), PagoPreBoletaActivity::class.java!!)
                                     intentBoleta.putExtra("KEY_CODBOLETA", pagoPre.codigo)
                                     intentBoleta.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    activity!!.startActivity(intentBoleta)*/
+                                    requireActivity().startActivity(intentBoleta)*/
                                 }
                             }
                             rvPago_fpagopre.adapter = adapter
@@ -199,7 +196,15 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                 swPago_fpagopre.isRefreshing = false
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
+                if(error is TimeoutError) {
+                    if(view != null) {
+                        rvPago_fpagopre.visibility = View.GONE
+                        prbCargando_fpagopre.visibility = View.GONE
+                        swPago_fpagopre.isRefreshing = false
+                        lblMensaje_fpagopre.visibility = View.VISIBLE
+                        lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                    }
+                } else if(error.networkResponse.statusCode == 401) {
 
                     requireActivity().renewToken { token ->
                         if(!token.isNullOrEmpty()){

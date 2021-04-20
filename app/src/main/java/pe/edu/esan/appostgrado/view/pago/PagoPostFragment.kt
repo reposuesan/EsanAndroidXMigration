@@ -9,10 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.fragment_cursos.view.*
@@ -63,9 +60,9 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
             R.color.s3,
             R.color.s4
         )
-        view.lblMensaje_fpagopost.typeface = Utilitarios.getFontRoboto(activity!!, Utilitarios.TypeFont.THIN)
+        view.lblMensaje_fpagopost.typeface = Utilitarios.getFontRoboto(requireActivity(), Utilitarios.TypeFont.THIN)
         view.rvPago_fpagopost.layoutManager =
-            androidx.recyclerview.widget.LinearLayoutManager(activity!!)
+            androidx.recyclerview.widget.LinearLayoutManager(requireActivity())
         view.rvPago_fpagopost.adapter = null
     }
 
@@ -102,12 +99,12 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
 
         request.put("codigo", usuario.codigo)
 
-        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
+        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, requireActivity())
         if (requestEncriptado != null) {
             onPagoPost(Utilitarios.getUrl(Utilitarios.URL.PAGO_POST), requestEncriptado)
         } else {
             lblMensaje_fpagopost.visibility = View.VISIBLE
-            lblMensaje_fpagopost.text = activity!!.resources.getString(R.string.error_encriptar)
+            lblMensaje_fpagopost.text = requireActivity().resources.getString(R.string.error_encriptar)
         }
     }
 
@@ -118,7 +115,7 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
         if(view != null){
             prbCargando_fpagopost.visibility = View.VISIBLE
         }
-        requestQueue = Volley.newRequestQueue(activity!!)
+        requestQueue = Volley.newRequestQueue(requireActivity())
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
         /*val jsObjectRequest = JsonObjectRequest(*/
@@ -127,7 +124,7 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
                 request,
             { response ->
                 try {
-                    val pagopostJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPosgradoResult"] as String, activity!!)
+                    val pagopostJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPosgradoResult"] as String, requireActivity())
 
                     if (pagopostJArray != null) {
                         if (pagopostJArray.length() > 0) {
@@ -154,20 +151,25 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
 
                                 listaPago.add(PagoPost(fechavencimiento, diasvencidos, simbolo + importe, simbolo + penalidad, simbolo + interes, total))
                             }
+                            rvPago_fpagopost.visibility = View.VISIBLE
                             rvPago_fpagopost.adapter = PagoPostAdapter(listaPago)
                             lblMensaje_fpagopost.visibility = View.GONE
                         } else {
+                            rvPago_fpagopost.visibility = View.GONE
                             lblMensaje_fpagopost.visibility = View.VISIBLE
                             lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_pago_no)
                         }
                     } else {
+                        rvPago_fpagopost.visibility = View.GONE
                         lblMensaje_fpagopost.visibility = View.VISIBLE
                         lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
                     }
                 } catch (jex: JSONException) {
+                    rvPago_fpagopost.visibility = View.GONE
                     lblMensaje_fpagopost.visibility = View.VISIBLE
                     lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
                 } catch (ccax: ClassCastException) {
+                    rvPago_fpagopost.visibility = View.GONE
                     lblMensaje_fpagopost.visibility = View.VISIBLE
                     lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
                 }
@@ -176,8 +178,15 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
                 swPago_fpagopost.isRefreshing = false
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-
+                if(error is TimeoutError) {
+                    if(view != null) {
+                        prbCargando_fpagopost.visibility = View.GONE
+                        rvPago_fpagopost.visibility = View.GONE
+                        swPago_fpagopost.isRefreshing = false
+                        lblMensaje_fpagopost.visibility = View.VISIBLE
+                        lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default)
+                    }
+                } else if(error.networkResponse.statusCode == 401) {
                     requireActivity().renewToken { token ->
                         if(!token.isNullOrEmpty()){
                             onPagoPost(url, request)
@@ -210,7 +219,7 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
                 return requireActivity().getHeaderForJWT()
             }
         }
-        jsObjectRequest.retryPolicy = DefaultRetryPolicy(30000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

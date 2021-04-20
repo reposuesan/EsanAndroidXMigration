@@ -31,6 +31,7 @@ import android.widget.TextView
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -1065,20 +1066,32 @@ class LoginActivity : AppCompatActivity(),
                     dismissDialog()
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 500){
-                        val showAlertHelper = ShowAlertHelper(this)
-                        showAlertHelper.showAlertError(
-                            getString(R.string.error),
-                            getString(R.string.error_login_uno),
-                            null
-                        )
+                    if(error is TimeoutError){
+                        onLogin(url, request, usuario, clave)
+                    } else if(error.networkResponse != null){
+                        if(error.networkResponse.statusCode == 500){
+                                val showAlertHelper = ShowAlertHelper(this)
+                                showAlertHelper.showAlertError(
+                                    getString(R.string.error),
+                                    getString(R.string.error_login_uno),
+                                    null
+                                )
+                        } else {
+                                val showAlertHelper = ShowAlertHelper(this)
+                                showAlertHelper.showAlertError(getString(R.string.error),
+                                    getString(R.string.error_no_conexion),
+                                    null
+                                )
+                            }
                     } else {
-                        val showAlertHelper = ShowAlertHelper(this)
-                        showAlertHelper.showAlertError(getString(R.string.error),
-                            getString(R.string.error_no_conexion),
-                            null
-                        )
+                            val showAlertHelper = ShowAlertHelper(this)
+                            showAlertHelper.showAlertError(
+                                getString(R.string.error),
+                                getString(R.string.error_login_uno),
+                                null
+                            )
                     }
+
                     dismissDialog()
                     iniciandoSesion = false
                 }
@@ -1098,7 +1111,6 @@ class LoginActivity : AppCompatActivity(),
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
             )
             jsObjectRequest.tag = TAG
-
             requestQueue?.add(jsObjectRequest)
         }
     }

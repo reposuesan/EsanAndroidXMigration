@@ -14,7 +14,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_mensaje.*
@@ -207,7 +209,19 @@ class MensajeActivity : AppCompatActivity() {
                 prbCargando_mensaje.visibility = View.GONE
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
+                if(error is TimeoutError) {
+                    prbCargando_mensaje.visibility = View.GONE
+                    lblMensaje_mensaje.visibility = View.VISIBLE
+                    lblMensaje_mensaje.text = resources.getText(R.string.error_default)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        lblMensaje_mensaje.setCompoundDrawables(
+                            null,
+                            resources.getDrawable(R.drawable.ic_refresh_black_24dp),
+                            null,
+                            null
+                        )
+                    }
+                } else if(error.networkResponse.statusCode == 401) {
                     renewToken { token ->
                         if(!token.isNullOrEmpty()){
                             onMensaje(url, request)
@@ -247,7 +261,7 @@ class MensajeActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
-
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -274,7 +288,19 @@ class MensajeActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
+                if(error is TimeoutError) {
+                    prbCargando_mensaje.visibility = View.GONE
+                    lblMensaje_mensaje.visibility = View.VISIBLE
+                    lblMensaje_mensaje.text = resources.getText(R.string.error_default)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        lblMensaje_mensaje.setCompoundDrawables(
+                            null,
+                            resources.getDrawable(R.drawable.ic_refresh_black_24dp),
+                            null,
+                            null
+                        )
+                    }
+                } else if(error.networkResponse.statusCode == 401) {
                     renewToken { token ->
                         if(!token.isNullOrEmpty()){
                             onMarcarComoLeido(url, request, position)
@@ -313,6 +339,7 @@ class MensajeActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueueLeido?.add(jsObjectRequest)
     }

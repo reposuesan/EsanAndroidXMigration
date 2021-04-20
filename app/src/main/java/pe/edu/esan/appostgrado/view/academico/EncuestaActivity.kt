@@ -15,8 +15,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.Response
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_encuesta.*
@@ -233,16 +235,22 @@ class EncuestaActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onPreguntasEncuesta(url, request)
-                        } else {
-                            error.printStackTrace()
+                when {
+                    error is TimeoutError -> {
+                        error.printStackTrace()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onPreguntasEncuesta(url, request)
+                            } else {
+                                error.printStackTrace()
+                            }
                         }
                     }
-                } else {
-                    error.printStackTrace()
+                    else -> {
+                        error.printStackTrace()
+                    }
                 }
             }
         )
@@ -252,6 +260,7 @@ class EncuestaActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -401,26 +410,37 @@ class EncuestaActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onEnviarEncuesta(url, request, esPregrado)
-                        } else {
-                            CustomDialog.instance.dialogoCargando?.dismiss()
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                            snack.show()
+                when {
+                    error is TimeoutError -> {
+                        CustomDialog.instance.dialogoCargando?.dismiss()
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onEnviarEncuesta(url, request, esPregrado)
+                            } else {
+                                CustomDialog.instance.dialogoCargando?.dismiss()
+                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
+                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                snack.show()
+                            }
                         }
                     }
-                } else {
-                    CustomDialog.instance.dialogoCargando?.dismiss()
-                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
-                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                    snack.show()
+                    else -> {
+                        CustomDialog.instance.dialogoCargando?.dismiss()
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
                 }
 
             }
@@ -431,6 +451,7 @@ class EncuestaActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueueEnviar?.add(jsObjectRequest)
     }

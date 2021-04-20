@@ -10,10 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.fragment_cursos.view.*
@@ -66,9 +63,9 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         )
 
         view.rvPrograma_fprograma.layoutManager =
-            androidx.recyclerview.widget.LinearLayoutManager(activity)
+            androidx.recyclerview.widget.LinearLayoutManager(requireActivity())
         view.rvPrograma_fprograma.adapter = null
-        view.lblMensaje_fprograma.typeface = Utilitarios.getFontRoboto(activity!!, Utilitarios.TypeFont.THIN)
+        view.lblMensaje_fprograma.typeface = Utilitarios.getFontRoboto(requireActivity(), Utilitarios.TypeFont.THIN)
 
     }
 
@@ -100,13 +97,13 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         request.put("CodAlumno", usuario.codigo)
         request.put("FiltroProg", "TP")
 
-        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
+        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, requireActivity())
 
         if (requestEncriptado != null)
             onProgramas(Utilitarios.getUrl(Utilitarios.URL.PROGRAMAS), requestEncriptado)
         else {
             lblMensaje_fprograma.visibility = View.VISIBLE
-            lblMensaje_fprograma.text = activity!!.resources.getString(R.string.error_encriptar)
+            lblMensaje_fprograma.text = requireActivity().resources.getString(R.string.error_encriptar)
         }
     }
 
@@ -114,7 +111,7 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         if(view != null){
             prbCargando_fprograma.visibility = View.VISIBLE
         }
-        requestQueue = Volley.newRequestQueue(activity)
+        requestQueue = Volley.newRequestQueue(requireActivity())
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
         /*val jsObjectRequest = JsonObjectRequest(*/
@@ -123,7 +120,7 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                 request,
             { response ->
                 try {
-                    val programaJArray = Utilitarios.jsArrayDesencriptar(response["ListarProgramasPostResult"] as String, activity!!)
+                    val programaJArray = Utilitarios.jsArrayDesencriptar(response["ListarProgramasPostResult"] as String, requireActivity())
                     //val programaJArray = response["ListarProgramasPostResult"] as JSONArray
                     if (programaJArray != null) {
                         if (programaJArray.length() > 0) {
@@ -138,23 +135,26 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                             val adapter = ProgramaAdapter(listProgramas) { programa ->
 
                                 //getEncuestaPorPrograma (programa)
-                                val intent = Intent(activity, CursosPostActivity::class.java)
+                                val intent = Intent(requireActivity(), CursosPostActivity::class.java)
                                 intent.putExtra("KEY_CODIGO_PROGRAMA", programa.codigo)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(intent)
                             }
-
+                            rvPrograma_fprograma.visibility = View.VISIBLE
                             rvPrograma_fprograma.adapter = adapter
                             lblMensaje_fprograma.visibility = View.GONE
                         } else {
+                            rvPrograma_fprograma.visibility = View.GONE
                             lblMensaje_fprograma.visibility = View.VISIBLE
                             lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_programa_no)
                         }
                     } else {
+                        rvPrograma_fprograma.visibility = View.GONE
                         lblMensaje_fprograma.visibility = View.VISIBLE
                         lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_desencriptar)
                     }
                 } catch (jex: JSONException) {
+                    rvPrograma_fprograma.visibility = View.GONE
                     lblMensaje_fprograma.visibility = View.VISIBLE
                     lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_respuesta_server)
                 }
@@ -164,7 +164,14 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
+                if(error is TimeoutError) {
+                    if(view != null) {
+                        swPrograma_fprograma.isRefreshing = false
+                        prbCargando_fprograma.visibility = View.GONE
+                        lblMensaje_fprograma.visibility = View.VISIBLE
+                        lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+                    }
+                } else if(error.networkResponse.statusCode == 401) {
 
                     requireActivity().renewToken { token ->
                         if(!token.isNullOrEmpty()){
@@ -195,19 +202,10 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                 return requireActivity().getHeaderForJWT()
             }
         }
-        jsObjectRequest.retryPolicy = DefaultRetryPolicy(1500, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
-
-    /*
-    override fun onStart() {
-        super.onStart()
-        Toast.makeText(activity, "START: " + activity.supportFragmentManager.backStackEntryCount, Toast.LENGTH_SHORT).show()
-        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        //(activity.main_toolbar as Toolbar).toolbar_title.text = "Programas"
-    }
-    */
 
     override fun onRefresh() {
         swPrograma_fprograma.isRefreshing = true
@@ -219,4 +217,4 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         requestQueue?.cancelAll(TAG)
     }
 
-}// Required empty public constructor
+}

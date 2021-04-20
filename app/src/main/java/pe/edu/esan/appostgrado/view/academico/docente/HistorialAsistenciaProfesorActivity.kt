@@ -12,8 +12,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import androidx.lifecycle.ViewModelProviders
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.Response
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_historial_asistencia_profesor.*
@@ -312,18 +314,25 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
                 prbCargando_histoasistprof.visibility = View.GONE
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onHistorialAsistencia(url, request)
-                        } else {
-                            prbCargando_histoasistprof.visibility = View.GONE
-                            lblMensaje_histoasistprof.text = resources.getString(R.string.error_default)
+                when {
+                    error is TimeoutError -> {
+                        prbCargando_histoasistprof.visibility = View.GONE
+                        lblMensaje_histoasistprof.text = resources.getString(R.string.error_default)
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onHistorialAsistencia(url, request)
+                            } else {
+                                prbCargando_histoasistprof.visibility = View.GONE
+                                lblMensaje_histoasistprof.text = resources.getString(R.string.error_default)
+                            }
                         }
                     }
-                } else {
-                    prbCargando_histoasistprof.visibility = View.GONE
-                    lblMensaje_histoasistprof.text = resources.getString(R.string.error_default)
+                    else -> {
+                        prbCargando_histoasistprof.visibility = View.GONE
+                        lblMensaje_histoasistprof.text = resources.getString(R.string.error_default)
+                    }
                 }
 
             }
@@ -334,6 +343,7 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

@@ -61,7 +61,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        infoDayPlist = activity!!.resources.getStringArray(R.array.dias_semana)
+        infoDayPlist = requireActivity().resources.getStringArray(R.array.dias_semana)
         fechaActual = Date()
 
     }
@@ -96,9 +96,9 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         )
 
         view.rvHorario_fhorario.layoutManager =
-            androidx.recyclerview.widget.LinearLayoutManager(activity!!)
+            androidx.recyclerview.widget.LinearLayoutManager(requireActivity())
         view.rvHorario_fhorario.adapter = null
-        view.lblMensaje_fhorario.typeface = Utilitarios.getFontRoboto(activity!!, Utilitarios.TypeFont.THIN)
+        view.lblMensaje_fhorario.typeface = Utilitarios.getFontRoboto(requireActivity(), Utilitarios.TypeFont.THIN)
 
         horarioCambio = false
     }
@@ -206,7 +206,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             }
         }
 
-        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
+        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, requireActivity())
         if (requestEncriptado != null) {
             onHorario(
                 Utilitarios.getUrl(Utilitarios.URL.HORARIO_NEW),
@@ -215,7 +215,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             )
         } else {
             lblMensaje_fhorario.visibility = View.VISIBLE
-            lblMensaje_fhorario.text = activity!!.resources.getString(R.string.error_encriptar)
+            lblMensaje_fhorario.text = requireActivity().resources.getString(R.string.error_encriptar)
         }
     }
 
@@ -225,7 +225,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         if(view != null){
             prbCargando_fhorario.visibility = View.VISIBLE
         }
-        requestQueue = Volley.newRequestQueue(activity!!)
+        requestQueue = Volley.newRequestQueue(requireActivity())
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
         /*val jsObjectRequest = JsonObjectRequest(*/
@@ -238,7 +238,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                     if (!response.isNull("ListarHorarioAlumnoProfesorxFechaResult")) {
 
                         val stringOutput = response["ListarHorarioAlumnoProfesorxFechaResult"] as String
-                        val scheduleJArray = Utilitarios.jsArrayDesencriptar(stringOutput, activity!!)
+                        val scheduleJArray = Utilitarios.jsArrayDesencriptar(stringOutput, requireActivity())
                         if (scheduleJArray!!.length() > 0) {
 
                             ControlUsuario.instance.currentListHorario.clear()
@@ -362,26 +362,34 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                                        requireActivity().renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onHorario(url, request, currentUsuario)
-                        } else {
-                            if (view != null) {
-                                view!!.rvHorario_fhorario.visibility = View.GONE
-                                view!!.prbCargando_fhorario.visibility = View.GONE
-                                view!!.swHorario_fhorario.isRefreshing = false
-                                view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                                view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
-                            }
-                        }                        }
-                } else {
+                if(error is TimeoutError){
                     if (view != null) {
                         view!!.rvHorario_fhorario.visibility = View.GONE
                         view!!.prbCargando_fhorario.visibility = View.GONE
                         view!!.swHorario_fhorario.isRefreshing = false
                         view!!.lblMensaje_fhorario.visibility = View.VISIBLE
                         view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+                    }
+                } else if(error.networkResponse.statusCode == 401) {
+                            requireActivity().renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    onHorario(url, request, currentUsuario)
+                                } else {
+                                    if (view != null) {
+                                        view!!.rvHorario_fhorario.visibility = View.GONE
+                                        view!!.prbCargando_fhorario.visibility = View.GONE
+                                        view!!.swHorario_fhorario.isRefreshing = false
+                                        view!!.lblMensaje_fhorario.visibility = View.VISIBLE
+                                        view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+                                    }
+                                }                        }
+                } else {
+                    if (view != null) {
+                                view!!.rvHorario_fhorario.visibility = View.GONE
+                                view!!.prbCargando_fhorario.visibility = View.GONE
+                                view!!.swHorario_fhorario.isRefreshing = false
+                                view!!.lblMensaje_fhorario.visibility = View.VISIBLE
+                                view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
                     }
                 }
             }
@@ -393,8 +401,8 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             }
         }
 
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
-
         requestQueue?.add(jsObjectRequest)
     }
 
@@ -422,10 +430,10 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
         if (fechaEnviada.equals(fechaDeHoy)) {
 
-            lblSemanaActual_fhorario.text = activity!!.resources.getString(R.string.semana_actual)
+            lblSemanaActual_fhorario.text = requireActivity().resources.getString(R.string.semana_actual)
             esSemanaActual = true
         } else {
-            lblSemanaActual_fhorario.text = activity!!.resources.getString(R.string.semana)
+            lblSemanaActual_fhorario.text = requireActivity().resources.getString(R.string.semana)
             esSemanaActual = false
         }
 
@@ -498,13 +506,13 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
 
     fun refreshManual() {
-        if (isOnlineUtils(activity!!)) {
+        if (isOnlineUtils(requireActivity())) {
             swHorario_fhorario.isRefreshing = true
             showHorario()
         } else {
             rvHorario_fhorario.visibility = View.GONE
             lblMensaje_fhorario.visibility = View.VISIBLE
-            lblMensaje_fhorario.text = activity!!.resources.getString(R.string.error_default)
+            lblMensaje_fhorario.text = requireActivity().resources.getString(R.string.error_default)
             swHorario_fhorario.isRefreshing = false
         }
     }
@@ -1028,13 +1036,13 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                             val hoy = diaSemana == position
                             ControlUsuario.instance.currentListHorarioSelect = horarioDia
 
-                            val intent = Intent(activity!!, HorarioDetalleActivity::class.java)
+                            val intent = Intent(requireActivity(), HorarioDetalleActivity::class.java)
                             intent.putExtra("KEY_DIA", diaClick)
                             intent.putExtra("KEY_HOY", hoy)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                             startActivity(intent)
                         } else {
-                            val builder = AlertDialog.Builder(activity!!)
+                            val builder = AlertDialog.Builder(requireActivity())
                             builder.setMessage(getString(R.string.error_login_tres))
                                 .setTitle(getString(R.string.error))
                             val dialog = builder.create()
@@ -1060,13 +1068,13 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                             val hoy = diaSemana == position
                             ControlUsuario.instance.currentListHorarioSelect = horarioDia
 
-                            val intent = Intent(activity!!, HorarioDetalleActivity::class.java)
+                            val intent = Intent(requireActivity(), HorarioDetalleActivity::class.java)
                             intent.putExtra("KEY_DIA", diaClick)
                             intent.putExtra("KEY_HOY", hoy)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                             startActivity(intent)
                         } else {
-                            val builder = AlertDialog.Builder(activity!!)
+                            val builder = AlertDialog.Builder(requireActivity())
                             builder.setMessage(getString(R.string.error_login_tres))
                                 .setTitle(getString(R.string.error))
                             val dialog = builder.create()
@@ -1118,7 +1126,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
     //TODO: QR INTERNATIONAL WEEK
     /*fun enableQR(){
         //controlViewModel.setQRCondition(true)
-        val misPreferencias = activity!!.getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+        val misPreferencias = requireActivity().getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
         val editor = misPreferencias.edit()
 
         editor.putBoolean("qr_code_iw", true)
@@ -1130,7 +1138,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
     //TODO: QR INTERNATIONAL WEEK
     fun disableQR(){
         //controlViewModel.setQRCondition(false)
-        val misPreferencias = activity!!.getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+        val misPreferencias = requireActivity().getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
         val editor = misPreferencias.edit()
 
         editor.putBoolean("qr_code_iw", false)

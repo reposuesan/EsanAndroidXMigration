@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.Response
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
@@ -153,20 +154,28 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onResultadoEncuestaCabecera(url, request)
-                        } else {
-                            lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
-                            lblMensaje_resultadoencuesta.visibility = View.VISIBLE
-                            prbCargando_resultadoencuesta.visibility = View.GONE
+                when {
+                    error is TimeoutError -> {
+                        lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                        lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                        prbCargando_resultadoencuesta.visibility = View.GONE
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onResultadoEncuestaCabecera(url, request)
+                            } else {
+                                lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                                lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                                prbCargando_resultadoencuesta.visibility = View.GONE
+                            }
                         }
                     }
-                } else {
-                    lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
-                    lblMensaje_resultadoencuesta.visibility = View.VISIBLE
-                    prbCargando_resultadoencuesta.visibility = View.GONE
+                    else -> {
+                        lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                        lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                        prbCargando_resultadoencuesta.visibility = View.GONE
+                    }
                 }
 
             }
@@ -247,7 +256,11 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
+                if(error is TimeoutError) {
+                    lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                    lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                    prbCargando_resultadoencuesta.visibility = View.GONE
+                } else if(error.networkResponse.statusCode == 401) {
                     renewToken { token ->
                         if(!token.isNullOrEmpty()){
                             onResultadoEncuestaDetalle(url, request, resultadoEncuesta)

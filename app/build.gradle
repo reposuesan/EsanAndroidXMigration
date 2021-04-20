@@ -21,9 +21,9 @@ android {
         targetSdkVersion 29
         multiDexEnabled true
         //El versionCode actual del Play Store es 87
-        versionCode 88
+        versionCode 90
         //El versionName actual del Play Store es 5.0.42
-        versionName "5.0.43"
+        versionName "5.0.45"
         vectorDrawables.useSupportLibrary = true
         //buildConfigField("String","ESAN", ESAN)
         buildConfigField("String","ESAN", propertyOrEmpty("ESAN"))

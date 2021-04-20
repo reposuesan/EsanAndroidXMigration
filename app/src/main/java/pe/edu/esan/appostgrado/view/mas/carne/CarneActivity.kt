@@ -10,8 +10,10 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.Response
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
@@ -178,18 +180,25 @@ class CarneActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            consultarMatriculaAlumno(url, request)
-                        } else {
-                            empty_text_view_carnet.text = resources.getText(R.string.error_respuesta_server)
-                            ocultarCarnet()
+                when {
+                    error is TimeoutError -> {
+                        empty_text_view_carnet.text = resources.getText(R.string.error_respuesta_server)
+                        ocultarCarnet()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                consultarMatriculaAlumno(url, request)
+                            } else {
+                                empty_text_view_carnet.text = resources.getText(R.string.error_respuesta_server)
+                                ocultarCarnet()
+                            }
                         }
                     }
-                } else {
-                    empty_text_view_carnet.text = resources.getText(R.string.error_respuesta_server)
-                    ocultarCarnet()
+                    else -> {
+                        empty_text_view_carnet.text = resources.getText(R.string.error_respuesta_server)
+                        ocultarCarnet()
+                    }
                 }
             }
         )
@@ -200,6 +209,7 @@ class CarneActivity : AppCompatActivity() {
             }
         }
 
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
 
@@ -241,6 +251,7 @@ class CarneActivity : AppCompatActivity() {
             if(!userIsOut){
                 Glide.with(this)
                     .load(Utilitarios.getUrlFoto(extras["KEY_CODIGO"] as String, 140))
+                    .apply(RequestOptions.timeoutOf(20 * 60 * 1000))
                     .into(imgUsuario_carnealumno)
             }
 
@@ -250,11 +261,6 @@ class CarneActivity : AppCompatActivity() {
                     .apply(RequestOptions.timeoutOf(20 * 60 * 1000))
                     .into(imgCodeBar_carnealumno)
             }
-
-            /*Glide.with(this)
-                .load("https://bwipjs-api.metafloor.com/?bcid=code128&text=13200177&backgroundcolor=FFFFFF&textcolor=CF1111&barcolor=CF1111&scaleX=16&scaleY=4&includetext")
-                .into(imgCodeBar_carnealumno)*/
-
         }
 
         timer?.schedule(object: TimerTask(){

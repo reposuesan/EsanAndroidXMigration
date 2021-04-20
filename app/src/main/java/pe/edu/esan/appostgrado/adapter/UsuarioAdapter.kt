@@ -63,8 +63,9 @@ class UsuarioAdapter(val listaUsuarios: List<UserEsan>, val clickListener: (User
             itemView.lblCorreo_imas.typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.LIGHT)
 
             val requestOptions = RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.NONE) //because file name is always same
-                    .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE) //because file name is always same
+                .skipMemoryCache(true)
+                .timeout(20 * 60 * 1000)
 
             when (usuario) {
                 is Alumno -> {
@@ -89,7 +90,6 @@ class UsuarioAdapter(val listaUsuarios: List<UserEsan>, val clickListener: (User
                     Glide.with(itemView.context)
                             .load(Utilitarios.getUrlFoto(usuario.codigo, 140))
                             .apply(requestOptions)
-                            //.transition(DrawableTransitionOptions.withCrossFade())
                             .into(object : SimpleTarget<Drawable>() {
                                 override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
                                     itemView.imgUsuario_imas.setImageBitmap(Utilitarios.getRoundedCornerDrawable(resource))

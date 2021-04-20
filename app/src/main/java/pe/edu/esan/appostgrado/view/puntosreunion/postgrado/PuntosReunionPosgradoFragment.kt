@@ -11,9 +11,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.fragment_cursos.view.*
@@ -58,10 +56,10 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
         val view = inflater.inflate(R.layout.fragment_puntos_reunion_postgrado, container, false)
 
         view.rvOpciones_fpuntosreunion.layoutManager =
-            androidx.recyclerview.widget.LinearLayoutManager(activity!!)
+            androidx.recyclerview.widget.LinearLayoutManager(requireActivity())
         view.rvOpciones_fpuntosreunion.adapter = null
 
-        view.lblMensaje_fpuntosreunion.typeface = Utilitarios.getFontRoboto(activity!!, Utilitarios.TypeFont.THIN)
+        view.lblMensaje_fpuntosreunion.typeface = Utilitarios.getFontRoboto(requireActivity(), Utilitarios.TypeFont.THIN)
 
         return view
     }
@@ -71,10 +69,10 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
         view.rvOpciones_fpuntosreunion.layoutManager =
-            androidx.recyclerview.widget.LinearLayoutManager(activity!!)
+            androidx.recyclerview.widget.LinearLayoutManager(requireActivity())
         view.rvOpciones_fpuntosreunion.adapter = null
 
-        view.lblMensaje_fpuntosreunion.typeface = Utilitarios.getFontRoboto(activity!!, Utilitarios.TypeFont.THIN)
+        view.lblMensaje_fpuntosreunion.typeface = Utilitarios.getFontRoboto(requireActivity(), Utilitarios.TypeFont.THIN)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -118,13 +116,13 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
         request.put("CodAlumno", usuario.codigo)
         request.put("Facultad", if (usuario.tipoAlumno.equals(Utilitarios.POS)) 1 else 2)
 
-        val requestEncritado = Utilitarios.jsObjectEncrypted(request, activity!!)
+        val requestEncritado = Utilitarios.jsObjectEncrypted(request, requireActivity())
 
         if (requestEncritado != null)
             onPromocion(Utilitarios.getUrl(Utilitarios.URL.PR_PROMOCION), requestEncritado)
         else {
             lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-            lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_encriptar)
+            lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_encriptar)
         }
     }
 
@@ -133,7 +131,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
         if(view != null) {
             prbCargando_fpuntosreunion.visibility = View.VISIBLE
         }
-        requestQueue = Volley.newRequestQueue(activity!!)
+        requestQueue = Volley.newRequestQueue(requireActivity())
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
         /*val jsObjectRequest = JsonObjectRequest(*/
@@ -158,7 +156,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                                     listaPromocion.add(Promocion(idPromo, codigo, nombre, idGrupoPromo))
                                 }
 
-                                val promocionAdapter = PromocionArrayAdapter(activity!!, listaPromocion)
+                                val promocionAdapter = PromocionArrayAdapter(requireActivity(), listaPromocion)
                                 cmbPromocion_fpuntosreunion.adapter = promocionAdapter
                                 cmbPromocion_fpuntosreunion.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                                     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
@@ -178,20 +176,20 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                                 }
                             } else {
                                 lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_permiso_opcion)
+                                lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_permiso_opcion)
                             }
                         } else {
                             lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                            lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_desencriptar)
+                            lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_desencriptar)
                         }
                     } else {
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_permiso_opcion)
+                        lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_permiso_opcion)
                     }
                 } catch (jex: JSONException) {
                     rvOpciones_fpuntosreunion.visibility = View.GONE
                     lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                    lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                    lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_no_conexion)
                 } catch (ccex: ClassCastException) {
                     rvOpciones_fpuntosreunion.visibility = View.GONE
                     lblMensaje_fpuntosreunion.visibility = View.VISIBLE
@@ -200,7 +198,13 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 prbCargando_fpuntosreunion.visibility = View.GONE
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
+                if(error is TimeoutError){
+                    if(view != null) {
+                        prbCargando_fpuntosreunion.visibility = View.GONE
+                        lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                        lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_no_conexion)
+                    }
+                } else if(error.networkResponse.statusCode == 401) {
 
                     requireActivity().renewToken { token ->
                         if(!token.isNullOrEmpty()){
@@ -209,7 +213,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                             if(view != null) {
                                 prbCargando_fpuntosreunion.visibility = View.GONE
                                 lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                                lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_no_conexion)
                             }
                         }
                     }
@@ -217,7 +221,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                     if(view != null) {
                         prbCargando_fpuntosreunion.visibility = View.GONE
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                        lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_no_conexion)
                     }
                 }
             }
@@ -228,6 +232,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 return requireActivity().getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -246,7 +251,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
             onTipoGrupo(Utilitarios.getUrl(Utilitarios.URL.PR_CONFIGURACION), requestEncriptado, promocion.id, promocion.idgrupo)
         else {
             lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-            lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_encriptar)
+            lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_encriptar)
         }
     }
 
@@ -255,7 +260,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
         if(view != null) {
             prbCargando_fpuntosreunion.visibility = View.VISIBLE
         }
-        requestQueue2 = Volley.newRequestQueue(activity!!)
+        requestQueue2 = Volley.newRequestQueue(requireActivity())
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
         /*val jsObjectRequest = JsonObjectRequest(*/
@@ -290,11 +295,11 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
 
                                             ControlUsuario.instance.prPromocionConfig = listaTipoGrupo[p2]
                                             val listaOpciones = ArrayList<MasOpcion>()
-                                            listaOpciones.add(MasOpcion(1, Intent(activity!!, PRMiGrupoActivity::class.java), context!!.resources.getString(R.string.grupos), context!!.resources.getString(R.string.sub_grupos), activity!!.resources.getDrawable(R.drawable.tab_grupo)))
+                                            listaOpciones.add(MasOpcion(1, Intent(requireActivity(), PRMiGrupoActivity::class.java), context!!.resources.getString(R.string.grupos), context!!.resources.getString(R.string.sub_grupos), requireActivity().resources.getDrawable(R.drawable.tab_grupo)))
 
                                             val puntosAdapter = PuntosReunionOpcionAdapter(listaOpciones) { masOpcion ->
                                                 masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                                activity!!.startActivity(masOpcion.intent)
+                                                requireActivity().startActivity(masOpcion.intent)
                                             }
 
                                             rvOpciones_fpuntosreunion.adapter = puntosAdapter
@@ -319,11 +324,11 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                                         val listaOpciones = ArrayList<MasOpcion>()
 
                                         ControlUsuario.instance.prPromocionConfig = listaTipoGrupo[0]
-                                        listaOpciones.add(MasOpcion(1, Intent(activity!!, PRMiGrupoActivity::class.java), context!!.resources.getString(R.string.grupos), context!!.resources.getString(R.string.sub_grupos), activity!!.resources.getDrawable( R.drawable.tab_grupo)))
+                                        listaOpciones.add(MasOpcion(1, Intent(requireActivity(), PRMiGrupoActivity::class.java), context!!.resources.getString(R.string.grupos), context!!.resources.getString(R.string.sub_grupos), requireActivity().resources.getDrawable( R.drawable.tab_grupo)))
 
                                         val puntosAdapter = PuntosReunionOpcionAdapter(listaOpciones) { masOpcion ->
                                             masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                            activity!!.startActivity(masOpcion.intent)
+                                            requireActivity().startActivity(masOpcion.intent)
                                         }
 
                                         rvOpciones_fpuntosreunion.adapter = puntosAdapter
@@ -334,24 +339,30 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                                 }
                             } else {
                                 lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_permiso_opcion)
+                                lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_permiso_opcion)
                             }
                         } else {
                             lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                            lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_desencriptar)
+                            lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_desencriptar)
                         }
                     } else {
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_permiso_opcion)
+                        lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_permiso_opcion)
                     }
                 }catch (jex: JSONException) {
                     lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                    lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                    lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_no_conexion)
                 }
                 prbCargando_fpuntosreunion.visibility = View.GONE
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
+                if(error is TimeoutError) {
+                    if(view != null) {
+                        prbCargando_fpuntosreunion.visibility = View.GONE
+                        lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                        lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_no_conexion)
+                    }
+                } else if(error.networkResponse.statusCode == 401) {
 
                     requireActivity().renewToken { token ->
                         if(!token.isNullOrEmpty()){
@@ -360,7 +371,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                             if(view != null) {
                                 prbCargando_fpuntosreunion.visibility = View.GONE
                                 lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                                lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_no_conexion)
                             }
                         }
                     }
@@ -368,7 +379,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                     if(view != null) {
                         prbCargando_fpuntosreunion.visibility = View.GONE
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                        lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_no_conexion)
                     }
                 }
 
@@ -380,6 +391,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 return requireActivity().getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue2?.add(jsObjectRequest)
     }
@@ -398,11 +410,11 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 onDetalleAlumno(Utilitarios.getUrl(Utilitarios.URL.PR_DETALLEGRUPO), idConfiguracion, requestEncriptar)
             else {
                 lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_encriptar)
+                lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_encriptar)
             }
         } else {
             lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-            lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_ingreso)
+            lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_ingreso)
         }
     }
 
@@ -411,7 +423,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
         if(view != null){
             prbCargando_fpuntosreunion.visibility = View.VISIBLE
         }
-        requestQueue3 = Volley.newRequestQueue(activity!!)
+        requestQueue3 = Volley.newRequestQueue(requireActivity())
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
         /*val jsObjectRequest = JsonObjectRequest(*/
@@ -434,39 +446,45 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                                 ControlUsuario.instance.prconfiguracion = PRConfiguracion(idConfiguracion, grupo, cantHorasAntici, cantHorasReserv, cantHorasRestan)
 
                                 val listaOpciones = ArrayList<MasOpcion>()
-                                listaOpciones.add(MasOpcion(1, Intent(activity!!, PRReservaPrimeraActivity::class.java), context!!.resources.getString(R.string.reservar), context!!.resources.getString(R.string.sub_reservar), activity!!.resources.getDrawable( R.drawable.tab_clock)))
-                                listaOpciones.add(MasOpcion(2, Intent(activity!!, PRConfirmarActivity::class.java), context!!.resources.getString(R.string.confirmar_reserva), context!!.resources.getString(R.string.sub_confirmar_reserva), activity!!.resources.getDrawable( R.drawable.tab_check)))
-                                listaOpciones.add(MasOpcion(3, Intent(activity!!, PRMisReservasActivity::class.java), context!!.resources.getString(R.string.mis_reservas), context!!.resources.getString(R.string.sub_mis_reservas), activity!!.resources.getDrawable( R.drawable.tab_note)))
-                                //listaOpciones.add(MasOpcion(3, Intent(), context!!.resources.getString(R.string.mis_reservas), context!!.resources.getString(R.string.sub_mis_reservas), ContextCompat.getDrawable(activity!!, R.drawable.tab_note)))
-                                //listaOpciones.add(MasOpcion(4, Intent(), context!!.resources.getString(R.string.disponibilidad_pr), context!!.resources.getString(R.string.sub_disponibilidad_pr), ContextCompat.getDrawable(activity!!, R.drawable.tab_grid)))
+                                listaOpciones.add(MasOpcion(1, Intent(requireActivity(), PRReservaPrimeraActivity::class.java), context!!.resources.getString(R.string.reservar), context!!.resources.getString(R.string.sub_reservar), requireActivity().resources.getDrawable( R.drawable.tab_clock)))
+                                listaOpciones.add(MasOpcion(2, Intent(requireActivity(), PRConfirmarActivity::class.java), context!!.resources.getString(R.string.confirmar_reserva), context!!.resources.getString(R.string.sub_confirmar_reserva), requireActivity().resources.getDrawable( R.drawable.tab_check)))
+                                listaOpciones.add(MasOpcion(3, Intent(requireActivity(), PRMisReservasActivity::class.java), context!!.resources.getString(R.string.mis_reservas), context!!.resources.getString(R.string.sub_mis_reservas), requireActivity().resources.getDrawable( R.drawable.tab_note)))
+                                //listaOpciones.add(MasOpcion(3, Intent(), context!!.resources.getString(R.string.mis_reservas), context!!.resources.getString(R.string.sub_mis_reservas), ContextCompat.getDrawable(requireActivity(), R.drawable.tab_note)))
+                                //listaOpciones.add(MasOpcion(4, Intent(), context!!.resources.getString(R.string.disponibilidad_pr), context!!.resources.getString(R.string.sub_disponibilidad_pr), ContextCompat.getDrawable(requireActivity(), R.drawable.tab_grid)))
 
                                 val puntosAdapter = PuntosReunionOpcionAdapter(listaOpciones) { masOpcion ->
                                     masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    activity!!.startActivity(masOpcion.intent)
+                                    requireActivity().startActivity(masOpcion.intent)
                                 }
 
                                 rvOpciones_fpuntosreunion.adapter = puntosAdapter
                                 rvOpciones_fpuntosreunion.visibility = View.VISIBLE
                             } else {
                                 lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.advertencia_pr_notienegrupo)
+                                lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.advertencia_pr_notienegrupo)
                             }
                         } else {
                             lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                            lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_desencriptar)
+                            lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_desencriptar)
                         }
                     } else {
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.advertencia_pr_notienegrupo)
+                        lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.advertencia_pr_notienegrupo)
                     }
                 } catch (jex: JSONException) {
                     lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                    lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                    lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_no_conexion)
                 }
                 prbCargando_fpuntosreunion.visibility = View.GONE
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
+                if(error is TimeoutError) {
+                    if(view != null) {
+                        prbCargando_fpuntosreunion.visibility = View.GONE
+                        lblMensaje_fpuntosreunion.visibility = View.VISIBLE
+                        lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_no_conexion)
+                    }
+                } else if(error.networkResponse.statusCode == 401) {
 
                     requireActivity().renewToken { token ->
                         if(!token.isNullOrEmpty()){
@@ -475,7 +493,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                             if(view != null) {
                                 prbCargando_fpuntosreunion.visibility = View.GONE
                                 lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                                lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                                lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_no_conexion)
                             }
                         }
                     }
@@ -483,7 +501,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                     if(view != null) {
                         prbCargando_fpuntosreunion.visibility = View.GONE
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                        lblMensaje_fpuntosreunion.text = activity!!.resources.getString(R.string.error_no_conexion)
+                        lblMensaje_fpuntosreunion.text = requireActivity().resources.getString(R.string.error_no_conexion)
                     }
                 }
 
@@ -495,6 +513,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 return requireActivity().getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue3?.add(jsObjectRequest)
     }

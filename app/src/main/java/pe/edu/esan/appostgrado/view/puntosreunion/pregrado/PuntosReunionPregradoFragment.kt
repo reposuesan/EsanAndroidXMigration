@@ -19,10 +19,7 @@ import android.view.*
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.fragment_cursos.view.*
@@ -97,7 +94,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
 
         view.realizar_prereserva_opcion.setOnClickListener {
             if(terminosCondicionesChecked){
-                val intent = Intent(activity, PregradoCubsRegistroActivity::class.java)
+                val intent = Intent(requireActivity(), PregradoCubsRegistroActivity::class.java)
                 intent.putExtra("configuracionID", configuracionID)
                 intent.putExtra("codigo_alumno", codigoAlumno)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -105,7 +102,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
             } else {
                 if(activity != null) {
                     val snack = Snackbar.make(
-                        activity!!.findViewById(android.R.id.content),
+                        requireActivity().findViewById(android.R.id.content),
                         getString(R.string.debe_aceptar_politicas_uso),
                         Snackbar.LENGTH_SHORT
                     )
@@ -124,7 +121,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
 
         view.confirmar_prereserva_opcion.setOnClickListener {
             if(terminosCondicionesChecked) {
-                val intent = Intent(activity, PregradoCubsConfirmacionActivity::class.java)
+                val intent = Intent(requireActivity(), PregradoCubsConfirmacionActivity::class.java)
                 intent.putExtra("configuracionID", configuracionID)
                 intent.putExtra("codigo_alumno", codigoAlumno)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -132,7 +129,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
             } else {
                 if(activity != null) {
                     val snack = Snackbar.make(
-                        activity!!.findViewById(android.R.id.content),
+                        requireActivity().findViewById(android.R.id.content),
                         getString(R.string.debe_aceptar_politicas_uso),
                         Snackbar.LENGTH_SHORT
                     )
@@ -151,7 +148,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
 
         view.ver_historial_prereservas_opcion.setOnClickListener {
             if(terminosCondicionesChecked) {
-                val intent = Intent(activity, PregradoCubsHistorialActivity::class.java)
+                val intent = Intent(requireActivity(), PregradoCubsHistorialActivity::class.java)
                 intent.putExtra("configuracionID", configuracionID)
                 intent.putExtra("codigo_alumno", codigoAlumno)
                 intent.putExtra("promocion", promocion)
@@ -161,7 +158,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
             } else {
                 if(activity != null) {
                     val snack = Snackbar.make(
-                        activity!!.findViewById(android.R.id.content),
+                        requireActivity().findViewById(android.R.id.content),
                         getString(R.string.debe_aceptar_politicas_uso),
                         Snackbar.LENGTH_SHORT
                     )
@@ -233,7 +230,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
     fun showTYCConfirmationDialog(){
 
         if(activity != null) {
-            val alertDialog = AlertDialog.Builder(activity!!, R.style.EsanAlertDialog)
+            val alertDialog = AlertDialog.Builder(requireActivity(), R.style.EsanAlertDialog)
 
             alertDialog.setTitle(getString(R.string.acepta_tyc_dialog_pr_title))
             alertDialog.setMessage(getString(R.string.mensaje_politicas_uso_dialog))
@@ -265,8 +262,8 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
 
                         try {
                             if (activity != null) {
-                                val pInfo = activity!!.packageManager.getPackageInfo(
-                                    activity!!.packageName,
+                                val pInfo = requireActivity().packageManager.getPackageInfo(
+                                    requireActivity().packageName,
                                     0
                                 )
                                 val version = pInfo.versionName
@@ -312,10 +309,10 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
     fun obtenerConfiguracionIdServicio(url: String, request: JSONObject) {
 
         if(activity != null) {
-            val fRequest = Utilitarios.jsObjectEncrypted(request, activity!!.applicationContext)
+            val fRequest = Utilitarios.jsObjectEncrypted(request, requireActivity().applicationContext)
 
             if (fRequest != null) {
-                mRequestQueue = Volley.newRequestQueue(activity!!.applicationContext)
+                mRequestQueue = Volley.newRequestQueue(requireActivity().applicationContext)
                 //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
                 val jsonObjectRequest = object: JsonObjectRequest(
                 /*val jsonObjectRequest = JsonObjectRequest(*/
@@ -328,7 +325,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                             if (activity != null) {
                                 jsResponse = Utilitarios.jsObjectDesencriptar(
                                     response.getString("ObtenerConfiguracionAlumnoResult"),
-                                    activity!!.applicationContext
+                                    requireActivity().applicationContext
                                 )
                             }
                             if (jsResponse != null) {
@@ -411,7 +408,14 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                         }
                     },
                     { error ->
-                        if(error.networkResponse.statusCode == 401) {
+                        if(error is TimeoutError) {
+                            if(view != null) {
+                                view!!.linear_layout_container.visibility = View.GONE
+                                view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
+                                view!!.empty_text_view.visibility = View.VISIBLE
+                                view!!.progress_bar_pp_pregrado.visibility = View.GONE
+                            }
+                        } else if(error.networkResponse.statusCode == 401) {
 
                             requireActivity().renewToken { token ->
                                 if(!token.isNullOrEmpty()){
@@ -459,9 +463,9 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
     fun verificarTipoPoliticaPortal(url: String, request: JSONObject) {
 
         if(activity != null) {
-            val fRequest = Utilitarios.jsObjectEncrypted(request, activity!!.applicationContext)
+            val fRequest = Utilitarios.jsObjectEncrypted(request, requireActivity().applicationContext)
             if (fRequest != null) {
-                mRequestQueue = Volley.newRequestQueue(activity!!.applicationContext)
+                mRequestQueue = Volley.newRequestQueue(requireActivity().applicationContext)
                 //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
                 val jsonObjectRequest = object: JsonObjectRequest(
                 /*val jsonObjectRequest = JsonObjectRequest(*/
@@ -474,7 +478,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                             if(activity != null) {
                                 jsResponse = Utilitarios.jsObjectDesencriptar(
                                     response.getString("VerificarTipoPoliticaPortalResult"),
-                                    activity!!.applicationContext
+                                    requireActivity().applicationContext
                                 )
                             }
 
@@ -546,7 +550,14 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                         }
                     },
                     { error ->
-                        if(error.networkResponse.statusCode == 401) {
+                        if(error is TimeoutError) {
+                            if (view != null) {
+                                view!!.linear_layout_container.visibility = View.GONE
+                                view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
+                                view!!.empty_text_view.visibility = View.VISIBLE
+                                view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                            }
+                        } else if(error.networkResponse.statusCode == 401) {
 
                             requireActivity().renewToken { token ->
                                 if(!token.isNullOrEmpty()){
@@ -594,10 +605,10 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
     fun aceptarTipoPolitica(url: String, request: JSONObject){
 
         if(activity != null) {
-            val fRequest = Utilitarios.jsObjectEncrypted(request, activity!!.applicationContext)
+            val fRequest = Utilitarios.jsObjectEncrypted(request, requireActivity().applicationContext)
 
             if (fRequest != null) {
-                mRequestQueue = Volley.newRequestQueue(activity!!.applicationContext)
+                mRequestQueue = Volley.newRequestQueue(requireActivity().applicationContext)
                 //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
                 val jsonObjectRequest = object: JsonObjectRequest(
                 /*val jsonObjectRequest = JsonObjectRequest(*/
@@ -610,7 +621,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                             if(activity != null) {
                                 jsResponse = Utilitarios.jsObjectDesencriptar(
                                     response.getString("AceptarTipoPoliticaResult"),
-                                    activity!!.applicationContext
+                                    requireActivity().applicationContext
                                 )
                             }
 
@@ -639,7 +650,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                         if (activity != null) {
 
                                             val snack = Snackbar.make(
-                                                activity!!.findViewById(android.R.id.content),
+                                                requireActivity().findViewById(android.R.id.content),
                                                 getString(R.string.politicas_uso_aceptadas_mensaje),
                                                 Snackbar.LENGTH_LONG
                                             )
@@ -690,7 +701,15 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                         }
                     },
                     { error ->
-                        if(error.networkResponse.statusCode == 401) {
+                        if(error is TimeoutError) {
+                            if (view != null) {
+                                view!!.linear_layout_container.visibility = View.GONE
+                                view!!.empty_text_view.text =
+                                    getString(R.string.no_respuesta_desde_servidor)
+                                view!!.empty_text_view.visibility = View.VISIBLE
+                                view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                            }
+                        } else if(error.networkResponse.statusCode == 401) {
 
                             requireActivity().renewToken { token ->
                                 if(!token.isNullOrEmpty()){

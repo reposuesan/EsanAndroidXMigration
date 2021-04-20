@@ -13,9 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 /*import com.crashlytics.android.Crashlytics*/
@@ -132,7 +130,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 mainSetupMasFragment(view)
                 setupAdapters()
         })*/
-        val misPreferencias = activity?.getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+        val misPreferencias = requireActivity().getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
         generateQRForIW = misPreferencias?.getBoolean("qr_code_iw",false)
 
         mainSetupMasFragment(view)
@@ -145,7 +143,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
         var usuarioGeneral: UsuarioGeneral? = null
         var currentUsuario = UserEsan(0, "Invitado")
 
-        val misPreferencias = activity?.getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+        val misPreferencias = requireActivity().getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
 
         try {
             usuarioGeneral = ControlUsuario.instance.currentUsuarioGeneral
@@ -241,11 +239,11 @@ class MasFragment : androidx.fragment.app.Fragment() {
         if(view != null){
             if (listaUsuarios.size == 1) {
                 view.rvUsuario_fmas.layoutManager =
-                    androidx.recyclerview.widget.LinearLayoutManager(activity!!)
+                    androidx.recyclerview.widget.LinearLayoutManager(requireActivity())
             } else if (listaUsuarios.size > 1) {
                 view.rvUsuario_fmas.layoutManager =
                     androidx.recyclerview.widget.LinearLayoutManager(
-                        activity!!,
+                        requireActivity(),
                         androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,
                         false
                     )
@@ -254,7 +252,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
             }
 
             view.rvOpciones_fmas.layoutManager =
-                androidx.recyclerview.widget.LinearLayoutManager(activity!!)
+                androidx.recyclerview.widget.LinearLayoutManager(requireActivity())
 
             view.rvUsuario_fmas.adapter = null
             view.rvOpciones_fmas.adapter = null
@@ -269,7 +267,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 /**Un solo usuario*/
             } else if (cantidadPerfiles == 2) {
 
-                val preferencias = activity!!.getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+                val preferencias = requireActivity().getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
                 val tipoAnterior = preferencias.getString("tipoperfil", "")
 
                 if(tipoAnterior == tipo){
@@ -282,9 +280,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
                     ControlUsuario.instance.currentUsuario[0] = userSelected
 
-                    val intent = activity!!.intent
+                    val intent = requireActivity().intent
                     intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-                    activity!!.finish()
+                    requireActivity().finish()
                     startActivity(intent)
                 }
             }
@@ -295,18 +293,18 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 if (masOpcion != null) {
                     if (masOpcion.intent != null) {
                         masOpcion.intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        activity!!.startActivity(masOpcion.intent)
+                        requireActivity().startActivity(masOpcion.intent)
                     }
                 } else {
                     rvOpciones_fmas.visibility = View.INVISIBLE
                     rvOpciones_fmas.isEnabled = false
                     rvOpciones_fmas.isClickable = false
-                    CustomDialog.instance.showDialogLoad(activity!!)
+                    CustomDialog.instance.showDialogLoad(requireActivity())
                     if (invitado) {
                         ControlUsuario.instance.currentUsuario.clear()
                         ControlUsuario.instance.statusLogout = 1
                         dismissDialog()
-                        activity!!.finish()
+                        requireActivity().finish()
                     } else {
                         if(!cerrandoSesion) {
                             setCerrarSesion()
@@ -340,7 +338,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     val request = JSONObject()
                     request.put("CodAlumno", usuario.codigo)
 
-                    val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
+                    val requestEncriptado = Utilitarios.jsObjectEncrypted(request, requireActivity())
                     if (requestEncriptado != null) {
                         cerrandoSesion = true
                         onCerrarSesion(Utilitarios.getUrl(Utilitarios.URL.CERRAR_SESION), requestEncriptado)
@@ -359,7 +357,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
     private fun onCerrarSesion(url: String, request: JSONObject) {
 
-        requestQueue = Volley.newRequestQueue(activity!!)
+        requestQueue = Volley.newRequestQueue(requireActivity())
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
         /*val jsObjectRequest = JsonObjectRequest(*/
@@ -369,7 +367,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
             { response ->
 
                 val respuesta: String? = try {
-                    Utilitarios.stringDesencriptar(response["ActualizarTokenResult"] as String, activity!!)
+                    Utilitarios.stringDesencriptar(response["ActualizarTokenResult"] as String, requireActivity())
                 } catch (e: Exception) {
                     ""
                 }
@@ -383,10 +381,10 @@ class MasFragment : androidx.fragment.app.Fragment() {
                             borrarDatos()
                             //UNSUBSCRIBE FROM TOPICS
                             /*unsubscribeUserFromTopics()*/
-                            activity!!.finish()
+                            requireActivity().finish()
                         } else {
                             cerrandoSesion = false
-                            Toast.makeText(activity!!, getString(R.string.error_en_cierre_sesion), Toast.LENGTH_LONG).show()
+                            Toast.makeText(requireActivity(), getString(R.string.error_en_cierre_sesion), Toast.LENGTH_LONG).show()
                             controlViewModel.proceedLogoutPublic.removeObservers(viewLifecycleOwner)
                         }
                     }
@@ -396,31 +394,42 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     controlViewModel.deleteDataFromRoom()
                 } else {
                     cerrandoSesion = false
-                    Toast.makeText(activity!!, getString(R.string.error_en_cierre_sesion), Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireActivity(), getString(R.string.error_en_cierre_sesion), Toast.LENGTH_LONG).show()
                     controlViewModel.proceedLogoutPublic.removeObservers(viewLifecycleOwner)
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    requireActivity().renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onCerrarSesion(url, request)
-                        } else {
-                            rvOpciones_fmas.visibility = View.VISIBLE
-                            rvOpciones_fmas.isEnabled = true
-                            rvOpciones_fmas.isClickable = true
-                            dismissDialog()
-                            cerrandoSesion = false
-                            Toast.makeText(activity!!, getString(R.string.error_en_cierre_sesion), Toast.LENGTH_LONG).show()
+                when {
+                    error is TimeoutError -> {
+                        rvOpciones_fmas.visibility = View.VISIBLE
+                        rvOpciones_fmas.isEnabled = true
+                        rvOpciones_fmas.isClickable = true
+                        dismissDialog()
+                        cerrandoSesion = false
+                        Toast.makeText(requireActivity(), getString(R.string.error_respuesta_server), Toast.LENGTH_LONG).show()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        requireActivity().renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onCerrarSesion(url, request)
+                            } else {
+                                rvOpciones_fmas.visibility = View.VISIBLE
+                                rvOpciones_fmas.isEnabled = true
+                                rvOpciones_fmas.isClickable = true
+                                dismissDialog()
+                                cerrandoSesion = false
+                                Toast.makeText(requireActivity(), getString(R.string.error_en_cierre_sesion), Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
-                } else {
-                    rvOpciones_fmas.visibility = View.VISIBLE
-                    rvOpciones_fmas.isEnabled = true
-                    rvOpciones_fmas.isClickable = true
-                    dismissDialog()
-                    cerrandoSesion = false
-                    Toast.makeText(activity!!, getString(R.string.error_en_cierre_sesion), Toast.LENGTH_LONG).show()
+                    else -> {
+                        rvOpciones_fmas.visibility = View.VISIBLE
+                        rvOpciones_fmas.isEnabled = true
+                        rvOpciones_fmas.isClickable = true
+                        dismissDialog()
+                        cerrandoSesion = false
+                        Toast.makeText(requireActivity(), getString(R.string.error_en_cierre_sesion), Toast.LENGTH_LONG).show()
+                    }
                 }
 
             }
@@ -431,6 +440,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 return requireActivity().getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -467,7 +477,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
     }
 
     private fun borrarPreferencias() {
-        val misPresferencias = activity!!.getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
+        val misPresferencias = requireActivity().getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
         val agreetouchid = misPresferencias.getBoolean("touchid", false)
         val editor = misPresferencias.edit()
         if (agreetouchid) {
@@ -496,7 +506,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 listaOpciones.add(
                     MasOpcion(
                         1,
-                        Intent(activity!!, MensajeActivity::class.java),
+                        Intent(requireActivity(), MensajeActivity::class.java),
                         context!!.resources.getString(R.string.mensajes),
                         context!!.resources.getString(R.string.mensajes_detalle),
                         context!!.resources.getDrawable(R.drawable.icon_mail),
@@ -508,7 +518,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     listaOpciones.add(
                         MasOpcion(
                             5,
-                            Intent(activity!!, MallaCurricularActivity::class.java),
+                            Intent(requireActivity(), MallaCurricularActivity::class.java),
                             context!!.resources.getString(R.string.malla_curricular),
                             context!!.resources.getString(R.string.malla_curricular_detalle),
                             context!!.resources.getDrawable(R.drawable.icon_malla),
@@ -519,7 +529,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     listaOpciones.add(
                         MasOpcion(
                             8,
-                            Intent(activity!!, PregradoLabsPrincipalActivity::class.java),
+                            Intent(requireActivity(), PregradoLabsPrincipalActivity::class.java),
                             context!!.resources.getString(R.string.laboratorios_title),
                             context!!.resources.getString(R.string.laboratorios_detalle),
                             ContextCompat.getDrawable(context!!, R.drawable.tab_laboratorio),
@@ -531,7 +541,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     if (listaUsuarios.size == 1) {
                         val alumnoPre = listaUsuarios[0] as UserEsan
 
-                        val carneIntent = Intent(activity!!, CarneActivity::class.java)
+                        val carneIntent = Intent(requireActivity(), CarneActivity::class.java)
                         carneIntent.putExtra("KEY_NOMBRE", alumnoPre.nombres)
                         carneIntent.putExtra("KEY_APELLIDO", alumnoPre.apellidos)
                         carneIntent.putExtra("KEY_CODIGO", alumnoPre.codigo)
@@ -542,7 +552,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                                 carneIntent,
                                 context!!.getString(R.string.carne_virtual_title),
                                 getString(R.string.generar_carne_virtual_subtitle),
-                                context!!.resources.getDrawable(R.drawable.tab_carnet),
+                                requireContext().resources.getDrawable(R.drawable.tab_carnet),
                                 false,
                                 0
                             )
@@ -550,7 +560,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     } else if (listaUsuarios.size > 1 && (listaUsuarios[0] as Alumno).tipoAlumno == Utilitarios.POS) {
                         val alumnoPre = listaUsuarios[1] as UserEsan
 
-                        val carneIntent = Intent(activity!!, CarneActivity::class.java)
+                        val carneIntent = Intent(requireActivity(), CarneActivity::class.java)
                         carneIntent.putExtra("KEY_NOMBRE", alumnoPre.nombres)
                         carneIntent.putExtra("KEY_APELLIDO", alumnoPre.apellidos)
                         carneIntent.putExtra("KEY_CODIGO", alumnoPre.codigo)
@@ -561,7 +571,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                                 carneIntent,
                                 context!!.getString(R.string.carne_virtual_title),
                                 getString(R.string.generar_carne_virtual_subtitle),
-                                context!!.resources.getDrawable(R.drawable.tab_carnet),
+                                requireContext().resources.getDrawable(R.drawable.tab_carnet),
                                 false,
                                 0
                             )
@@ -569,7 +579,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     } else {
                         val alumnoPre = listaUsuarios[0] as UserEsan
 
-                        val carneIntent = Intent(activity!!, CarneActivity::class.java)
+                        val carneIntent = Intent(requireActivity(), CarneActivity::class.java)
                         carneIntent.putExtra("KEY_NOMBRE", alumnoPre.nombres)
                         carneIntent.putExtra("KEY_APELLIDO", alumnoPre.apellidos)
                         carneIntent.putExtra("KEY_CODIGO", alumnoPre.codigo)
@@ -592,7 +602,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 if (usuario.tipoAlumno == Utilitarios.POS) {
                     val alumnoPost = listaUsuarios[0] as UserEsan
 
-                    val carneIntent = Intent(activity!!, CarneActivity::class.java)
+                    val carneIntent = Intent(requireActivity(), CarneActivity::class.java)
                     carneIntent.putExtra("KEY_NOMBRE", alumnoPost.nombres)
                     carneIntent.putExtra("KEY_APELLIDO", alumnoPost.apellidos)
                     carneIntent.putExtra("KEY_CODIGO", alumnoPost.codigo)
@@ -613,7 +623,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 listaOpciones.add(
                     MasOpcion(
                         6,
-                        Intent(activity!!, ConfiguracionActivity::class.java),
+                        Intent(requireActivity(), ConfiguracionActivity::class.java),
                         context!!.resources.getString(R.string.configuracion),
                         context!!.resources.getString(R.string.configuracion_detalle),
                         context!!.resources.getDrawable(R.drawable.ico_config),
@@ -627,7 +637,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     listaOpciones.add(
                         MasOpcion(
                             15,
-                            Intent(activity!!, GenerateQRCodeActivity::class.java),
+                            Intent(requireActivity(), GenerateQRCodeActivity::class.java),
                             getString(R.string.generacion_codigo_qr),
                             getString(R.string.genera_tu_codigo_qr),
                             context!!.resources.getDrawable(R.drawable.ic_code_qr),
@@ -643,7 +653,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 listaOpciones.add(
                     MasOpcion(
                         1,
-                        Intent(activity!!, MensajeActivity::class.java),
+                        Intent(requireActivity(), MensajeActivity::class.java),
                         context!!.resources.getString(R.string.mensajes),
                         context!!.resources.getString(R.string.mensajes_detalle),
                         context!!.resources.getDrawable(R.drawable.icon_mail),
@@ -655,7 +665,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     listaOpciones.add(
                         MasOpcion(
                             4,
-                            Intent(activity!!, CargaAcademicaActivity::class.java),
+                            Intent(requireActivity(), CargaAcademicaActivity::class.java),
                             context!!.resources.getString(R.string.carga_academica),
                             context!!.resources.getString(R.string.carga_academica_detalle),
                             context!!.resources.getDrawable(R.drawable.tab_clock),
@@ -667,7 +677,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 listaOpciones.add(
                     MasOpcion(
                         5,
-                        Intent(activity!!, ConfiguracionActivity::class.java),
+                        Intent(requireActivity(), ConfiguracionActivity::class.java),
                         context!!.resources.getString(R.string.configuracion),
                         context!!.resources.getString(R.string.configuracion_detalle),
                         context!!.resources.getDrawable(R.drawable.ico_config),
@@ -680,7 +690,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     listaOpciones.add(
                         MasOpcion(
                             15,
-                            Intent(activity!!, GenerateQRCodeActivity::class.java),
+                            Intent(requireActivity(), GenerateQRCodeActivity::class.java),
                             getString(R.string.generacion_codigo_qr),
                             getString(R.string.genera_tu_codigo_qr),
                             context!!.resources.getDrawable(R.drawable.ic_code_qr),
@@ -702,7 +712,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
             listaOpciones.add(
                 MasOpcion(
                     16,
-                    Intent(activity!!, ScanQRCodeActivity::class.java),
+                    Intent(requireActivity(), ScanQRCodeActivity::class.java),
                     context!!.resources.getString(R.string.lectura_codigo_qr),
                     context!!.resources.getString(R.string.leer_codigo_qr),
                     context!!.resources.getDrawable(R.drawable.ic_code_qr),
@@ -712,11 +722,11 @@ class MasFragment : androidx.fragment.app.Fragment() {
             )
         }*/
 
-        if (Utilitarios.comprobarSensor(activity!!))
+        if (Utilitarios.comprobarSensor(requireActivity()))
             listaOpciones.add(
                 MasOpcion(
                     2,
-                    Intent(activity!!, PrincipalRAActivity::class.java).putExtra("accion", "busqueda"),
+                    Intent(requireActivity(), PrincipalRAActivity::class.java).putExtra("accion", "busqueda"),
                     context!!.resources.getString(R.string.ra),
                     context!!.resources.getString(R.string.ra_detalle),
                     context!!.resources.getDrawable(R.drawable.tab_ra),
@@ -741,7 +751,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
         listaOpciones.add(
             MasOpcion(
                 7,
-                Intent(activity!!, ComedorActivity::class.java),
+                Intent(requireActivity(), ComedorActivity::class.java),
                 context!!.resources.getString(R.string.comedor),
                 context!!.resources.getString(R.string.comedor_detalle),
                 context!!.resources.getDrawable(R.drawable.tab_restaurant),
@@ -753,10 +763,10 @@ class MasFragment : androidx.fragment.app.Fragment() {
         listaOpciones.add(
             MasOpcion(
                 3,
-                Intent(activity!!, LinkInteresActivity::class.java),
+                Intent(requireActivity(), LinkInteresActivity::class.java),
                 context!!.resources.getString(R.string.link_interes),
                 context!!.resources.getString(R.string.link_interes_detalle),
-                context!!.resources.getDrawable(R.drawable.tab_link),
+                requireContext().resources.getDrawable(R.drawable.tab_link),
                 false,
                 0
             )
@@ -775,7 +785,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     request.put("Facultad", if (usuario.tipoAlumno == Utilitarios.PRE) "2" else "1")
                     request.put("Usuario", usuario.codigo)
 
-                    val requestEncriptado = Utilitarios.jsObjectEncrypted(request, activity!!)
+                    val requestEncriptado = Utilitarios.jsObjectEncrypted(request, requireActivity())
                     if (requestEncriptado != null) {
 
                         onCantidadMensaje(Utilitarios.getUrl(Utilitarios.URL.CANTIDAD_MENSAJES), requestEncriptado)
@@ -787,7 +797,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     request.put("Facultad", "0")
                     request.put("Usuario", usuario.codigo)
 
-                    val requestEncriptado = Utilitarios.jsObjectEncrypted(request, context!!)
+                    val requestEncriptado = Utilitarios.jsObjectEncrypted(request, requireActivity())
                     if (requestEncriptado != null) {
 
                         onCantidadMensaje(Utilitarios.getUrl(Utilitarios.URL.CANTIDAD_MENSAJES), requestEncriptado)
@@ -799,7 +809,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
 
     private fun onCantidadMensaje(url: String, request: JSONObject) {
-        requestQueueCantMensaje = Volley.newRequestQueue(activity)
+        requestQueueCantMensaje = Volley.newRequestQueue(requireActivity())
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
         val jsObjectRequest = object: JsonObjectRequest(
         /*val jsObjectRequest = JsonObjectRequest(*/
@@ -810,7 +820,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 try {
                     val respuesta = Utilitarios.stringDesencriptar(
                         response["ObtenerNotificacionPendientePorUsuarioResult"] as String,
-                        activity!!
+                        requireActivity()
                     )
                     if (respuesta != null) {
                         opcionesAdapter?.actualizarCantidadMensajes(respuesta.toInt())
@@ -825,16 +835,22 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    requireActivity().renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onCantidadMensaje(url, request)
-                        } else {
-                            error.printStackTrace()
+                when {
+                    error is TimeoutError -> {
+                        error.printStackTrace()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        requireActivity().renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onCantidadMensaje(url, request)
+                            } else {
+                                error.printStackTrace()
+                            }
                         }
                     }
-                } else {
-                    error.printStackTrace()
+                    else -> {
+                        error.printStackTrace()
+                    }
                 }
             }
         )
@@ -844,6 +860,11 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 return requireActivity().getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(
+            15000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
         jsObjectRequest.tag = TAG
         requestQueueCantMensaje?.add(jsObjectRequest)
     }

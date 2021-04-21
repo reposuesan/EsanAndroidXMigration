@@ -56,7 +56,7 @@ class PregradoCubsRegistroActivity : AppCompatActivity() {
         my_toolbar_registro.setTitleTextColor(ContextCompat.getColor(this, R.color.md_white_1000))
 
         if(intent.hasExtra("codigo_alumno")){
-            usuarioActual = intent.getStringExtra("codigo_alumno")
+            usuarioActual = intent.getStringExtra("codigo_alumno") ?: ""
         }
 
         main_container_registro_cubs.visibility = View.VISIBLE

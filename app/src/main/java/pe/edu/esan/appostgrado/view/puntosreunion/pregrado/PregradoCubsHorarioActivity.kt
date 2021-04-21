@@ -83,7 +83,7 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
 
         val grupoPrereserva = intent.getParcelableExtra<GrupoAlumnosPrereserva>("grupoPrereserva")
 
-        horasPermitidas = grupoPrereserva.horasDisp.toInt()
+        horasPermitidas = grupoPrereserva!!.horasDisp.toInt()
         horaInicioRespuestaServidor = grupoPrereserva.horaIniRes.toInt()
         horaFinRespuestaServidor = grupoPrereserva.horaFinRes.toInt()
         horaActualRespuestaServidor = grupoPrereserva.horaActual.toInt()

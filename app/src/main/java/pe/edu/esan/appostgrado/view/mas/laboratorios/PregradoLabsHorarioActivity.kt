@@ -91,7 +91,7 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
 
         if (intent.hasExtra("alumno_prereserva_lab") && intent.hasExtra("codigo_alumno")) {
             alumnoPrereservaLab = intent.getParcelableExtra("alumno_prereserva_lab")
-            codigoAlumno = intent.getStringExtra("codigo_alumno")
+            codigoAlumno = intent.getStringExtra("codigo_alumno") ?: ""
             configuracionID = alumnoPrereservaLab!!.idConfiguracionLab
             horaActualParaHorario = alumnoPrereservaLab!!.horaActualLab
         }

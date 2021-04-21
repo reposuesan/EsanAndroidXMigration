@@ -265,93 +265,6 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
     }
 
 
-    /*private fun onClonarAsistenciaAlumnos(url: String, request: JSONObject) {
-        CustomDialog.instance.showDialogLoad(this)
-
-        requestQueueRegCopiaAsisAlumno = Volley.newRequestQueue(this)
-        val jsObjectRequest = JsonObjectRequest(
-            url,
-            request,
-            { response ->
-                try {
-                    if (response["RegistrarAsistenciaMasivaAlumnoResult"] as Boolean) {
-                        val snack = Snackbar.make(
-                            findViewById(android.R.id.content),
-                            resources.getString(R.string.info_si_asistencia_registrada),
-                            Snackbar.LENGTH_LONG
-                        )
-                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.info))
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
-                            Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                            .setTextColor(ContextCompat.getColor(this, R.color.info_text))
-                        snack.show()
-
-                        val codSeccion = request["CodSeccion"] as String
-                        val sesion = request["IdNuevaSesion"] as Int
-                        val hora = request["IdHorario"] as Int
-
-                        var pos = 0
-                        for (horario in ControlUsuario.instance.currentListHorarioSelect) {
-                            if (horario.seccionCodigo == codSeccion && horario.idSesion == sesion && horario.idHorario == hora) {
-                                adapterHorario?.listaHorario?.get(pos)?.takeAssist = 1
-                                adapterHorario?.notifyItemChanged(pos)
-                                break
-                            }
-                            pos++
-                        }
-
-
-                    } else {
-                        val snack = Snackbar.make(
-                            findViewById(android.R.id.content),
-                            resources.getString(R.string.error_no_marco_asistencia_alumnos),
-                            Snackbar.LENGTH_LONG
-                        )
-                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
-                            Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                            .setTextColor(ContextCompat.getColor(this, R.color.warning_text))
-                        snack.show()
-                    }
-                } catch (jex: JSONException) {
-                    val snack = Snackbar.make(
-                        findViewById(android.R.id.content),
-                        resources.getString(R.string.error_no_conexion),
-                        Snackbar.LENGTH_LONG
-                    )
-                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
-                        Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                        .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                    snack.show()
-                }
-            },
-            { error ->
-                ControlUsuario.instance.indexActualiza = -1
-                val snack = Snackbar.make(
-                    findViewById(android.R.id.content),
-                    resources.getString(R.string.error_no_conexion),
-                    Snackbar.LENGTH_LONG
-                )
-                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
-                    Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                    .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                snack.show()
-            }
-        )
-        jsObjectRequest.tag = TAG
-
-        requestQueueRegCopiaAsisAlumno?.add(jsObjectRequest)
-
-        CustomDialog.instance.dialogoCargando?.dismiss()
-    }*/
-
-
     private fun getConsultarHorarioProfesor(listaHorario: ArrayList<Horario>) {
         var ultimaSeccion = 0
         val listaHorarioSeleccion = ArrayList<Horario>()
@@ -668,8 +581,8 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
     }
 
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 ControlUsuario.instance.cambioPantalla = true
                 finish()
@@ -697,23 +610,23 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
     }
 
 
-    override fun onLocationChanged(p0: Location?) {
-        longitud = p0?.longitude.toString()
-        latitud = p0?.latitude.toString()
+    override fun onLocationChanged(p0: Location) {
+        longitud = p0.longitude.toString()
+        latitud = p0.latitude.toString()
     }
 
 
-    override fun onStatusChanged(p0: String?, p1: Int, p2: Bundle?) {
-
-    }
-
-
-    override fun onProviderEnabled(p0: String?) {
+    override fun onStatusChanged(p0: String, p1: Int, p2: Bundle?) {
 
     }
 
 
-    override fun onProviderDisabled(p0: String?) {
+    override fun onProviderEnabled(p0: String) {
+
+    }
+
+
+    override fun onProviderDisabled(p0: String) {
         longitud = ""
         latitud = ""
     }

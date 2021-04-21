@@ -282,6 +282,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
                 } else {
 
                     tipoUsuario = "AlumnoPregrado"
+
                     val poshorario = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
                     poshorario.text = resources.getString(T_HORARIO)
                     poshorario.isSelected = true
@@ -312,6 +313,7 @@ class MenuPrincipalActivity : AppCompatActivity() {
             is Profesor -> {
 
                 tipoUsuario = "Profesor"
+
                 val poshorario = LayoutInflater.from(this).inflate(R.layout.tab_menuprincipal, tabs, false) as TextView
                 poshorario.text = resources.getString(T_HORARIO)
                 poshorario.isSelected = true

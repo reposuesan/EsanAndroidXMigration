@@ -99,16 +99,16 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
         } else {
 
             if (intent.hasExtra("codigo_alumno")) {
-                codigoAlumno = intent.getStringExtra("codigo_alumno")
+                codigoAlumno = intent.getStringExtra("codigo_alumno") ?: ""
             }
 
             if (intent.hasExtra("hora_inicio") && intent.hasExtra("hora_fin") && intent.hasExtra("fecha_prereserva") && intent.hasExtra("programas_list")) {
-                horaInicioPrereserva = intent.getStringExtra("hora_inicio")
-                horaFinPrereserva = intent.getStringExtra("hora_fin")
-                fechaPrereserva = intent.getStringExtra("fecha_prereserva")
+                horaInicioPrereserva = intent.getStringExtra("hora_inicio") ?: ""
+                horaFinPrereserva = intent.getStringExtra("hora_fin") ?: ""
+                fechaPrereserva = intent.getStringExtra("fecha_prereserva") ?: ""
                 cantHorasSeleccionadas = intent.getDoubleExtra("cantidad_horas_seleccionadas", 0.0)
-                configuracionID = intent.getStringExtra("id_configuracion")
-                rawList = intent.getParcelableArrayListExtra("programas_list")
+                configuracionID = intent.getStringExtra("id_configuracion") ?: ""
+                rawList = intent.getParcelableArrayListExtra("programas_list")!!
                 dispositivo = intent.getStringExtra("dispositivo_data")
                 maxCantidadProgPermitidos = intent.getIntExtra("max_cantidad_prog_permitidos", 0)
                 textview_horario_select_software.text = applicationContext.getString(R.string.hours_select_software_text, horaInicioPrereserva, horaFinPrereserva)

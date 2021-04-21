@@ -14,7 +14,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
@@ -102,13 +104,15 @@ class TomarAsistenciaActivity : AppCompatActivity() {
             request.put("IdHorario", horario.idHorario)
             request.put("IdSesion", idSesion)
 
-            onEstadoAsistenciaSeccion(Utilitarios.getUrl(Utilitarios.URL.LISTA_ASISTENCIA), request, laanterior)
+            val requestEncriptado = Utilitarios.jsObjectEncrypted(request, this)
+
+            onEstadoAsistenciaSeccion(Utilitarios.getUrl(Utilitarios.URL.LISTA_ASISTENCIA), requestEncriptado, laanterior)
         } else {
             finish()
         }
     }
 
-    private fun onEstadoAsistenciaSeccion(url: String, request: JSONObject, laanterior: Boolean) {
+    private fun onEstadoAsistenciaSeccion(url: String, request: JSONObject?, laanterior: Boolean) {
         prbCargando_tomarasistencia.visibility = View.VISIBLE
         requestQueue = Volley.newRequestQueue(this)
         //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
@@ -120,8 +124,9 @@ class TomarAsistenciaActivity : AppCompatActivity() {
                 try {
                     var consultarAnterior = false
                     if (!response.isNull("ListarAsistenciaAlumnosxSeccionResult")) {
-                        val listaAlumnoJArray = response["ListarAsistenciaAlumnosxSeccionResult"] as JSONArray
-                        if (listaAlumnoJArray.length() > 0) {
+
+                        val listaAlumnoJArray = Utilitarios.jsArrayDesencriptar(response["ListarAsistenciaAlumnosxSeccionResult"] as String, this)
+                        if (listaAlumnoJArray!!.length() > 0) {
                             listaAlumnos = ArrayList()
 
                             for (z in 0 until listaAlumnoJArray.length()) {
@@ -140,7 +145,6 @@ class TomarAsistenciaActivity : AppCompatActivity() {
 
                                 consultarAnterior = estadoAsistencia.isEmpty()
                                 llenarMasivoAsistencia = estadoAsistencia.isEmpty()
-
 
                                 val alumno = Alumno(codigo, idactor, nombrecompleto, email, estadonombre, procActual, procInhabilitado)
                                 alumno.estadoAsistencia = estadoAsistencia
@@ -161,40 +165,68 @@ class TomarAsistenciaActivity : AppCompatActivity() {
                                     getEstadoAsistenciaSeccion(true)
                                 }
                             }
+                            rvAlumno_tomarasistencia.visibility = View.VISIBLE
+                            prbCargando_tomarasistencia.visibility = View.GONE
+                            lblSMarcaTodo_tomarasistencia.visibility = View.VISIBLE
+                            sgMarca_tomarasistencia.visibility = View.VISIBLE
+                            asistencia_empty_text_view.visibility = View.GONE
                         } else {
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.advertencia_no_informacion), Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
-                            snack.show()
+                            rvAlumno_tomarasistencia.visibility = View.GONE
+                            prbCargando_tomarasistencia.visibility = View.GONE
+                            lblSMarcaTodo_tomarasistencia.visibility = View.GONE
+                            sgMarca_tomarasistencia.visibility = View.GONE
+                            asistencia_empty_text_view.visibility = View.VISIBLE
+                            asistencia_empty_text_view.text = getString(R.string.advertencia_no_informacion)
                         }
                     } else {
-                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_intentelo_mas_tarde), Snackbar.LENGTH_LONG)
-                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.warning))
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.warning_text))
-                        snack.show()
+                        rvAlumno_tomarasistencia.visibility = View.GONE
+                        prbCargando_tomarasistencia.visibility = View.GONE
+                        lblSMarcaTodo_tomarasistencia.visibility = View.GONE
+                        sgMarca_tomarasistencia.visibility = View.GONE
+                        asistencia_empty_text_view.visibility = View.VISIBLE
+                        asistencia_empty_text_view.text = getString(R.string.error_intentelo_mas_tarde)
                     }
                 } catch (jex: JSONException) {
-                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                    snack.show()
+                    rvAlumno_tomarasistencia.visibility = View.GONE
+                    prbCargando_tomarasistencia.visibility = View.GONE
+                    lblSMarcaTodo_tomarasistencia.visibility = View.GONE
+                    sgMarca_tomarasistencia.visibility = View.GONE
+                    asistencia_empty_text_view.visibility = View.VISIBLE
+                    asistencia_empty_text_view.text = getString(R.string.error_respuesta_server)
                 }
-                prbCargando_tomarasistencia.visibility = View.GONE
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onEstadoAsistenciaSeccion(url, request, laanterior)
-                        } else {
-                            prbCargando_tomarasistencia.visibility = View.GONE
+                when {
+                    error is TimeoutError -> {
+                        rvAlumno_tomarasistencia.visibility = View.GONE
+                        prbCargando_tomarasistencia.visibility = View.GONE
+                        lblSMarcaTodo_tomarasistencia.visibility = View.GONE
+                        sgMarca_tomarasistencia.visibility = View.GONE
+                        asistencia_empty_text_view.visibility = View.VISIBLE
+                        asistencia_empty_text_view.text = getString(R.string.error_respuesta_server)
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onEstadoAsistenciaSeccion(url, request, laanterior)
+                            } else {
+                                rvAlumno_tomarasistencia.visibility = View.GONE
+                                prbCargando_tomarasistencia.visibility = View.GONE
+                                lblSMarcaTodo_tomarasistencia.visibility = View.GONE
+                                sgMarca_tomarasistencia.visibility = View.GONE
+                                asistencia_empty_text_view.visibility = View.VISIBLE
+                                asistencia_empty_text_view.text = getString(R.string.error_respuesta_server)
+                            }
                         }
                     }
-                } else {
-                    prbCargando_tomarasistencia.visibility = View.GONE
+                    else -> {
+                        rvAlumno_tomarasistencia.visibility = View.GONE
+                        prbCargando_tomarasistencia.visibility = View.GONE
+                        lblSMarcaTodo_tomarasistencia.visibility = View.GONE
+                        sgMarca_tomarasistencia.visibility = View.GONE
+                        asistencia_empty_text_view.visibility = View.VISIBLE
+                        asistencia_empty_text_view.text = getString(R.string.error_respuesta_server)
+                    }
                 }
 
             }
@@ -205,6 +237,7 @@ class TomarAsistenciaActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -289,28 +322,34 @@ class TomarAsistenciaActivity : AppCompatActivity() {
 
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onAsistencia(re, request, url)
-                        } else {
-                            CustomDialog.instance.dialogoCargando?.dismiss()
+                when {
+                    error is TimeoutError -> {
+                        onAsistencia(re, request, url)
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onAsistencia(re, request, url)
+                            } else {
+                                CustomDialog.instance.dialogoCargando?.dismiss()
 
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                            snack.show()
+                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                snack.show()
+                            }
                         }
                     }
-                } else {
-                    CustomDialog.instance.dialogoCargando?.dismiss()
+                    else -> {
+                        CustomDialog.instance.dialogoCargando?.dismiss()
 
-                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                    snack.show()
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
                 }
 
             }
@@ -321,8 +360,8 @@ class TomarAsistenciaActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
-
         requestQueueRegAsis?.add(jsObjectRequest)
     }
 
@@ -381,26 +420,32 @@ class TomarAsistenciaActivity : AppCompatActivity() {
 
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            copiarAsistencias(requestEncriptado, id, request)
-                        } else {
-                            CustomDialog.instance.dialogoCargando?.dismiss()
+                when {
+                    error is TimeoutError -> {
+                        copiarAsistencias(requestEncriptado, id, request)
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                copiarAsistencias(requestEncriptado, id, request)
+                            } else {
+                                CustomDialog.instance.dialogoCargando?.dismiss()
 
-                            ControlUsuario.instance.recargaHorarioProfesor = true
-                            ControlUsuario.instance.cambioPantalla = false
-                            ControlUsuario.instance.pantallaSuspendida = false
-                            finish()
+                                ControlUsuario.instance.recargaHorarioProfesor = true
+                                ControlUsuario.instance.cambioPantalla = false
+                                ControlUsuario.instance.pantallaSuspendida = false
+                                finish()
+                            }
                         }
                     }
-                } else {
-                    CustomDialog.instance.dialogoCargando?.dismiss()
+                    else -> {
+                        CustomDialog.instance.dialogoCargando?.dismiss()
 
-                    ControlUsuario.instance.recargaHorarioProfesor = true
-                    ControlUsuario.instance.cambioPantalla = false
-                    ControlUsuario.instance.pantallaSuspendida = false
-                    finish()
+                        ControlUsuario.instance.recargaHorarioProfesor = true
+                        ControlUsuario.instance.cambioPantalla = false
+                        ControlUsuario.instance.pantallaSuspendida = false
+                        finish()
+                    }
                 }
 
             }
@@ -411,8 +456,8 @@ class TomarAsistenciaActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
-
         requestQueueRegAsis?.add(jsObjectRequest)
     }
 
@@ -462,7 +507,6 @@ class TomarAsistenciaActivity : AppCompatActivity() {
     private fun validarAsistenciaCompleta() : EstadoAsistencia {
         val respuesta = EstadoAsistencia(false, null)
 
-        //val asistenciaJs = JSONObject()
         val asisnteciaAlumnoJs = JSONObject()
 
         asistencias = 0
@@ -509,8 +553,6 @@ class TomarAsistenciaActivity : AppCompatActivity() {
                 asisnteciaAlumnoJs.put("ListaAlumnosTarde", eliminarUltimoCaracter(Tardanza))
                 asisnteciaAlumnoJs.put("ListaAlumnosFalta", eliminarUltimoCaracter(Falta))
 
-                //asistenciaJs.put("objAsistencia", asisnteciaAlumnoJs)
-
                 respuesta.puedeenviar = true
                 respuesta.asistencias = asisnteciaAlumnoJs
                 return respuesta
@@ -536,8 +578,8 @@ class TomarAsistenciaActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 showBackButton()
                 return true

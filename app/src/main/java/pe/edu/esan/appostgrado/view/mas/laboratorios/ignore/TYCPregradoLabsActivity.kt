@@ -38,7 +38,7 @@ class TYCPregradoLabsActivity : AppCompatActivity() {
         webview_tyc.visibility = View.GONE
 
         if(intent.hasExtra("url_tyc")) {
-            val urlTYC = intent.getStringExtra("url_tyc")
+            val urlTYC = intent.getStringExtra("url_tyc") ?: ""
             webview_tyc.clearCache(true)
             webview_tyc.clearFormData()
             webview_tyc.clearHistory()

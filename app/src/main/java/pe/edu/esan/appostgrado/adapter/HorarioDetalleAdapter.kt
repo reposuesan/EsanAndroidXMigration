@@ -87,7 +87,7 @@ class HorarioDetalleAdapter (val listaHorario: List<Horario>, val clickListener:
                             intentAR.putExtra("buscar", horario.idAmbiente.toString())
                             itemView.context.startActivity(intentAR)
                         } else {
-                            //val snack = Snackbar.make(itemView.findViewById(android.R.id.content), itemView.resources.getString(R.string.error_permiso_gps), Snackbar.LENGTH_LONG)
+
                             val snack = Snackbar.make(itemView, itemView.resources.getString(R.string.error_permiso_gps), Snackbar.LENGTH_LONG)
                             snack.view.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.warning))
                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.REGULAR)
@@ -95,7 +95,7 @@ class HorarioDetalleAdapter (val listaHorario: List<Horario>, val clickListener:
                             snack.show()
                         }
                     } else {
-                        //val snack = Snackbar.make(itemView.findViewById(android.R.id.content), itemView.resources.getString(R.string.error_permiso_camara), Snackbar.LENGTH_LONG)
+
                         val snack = Snackbar.make(itemView, itemView.resources.getString(R.string.error_permiso_camara), Snackbar.LENGTH_LONG)
                         snack.view.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.warning))
                         snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.REGULAR)
@@ -103,7 +103,7 @@ class HorarioDetalleAdapter (val listaHorario: List<Horario>, val clickListener:
                         snack.show()
                     }
                 } else {
-                    //val snack = Snackbar.make(itemView.findViewById(android.R.id.content), itemView.resources.getString(R.string.error_sensores_ra), Snackbar.LENGTH_LONG)
+
                     val snack = Snackbar.make(itemView, itemView.resources.getString(R.string.error_sensores_ra), Snackbar.LENGTH_LONG)
                     snack.view.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.danger))
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.REGULAR)
@@ -147,7 +147,7 @@ class HorarioDetalleAdapter (val listaHorario: List<Horario>, val clickListener:
                             intentAR.putExtra("buscar", horario.idAmbiente.toString())
                             itemView.context.startActivity(intentAR)
                         } else {
-                            //val snack = Snackbar.make(itemView.findViewById(android.R.id.content), itemView.resources.getString(R.string.error_permiso_gps), Snackbar.LENGTH_LONG)
+
                             val snack = Snackbar.make(itemView, itemView.resources.getString(R.string.error_permiso_gps), Snackbar.LENGTH_LONG)
                             snack.view.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.warning))
                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.REGULAR)
@@ -155,7 +155,7 @@ class HorarioDetalleAdapter (val listaHorario: List<Horario>, val clickListener:
                             snack.show()
                         }
                     } else {
-                        //val snack = Snackbar.make(itemView.findViewById(android.R.id.content), itemView.resources.getString(R.string.error_permiso_camara), Snackbar.LENGTH_LONG)
+
                         val snack = Snackbar.make(itemView, itemView.resources.getString(R.string.error_permiso_camara), Snackbar.LENGTH_LONG)
                         snack.view.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.warning))
                         snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.REGULAR)
@@ -163,7 +163,7 @@ class HorarioDetalleAdapter (val listaHorario: List<Horario>, val clickListener:
                         snack.show()
                     }
                 } else {
-                    //val snack = Snackbar.make(itemView.findViewById(android.R.id.content), itemView.resources.getString(R.string.error_sensores_ra), Snackbar.LENGTH_LONG)
+
                     val snack = Snackbar.make(itemView, itemView.resources.getString(R.string.error_sensores_ra), Snackbar.LENGTH_LONG)
                     snack.view.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.danger))
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.REGULAR)
@@ -248,7 +248,7 @@ class HorarioDetalleAdapter (val listaHorario: List<Horario>, val clickListener:
                             intentAR.putExtra("buscar", horario.idAmbiente.toString())
                             itemView.context.startActivity(intentAR)
                         } else {
-                            //val snack = Snackbar.make(itemView.findViewById(android.R.id.content), itemView.resources.getString(R.string.error_permiso_gps), Snackbar.LENGTH_LONG)
+
                             val snack = Snackbar.make(itemView, itemView.resources.getString(R.string.error_permiso_gps), Snackbar.LENGTH_LONG)
                             snack.view.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.warning))
                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.REGULAR)
@@ -256,7 +256,7 @@ class HorarioDetalleAdapter (val listaHorario: List<Horario>, val clickListener:
                             snack.show()
                         }
                     } else {
-                        //val snack = Snackbar.make(itemView.findViewById(android.R.id.content), itemView.resources.getString(R.string.error_permiso_camara), Snackbar.LENGTH_LONG)
+
                         val snack = Snackbar.make(itemView, itemView.resources.getString(R.string.error_permiso_camara), Snackbar.LENGTH_LONG)
                         snack.view.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.warning))
                         snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.REGULAR)
@@ -264,7 +264,7 @@ class HorarioDetalleAdapter (val listaHorario: List<Horario>, val clickListener:
                         snack.show()
                     }
                 } else {
-                    //val snack = Snackbar.make(itemView.findViewById(android.R.id.content), itemView.resources.getString(R.string.error_sensores_ra), Snackbar.LENGTH_LONG)
+
                     val snack = Snackbar.make(itemView, itemView.resources.getString(R.string.error_sensores_ra), Snackbar.LENGTH_LONG)
                     snack.view.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.danger))
                     snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.REGULAR)

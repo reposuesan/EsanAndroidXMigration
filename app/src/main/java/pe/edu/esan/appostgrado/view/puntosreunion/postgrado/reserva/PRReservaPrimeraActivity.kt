@@ -692,8 +692,8 @@ class PRReservaPrimeraActivity : AppCompatActivity(){
         controlViewModel.insertDataToRoom()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 finish()
                 return true

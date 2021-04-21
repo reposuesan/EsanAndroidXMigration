@@ -169,7 +169,7 @@ class Utilitarios {
         private const val Release = true
 
         private const val DominioPortal = "https://movilrestws.esan.edu.pe"
-        private const val DominioPortalTest = "https://movilrestws.esan.edu.pe"
+        private const val DominioPortalTest = "https://qasmovilrestws.esan.edu.pe"
 
         private const val DominioUE = "https://intranetmovil.ue.edu.pe"
         private const val DominioUETest = "https://intranetmovil.ue.edu.pe"

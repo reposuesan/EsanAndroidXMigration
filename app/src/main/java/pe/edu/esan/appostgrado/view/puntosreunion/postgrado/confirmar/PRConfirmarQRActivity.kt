@@ -79,7 +79,7 @@ class PRConfirmarQRActivity : AppCompatActivity() {
                 .build()
 
         svCamara_prconfirmarqr.holder.addCallback(object: SurfaceHolder.Callback {
-            override fun surfaceCreated(p0: SurfaceHolder?) {
+            override fun surfaceCreated(p0: SurfaceHolder) {
 
 
                 if (ActivityCompat.checkSelfPermission(this@PRConfirmarQRActivity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
@@ -93,11 +93,11 @@ class PRConfirmarQRActivity : AppCompatActivity() {
 
             }
 
-            override fun surfaceChanged(p0: SurfaceHolder?, p1: Int, p2: Int, p3: Int) {
+            override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
 
             }
 
-            override fun surfaceDestroyed(p0: SurfaceHolder?) {
+            override fun surfaceDestroyed(p0: SurfaceHolder) {
                 cameraSource.stop()
             }
         })

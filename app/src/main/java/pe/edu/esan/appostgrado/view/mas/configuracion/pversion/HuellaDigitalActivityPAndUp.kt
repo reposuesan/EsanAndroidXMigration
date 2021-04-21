@@ -179,8 +179,8 @@ class HuellaDigitalActivityPAndUp : AppCompatActivity(), BiometricHelper.Biometr
             .authenticate(mCancellationSignal, mainExecutor, biometricHelper)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             android.R.id.home -> {
                 finish()
                 return true

@@ -74,8 +74,8 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
 
         val usuarioActual = intent.getStringExtra("codigo_alumno")
 
-        promocion = intent.getStringExtra("promocion")
-        direccion = intent.getStringExtra("direccion")
+        promocion = intent.getStringExtra("promocion") ?: ""
+        direccion = intent.getStringExtra("direccion") ?: ""
 
         userIsOut = false
 

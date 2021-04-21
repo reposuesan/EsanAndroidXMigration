@@ -761,7 +761,7 @@ fun Context.renewToken(callbackToken: (jwtNewToken: String?) -> Unit){
         )
 
         jsObjectRequest.retryPolicy = DefaultRetryPolicy(
-            3000,
+            15000,
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
             DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
         )

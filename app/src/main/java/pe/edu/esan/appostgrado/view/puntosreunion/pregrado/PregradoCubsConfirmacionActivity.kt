@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.snackbar.Snackbar
@@ -101,26 +102,37 @@ class PregradoCubsConfirmacionActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                confirmarPrereservaServicio(url, request)
-                            } else {
-                                val showAlertHelper = ShowAlertHelper(this)
-                                showAlertHelper.showAlertError(
-                                    getString(R.string.error),
-                                    getString(R.string.error_no_conexion),
-                                    null
-                                )
+                    when {
+                        error is TimeoutError -> {
+                            val showAlertHelper = ShowAlertHelper(this)
+                            showAlertHelper.showAlertError(
+                                getString(R.string.error),
+                                getString(R.string.error_no_conexion),
+                                null
+                            )
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    confirmarPrereservaServicio(url, request)
+                                } else {
+                                    val showAlertHelper = ShowAlertHelper(this)
+                                    showAlertHelper.showAlertError(
+                                        getString(R.string.error),
+                                        getString(R.string.error_no_conexion),
+                                        null
+                                    )
+                                }
                             }
                         }
-                    } else {
-                        val showAlertHelper = ShowAlertHelper(this)
-                        showAlertHelper.showAlertError(
-                            getString(R.string.error),
-                            getString(R.string.error_no_conexion),
-                            null
-                        )
+                        else -> {
+                            val showAlertHelper = ShowAlertHelper(this)
+                            showAlertHelper.showAlertError(
+                                getString(R.string.error),
+                                getString(R.string.error_no_conexion),
+                                null
+                            )
+                        }
                     }
 
                 }

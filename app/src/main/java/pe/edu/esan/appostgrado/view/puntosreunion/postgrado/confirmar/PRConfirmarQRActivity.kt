@@ -14,8 +14,10 @@ import android.view.SurfaceHolder
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.Response
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.gms.vision.CameraSource
@@ -229,28 +231,40 @@ class PRConfirmarQRActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onConfirmarReservaQR(url, request, idReservaConfirmar)
-                        } else {
-                            prbCargando_prconfirmarqr.visibility = View.GONE
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                            snack.show()
-                            finish()
+                when {
+                    error is TimeoutError -> {
+                        prbCargando_prconfirmarqr.visibility = View.GONE
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                        finish()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onConfirmarReservaQR(url, request, idReservaConfirmar)
+                            } else {
+                                prbCargando_prconfirmarqr.visibility = View.GONE
+                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                snack.show()
+                                finish()
+                            }
                         }
                     }
-                } else {
-                    prbCargando_prconfirmarqr.visibility = View.GONE
-                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                    snack.show()
-                    finish()
+                    else -> {
+                        prbCargando_prconfirmarqr.visibility = View.GONE
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                        finish()
+                    }
                 }
 
             }
@@ -261,6 +275,7 @@ class PRConfirmarQRActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -351,28 +366,40 @@ class PRConfirmarQRActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onCambiarReserva(url, request)
-                        } else {
-                            prbCargando_prconfirmarqr.visibility = View.GONE
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                            snack.show()
-                            finish()
+                when {
+                    error is TimeoutError -> {
+                        prbCargando_prconfirmarqr.visibility = View.GONE
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                        finish()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onCambiarReserva(url, request)
+                            } else {
+                                prbCargando_prconfirmarqr.visibility = View.GONE
+                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                snack.show()
+                                finish()
+                            }
                         }
                     }
-                } else {
-                    prbCargando_prconfirmarqr.visibility = View.GONE
-                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                    snack.show()
-                    finish()
+                    else -> {
+                        prbCargando_prconfirmarqr.visibility = View.GONE
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                        finish()
+                    }
                 }
 
             }
@@ -383,6 +410,7 @@ class PRConfirmarQRActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

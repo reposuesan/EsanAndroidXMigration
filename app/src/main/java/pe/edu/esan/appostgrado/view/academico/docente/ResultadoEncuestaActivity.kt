@@ -256,24 +256,28 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error is TimeoutError) {
-                    lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
-                    lblMensaje_resultadoencuesta.visibility = View.VISIBLE
-                    prbCargando_resultadoencuesta.visibility = View.GONE
-                } else if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onResultadoEncuestaDetalle(url, request, resultadoEncuesta)
-                        } else {
-                            lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
-                            lblMensaje_resultadoencuesta.visibility = View.VISIBLE
-                            prbCargando_resultadoencuesta.visibility = View.GONE
+                when {
+                    error is TimeoutError -> {
+                        lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                        lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                        prbCargando_resultadoencuesta.visibility = View.GONE
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onResultadoEncuestaDetalle(url, request, resultadoEncuesta)
+                            } else {
+                                lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                                lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                                prbCargando_resultadoencuesta.visibility = View.GONE
+                            }
                         }
                     }
-                } else {
-                    lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
-                    lblMensaje_resultadoencuesta.visibility = View.VISIBLE
-                    prbCargando_resultadoencuesta.visibility = View.GONE
+                    else -> {
+                        lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
+                        lblMensaje_resultadoencuesta.visibility = View.VISIBLE
+                        prbCargando_resultadoencuesta.visibility = View.GONE
+                    }
                 }
             }
         )

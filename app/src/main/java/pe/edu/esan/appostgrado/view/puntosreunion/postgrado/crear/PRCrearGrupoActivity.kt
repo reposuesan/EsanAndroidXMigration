@@ -13,9 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
@@ -235,26 +233,37 @@ class PRCrearGrupoActivity : AppCompatActivity() {
 
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onAlumnosSinGrupo(url, request, alumnoActual)
-                        } else {
-                            prbCargando_prcreargrupo.visibility = View.GONE
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                            snack.show()
+                when {
+                    error is TimeoutError -> {
+                        prbCargando_prcreargrupo.visibility = View.GONE
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onAlumnosSinGrupo(url, request, alumnoActual)
+                            } else {
+                                prbCargando_prcreargrupo.visibility = View.GONE
+                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                snack.show()
+                            }
                         }
                     }
-                } else {
-                    prbCargando_prcreargrupo.visibility = View.GONE
-                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                    snack.show()
+                    else -> {
+                        prbCargando_prcreargrupo.visibility = View.GONE
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
                 }
 
             }
@@ -265,6 +274,7 @@ class PRCrearGrupoActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -354,26 +364,37 @@ class PRCrearGrupoActivity : AppCompatActivity() {
                 CustomDialog.instance.dialogoCargando?.dismiss()
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onEliminarAlumnoGrupo(url, request, alumnoSelect, position)
-                        } else {
-                            CustomDialog.instance.dialogoCargando?.dismiss()
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                            snack.show()
+                when {
+                    error is TimeoutError -> {
+                        CustomDialog.instance.dialogoCargando?.dismiss()
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onEliminarAlumnoGrupo(url, request, alumnoSelect, position)
+                            } else {
+                                CustomDialog.instance.dialogoCargando?.dismiss()
+                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                snack.show()
+                            }
                         }
                     }
-                } else {
-                    CustomDialog.instance.dialogoCargando?.dismiss()
-                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                    snack.show()
+                    else -> {
+                        CustomDialog.instance.dialogoCargando?.dismiss()
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
                 }
 
             }
@@ -384,6 +405,7 @@ class PRCrearGrupoActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueueEliminar?.add(jsObjectRequest)
     }
@@ -482,26 +504,37 @@ class PRCrearGrupoActivity : AppCompatActivity() {
                 CustomDialog.instance.dialogoCargando?.dismiss()
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onAgregarAlumnoGrupo(url, request, alumnoSelect, position)
-                        } else {
-                            CustomDialog.instance.dialogoCargando?.dismiss()
-                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                            snack.show()
+                when {
+                    error is TimeoutError -> {
+                        CustomDialog.instance.dialogoCargando?.dismiss()
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onAgregarAlumnoGrupo(url, request, alumnoSelect, position)
+                            } else {
+                                CustomDialog.instance.dialogoCargando?.dismiss()
+                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                snack.show()
+                            }
                         }
                     }
-                } else {
-                    CustomDialog.instance.dialogoCargando?.dismiss()
-                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                    snack.show()
+                    else -> {
+                        CustomDialog.instance.dialogoCargando?.dismiss()
+                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
                 }
 
             }
@@ -512,6 +545,7 @@ class PRCrearGrupoActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueueAgregar?.add(jsObjectRequest)
     }

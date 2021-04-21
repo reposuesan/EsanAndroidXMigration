@@ -13,10 +13,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
@@ -219,22 +216,31 @@ class PregradoCubsRegistroActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                verificarGrupoAlumnosReservaServicio(url, request)
-                            } else {
-                                main_container_registro_cubs.visibility = View.GONE
-                                progress_bar_registro_prereserva_pp.visibility = View.GONE
-                                empty_text_view_registro.visibility = View.VISIBLE
-                                empty_text_view_registro.text = getString(R.string.no_respuesta_desde_servidor)
+                    when {
+                        error is TimeoutError -> {
+                            main_container_registro_cubs.visibility = View.GONE
+                            progress_bar_registro_prereserva_pp.visibility = View.GONE
+                            empty_text_view_registro.visibility = View.VISIBLE
+                            empty_text_view_registro.text = getString(R.string.no_respuesta_desde_servidor)
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    verificarGrupoAlumnosReservaServicio(url, request)
+                                } else {
+                                    main_container_registro_cubs.visibility = View.GONE
+                                    progress_bar_registro_prereserva_pp.visibility = View.GONE
+                                    empty_text_view_registro.visibility = View.VISIBLE
+                                    empty_text_view_registro.text = getString(R.string.no_respuesta_desde_servidor)
+                                }
                             }
                         }
-                    } else {
-                        main_container_registro_cubs.visibility = View.GONE
-                        progress_bar_registro_prereserva_pp.visibility = View.GONE
-                        empty_text_view_registro.visibility = View.VISIBLE
-                        empty_text_view_registro.text = getString(R.string.no_respuesta_desde_servidor)
+                        else -> {
+                            main_container_registro_cubs.visibility = View.GONE
+                            progress_bar_registro_prereserva_pp.visibility = View.GONE
+                            empty_text_view_registro.visibility = View.VISIBLE
+                            empty_text_view_registro.text = getString(R.string.no_respuesta_desde_servidor)
+                        }
                     }
                 }
             )

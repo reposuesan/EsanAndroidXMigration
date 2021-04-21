@@ -10,8 +10,10 @@ import androidx.appcompat.widget.Toolbar
 import android.util.DisplayMetrics
 import android.view.MenuItem
 import android.view.View
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.Response
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
@@ -134,20 +136,28 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onAlumnosAsistencia(url, request)
-                        } else {
-                            prbCargando_seguimientoalumno.visibility = View.GONE
-                            lblMensaje_seguimientoalumno.visibility = View.VISIBLE
-                            lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
+                when {
+                    error is TimeoutError -> {
+                        prbCargando_seguimientoalumno.visibility = View.GONE
+                        lblMensaje_seguimientoalumno.visibility = View.VISIBLE
+                        lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onAlumnosAsistencia(url, request)
+                            } else {
+                                prbCargando_seguimientoalumno.visibility = View.GONE
+                                lblMensaje_seguimientoalumno.visibility = View.VISIBLE
+                                lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
+                            }
                         }
                     }
-                } else {
-                    prbCargando_seguimientoalumno.visibility = View.GONE
-                    lblMensaje_seguimientoalumno.visibility = View.VISIBLE
-                    lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
+                    else -> {
+                        prbCargando_seguimientoalumno.visibility = View.GONE
+                        lblMensaje_seguimientoalumno.visibility = View.VISIBLE
+                        lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)
+                    }
                 }
 
             }
@@ -158,6 +168,7 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

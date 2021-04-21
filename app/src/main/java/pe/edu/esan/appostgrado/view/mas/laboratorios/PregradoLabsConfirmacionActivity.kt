@@ -7,10 +7,7 @@ import androidx.core.content.ContextCompat
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
@@ -85,16 +82,22 @@ class PregradoLabsConfirmacionActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                confirmarPrereservaServicio(url, request)
-                            } else {
-                                tv_mensaje_confirmacion_prereserva_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                    when {
+                        error is TimeoutError -> {
+                            tv_mensaje_confirmacion_prereserva_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    confirmarPrereservaServicio(url, request)
+                                } else {
+                                    tv_mensaje_confirmacion_prereserva_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                                }
                             }
                         }
-                    } else {
-                        tv_mensaje_confirmacion_prereserva_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                        else -> {
+                            tv_mensaje_confirmacion_prereserva_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                        }
                     }
                 }
             )

@@ -10,8 +10,10 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.Response
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_historico_notas_pre.*
@@ -144,20 +146,28 @@ class HistoricoNotasPreActivity : AppCompatActivity() {
                 prbCargando_historiconotaspre.visibility = View.GONE
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onHistoricoNotas(url, request)
-                        } else {
-                            prbCargando_historiconotaspre.visibility = View.GONE
-                            lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                            lblMensaje_historiconotaspre.visibility = View.VISIBLE
+                when {
+                    error is TimeoutError -> {
+                        prbCargando_historiconotaspre.visibility = View.GONE
+                        lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_historiconotaspre.visibility = View.VISIBLE
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onHistoricoNotas(url, request)
+                            } else {
+                                prbCargando_historiconotaspre.visibility = View.GONE
+                                lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                                lblMensaje_historiconotaspre.visibility = View.VISIBLE
+                            }
                         }
                     }
-                } else {
-                    prbCargando_historiconotaspre.visibility = View.GONE
-                    lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
-                    lblMensaje_historiconotaspre.visibility = View.VISIBLE
+                    else -> {
+                        prbCargando_historiconotaspre.visibility = View.GONE
+                        lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_historiconotaspre.visibility = View.VISIBLE
+                    }
                 }
 
             }
@@ -168,6 +178,7 @@ class HistoricoNotasPreActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

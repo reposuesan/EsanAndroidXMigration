@@ -20,9 +20,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -379,43 +377,60 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            getConsultarAsistenciaProfesor(
-                                url,
-                                request,
-                                requestSinEncriptar,
-                                curso,
-                                horario)
-                        } else {
-                            ControlUsuario.instance.indexActualiza = -1
-                            val snack = Snackbar.make(
-                                findViewById(android.R.id.content),
-                                resources.getString(R.string.error_no_conexion),
-                                Snackbar.LENGTH_LONG
-                            )
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
-                                Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                                .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                            snack.show()
+                when {
+                    error is TimeoutError -> {
+                        ControlUsuario.instance.indexActualiza = -1
+                        val snack = Snackbar.make(
+                            findViewById(android.R.id.content),
+                            resources.getString(R.string.error_no_conexion),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
+                            Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                            .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                getConsultarAsistenciaProfesor(
+                                    url,
+                                    request,
+                                    requestSinEncriptar,
+                                    curso,
+                                    horario)
+                            } else {
+                                ControlUsuario.instance.indexActualiza = -1
+                                val snack = Snackbar.make(
+                                    findViewById(android.R.id.content),
+                                    resources.getString(R.string.error_no_conexion),
+                                    Snackbar.LENGTH_LONG
+                                )
+                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
+                                    Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                                    .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                snack.show()
+                            }
                         }
                     }
-                } else {
-                    ControlUsuario.instance.indexActualiza = -1
-                    val snack = Snackbar.make(
-                        findViewById(android.R.id.content),
-                        resources.getString(R.string.error_no_conexion),
-                        Snackbar.LENGTH_LONG
-                    )
-                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
-                        Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                        .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                    snack.show()
+                    else -> {
+                        ControlUsuario.instance.indexActualiza = -1
+                        val snack = Snackbar.make(
+                            findViewById(android.R.id.content),
+                            resources.getString(R.string.error_no_conexion),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
+                            Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                            .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
                 }
 
             }
@@ -426,6 +441,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -536,36 +552,52 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onRegistrarAsistenciaProfesor(url, request, horario)
-                        } else {
-                            val snack = Snackbar.make(
-                                findViewById(android.R.id.content),
-                                resources.getString(R.string.error_no_conexion),
-                                Snackbar.LENGTH_LONG
-                            )
-                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
-                                Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                                .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                            snack.show()
+                when {
+                    error is TimeoutError -> {
+                        val snack = Snackbar.make(
+                            findViewById(android.R.id.content),
+                            resources.getString(R.string.error_no_conexion),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
+                            Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                            .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onRegistrarAsistenciaProfesor(url, request, horario)
+                            } else {
+                                val snack = Snackbar.make(
+                                    findViewById(android.R.id.content),
+                                    resources.getString(R.string.error_no_conexion),
+                                    Snackbar.LENGTH_LONG
+                                )
+                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
+                                    Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                                    .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                snack.show()
+                            }
                         }
                     }
-                } else {
-                    val snack = Snackbar.make(
-                        findViewById(android.R.id.content),
-                        resources.getString(R.string.error_no_conexion),
-                        Snackbar.LENGTH_LONG
-                    )
-                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
-                        Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                        .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                    snack.show()
+                    else -> {
+                        val snack = Snackbar.make(
+                            findViewById(android.R.id.content),
+                            resources.getString(R.string.error_no_conexion),
+                            Snackbar.LENGTH_LONG
+                        )
+                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface =
+                            Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                            .setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                        snack.show()
+                    }
                 }
 
             }
@@ -576,6 +608,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueueRegAsisProf?.add(jsObjectRequest)
     }

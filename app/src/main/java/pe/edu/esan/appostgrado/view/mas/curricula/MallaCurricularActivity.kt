@@ -12,8 +12,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.Response
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
@@ -129,7 +131,9 @@ class MallaCurricularActivity : AppCompatActivity() {
 
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
+                if(error is TimeoutError) {
+                    Log.e(LOG,"An error occurred")
+                } else if(error.networkResponse.statusCode == 401) {
                     renewToken { token ->
                         if(!token.isNullOrEmpty()){
                             onHistoricoResumen(url, request)
@@ -262,20 +266,28 @@ class MallaCurricularActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onMallaCurricular(url, request)
-                        } else {
-                            prbCargando_mallacurricular.visibility = View.GONE
-                            lblMensaje_mallacurricular.visibility = View.VISIBLE
-                            lblMensaje_mallacurricular.text = resources.getString(R.string.error_no_conexion)
+                when {
+                    error is TimeoutError -> {
+                        prbCargando_mallacurricular.visibility = View.GONE
+                        lblMensaje_mallacurricular.visibility = View.VISIBLE
+                        lblMensaje_mallacurricular.text = resources.getString(R.string.error_no_conexion)
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onMallaCurricular(url, request)
+                            } else {
+                                prbCargando_mallacurricular.visibility = View.GONE
+                                lblMensaje_mallacurricular.visibility = View.VISIBLE
+                                lblMensaje_mallacurricular.text = resources.getString(R.string.error_no_conexion)
+                            }
                         }
                     }
-                } else {
-                    prbCargando_mallacurricular.visibility = View.GONE
-                    lblMensaje_mallacurricular.visibility = View.VISIBLE
-                    lblMensaje_mallacurricular.text = resources.getString(R.string.error_no_conexion)
+                    else -> {
+                        prbCargando_mallacurricular.visibility = View.GONE
+                        lblMensaje_mallacurricular.visibility = View.VISIBLE
+                        lblMensaje_mallacurricular.text = resources.getString(R.string.error_no_conexion)
+                    }
                 }
             }
         )
@@ -285,7 +297,7 @@ class MallaCurricularActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
-
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

@@ -10,14 +10,13 @@ import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import kotlinx.android.synthetic.main.activity_prmis_reservas.*
 import kotlinx.android.synthetic.main.toolbar_menuprincipal.view.*
+import okio.Timeout
 import org.json.JSONException
 import org.json.JSONObject
 import pe.edu.esan.appostgrado.R
@@ -177,20 +176,28 @@ class PRMisReservasActivity : AppCompatActivity() {
 
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onMisReservas(url, request)
-                        } else {
-                            prbCargando_prmisreservas.visibility = View.GONE
-                            lblMensaje_prmisreservas.visibility = View.VISIBLE
-                            lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
+                when {
+                    error is TimeoutError -> {
+                        prbCargando_prmisreservas.visibility = View.GONE
+                        lblMensaje_prmisreservas.visibility = View.VISIBLE
+                        lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onMisReservas(url, request)
+                            } else {
+                                prbCargando_prmisreservas.visibility = View.GONE
+                                lblMensaje_prmisreservas.visibility = View.VISIBLE
+                                lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
+                            }
                         }
                     }
-                } else {
-                    prbCargando_prmisreservas.visibility = View.GONE
-                    lblMensaje_prmisreservas.visibility = View.VISIBLE
-                    lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
+                    else -> {
+                        prbCargando_prmisreservas.visibility = View.GONE
+                        lblMensaje_prmisreservas.visibility = View.VISIBLE
+                        lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)
+                    }
                 }
 
             }
@@ -201,6 +208,7 @@ class PRMisReservasActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

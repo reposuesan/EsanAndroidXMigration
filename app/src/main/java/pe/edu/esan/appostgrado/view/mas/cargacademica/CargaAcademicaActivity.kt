@@ -10,8 +10,10 @@ import androidx.appcompat.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.RequestQueue
 import com.android.volley.Response
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_carga_academica.*
@@ -203,20 +205,28 @@ class CargaAcademicaActivity : AppCompatActivity() {
                 prbCargando_cargacademica.visibility = View.GONE
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onCargaAcademica(url, request)
-                        } else {
-                            prbCargando_cargacademica.visibility = View.GONE
-                            lblMensaje_cargacademica.visibility = View.VISIBLE
-                            lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
+                when {
+                    error is TimeoutError -> {
+                        prbCargando_cargacademica.visibility = View.GONE
+                        lblMensaje_cargacademica.visibility = View.VISIBLE
+                        lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onCargaAcademica(url, request)
+                            } else {
+                                prbCargando_cargacademica.visibility = View.GONE
+                                lblMensaje_cargacademica.visibility = View.VISIBLE
+                                lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
+                            }
                         }
                     }
-                } else {
-                    prbCargando_cargacademica.visibility = View.GONE
-                    lblMensaje_cargacademica.visibility = View.VISIBLE
-                    lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
+                    else -> {
+                        prbCargando_cargacademica.visibility = View.GONE
+                        lblMensaje_cargacademica.visibility = View.VISIBLE
+                        lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)
+                    }
                 }
 
             }
@@ -227,6 +237,7 @@ class CargaAcademicaActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }

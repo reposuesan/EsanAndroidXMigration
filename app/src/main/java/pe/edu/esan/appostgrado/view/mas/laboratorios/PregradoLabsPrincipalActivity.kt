@@ -24,10 +24,7 @@ import android.widget.CheckBox
 
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_pregrado_labs_principal.*
@@ -365,24 +362,34 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                verificarAlumnoReservaServicio(url, request)
-                            } else {
-                                linear_layout_container_lab.visibility = View.GONE
-                                progress_bar_principal_labs.visibility = View.GONE
-                                empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                                empty_text_view_lab.visibility = View.VISIBLE
-                                checkbox_terminos_condiciones.visibility = View.GONE
+                    when {
+                        error is TimeoutError -> {
+                            linear_layout_container_lab.visibility = View.GONE
+                            progress_bar_principal_labs.visibility = View.GONE
+                            empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            empty_text_view_lab.visibility = View.VISIBLE
+                            checkbox_terminos_condiciones.visibility = View.GONE
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    verificarAlumnoReservaServicio(url, request)
+                                } else {
+                                    linear_layout_container_lab.visibility = View.GONE
+                                    progress_bar_principal_labs.visibility = View.GONE
+                                    empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                                    empty_text_view_lab.visibility = View.VISIBLE
+                                    checkbox_terminos_condiciones.visibility = View.GONE
+                                }
                             }
                         }
-                    } else {
-                        linear_layout_container_lab.visibility = View.GONE
-                        progress_bar_principal_labs.visibility = View.GONE
-                        empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                        empty_text_view_lab.visibility = View.VISIBLE
-                        checkbox_terminos_condiciones.visibility = View.GONE
+                        else -> {
+                            linear_layout_container_lab.visibility = View.GONE
+                            progress_bar_principal_labs.visibility = View.GONE
+                            empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            empty_text_view_lab.visibility = View.VISIBLE
+                            checkbox_terminos_condiciones.visibility = View.GONE
+                        }
                     }
                 }
             )
@@ -460,24 +467,34 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                verificarTipoPoliticaPortal(url, request)
-                            } else {
-                                linear_layout_container_lab.visibility = View.GONE
-                                empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                                empty_text_view_lab.visibility = View.VISIBLE
-                                checkbox_terminos_condiciones.visibility = View.GONE
-                                progress_bar_principal_labs.visibility = View.GONE
+                    when {
+                        error is TimeoutError -> {
+                            linear_layout_container_lab.visibility = View.GONE
+                            empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            empty_text_view_lab.visibility = View.VISIBLE
+                            checkbox_terminos_condiciones.visibility = View.GONE
+                            progress_bar_principal_labs.visibility = View.GONE
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    verificarTipoPoliticaPortal(url, request)
+                                } else {
+                                    linear_layout_container_lab.visibility = View.GONE
+                                    empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                                    empty_text_view_lab.visibility = View.VISIBLE
+                                    checkbox_terminos_condiciones.visibility = View.GONE
+                                    progress_bar_principal_labs.visibility = View.GONE
+                                }
                             }
                         }
-                    } else {
-                        linear_layout_container_lab.visibility = View.GONE
-                        empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                        empty_text_view_lab.visibility = View.VISIBLE
-                        checkbox_terminos_condiciones.visibility = View.GONE
-                        progress_bar_principal_labs.visibility = View.GONE
+                        else -> {
+                            linear_layout_container_lab.visibility = View.GONE
+                            empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            empty_text_view_lab.visibility = View.VISIBLE
+                            checkbox_terminos_condiciones.visibility = View.GONE
+                            progress_bar_principal_labs.visibility = View.GONE
+                        }
                     }
                 }
             )
@@ -552,22 +569,31 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                aceptarTipoPolitica(url, request)
-                            } else {
-                                linear_layout_container_lab.visibility = View.GONE
-                                empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                                empty_text_view_lab.visibility = View.VISIBLE
-                                progress_bar_principal_labs.visibility = View.GONE
+                    when {
+                        error is TimeoutError -> {
+                            linear_layout_container_lab.visibility = View.GONE
+                            empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            empty_text_view_lab.visibility = View.VISIBLE
+                            progress_bar_principal_labs.visibility = View.GONE
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    aceptarTipoPolitica(url, request)
+                                } else {
+                                    linear_layout_container_lab.visibility = View.GONE
+                                    empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                                    empty_text_view_lab.visibility = View.VISIBLE
+                                    progress_bar_principal_labs.visibility = View.GONE
+                                }
                             }
                         }
-                    } else {
-                        linear_layout_container_lab.visibility = View.GONE
-                        empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                        empty_text_view_lab.visibility = View.VISIBLE
-                        progress_bar_principal_labs.visibility = View.GONE
+                        else -> {
+                            linear_layout_container_lab.visibility = View.GONE
+                            empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            empty_text_view_lab.visibility = View.VISIBLE
+                            progress_bar_principal_labs.visibility = View.GONE
+                        }
                     }
 
                 }

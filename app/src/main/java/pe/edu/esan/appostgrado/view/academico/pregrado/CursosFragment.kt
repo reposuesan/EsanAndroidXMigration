@@ -506,7 +506,23 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
+                if(error is TimeoutError) {
+                    if(view != null) {
+                        if(ControlUsuario.instance.currentCursoPre != null){
+                            ControlUsuario.instance.currentCursoPre!!.errorasistencias = true
+                        }
+
+                        if(CustomDialog.instance.dialogoCargando != null){
+                            CustomDialog.instance.dialogoCargando?.dismiss()
+                        }
+
+                        if(activity != null){
+                            val intentDetalleCurso = Intent(requireActivity(), CursoDetalleActivity::class.java)
+                            intentDetalleCurso.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            startActivity(intentDetalleCurso)
+                        }
+                    }
+                } else if(error.networkResponse.statusCode == 401) {
                     requireActivity().renewToken { token ->
                         if(!token.isNullOrEmpty()){
                             onAsistencias(url, request, codSeccion, alumnoRetirado)

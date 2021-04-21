@@ -11,10 +11,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.RelativeLayout
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
@@ -326,40 +323,58 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                revisarDisponibilidadLaboratoriosServicio(url, request)
-                            } else {
-                                main_container_horario_lab.visibility = View.GONE
-                                progress_bar_horario_lab.visibility = View.GONE
+                    when {
+                        error is TimeoutError -> {
+                            main_container_horario_lab.visibility = View.GONE
+                            progress_bar_horario_lab.visibility = View.GONE
 
-                                val params = RelativeLayout.LayoutParams(
-                                    RelativeLayout.LayoutParams.WRAP_CONTENT,
-                                    RelativeLayout.LayoutParams.WRAP_CONTENT
-                                )
-                                params.addRule(RelativeLayout.CENTER_IN_PARENT)
-                                tv_consultando_disp_lab.layoutParams = params
-                                tv_consultando_disp_lab.textSize = 26.0f
-                                tv_consultando_disp_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                                tv_consultando_disp_lab.visibility = View.VISIBLE
-                                tv_consultando_disp_lab.setTextColor(ContextCompat.getColor(this, R.color.esan_red))
+                            val params = RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT
+                            )
+                            params.addRule(RelativeLayout.CENTER_IN_PARENT)
+                            tv_consultando_disp_lab.layoutParams = params
+                            tv_consultando_disp_lab.textSize = 26.0f
+                            tv_consultando_disp_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            tv_consultando_disp_lab.visibility = View.VISIBLE
+                            tv_consultando_disp_lab.setTextColor(ContextCompat.getColor(this, R.color.esan_red))
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    revisarDisponibilidadLaboratoriosServicio(url, request)
+                                } else {
+                                    main_container_horario_lab.visibility = View.GONE
+                                    progress_bar_horario_lab.visibility = View.GONE
+
+                                    val params = RelativeLayout.LayoutParams(
+                                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                        RelativeLayout.LayoutParams.WRAP_CONTENT
+                                    )
+                                    params.addRule(RelativeLayout.CENTER_IN_PARENT)
+                                    tv_consultando_disp_lab.layoutParams = params
+                                    tv_consultando_disp_lab.textSize = 26.0f
+                                    tv_consultando_disp_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                                    tv_consultando_disp_lab.visibility = View.VISIBLE
+                                    tv_consultando_disp_lab.setTextColor(ContextCompat.getColor(this, R.color.esan_red))
+                                }
                             }
                         }
-                    } else {
-                        main_container_horario_lab.visibility = View.GONE
-                        progress_bar_horario_lab.visibility = View.GONE
+                        else -> {
+                            main_container_horario_lab.visibility = View.GONE
+                            progress_bar_horario_lab.visibility = View.GONE
 
-                        val params = RelativeLayout.LayoutParams(
-                            RelativeLayout.LayoutParams.WRAP_CONTENT,
-                            RelativeLayout.LayoutParams.WRAP_CONTENT
-                        )
-                        params.addRule(RelativeLayout.CENTER_IN_PARENT)
-                        tv_consultando_disp_lab.layoutParams = params
-                        tv_consultando_disp_lab.textSize = 26.0f
-                        tv_consultando_disp_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                        tv_consultando_disp_lab.visibility = View.VISIBLE
-                        tv_consultando_disp_lab.setTextColor(ContextCompat.getColor(this, R.color.esan_red))
+                            val params = RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                RelativeLayout.LayoutParams.WRAP_CONTENT
+                            )
+                            params.addRule(RelativeLayout.CENTER_IN_PARENT)
+                            tv_consultando_disp_lab.layoutParams = params
+                            tv_consultando_disp_lab.textSize = 26.0f
+                            tv_consultando_disp_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            tv_consultando_disp_lab.visibility = View.VISIBLE
+                            tv_consultando_disp_lab.setTextColor(ContextCompat.getColor(this, R.color.esan_red))
+                        }
                     }
                 }
             )
@@ -592,20 +607,28 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                verificarCambioHorarioServicio(url, request)
-                            } else {
-                                main_container_horario_lab.visibility = View.GONE
-                                tv_consultando_disp_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                                tv_consultando_disp_lab.visibility = View.VISIBLE
+                    when {
+                        error is TimeoutError -> {
+                            main_container_horario_lab.visibility = View.GONE
+                            tv_consultando_disp_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            tv_consultando_disp_lab.visibility = View.VISIBLE
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    verificarCambioHorarioServicio(url, request)
+                                } else {
+                                    main_container_horario_lab.visibility = View.GONE
+                                    tv_consultando_disp_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                                    tv_consultando_disp_lab.visibility = View.VISIBLE
+                                }
                             }
                         }
-                    } else {
-                        main_container_horario_lab.visibility = View.GONE
-                        tv_consultando_disp_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                        tv_consultando_disp_lab.visibility = View.VISIBLE
+                        else -> {
+                            main_container_horario_lab.visibility = View.GONE
+                            tv_consultando_disp_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            tv_consultando_disp_lab.visibility = View.VISIBLE
+                        }
                     }
                 }
             )

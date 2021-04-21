@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProviders
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
@@ -177,26 +174,37 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                listaPrereservasPorAlumnoServicio(url, request)
-                            } else {
-                                tv_empty_historial_lab.visibility = View.VISIBLE
-                                tv_empty_historial_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                                recycler_view_historial_lab.visibility = View.GONE
-                                progress_bar_historial_lab.visibility = View.GONE
-                                tv_promocion_historial_lab.visibility = View.GONE
-                                tv_direccion_historial_lab.visibility = View.GONE
+                    when {
+                        error is TimeoutError -> {
+                            tv_empty_historial_lab.visibility = View.VISIBLE
+                            tv_empty_historial_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            recycler_view_historial_lab.visibility = View.GONE
+                            progress_bar_historial_lab.visibility = View.GONE
+                            tv_promocion_historial_lab.visibility = View.GONE
+                            tv_direccion_historial_lab.visibility = View.GONE
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    listaPrereservasPorAlumnoServicio(url, request)
+                                } else {
+                                    tv_empty_historial_lab.visibility = View.VISIBLE
+                                    tv_empty_historial_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                                    recycler_view_historial_lab.visibility = View.GONE
+                                    progress_bar_historial_lab.visibility = View.GONE
+                                    tv_promocion_historial_lab.visibility = View.GONE
+                                    tv_direccion_historial_lab.visibility = View.GONE
+                                }
                             }
                         }
-                    } else {
-                        tv_empty_historial_lab.visibility = View.VISIBLE
-                        tv_empty_historial_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                        recycler_view_historial_lab.visibility = View.GONE
-                        progress_bar_historial_lab.visibility = View.GONE
-                        tv_promocion_historial_lab.visibility = View.GONE
-                        tv_direccion_historial_lab.visibility = View.GONE
+                        else -> {
+                            tv_empty_historial_lab.visibility = View.VISIBLE
+                            tv_empty_historial_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            recycler_view_historial_lab.visibility = View.GONE
+                            progress_bar_historial_lab.visibility = View.GONE
+                            tv_promocion_historial_lab.visibility = View.GONE
+                            tv_direccion_historial_lab.visibility = View.GONE
+                        }
                     }
                 }
             )

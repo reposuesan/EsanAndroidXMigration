@@ -15,8 +15,10 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
+import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_cursos_post.*
@@ -192,18 +194,25 @@ class CursosPostActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onEncuestaPorPrograma(url, request, codigoPromocion)
-                        } else {
-                            lblMensaje_acursospost.visibility = View.VISIBLE
-                            lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
+                when {
+                    error is TimeoutError -> {
+                        lblMensaje_acursospost.visibility = View.VISIBLE
+                        lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onEncuestaPorPrograma(url, request, codigoPromocion)
+                            } else {
+                                lblMensaje_acursospost.visibility = View.VISIBLE
+                                lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
+                            }
                         }
                     }
-                } else {
-                    lblMensaje_acursospost.visibility = View.VISIBLE
-                    lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
+                    else -> {
+                        lblMensaje_acursospost.visibility = View.VISIBLE
+                        lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
+                    }
                 }
             }
         )
@@ -213,6 +222,7 @@ class CursosPostActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueueEncuesta?.add(jsObjectRequest)
     }
@@ -394,20 +404,28 @@ class CursosPostActivity : AppCompatActivity() {
                 prbCargando_acursospost.visibility = View.GONE
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onCursos(url, request, listaEncuesta)
-                        } else {
-                            prbCargando_acursospost.visibility = View.GONE
-                            lblMensaje_acursospost.visibility = View.VISIBLE
-                            lblMensaje_acursospost.text = resources.getText(R.string.error_no_conexion)
+                when {
+                    error is TimeoutError -> {
+                        prbCargando_acursospost.visibility = View.GONE
+                        lblMensaje_acursospost.visibility = View.VISIBLE
+                        lblMensaje_acursospost.text = resources.getText(R.string.error_no_conexion)
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onCursos(url, request, listaEncuesta)
+                            } else {
+                                prbCargando_acursospost.visibility = View.GONE
+                                lblMensaje_acursospost.visibility = View.VISIBLE
+                                lblMensaje_acursospost.text = resources.getText(R.string.error_no_conexion)
+                            }
                         }
                     }
-                } else {
-                    prbCargando_acursospost.visibility = View.GONE
-                    lblMensaje_acursospost.visibility = View.VISIBLE
-                    lblMensaje_acursospost.text = resources.getText(R.string.error_no_conexion)
+                    else -> {
+                        prbCargando_acursospost.visibility = View.GONE
+                        lblMensaje_acursospost.visibility = View.VISIBLE
+                        lblMensaje_acursospost.text = resources.getText(R.string.error_no_conexion)
+                    }
                 }
             }
         )
@@ -417,6 +435,7 @@ class CursosPostActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueue?.add(jsObjectRequest)
     }
@@ -492,30 +511,40 @@ class CursosPostActivity : AppCompatActivity() {
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                getNotasListaExpandida(cursosPost, posModulo, posCurso)
-                            } else {
-                                val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                                snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                                snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                                snack.show()
-                                listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
+                    when {
+                        error is TimeoutError -> {
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    getNotasListaExpandida(cursosPost, posModulo, posCurso)
+                                } else {
+                                    val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                                    snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                                    snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                                    snack.show()
+                                    //listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
 
-                                refreshAdapter()
+                                    //refreshAdapter()
+                                }
                             }
                         }
-                    } else {
-                        val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
-                        snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
-                        snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
-                        snack.show()
-                        listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
+                        else -> {
+                            val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
+                            snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
+                            snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).setTextColor(ContextCompat.getColor(this, R.color.danger_text))
+                            snack.show()
+                            //listaModuloCursos[posModulo].listaCursos[posCurso]?.cargando = false
 
-                        refreshAdapter()
+                            //refreshAdapter()
+                        }
                     }
                 }
             )
@@ -525,6 +554,7 @@ class CursosPostActivity : AppCompatActivity() {
                     return getHeaderForJWT()
                 }
             }
+            jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
             jsObjectRequest.tag = TAG
             requestQueue?.add(jsObjectRequest)
         } else {
@@ -616,16 +646,22 @@ class CursosPostActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error.networkResponse.statusCode == 401) {
-                    renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onAsistenciaCurso(url, request)
-                        } else {
-                            CustomDialog.instance.dialogoCargando?.dismiss()
+                when {
+                    error is TimeoutError -> {
+                        CustomDialog.instance.dialogoCargando?.dismiss()
+                    }
+                    error.networkResponse.statusCode == 401 -> {
+                        renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onAsistenciaCurso(url, request)
+                            } else {
+                                CustomDialog.instance.dialogoCargando?.dismiss()
+                            }
                         }
                     }
-                } else {
-                    CustomDialog.instance.dialogoCargando?.dismiss()
+                    else -> {
+                        CustomDialog.instance.dialogoCargando?.dismiss()
+                    }
                 }
 
             }
@@ -636,6 +672,7 @@ class CursosPostActivity : AppCompatActivity() {
                 return getHeaderForJWT()
             }
         }
+        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
         jsObjectRequest.tag = TAG
         requestQueueAsistencia?.add(jsObjectRequest)
     }

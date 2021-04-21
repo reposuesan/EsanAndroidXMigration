@@ -12,10 +12,6 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_pregrado_cubs_historial.*
@@ -26,6 +22,7 @@ import pe.edu.esan.appostgrado.entidades.PrereservaDetalle
 import pe.edu.esan.appostgrado.helpers.ShowAlertHelper
 import pe.edu.esan.appostgrado.util.Utilitarios
 import androidx.appcompat.app.AlertDialog
+import com.android.volley.*
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
 import pe.edu.esan.appostgrado.util.getHeaderForJWT
 import pe.edu.esan.appostgrado.util.renewToken
@@ -165,36 +162,52 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                listaPrereservasPorAlumnoServicio(url, request)
-                            } else {
-                                progress_bar_historial.visibility = View.GONE
-                                tv_cargando_integrantes.visibility = View.GONE
-                                tv_direccion_historial.visibility = View.GONE
-                                tv_promocion_historial.visibility = View.GONE
+                    when {
+                        error is TimeoutError -> {
+                            progress_bar_historial.visibility = View.GONE
+                            tv_cargando_integrantes.visibility = View.GONE
+                            tv_direccion_historial.visibility = View.GONE
+                            tv_promocion_historial.visibility = View.GONE
 
-                                val showAlertHelper = ShowAlertHelper(this)
-                                showAlertHelper.showAlertError(
-                                    getString(R.string.error),
-                                    getString(R.string.error_no_conexion),
-                                    null
-                                )
+                            val showAlertHelper = ShowAlertHelper(this)
+                            showAlertHelper.showAlertError(
+                                getString(R.string.error),
+                                getString(R.string.error_no_conexion),
+                                null
+                            )
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    listaPrereservasPorAlumnoServicio(url, request)
+                                } else {
+                                    progress_bar_historial.visibility = View.GONE
+                                    tv_cargando_integrantes.visibility = View.GONE
+                                    tv_direccion_historial.visibility = View.GONE
+                                    tv_promocion_historial.visibility = View.GONE
+
+                                    val showAlertHelper = ShowAlertHelper(this)
+                                    showAlertHelper.showAlertError(
+                                        getString(R.string.error),
+                                        getString(R.string.error_no_conexion),
+                                        null
+                                    )
+                                }
                             }
                         }
-                    } else {
-                        progress_bar_historial.visibility = View.GONE
-                        tv_cargando_integrantes.visibility = View.GONE
-                        tv_direccion_historial.visibility = View.GONE
-                        tv_promocion_historial.visibility = View.GONE
+                        else -> {
+                            progress_bar_historial.visibility = View.GONE
+                            tv_cargando_integrantes.visibility = View.GONE
+                            tv_direccion_historial.visibility = View.GONE
+                            tv_promocion_historial.visibility = View.GONE
 
-                        val showAlertHelper = ShowAlertHelper(this)
-                        showAlertHelper.showAlertError(
-                            getString(R.string.error),
-                            getString(R.string.error_no_conexion),
-                            null
-                        )
+                            val showAlertHelper = ShowAlertHelper(this)
+                            showAlertHelper.showAlertError(
+                                getString(R.string.error),
+                                getString(R.string.error_no_conexion),
+                                null
+                            )
+                        }
                     }
                 }
             )
@@ -290,18 +303,25 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                muestraIntegrantesDeGrupoServicio(url, request)
-                            } else {
-                                error.printStackTrace()
-                                showMiembrosDelGrupo(getString(R.string.no_respuesta_desde_servidor),false)
+                    when {
+                        error is TimeoutError -> {
+                            error.printStackTrace()
+                            showMiembrosDelGrupo(getString(R.string.no_respuesta_desde_servidor),false)
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    muestraIntegrantesDeGrupoServicio(url, request)
+                                } else {
+                                    error.printStackTrace()
+                                    showMiembrosDelGrupo(getString(R.string.no_respuesta_desde_servidor),false)
+                                }
                             }
                         }
-                    } else {
-                        error.printStackTrace()
-                        showMiembrosDelGrupo(getString(R.string.no_respuesta_desde_servidor),false)
+                        else -> {
+                            error.printStackTrace()
+                            showMiembrosDelGrupo(getString(R.string.no_respuesta_desde_servidor),false)
+                        }
                     }
 
                 }

@@ -15,10 +15,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
-import com.android.volley.DefaultRetryPolicy
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
+import com.android.volley.*
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_malla_curricular.*
@@ -482,22 +479,31 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
                     }
                 },
                 { error ->
-                    if(error.networkResponse.statusCode == 401) {
-                        renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                registrarPrereservaLabServicio(url, request)
-                            } else {
-                                tv_empty_select_software_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                                tv_empty_select_software_lab.visibility = View.VISIBLE
-                                select_software_lab_container.visibility = View.GONE
-                                progress_bar_select_software_lab.visibility = View.GONE
+                    when {
+                        error is TimeoutError -> {
+                            tv_empty_select_software_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            tv_empty_select_software_lab.visibility = View.VISIBLE
+                            select_software_lab_container.visibility = View.GONE
+                            progress_bar_select_software_lab.visibility = View.GONE
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    registrarPrereservaLabServicio(url, request)
+                                } else {
+                                    tv_empty_select_software_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                                    tv_empty_select_software_lab.visibility = View.VISIBLE
+                                    select_software_lab_container.visibility = View.GONE
+                                    progress_bar_select_software_lab.visibility = View.GONE
+                                }
                             }
                         }
-                    } else {
-                        tv_empty_select_software_lab.text = getString(R.string.no_respuesta_desde_servidor)
-                        tv_empty_select_software_lab.visibility = View.VISIBLE
-                        select_software_lab_container.visibility = View.GONE
-                        progress_bar_select_software_lab.visibility = View.GONE
+                        else -> {
+                            tv_empty_select_software_lab.text = getString(R.string.no_respuesta_desde_servidor)
+                            tv_empty_select_software_lab.visibility = View.VISIBLE
+                            select_software_lab_container.visibility = View.GONE
+                            progress_bar_select_software_lab.visibility = View.GONE
+                        }
                     }
 
                 }

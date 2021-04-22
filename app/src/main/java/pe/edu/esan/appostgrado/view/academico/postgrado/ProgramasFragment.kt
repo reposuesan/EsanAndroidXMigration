@@ -164,7 +164,7 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                 }
             },
             { error ->
-                if(error is TimeoutError) {
+                if(error is TimeoutError || error.networkResponse == null) {
                     if(view != null) {
                         swPrograma_fprograma.isRefreshing = false
                         prbCargando_fprograma.visibility = View.GONE

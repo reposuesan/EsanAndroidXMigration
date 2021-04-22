@@ -360,7 +360,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                 }
             },
             { error ->
-                if(error is TimeoutError){
+                if(error is TimeoutError || error.networkResponse == null){
                     if(view != null){
                         view!!.swCurso_fcurso.isRefreshing = false
                         view!!.prbCargando_fcurso.visibility = View.GONE
@@ -506,7 +506,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                 }
             },
             { error ->
-                if(error is TimeoutError) {
+                if(error is TimeoutError || error.networkResponse == null) {
                     if(view != null) {
                         if(ControlUsuario.instance.currentCursoPre != null){
                             ControlUsuario.instance.currentCursoPre!!.errorasistencias = true

@@ -171,7 +171,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                 prbCargando_fseccion.visibility = View.GONE
             },
             { error ->
-                if(error is TimeoutError){
+                if(error is TimeoutError || error.networkResponse == null){
                     if(view != null) {
                         swCurso_fseccion.isRefreshing = false
                         prbCargando_fseccion.visibility = View.GONE

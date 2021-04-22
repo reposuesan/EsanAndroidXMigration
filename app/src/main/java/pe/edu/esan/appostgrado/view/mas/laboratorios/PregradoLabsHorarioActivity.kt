@@ -324,7 +324,7 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             main_container_horario_lab.visibility = View.GONE
                             progress_bar_horario_lab.visibility = View.GONE
 
@@ -608,7 +608,7 @@ class PregradoLabsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             main_container_horario_lab.visibility = View.GONE
                             tv_consultando_disp_lab.text = getString(R.string.no_respuesta_desde_servidor)
                             tv_consultando_disp_lab.visibility = View.VISIBLE

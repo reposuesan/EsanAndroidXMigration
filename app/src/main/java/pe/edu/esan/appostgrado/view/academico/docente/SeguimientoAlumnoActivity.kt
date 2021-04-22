@@ -137,7 +137,7 @@ class SeguimientoAlumnoActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         prbCargando_seguimientoalumno.visibility = View.GONE
                         lblMensaje_seguimientoalumno.visibility = View.VISIBLE
                         lblMensaje_seguimientoalumno.text = resources.getString(R.string.error_no_conexion)

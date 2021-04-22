@@ -234,7 +234,7 @@ class PRReservaSegundaActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         CustomDialog.instance.dialogoCargando?.dismiss()
                         btnConfirmar_itemprreservasegunda.isEnabled = true
                         val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
@@ -430,7 +430,7 @@ class PRReservaSegundaActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
                         snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
                         snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)

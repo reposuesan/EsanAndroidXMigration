@@ -83,7 +83,7 @@ class PregradoLabsConfirmacionActivity : AppCompatActivity() {
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             tv_mensaje_confirmacion_prereserva_lab.text = getString(R.string.no_respuesta_desde_servidor)
                         }
                         error.networkResponse.statusCode == 401 -> {

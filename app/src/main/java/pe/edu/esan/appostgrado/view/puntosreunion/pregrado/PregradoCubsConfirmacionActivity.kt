@@ -103,7 +103,7 @@ class PregradoCubsConfirmacionActivity : AppCompatActivity() {
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             val showAlertHelper = ShowAlertHelper(this)
                             showAlertHelper.showAlertError(
                                 getString(R.string.error),

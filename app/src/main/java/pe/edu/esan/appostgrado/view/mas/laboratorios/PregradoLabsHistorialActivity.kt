@@ -175,7 +175,7 @@ class PregradoLabsHistorialActivity : AppCompatActivity() {
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             tv_empty_historial_lab.visibility = View.VISIBLE
                             tv_empty_historial_lab.text = getString(R.string.no_respuesta_desde_servidor)
                             recycler_view_historial_lab.visibility = View.GONE

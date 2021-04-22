@@ -198,7 +198,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 prbCargando_fpuntosreunion.visibility = View.GONE
             },
             { error ->
-                if(error is TimeoutError){
+                if(error is TimeoutError || error.networkResponse == null){
                     if(view != null) {
                         prbCargando_fpuntosreunion.visibility = View.GONE
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE
@@ -356,7 +356,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 prbCargando_fpuntosreunion.visibility = View.GONE
             },
             { error ->
-                if(error is TimeoutError) {
+                if(error is TimeoutError || error.networkResponse == null) {
                     if(view != null) {
                         prbCargando_fpuntosreunion.visibility = View.GONE
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE
@@ -478,7 +478,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 prbCargando_fpuntosreunion.visibility = View.GONE
             },
             { error ->
-                if(error is TimeoutError) {
+                if(error is TimeoutError || error.networkResponse == null) {
                     if(view != null) {
                         prbCargando_fpuntosreunion.visibility = View.GONE
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE

@@ -363,7 +363,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             linear_layout_container_lab.visibility = View.GONE
                             progress_bar_principal_labs.visibility = View.GONE
                             empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
@@ -468,7 +468,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             linear_layout_container_lab.visibility = View.GONE
                             empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
                             empty_text_view_lab.visibility = View.VISIBLE
@@ -570,7 +570,7 @@ class PregradoLabsPrincipalActivity : AppCompatActivity() {
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             linear_layout_container_lab.visibility = View.GONE
                             empty_text_view_lab.text = getString(R.string.no_respuesta_desde_servidor)
                             empty_text_view_lab.visibility = View.VISIBLE

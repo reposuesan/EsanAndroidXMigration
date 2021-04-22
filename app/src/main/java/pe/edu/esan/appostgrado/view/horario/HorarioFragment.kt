@@ -362,7 +362,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                 }
             },
             { error ->
-                if(error is TimeoutError){
+                if(error is TimeoutError || error.networkResponse == null){
                     if (view != null) {
                         view!!.rvHorario_fhorario.visibility = View.GONE
                         view!!.prbCargando_fhorario.visibility = View.GONE

@@ -408,7 +408,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                         }
                     },
                     { error ->
-                        if(error is TimeoutError) {
+                        if(error is TimeoutError || error.networkResponse == null) {
                             if(view != null) {
                                 view!!.linear_layout_container.visibility = View.GONE
                                 view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
@@ -550,7 +550,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                         }
                     },
                     { error ->
-                        if(error is TimeoutError) {
+                        if(error is TimeoutError || error.networkResponse == null) {
                             if (view != null) {
                                 view!!.linear_layout_container.visibility = View.GONE
                                 view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
@@ -701,7 +701,7 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                         }
                     },
                     { error ->
-                        if(error is TimeoutError) {
+                        if(error is TimeoutError || error.networkResponse == null) {
                             if (view != null) {
                                 view!!.linear_layout_container.visibility = View.GONE
                                 view!!.empty_text_view.text =

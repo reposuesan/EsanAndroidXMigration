@@ -232,7 +232,7 @@ class PRConfirmarQRActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         prbCargando_prconfirmarqr.visibility = View.GONE
                         val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
                         snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
@@ -367,7 +367,7 @@ class PRConfirmarQRActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         prbCargando_prconfirmarqr.visibility = View.GONE
                         val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
                         snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))

@@ -236,7 +236,7 @@ class EncuestaActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         error.printStackTrace()
                     }
                     error.networkResponse.statusCode == 401 -> {
@@ -411,7 +411,7 @@ class EncuestaActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         CustomDialog.instance.dialogoCargando?.dismiss()
                         val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_respuesta_server), Snackbar.LENGTH_LONG)
                         snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))

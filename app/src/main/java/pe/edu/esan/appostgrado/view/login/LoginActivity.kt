@@ -1066,7 +1066,7 @@ class LoginActivity : AppCompatActivity(),
                     dismissDialog()
                 },
                 { error ->
-                    if(error is TimeoutError){
+                    if(error is TimeoutError || error.networkResponse == null){
                         onLogin(url, request, usuario, clave)
                     } else if(error.networkResponse != null){
                         if(error.networkResponse.statusCode == 500){

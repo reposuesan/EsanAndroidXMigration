@@ -217,7 +217,7 @@ class PregradoCubsRegistroActivity : AppCompatActivity() {
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             main_container_registro_cubs.visibility = View.GONE
                             progress_bar_registro_prereserva_pp.visibility = View.GONE
                             empty_text_view_registro.visibility = View.VISIBLE

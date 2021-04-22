@@ -177,7 +177,7 @@ class PRMisReservasActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         prbCargando_prmisreservas.visibility = View.GONE
                         lblMensaje_prmisreservas.visibility = View.VISIBLE
                         lblMensaje_prmisreservas.text = resources.getString(R.string.error_no_conexion)

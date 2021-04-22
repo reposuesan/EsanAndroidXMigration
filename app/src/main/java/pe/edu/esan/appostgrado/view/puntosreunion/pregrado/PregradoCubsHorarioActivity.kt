@@ -263,7 +263,7 @@ class PregradoCubsHorarioActivity : AppCompatActivity(), PregradoPrereservaHorar
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             progress_bar_horario_cubs.visibility = View.GONE
                             main_container_horario_cubs.visibility = View.GONE
                             empty_text_view_horario.visibility = View.VISIBLE

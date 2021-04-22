@@ -315,7 +315,7 @@ class HistorialAsistenciaProfesorActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         prbCargando_histoasistprof.visibility = View.GONE
                         lblMensaje_histoasistprof.text = resources.getString(R.string.error_default)
                     }

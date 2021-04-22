@@ -378,7 +378,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         ControlUsuario.instance.indexActualiza = -1
                         val snack = Snackbar.make(
                             findViewById(android.R.id.content),
@@ -553,7 +553,7 @@ class HorarioDetalleActivity : AppCompatActivity(), LocationListener {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         val snack = Snackbar.make(
                             findViewById(android.R.id.content),
                             resources.getString(R.string.error_no_conexion),

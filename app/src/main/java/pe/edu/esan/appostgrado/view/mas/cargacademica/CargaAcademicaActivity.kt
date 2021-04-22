@@ -206,7 +206,7 @@ class CargaAcademicaActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         prbCargando_cargacademica.visibility = View.GONE
                         lblMensaje_cargacademica.visibility = View.VISIBLE
                         lblMensaje_cargacademica.text = resources.getText(R.string.error_no_conexion)

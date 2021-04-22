@@ -480,7 +480,7 @@ class PregradoLabsSelectSoftwareActivity : AppCompatActivity(), PregradoPrereser
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             tv_empty_select_software_lab.text = getString(R.string.no_respuesta_desde_servidor)
                             tv_empty_select_software_lab.visibility = View.VISIBLE
                             select_software_lab_container.visibility = View.GONE

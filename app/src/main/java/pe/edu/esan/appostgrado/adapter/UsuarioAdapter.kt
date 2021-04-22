@@ -65,7 +65,7 @@ class UsuarioAdapter(val listaUsuarios: List<UserEsan>, val clickListener: (User
             val requestOptions = RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.NONE) //because file name is always same
                 .skipMemoryCache(true)
-                .timeout(20 * 60 * 1000)
+                .timeout(60000)
 
             when (usuario) {
                 is Alumno -> {

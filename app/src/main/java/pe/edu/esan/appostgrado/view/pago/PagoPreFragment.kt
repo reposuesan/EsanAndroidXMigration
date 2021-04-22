@@ -196,7 +196,7 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                 swPago_fpagopre.isRefreshing = false
             },
             { error ->
-                if(error is TimeoutError) {
+                if(error is TimeoutError || error.networkResponse == null) {
                     if(view != null) {
                         rvPago_fpagopre.visibility = View.GONE
                         prbCargando_fpagopre.visibility = View.GONE

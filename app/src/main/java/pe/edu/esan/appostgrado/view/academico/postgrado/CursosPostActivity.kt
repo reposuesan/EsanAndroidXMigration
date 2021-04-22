@@ -195,7 +195,7 @@ class CursosPostActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         lblMensaje_acursospost.visibility = View.VISIBLE
                         lblMensaje_acursospost.text = resources.getText(R.string.error_respuesta_server)
                     }
@@ -405,7 +405,7 @@ class CursosPostActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         prbCargando_acursospost.visibility = View.GONE
                         lblMensaje_acursospost.visibility = View.VISIBLE
                         lblMensaje_acursospost.text = resources.getText(R.string.error_no_conexion)
@@ -512,7 +512,7 @@ class CursosPostActivity : AppCompatActivity() {
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             val snack = Snackbar.make(findViewById(android.R.id.content), resources.getString(R.string.error_no_conexion), Snackbar.LENGTH_LONG)
                             snack.view.setBackgroundColor(ContextCompat.getColor(this, R.color.danger))
                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text).typeface = Utilitarios.getFontRoboto(this, Utilitarios.TypeFont.REGULAR)
@@ -647,7 +647,7 @@ class CursosPostActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         CustomDialog.instance.dialogoCargando?.dismiss()
                     }
                     error.networkResponse.statusCode == 401 -> {

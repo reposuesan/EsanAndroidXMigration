@@ -119,7 +119,7 @@ class DirectorioActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         prbCargando_directorio.visibility = View.GONE
                         lblMensaje_directorio.visibility = View.VISIBLE
                         lblMensaje_directorio.text = resources.getString(R.string.error_no_conexion)

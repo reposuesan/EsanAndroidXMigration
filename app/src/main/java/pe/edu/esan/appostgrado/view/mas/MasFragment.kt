@@ -400,7 +400,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         rvOpciones_fmas.visibility = View.VISIBLE
                         rvOpciones_fmas.isEnabled = true
                         rvOpciones_fmas.isClickable = true
@@ -836,7 +836,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         error.printStackTrace()
                     }
                     error.networkResponse.statusCode == 401 -> {

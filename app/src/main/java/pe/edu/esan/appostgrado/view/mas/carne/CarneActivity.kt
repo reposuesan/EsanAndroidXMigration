@@ -181,7 +181,7 @@ class CarneActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         empty_text_view_carnet.text = resources.getText(R.string.error_respuesta_server)
                         ocultarCarnet()
                     }
@@ -251,14 +251,14 @@ class CarneActivity : AppCompatActivity() {
             if(!userIsOut){
                 Glide.with(this)
                     .load(Utilitarios.getUrlFoto(extras["KEY_CODIGO"] as String, 140))
-                    .apply(RequestOptions.timeoutOf(20 * 60 * 1000))
+                    .apply(RequestOptions.timeoutOf(60000))
                     .into(imgUsuario_carnealumno)
             }
 
             if(!userIsOut){
                 Glide.with(this)
                     .load(Utilitarios.getCodeBarUrl(extras["KEY_CODIGO"] as String))
-                    .apply(RequestOptions.timeoutOf(20 * 60 * 1000))
+                    .apply(RequestOptions.timeoutOf(60000))
                     .into(imgCodeBar_carnealumno)
             }
         }

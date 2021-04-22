@@ -209,7 +209,7 @@ class MensajeActivity : AppCompatActivity() {
                 prbCargando_mensaje.visibility = View.GONE
             },
             { error ->
-                if(error is TimeoutError) {
+                if(error is TimeoutError || error.networkResponse == null) {
                     prbCargando_mensaje.visibility = View.GONE
                     lblMensaje_mensaje.visibility = View.VISIBLE
                     lblMensaje_mensaje.text = resources.getText(R.string.error_default)
@@ -288,7 +288,7 @@ class MensajeActivity : AppCompatActivity() {
                 }
             },
             { error ->
-                if(error is TimeoutError) {
+                if(error is TimeoutError || error.networkResponse == null) {
                     prbCargando_mensaje.visibility = View.GONE
                     lblMensaje_mensaje.visibility = View.VISIBLE
                     lblMensaje_mensaje.text = resources.getText(R.string.error_default)

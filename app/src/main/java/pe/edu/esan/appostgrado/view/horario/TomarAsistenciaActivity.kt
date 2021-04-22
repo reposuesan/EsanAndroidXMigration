@@ -197,7 +197,7 @@ class TomarAsistenciaActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         rvAlumno_tomarasistencia.visibility = View.GONE
                         prbCargando_tomarasistencia.visibility = View.GONE
                         lblSMarcaTodo_tomarasistencia.visibility = View.GONE
@@ -323,7 +323,7 @@ class TomarAsistenciaActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         onAsistencia(re, request, url)
                     }
                     error.networkResponse.statusCode == 401 -> {
@@ -421,7 +421,7 @@ class TomarAsistenciaActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         copiarAsistencias(requestEncriptado, id, request)
                     }
                     error.networkResponse.statusCode == 401 -> {

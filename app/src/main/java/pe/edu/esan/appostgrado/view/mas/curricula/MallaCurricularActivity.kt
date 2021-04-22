@@ -131,7 +131,7 @@ class MallaCurricularActivity : AppCompatActivity() {
 
             },
             { error ->
-                if(error is TimeoutError) {
+                if(error is TimeoutError || error.networkResponse == null) {
                     Log.e(LOG,"An error occurred")
                 } else if(error.networkResponse.statusCode == 401) {
                     renewToken { token ->
@@ -267,7 +267,7 @@ class MallaCurricularActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         prbCargando_mallacurricular.visibility = View.GONE
                         lblMensaje_mallacurricular.visibility = View.VISIBLE
                         lblMensaje_mallacurricular.text = resources.getString(R.string.error_no_conexion)

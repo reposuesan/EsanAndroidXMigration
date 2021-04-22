@@ -155,7 +155,7 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
                         lblMensaje_resultadoencuesta.visibility = View.VISIBLE
                         prbCargando_resultadoencuesta.visibility = View.GONE
@@ -257,7 +257,7 @@ class ResultadoEncuestaActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         lblMensaje_resultadoencuesta.text = resources.getString(R.string.error_respuesta_server)
                         lblMensaje_resultadoencuesta.visibility = View.VISIBLE
                         prbCargando_resultadoencuesta.visibility = View.GONE

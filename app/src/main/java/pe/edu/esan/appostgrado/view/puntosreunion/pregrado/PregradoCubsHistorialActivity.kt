@@ -163,7 +163,7 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             progress_bar_historial.visibility = View.GONE
                             tv_cargando_integrantes.visibility = View.GONE
                             tv_direccion_historial.visibility = View.GONE
@@ -304,7 +304,7 @@ class PregradoCubsHistorialActivity : AppCompatActivity(), PregradoPrereservasHi
                 },
                 { error ->
                     when {
-                        error is TimeoutError -> {
+                        error is TimeoutError || error.networkResponse == null -> {
                             error.printStackTrace()
                             showMiembrosDelGrupo(getString(R.string.no_respuesta_desde_servidor),false)
                         }

@@ -147,7 +147,7 @@ class HistoricoNotasPreActivity : AppCompatActivity() {
             },
             { error ->
                 when {
-                    error is TimeoutError -> {
+                    error is TimeoutError || error.networkResponse == null -> {
                         prbCargando_historiconotaspre.visibility = View.GONE
                         lblMensaje_historiconotaspre.text = resources.getText(R.string.error_respuesta_server)
                         lblMensaje_historiconotaspre.visibility = View.VISIBLE

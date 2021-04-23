@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 class ConvertersKotlin {
 
-    val gson = Gson()
+    //val gson = Gson()
 
     @TypeConverter
     fun fromStringToCurrentUsuario(stringInput: String): ArrayList<UserEsan> {
@@ -36,37 +36,37 @@ class ConvertersKotlin {
     @TypeConverter
     fun fromStringToCurrentUsuarioGeneral(stringInput: String): UsuarioGeneral? {
         val type = object : TypeToken<UsuarioGeneral>(){}.type
-        return gson.fromJson(stringInput, type)
+        return Gson().fromJson(stringInput, type)
     }
 
     @TypeConverter
     fun fromCurrentUsuarioGeneralToString(currentUsuarioGeneralInput: UsuarioGeneral?): String {
         val type = object : TypeToken<UsuarioGeneral>(){}.type
-        return gson.toJson(currentUsuarioGeneralInput, type)
+        return Gson().toJson(currentUsuarioGeneralInput, type)
     }
 
     @TypeConverter
     fun fromStringToArrayListHorario(stringInput: String): ArrayList<Horario> {
         val type = object : TypeToken<ArrayList<Horario>>(){}.type
-        return gson.fromJson(stringInput, type)
+        return Gson().fromJson(stringInput, type)
     }
 
     @TypeConverter
     fun fromArrayListHorarioToString(listHorario: ArrayList<Horario>): String {
         val type = object : TypeToken<ArrayList<Horario>>(){}.type
-        return gson.toJson(listHorario,type)
+        return Gson().toJson(listHorario,type)
     }
 
     @TypeConverter
     fun fromStringToUnmodifiedArrayListHorario(stringInput: String): CopyOnWriteArrayList<Horario> {
         val type = object : TypeToken<CopyOnWriteArrayList<Horario>>(){}.type
-        return gson.fromJson(stringInput, type)
+        return Gson().fromJson(stringInput, type)
     }
 
     @TypeConverter
     fun fromUnmodifiedArrayListHorarioToString(listHorario: CopyOnWriteArrayList<Horario>): String {
         val type = object : TypeToken<CopyOnWriteArrayList<Horario>>(){}.type
-        return gson.toJson(listHorario,type)
+        return Gson().toJson(listHorario,type)
     }
 
     @TypeConverter
@@ -79,7 +79,7 @@ class ConvertersKotlin {
     @TypeConverter
     fun fromCurrentHorarioToString(horario: Horario?): String {
         val type = object : TypeToken<Horario>() {}.type
-        return gson.toJson(horario, type)
+        return Gson().toJson(horario, type)
     }
 
     @TypeConverter
@@ -92,7 +92,7 @@ class ConvertersKotlin {
     @TypeConverter
     fun fromPRConfiguracionToString(prConfiguracion: PRConfiguracion?): String {
         val type = object : TypeToken<PRConfiguracion>() {}.type
-        return gson.toJson(prConfiguracion, type)
+        return Gson().toJson(prConfiguracion, type)
     }
 
     @TypeConverter
@@ -107,7 +107,7 @@ class ConvertersKotlin {
     @TypeConverter
     fun fromTipoGrupoToString(tipoGrupo: TipoGrupo?): String {
         val type = object : TypeToken<TipoGrupo>() {}.type
-        return gson.toJson(tipoGrupo, type)
+        return Gson().toJson(tipoGrupo, type)
     }
 
     @TypeConverter
@@ -122,7 +122,7 @@ class ConvertersKotlin {
     @TypeConverter
     fun fromPRReservaToString(prReserva: PRReserva?): String {
         val type = object : TypeToken<PRReserva>() {}.type
-        return gson.toJson(prReserva, type)
+        return Gson().toJson(prReserva, type)
     }
 
 
@@ -138,7 +138,7 @@ class ConvertersKotlin {
     @TypeConverter
     fun fromCurrentMiGrupoToString(currentMiGrupo: java.util.ArrayList<Alumno>): String {
         val type = object : TypeToken<java.util.ArrayList<Alumno>>() {}.type
-        return gson.toJson(currentMiGrupo, type)
+        return Gson().toJson(currentMiGrupo, type)
     }
 
     @TypeConverter
@@ -153,7 +153,7 @@ class ConvertersKotlin {
     @TypeConverter
     fun fromCurrentCursoPostToString(currentCursoPost: CursosPost?): String {
         val type = object : TypeToken<CursosPost>() {}.type
-        return gson.toJson(currentCursoPost, type)
+        return Gson().toJson(currentCursoPost, type)
     }
 
     @TypeConverter
@@ -168,7 +168,7 @@ class ConvertersKotlin {
     @TypeConverter
     fun fromCurrentCursoPreToString(currentCursoPre: CursosPre?): String {
         val type = object : TypeToken<CursosPre>() {}.type
-        return gson.toJson(currentCursoPre, type)
+        return Gson().toJson(currentCursoPre, type)
     }
 
     @TypeConverter
@@ -183,6 +183,6 @@ class ConvertersKotlin {
     @TypeConverter
     fun fromCurrentSeccionToString(currentSeccion: Seccion?): String {
         val type = object : TypeToken<Seccion>() {}.type
-        return gson.toJson(currentSeccion, type)
+        return Gson().toJson(currentSeccion, type)
     }
 }

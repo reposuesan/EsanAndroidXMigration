@@ -116,128 +116,131 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         if(view != null) {
             prbCargando_fpagopre.visibility = View.VISIBLE
         }
-        requestQueue = Volley.newRequestQueue(requireActivity())
-        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
-        val jsObjectRequest = object: JsonObjectRequest(
-        /*val jsObjectRequest = JsonObjectRequest(*/
+        if(isAdded) {
+            requestQueue = Volley.newRequestQueue(requireActivity())
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsObjectRequest = object: JsonObjectRequest(
+                /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
-            { response ->
-                try {
-                    val pagopreJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPregradoResult"] as String, requireActivity().applicationContext)
+                { response ->
+                    try {
+                        val pagopreJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPregradoResult"] as String, requireActivity().applicationContext)
 
-                    if (pagopreJArray != null) {
-                        if (pagopreJArray.length() > 0) {
-                            val listPago = ArrayList<PagoPre>()
-                            var ultimoPeriodo = ""
-                            for (p in 0 until pagopreJArray.length()) {
-                                val pagopreJson = pagopreJArray[p] as JSONObject
-                                val codigo = pagopreJson["codigo"] as String
-                                val periodo = pagopreJson["periodo"] as String
-                                val moneda = pagopreJson["moneda"] as String
-                                val montoneto = pagopreJson["montoneto"] as String
-                                val monto = "$moneda $montoneto"
-                                val concepto = pagopreJson["preciodescripcion"] as String
-                                val vencimiento = pagopreJson["vencimiento"] as String
+                        if (pagopreJArray != null) {
+                            if (pagopreJArray.length() > 0) {
+                                val listPago = ArrayList<PagoPre>()
+                                var ultimoPeriodo = ""
+                                for (p in 0 until pagopreJArray.length()) {
+                                    val pagopreJson = pagopreJArray[p] as JSONObject
+                                    val codigo = pagopreJson["codigo"] as String
+                                    val periodo = pagopreJson["periodo"] as String
+                                    val moneda = pagopreJson["moneda"] as String
+                                    val montoneto = pagopreJson["montoneto"] as String
+                                    val monto = "$moneda $montoneto"
+                                    val concepto = pagopreJson["preciodescripcion"] as String
+                                    val vencimiento = pagopreJson["vencimiento"] as String
 
-                                if (p == 0) {
-                                    ultimoPeriodo = periodo
-                                    listPago.add(PagoPre(Utilitarios.TipoFila.CABECERA, ultimoPeriodo))
-                                    listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
-                                } else {
-                                    if (ultimoPeriodo == periodo) {
-                                        listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
-                                    } else {
-                                        /*ultimoPeriodo = periodo*/
+                                    if (p == 0) {
+                                        ultimoPeriodo = periodo
                                         listPago.add(PagoPre(Utilitarios.TipoFila.CABECERA, ultimoPeriodo))
                                         listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
+                                    } else {
+                                        if (ultimoPeriodo == periodo) {
+                                            listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
+                                        } else {
+                                            /*ultimoPeriodo = periodo*/
+                                            listPago.add(PagoPre(Utilitarios.TipoFila.CABECERA, ultimoPeriodo))
+                                            listPago.add(PagoPre(Utilitarios.TipoFila.DETALLE, "", codigo, concepto, monto, vencimiento))
+                                        }
                                     }
                                 }
-                            }
-                            val adapter = PagoPreAdapter(listPago) { pagoPre ->
+                                val adapter = PagoPreAdapter(listPago) { pagoPre ->
 
-                                if (pagoPre.codigo?.trim() != "") {
+                                    if (pagoPre.codigo?.trim() != "") {
 
-                                    val webpageRecibo: Uri = Uri.parse(Utilitarios.getBoletasPreUrl(pagoPre.codigo!!))
-                                    val intent = Intent(Intent.ACTION_VIEW, webpageRecibo)
+                                        val webpageRecibo: Uri = Uri.parse(Utilitarios.getBoletasPreUrl(pagoPre.codigo!!))
+                                        val intent = Intent(Intent.ACTION_VIEW, webpageRecibo)
 
-                                    if(intent.resolveActivity(requireActivity().packageManager) != null){
-                                        startActivity(intent)
+                                        if(intent.resolveActivity(requireActivity().packageManager) != null){
+                                            startActivity(intent)
+                                        }
+
+                                        //This uses a WebView which does not work well with PDF files
+                                        /*val intentBoleta = Intent().setClass(requireActivity(), PagoPreBoletaActivity::class.java!!)
+                                        intentBoleta.putExtra("KEY_CODBOLETA", pagoPre.codigo)
+                                        intentBoleta.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                        requireActivity().startActivity(intentBoleta)*/
                                     }
-
-                                    //This uses a WebView which does not work well with PDF files
-                                    /*val intentBoleta = Intent().setClass(requireActivity(), PagoPreBoletaActivity::class.java!!)
-                                    intentBoleta.putExtra("KEY_CODBOLETA", pagoPre.codigo)
-                                    intentBoleta.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                    requireActivity().startActivity(intentBoleta)*/
                                 }
+                                rvPago_fpagopre.adapter = adapter
+                                lblMensaje_fpagopre.visibility = View.GONE
+                            } else {
+                                lblMensaje_fpagopre.visibility = View.VISIBLE
+                                lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_pago_no)
                             }
-                            rvPago_fpagopre.adapter = adapter
-                            lblMensaje_fpagopre.visibility = View.GONE
                         } else {
                             lblMensaje_fpagopre.visibility = View.VISIBLE
-                            lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_pago_no)
+                            lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
                         }
-                    } else {
+                    } catch (jex: JSONException) {
+
+                        lblMensaje_fpagopre.visibility = View.VISIBLE
+                        lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
+                    } catch (ccax: ClassCastException) {
                         lblMensaje_fpagopre.visibility = View.VISIBLE
                         lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
                     }
-                } catch (jex: JSONException) {
 
-                    lblMensaje_fpagopre.visibility = View.VISIBLE
-                    lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
-                } catch (ccax: ClassCastException) {
-                    lblMensaje_fpagopre.visibility = View.VISIBLE
-                    lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
-                }
+                    prbCargando_fpagopre.visibility = View.GONE
+                    swPago_fpagopre.isRefreshing = false
+                },
+                { error ->
+                    if(error is TimeoutError || error.networkResponse == null) {
+                        if(view != null) {
+                            rvPago_fpagopre.visibility = View.GONE
+                            prbCargando_fpagopre.visibility = View.GONE
+                            swPago_fpagopre.isRefreshing = false
+                            lblMensaje_fpagopre.visibility = View.VISIBLE
+                            lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                        }
+                    } else if(error.networkResponse.statusCode == 401) {
 
-                prbCargando_fpagopre.visibility = View.GONE
-                swPago_fpagopre.isRefreshing = false
-            },
-            { error ->
-                if(error is TimeoutError || error.networkResponse == null) {
-                    if(view != null) {
-                        rvPago_fpagopre.visibility = View.GONE
-                        prbCargando_fpagopre.visibility = View.GONE
-                        swPago_fpagopre.isRefreshing = false
-                        lblMensaje_fpagopre.visibility = View.VISIBLE
-                        lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
-                    }
-                } else if(error.networkResponse.statusCode == 401) {
-
-                    requireActivity().renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onPagoPre(url, request)
-                        } else {
-                            if(view != null) {
-                                rvPago_fpagopre.visibility = View.GONE
-                                prbCargando_fpagopre.visibility = View.GONE
-                                swPago_fpagopre.isRefreshing = false
-                                lblMensaje_fpagopre.visibility = View.VISIBLE
-                                lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
-                            }
-                        }                        }
-                } else {
-                    if(view != null) {
-                        rvPago_fpagopre.visibility = View.GONE
-                        prbCargando_fpagopre.visibility = View.GONE
-                        swPago_fpagopre.isRefreshing = false
-                        lblMensaje_fpagopre.visibility = View.VISIBLE
-                        lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                        requireActivity().renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onPagoPre(url, request)
+                            } else {
+                                if(view != null) {
+                                    rvPago_fpagopre.visibility = View.GONE
+                                    prbCargando_fpagopre.visibility = View.GONE
+                                    swPago_fpagopre.isRefreshing = false
+                                    lblMensaje_fpagopre.visibility = View.VISIBLE
+                                    lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                                }
+                            }                        }
+                    } else {
+                        if(view != null) {
+                            rvPago_fpagopre.visibility = View.GONE
+                            prbCargando_fpagopre.visibility = View.GONE
+                            swPago_fpagopre.isRefreshing = false
+                            lblMensaje_fpagopre.visibility = View.VISIBLE
+                            lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                        }
                     }
                 }
+            )
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return requireActivity().getHeaderForJWT()
+                }
             }
-        )
-        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                return requireActivity().getHeaderForJWT()
-            }
+            jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            jsObjectRequest.tag = TAG
+            requestQueue?.add(jsObjectRequest)
         }
-        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
-        jsObjectRequest.tag = TAG
-        requestQueue?.add(jsObjectRequest)
+
     }
 
     override fun onStop() {

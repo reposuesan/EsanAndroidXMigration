@@ -115,113 +115,117 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
         if(view != null){
             prbCargando_fpagopost.visibility = View.VISIBLE
         }
-        requestQueue = Volley.newRequestQueue(requireActivity())
-        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
-        val jsObjectRequest = object: JsonObjectRequest(
-        /*val jsObjectRequest = JsonObjectRequest(*/
+        if(isAdded) {
+            requestQueue = Volley.newRequestQueue(requireActivity())
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsObjectRequest = object: JsonObjectRequest(
+                /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
-            { response ->
-                try {
-                    val pagopostJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPosgradoResult"] as String, requireActivity())
+                { response ->
+                    try {
+                        val pagopostJArray = Utilitarios.jsArrayDesencriptar(response["ListaProgramacionPagosxAlumnoPosgradoResult"] as String, requireActivity())
 
-                    if (pagopostJArray != null) {
-                        if (pagopostJArray.length() > 0) {
-                            val listaPago = ArrayList<PagoPost>()
-                            for (p in 0 until pagopostJArray.length()) {
-                                val pagopostJson = pagopostJArray[p] as JSONObject
-                                val diasvencidos = pagopostJson["DiasVencimiento"] as Double
-                                val fechavencimiento = pagopostJson["FechaVencimiento"] as String
-                                val importe = pagopostJson["Importe"] as Double
-                                val moneda = pagopostJson["Moneda"] as String
-                                val interes = pagopostJson["Intereses"] as Double
-                                val penalidad = pagopostJson["Mora"] as Double
-                                val pagodolares = pagopostJson["PagarDolares"] as Double
-                                val pagoSoles = pagopostJson["PagarSoles"] as Double
-                                var simbolo = ""
-                                var total = ""
-                                if (moneda == "PEN") {
-                                    simbolo = "S/"
-                                    total = "S/ $pagoSoles"
-                                } else {
-                                    simbolo = "$"
-                                    total = "$ $pagodolares"
+                        if (pagopostJArray != null) {
+                            if (pagopostJArray.length() > 0) {
+                                val listaPago = ArrayList<PagoPost>()
+                                for (p in 0 until pagopostJArray.length()) {
+                                    val pagopostJson = pagopostJArray[p] as JSONObject
+                                    val diasvencidos = pagopostJson["DiasVencimiento"] as Double
+                                    val fechavencimiento = pagopostJson["FechaVencimiento"] as String
+                                    val importe = pagopostJson["Importe"] as Double
+                                    val moneda = pagopostJson["Moneda"] as String
+                                    val interes = pagopostJson["Intereses"] as Double
+                                    val penalidad = pagopostJson["Mora"] as Double
+                                    val pagodolares = pagopostJson["PagarDolares"] as Double
+                                    val pagoSoles = pagopostJson["PagarSoles"] as Double
+                                    var simbolo = ""
+                                    var total = ""
+                                    if (moneda == "PEN") {
+                                        simbolo = "S/"
+                                        total = "S/ $pagoSoles"
+                                    } else {
+                                        simbolo = "$"
+                                        total = "$ $pagodolares"
+                                    }
+
+                                    listaPago.add(PagoPost(fechavencimiento, diasvencidos, simbolo + importe, simbolo + penalidad, simbolo + interes, total))
                                 }
-
-                                listaPago.add(PagoPost(fechavencimiento, diasvencidos, simbolo + importe, simbolo + penalidad, simbolo + interes, total))
+                                rvPago_fpagopost.visibility = View.VISIBLE
+                                rvPago_fpagopost.adapter = PagoPostAdapter(listaPago)
+                                lblMensaje_fpagopost.visibility = View.GONE
+                            } else {
+                                rvPago_fpagopost.visibility = View.GONE
+                                lblMensaje_fpagopost.visibility = View.VISIBLE
+                                lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_pago_no)
                             }
-                            rvPago_fpagopost.visibility = View.VISIBLE
-                            rvPago_fpagopost.adapter = PagoPostAdapter(listaPago)
-                            lblMensaje_fpagopost.visibility = View.GONE
                         } else {
                             rvPago_fpagopost.visibility = View.GONE
                             lblMensaje_fpagopost.visibility = View.VISIBLE
-                            lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_pago_no)
+                            lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
                         }
-                    } else {
+                    } catch (jex: JSONException) {
+                        rvPago_fpagopost.visibility = View.GONE
+                        lblMensaje_fpagopost.visibility = View.VISIBLE
+                        lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
+                    } catch (ccax: ClassCastException) {
                         rvPago_fpagopost.visibility = View.GONE
                         lblMensaje_fpagopost.visibility = View.VISIBLE
                         lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
                     }
-                } catch (jex: JSONException) {
-                    rvPago_fpagopost.visibility = View.GONE
-                    lblMensaje_fpagopost.visibility = View.VISIBLE
-                    lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
-                } catch (ccax: ClassCastException) {
-                    rvPago_fpagopost.visibility = View.GONE
-                    lblMensaje_fpagopost.visibility = View.VISIBLE
-                    lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
-                }
 
-                prbCargando_fpagopost.visibility = View.GONE
-                swPago_fpagopost.isRefreshing = false
-            },
-            { error ->
-                if(error is TimeoutError || error.networkResponse == null) {
-                    if(view != null) {
-                        prbCargando_fpagopost.visibility = View.GONE
-                        rvPago_fpagopost.visibility = View.GONE
-                        swPago_fpagopost.isRefreshing = false
-                        lblMensaje_fpagopost.visibility = View.VISIBLE
-                        lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default)
-                    }
-                } else if(error.networkResponse.statusCode == 401) {
-                    requireActivity().renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onPagoPost(url, request)
-                        } else {
-                            if(view != null) {
-                                prbCargando_fpagopost.visibility = View.GONE
-                                rvPago_fpagopost.visibility = View.GONE
-                                swPago_fpagopost.isRefreshing = false
-                                lblMensaje_fpagopost.visibility = View.VISIBLE
-                                lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default)
+                    prbCargando_fpagopost.visibility = View.GONE
+                    swPago_fpagopost.isRefreshing = false
+                },
+                { error ->
+                    if(error is TimeoutError || error.networkResponse == null) {
+                        if(view != null) {
+                            prbCargando_fpagopost.visibility = View.GONE
+                            rvPago_fpagopost.visibility = View.GONE
+                            swPago_fpagopost.isRefreshing = false
+                            lblMensaje_fpagopost.visibility = View.VISIBLE
+                            lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default)
+                        }
+                    } else if(error.networkResponse.statusCode == 401) {
+                        requireActivity().renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onPagoPost(url, request)
+                            } else {
+                                if(view != null) {
+                                    prbCargando_fpagopost.visibility = View.GONE
+                                    rvPago_fpagopost.visibility = View.GONE
+                                    swPago_fpagopost.isRefreshing = false
+                                    lblMensaje_fpagopost.visibility = View.VISIBLE
+                                    lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default)
+                                }
                             }
                         }
+                    } else {
+                        if(view != null) {
+                            prbCargando_fpagopost.visibility = View.GONE
+                            rvPago_fpagopost.visibility = View.GONE
+                            swPago_fpagopost.isRefreshing = false
+                            lblMensaje_fpagopost.visibility = View.VISIBLE
+                            lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default)
+                        }
                     }
-                } else {
-                    if(view != null) {
-                        prbCargando_fpagopost.visibility = View.GONE
-                        rvPago_fpagopost.visibility = View.GONE
-                        swPago_fpagopost.isRefreshing = false
-                        lblMensaje_fpagopost.visibility = View.VISIBLE
-                        lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default)
-                    }
+
+
                 }
-
-
+            )
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return requireActivity().getHeaderForJWT()
+                }
             }
-        )
-        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                return requireActivity().getHeaderForJWT()
-            }
+            jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            jsObjectRequest.tag = TAG
+            requestQueue?.add(jsObjectRequest)
+
         }
-        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
-        jsObjectRequest.tag = TAG
-        requestQueue?.add(jsObjectRequest)
+
     }
 
 

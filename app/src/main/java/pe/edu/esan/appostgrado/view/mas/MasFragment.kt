@@ -809,64 +809,67 @@ class MasFragment : androidx.fragment.app.Fragment() {
 
 
     private fun onCantidadMensaje(url: String, request: JSONObject) {
-        requestQueueCantMensaje = Volley.newRequestQueue(requireActivity())
-        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
-        val jsObjectRequest = object: JsonObjectRequest(
-        /*val jsObjectRequest = JsonObjectRequest(*/
-            Request.Method.POST,
-            url,
-            request,
-            { response ->
-                try {
-                    val respuesta = Utilitarios.stringDesencriptar(
-                        response["ObtenerNotificacionPendientePorUsuarioResult"] as String,
-                        requireActivity()
-                    )
-                    if (respuesta != null) {
-                        opcionesAdapter?.actualizarCantidadMensajes(respuesta.toInt())
+        if(isAdded) {
+            requestQueueCantMensaje = Volley.newRequestQueue(requireActivity())
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsObjectRequest = object: JsonObjectRequest(
+                /*val jsObjectRequest = JsonObjectRequest(*/
+                Request.Method.POST,
+                url,
+                request,
+                { response ->
+                    try {
+                        val respuesta = Utilitarios.stringDesencriptar(
+                            response["ObtenerNotificacionPendientePorUsuarioResult"] as String,
+                            requireActivity()
+                        )
+                        if (respuesta != null) {
+                            opcionesAdapter?.actualizarCantidadMensajes(respuesta.toInt())
+                        }
+                    } catch (jex: JSONException) {
+
+                    } catch (caax: ClassCastException) {
+
+                    } catch (ex: ParseException) {
+
                     }
-                } catch (jex: JSONException) {
 
-                } catch (caax: ClassCastException) {
-
-                } catch (ex: ParseException) {
-
-                }
-
-            },
-            { error ->
-                when {
-                    error is TimeoutError || error.networkResponse == null -> {
-                        error.printStackTrace()
-                    }
-                    error.networkResponse.statusCode == 401 -> {
-                        requireActivity().renewToken { token ->
-                            if(!token.isNullOrEmpty()){
-                                onCantidadMensaje(url, request)
-                            } else {
-                                error.printStackTrace()
+                },
+                { error ->
+                    when {
+                        error is TimeoutError || error.networkResponse == null -> {
+                            error.printStackTrace()
+                        }
+                        error.networkResponse.statusCode == 401 -> {
+                            requireActivity().renewToken { token ->
+                                if(!token.isNullOrEmpty()){
+                                    onCantidadMensaje(url, request)
+                                } else {
+                                    error.printStackTrace()
+                                }
                             }
                         }
-                    }
-                    else -> {
-                        error.printStackTrace()
+                        else -> {
+                            error.printStackTrace()
+                        }
                     }
                 }
+            )
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return requireActivity().getHeaderForJWT()
+                }
             }
-        )
-        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                return requireActivity().getHeaderForJWT()
-            }
+            jsObjectRequest.retryPolicy = DefaultRetryPolicy(
+                15000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            )
+            jsObjectRequest.tag = TAG
+            requestQueueCantMensaje?.add(jsObjectRequest)
+
         }
-        jsObjectRequest.retryPolicy = DefaultRetryPolicy(
-            15000,
-            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-        )
-        jsObjectRequest.tag = TAG
-        requestQueueCantMensaje?.add(jsObjectRequest)
     }
 
 

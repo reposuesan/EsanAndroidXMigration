@@ -225,185 +225,189 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         if(view != null){
             prbCargando_fhorario.visibility = View.VISIBLE
         }
-        requestQueue = Volley.newRequestQueue(requireActivity())
-        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
-        val jsObjectRequest = object: JsonObjectRequest(
-        /*val jsObjectRequest = JsonObjectRequest(*/
-            Request.Method.POST,
-            url,
-            request,
-            { response ->
-                try {
 
-                    if (!response.isNull("ListarHorarioAlumnoProfesorxFechaResult")) {
+        if(isAdded) {
+            requestQueue = Volley.newRequestQueue(requireActivity())
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsObjectRequest = object: JsonObjectRequest(
+                /*val jsObjectRequest = JsonObjectRequest(*/
+                Request.Method.POST,
+                url,
+                request,
+                { response ->
+                    try {
 
-                        val stringOutput = response["ListarHorarioAlumnoProfesorxFechaResult"] as String
-                        val scheduleJArray = Utilitarios.jsArrayDesencriptar(stringOutput, requireActivity())
-                        if (scheduleJArray!!.length() > 0) {
+                        if (!response.isNull("ListarHorarioAlumnoProfesorxFechaResult")) {
 
-                            ControlUsuario.instance.currentListHorario.clear()
-                            for (z in 0 until scheduleJArray.length()) {
-                                val scheduleJs = scheduleJArray[z] as JSONObject
-                                var ambiente = scheduleJs["Ambiente"] as? String
-                                if (ambiente == null) {
-                                    ambiente = "-"
+                            val stringOutput = response["ListarHorarioAlumnoProfesorxFechaResult"] as String
+                            val scheduleJArray = Utilitarios.jsArrayDesencriptar(stringOutput, requireActivity())
+                            if (scheduleJArray!!.length() > 0) {
+
+                                ControlUsuario.instance.currentListHorario.clear()
+                                for (z in 0 until scheduleJArray.length()) {
+                                    val scheduleJs = scheduleJArray[z] as JSONObject
+                                    var ambiente = scheduleJs["Ambiente"] as? String
+                                    if (ambiente == null) {
+                                        ambiente = "-"
+                                    }
+                                    val valcurso = scheduleJs["Curso"] as String
+                                    val esPregrado = scheduleJs["EsPregrado"] as Int
+                                    val dia = (scheduleJs["Fecha"] as String).substring(
+                                        0,
+                                        1
+                                    ) + (scheduleJs["Fecha"] as String).substring(1)
+                                    val fechaActual =
+                                        Utilitarios.getStringToStringddMMyyyyHHmmTwo(scheduleJs["FechaHoraActual"] as String)
+                                    val horaFin = scheduleJs["Fin"] as String
+                                    val horaInicio = scheduleJs["Inicio"] as String
+                                    val idAmbiente = scheduleJs["IdAmbiente"] as Int
+                                    val idCurso = scheduleJs["IdCurso"] as Int
+                                    val idHorario = scheduleJs["IdHorario"] as Int
+                                    val idSeccion = scheduleJs["IdSeccion"] as Int
+                                    val idSesion = scheduleJs["IdSesion"] as Int
+                                    val idProfesorReemplazo = scheduleJs["IdactorReemplazo"] as Int
+                                    val nombreProfesor = scheduleJs["Profesor"] as String
+                                    val nombreProfesorReemplazo = scheduleJs["ProfesorReemplazo"] as String
+                                    val promocion = scheduleJs["Promocion"] as String
+
+                                    //TODO: QR INTERNATIONAL WEEK
+                                    /*if(promocion.equals("[OBLIESP/20-2] CICLO 2020-0")){
+                                        enableQR()
+                                    } else {
+                                        disableQR()
+                                    }*/
+
+                                    val seccionCodigo = when (currentUsuario) {
+                                        is Profesor -> scheduleJs["SeccionCodigo"] as String
+                                        else -> ""
+                                    }
+
+                                    val tomoAsistencia = scheduleJs["TomoAsistencia"] as Int
+
+                                    val arrayNombre = valcurso.split("|")
+                                    var numSesionReal = ""
+                                    var nombreCurso = ""
+
+                                    if (arrayNombre.size > 1) {
+                                        numSesionReal = arrayNombre[0].trim()
+                                        nombreCurso = arrayNombre[1].trim()
+                                    } else {
+                                        nombreCurso = arrayNombre[0].trim()
+                                    }
+                                    val codigoSeccion = when (currentUsuario) {
+                                        is Alumno -> ""
+                                        else -> scheduleJs["CodigoSeccion"] as String
+                                    }
+                                    val tipoHorario = when (currentUsuario) {
+                                        is Alumno -> 1 //ES ALUMNO
+                                        else -> 2 //ES PROFESOR
+                                    }
+
+                                    val horario = Horario(
+                                        tipoHorario,
+                                        idHorario,
+                                        horaInicio,
+                                        horaFin,
+                                        nombreProfesor,
+                                        dia,
+                                        idAmbiente,
+                                        nombreCurso,
+                                        idSeccion,
+                                        codigoSeccion,
+                                        idSesion,
+                                        seccionCodigo,
+                                        ambiente,
+                                        tomoAsistencia,
+                                        esPregrado,
+                                        fechaActual,
+                                        numSesionReal,
+                                        idProfesorReemplazo,
+                                        nombreProfesorReemplazo
+                                    )
+                                    ControlUsuario.instance.currentListHorario.add(horario)
+                                    existeHorario = true
                                 }
-                                val valcurso = scheduleJs["Curso"] as String
-                                val esPregrado = scheduleJs["EsPregrado"] as Int
-                                val dia = (scheduleJs["Fecha"] as String).substring(
-                                    0,
-                                    1
-                                ) + (scheduleJs["Fecha"] as String).substring(1)
-                                val fechaActual =
-                                    Utilitarios.getStringToStringddMMyyyyHHmmTwo(scheduleJs["FechaHoraActual"] as String)
-                                val horaFin = scheduleJs["Fin"] as String
-                                val horaInicio = scheduleJs["Inicio"] as String
-                                val idAmbiente = scheduleJs["IdAmbiente"] as Int
-                                val idCurso = scheduleJs["IdCurso"] as Int
-                                val idHorario = scheduleJs["IdHorario"] as Int
-                                val idSeccion = scheduleJs["IdSeccion"] as Int
-                                val idSesion = scheduleJs["IdSesion"] as Int
-                                val idProfesorReemplazo = scheduleJs["IdactorReemplazo"] as Int
-                                val nombreProfesor = scheduleJs["Profesor"] as String
-                                val nombreProfesorReemplazo = scheduleJs["ProfesorReemplazo"] as String
-                                val promocion = scheduleJs["Promocion"] as String
+                                showHorarioWithoutAsyncTask(reformatHours(), true)
 
-                                //TODO: QR INTERNATIONAL WEEK
-                                /*if(promocion.equals("[OBLIESP/20-2] CICLO 2020-0")){
-                                    enableQR()
-                                } else {
-                                    disableQR()
-                                }*/
-
-                                val seccionCodigo = when (currentUsuario) {
-                                    is Profesor -> scheduleJs["SeccionCodigo"] as String
-                                    else -> ""
+                                if (view != null) {
+                                    view!!.rvHorario_fhorario.visibility = View.VISIBLE
+                                    view!!.lblMensaje_fhorario.visibility = View.GONE
                                 }
-
-                                val tomoAsistencia = scheduleJs["TomoAsistencia"] as Int
-
-                                val arrayNombre = valcurso.split("|")
-                                var numSesionReal = ""
-                                var nombreCurso = ""
-
-                                if (arrayNombre.size > 1) {
-                                    numSesionReal = arrayNombre[0].trim()
-                                    nombreCurso = arrayNombre[1].trim()
-                                } else {
-                                    nombreCurso = arrayNombre[0].trim()
+                            } else {
+                                if (view != null) {
+                                    view!!.rvHorario_fhorario.visibility = View.GONE
+                                    view!!.lblMensaje_fhorario.visibility = View.VISIBLE
+                                    view!!.lblMensaje_fhorario.text = context!!.resources.getText(R.string.error_horario_no)
                                 }
-                                val codigoSeccion = when (currentUsuario) {
-                                    is Alumno -> ""
-                                    else -> scheduleJs["CodigoSeccion"] as String
-                                }
-                                val tipoHorario = when (currentUsuario) {
-                                    is Alumno -> 1 //ES ALUMNO
-                                    else -> 2 //ES PROFESOR
-                                }
-
-                                val horario = Horario(
-                                    tipoHorario,
-                                    idHorario,
-                                    horaInicio,
-                                    horaFin,
-                                    nombreProfesor,
-                                    dia,
-                                    idAmbiente,
-                                    nombreCurso,
-                                    idSeccion,
-                                    codigoSeccion,
-                                    idSesion,
-                                    seccionCodigo,
-                                    ambiente,
-                                    tomoAsistencia,
-                                    esPregrado,
-                                    fechaActual,
-                                    numSesionReal,
-                                    idProfesorReemplazo,
-                                    nombreProfesorReemplazo
-                                )
-                                ControlUsuario.instance.currentListHorario.add(horario)
-                                existeHorario = true
                             }
-                            showHorarioWithoutAsyncTask(reformatHours(), true)
 
-                            if (view != null) {
-                                view!!.rvHorario_fhorario.visibility = View.VISIBLE
-                                view!!.lblMensaje_fhorario.visibility = View.GONE
-                            }
                         } else {
                             if (view != null) {
                                 view!!.rvHorario_fhorario.visibility = View.GONE
                                 view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                                view!!.lblMensaje_fhorario.text = context!!.resources.getText(R.string.error_horario_no)
+                                view!!.lblMensaje_fhorario.text = context!!.resources.getText(R.string.error_desencriptar)
                             }
                         }
 
-                    } else {
+
+                    } catch (e: Exception) {
                         if (view != null) {
                             view!!.rvHorario_fhorario.visibility = View.GONE
                             view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                            view!!.lblMensaje_fhorario.text = context!!.resources.getText(R.string.error_desencriptar)
+                            view!!.lblMensaje_fhorario.text = context!!.resources.getText(R.string.error_default)
                         }
                     }
 
-
-                } catch (e: Exception) {
                     if (view != null) {
-                        view!!.rvHorario_fhorario.visibility = View.GONE
-                        view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                        view!!.lblMensaje_fhorario.text = context!!.resources.getText(R.string.error_default)
-                    }
-                }
-
-                if (view != null) {
-                    view!!.swHorario_fhorario.isRefreshing = false
-                    view!!.prbCargando_fhorario.visibility = View.GONE
-                }
-            },
-            { error ->
-                if(error is TimeoutError || error.networkResponse == null){
-                    if (view != null) {
-                        view!!.rvHorario_fhorario.visibility = View.GONE
-                        view!!.prbCargando_fhorario.visibility = View.GONE
                         view!!.swHorario_fhorario.isRefreshing = false
-                        view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                        view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+                        view!!.prbCargando_fhorario.visibility = View.GONE
                     }
-                } else if(error.networkResponse.statusCode == 401) {
-                            requireActivity().renewToken { token ->
-                                if(!token.isNullOrEmpty()){
-                                    onHorario(url, request, currentUsuario)
-                                } else {
-                                    if (view != null) {
-                                        view!!.rvHorario_fhorario.visibility = View.GONE
-                                        view!!.prbCargando_fhorario.visibility = View.GONE
-                                        view!!.swHorario_fhorario.isRefreshing = false
-                                        view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                                        view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
-                                    }
-                                }                        }
-                } else {
-                    if (view != null) {
-                                view!!.rvHorario_fhorario.visibility = View.GONE
-                                view!!.prbCargando_fhorario.visibility = View.GONE
-                                view!!.swHorario_fhorario.isRefreshing = false
-                                view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                                view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+                },
+                { error ->
+                    if(error is TimeoutError || error.networkResponse == null){
+                        if (view != null) {
+                            view!!.rvHorario_fhorario.visibility = View.GONE
+                            view!!.prbCargando_fhorario.visibility = View.GONE
+                            view!!.swHorario_fhorario.isRefreshing = false
+                            view!!.lblMensaje_fhorario.visibility = View.VISIBLE
+                            view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+                        }
+                    } else if(error.networkResponse.statusCode == 401) {
+                        requireActivity().renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onHorario(url, request, currentUsuario)
+                            } else {
+                                if (view != null) {
+                                    view!!.rvHorario_fhorario.visibility = View.GONE
+                                    view!!.prbCargando_fhorario.visibility = View.GONE
+                                    view!!.swHorario_fhorario.isRefreshing = false
+                                    view!!.lblMensaje_fhorario.visibility = View.VISIBLE
+                                    view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+                                }
+                            }                        }
+                    } else {
+                        if (view != null) {
+                            view!!.rvHorario_fhorario.visibility = View.GONE
+                            view!!.prbCargando_fhorario.visibility = View.GONE
+                            view!!.swHorario_fhorario.isRefreshing = false
+                            view!!.lblMensaje_fhorario.visibility = View.VISIBLE
+                            view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+                        }
                     }
                 }
+            )
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return requireActivity().getHeaderForJWT()
+                }
             }
-        )
-        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                return requireActivity().getHeaderForJWT()
-            }
-        }
 
-        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
-        jsObjectRequest.tag = TAG
-        requestQueue?.add(jsObjectRequest)
+            jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            jsObjectRequest.tag = TAG
+            requestQueue?.add(jsObjectRequest)
+
+        }
     }
 
 

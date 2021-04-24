@@ -111,100 +111,104 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
         if(view != null){
             prbCargando_fprograma.visibility = View.VISIBLE
         }
-        requestQueue = Volley.newRequestQueue(requireActivity())
-        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
-        val jsObjectRequest = object: JsonObjectRequest(
-        /*val jsObjectRequest = JsonObjectRequest(*/
+
+        if(isAdded) {
+            requestQueue = Volley.newRequestQueue(requireActivity())
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            val jsObjectRequest = object: JsonObjectRequest(
+                /*val jsObjectRequest = JsonObjectRequest(*/
                 Request.Method.POST,
                 url,
                 request,
-            { response ->
-                try {
-                    val programaJArray = Utilitarios.jsArrayDesencriptar(response["ListarProgramasPostResult"] as String, requireActivity())
-                    //val programaJArray = response["ListarProgramasPostResult"] as JSONArray
-                    if (programaJArray != null) {
-                        if (programaJArray.length() > 0) {
-                            val listProgramas = ArrayList<Programa>()
-                            for (p in 0 until programaJArray.length()) {
-                                val programaJson = programaJArray[p] as JSONObject
-                                val codigo = programaJson["PromocionCodigo"] as String
-                                val nombre = programaJson["PromocionNombre"] as String
-                                listProgramas.add(Programa(codigo, nombre))
-                            }
+                { response ->
+                    try {
+                        val programaJArray = Utilitarios.jsArrayDesencriptar(response["ListarProgramasPostResult"] as String, requireActivity())
+                        //val programaJArray = response["ListarProgramasPostResult"] as JSONArray
+                        if (programaJArray != null) {
+                            if (programaJArray.length() > 0) {
+                                val listProgramas = ArrayList<Programa>()
+                                for (p in 0 until programaJArray.length()) {
+                                    val programaJson = programaJArray[p] as JSONObject
+                                    val codigo = programaJson["PromocionCodigo"] as String
+                                    val nombre = programaJson["PromocionNombre"] as String
+                                    listProgramas.add(Programa(codigo, nombre))
+                                }
 
-                            val adapter = ProgramaAdapter(listProgramas) { programa ->
+                                val adapter = ProgramaAdapter(listProgramas) { programa ->
 
-                                //getEncuestaPorPrograma (programa)
-                                val intent = Intent(requireActivity(), CursosPostActivity::class.java)
-                                intent.putExtra("KEY_CODIGO_PROGRAMA", programa.codigo)
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                startActivity(intent)
+                                    //getEncuestaPorPrograma (programa)
+                                    val intent = Intent(requireActivity(), CursosPostActivity::class.java)
+                                    intent.putExtra("KEY_CODIGO_PROGRAMA", programa.codigo)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                    startActivity(intent)
+                                }
+                                rvPrograma_fprograma.visibility = View.VISIBLE
+                                rvPrograma_fprograma.adapter = adapter
+                                lblMensaje_fprograma.visibility = View.GONE
+                            } else {
+                                rvPrograma_fprograma.visibility = View.GONE
+                                lblMensaje_fprograma.visibility = View.VISIBLE
+                                lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_programa_no)
                             }
-                            rvPrograma_fprograma.visibility = View.VISIBLE
-                            rvPrograma_fprograma.adapter = adapter
-                            lblMensaje_fprograma.visibility = View.GONE
                         } else {
                             rvPrograma_fprograma.visibility = View.GONE
                             lblMensaje_fprograma.visibility = View.VISIBLE
-                            lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_programa_no)
+                            lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_desencriptar)
                         }
-                    } else {
+                    } catch (jex: JSONException) {
                         rvPrograma_fprograma.visibility = View.GONE
                         lblMensaje_fprograma.visibility = View.VISIBLE
-                        lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_desencriptar)
+                        lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_respuesta_server)
                     }
-                } catch (jex: JSONException) {
-                    rvPrograma_fprograma.visibility = View.GONE
-                    lblMensaje_fprograma.visibility = View.VISIBLE
-                    lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_respuesta_server)
-                }
-                if(view != null){
-                    swPrograma_fprograma.isRefreshing = false
-                    prbCargando_fprograma.visibility = View.GONE
-                }
-            },
-            { error ->
-                if(error is TimeoutError || error.networkResponse == null) {
-                    if(view != null) {
+                    if(view != null){
                         swPrograma_fprograma.isRefreshing = false
                         prbCargando_fprograma.visibility = View.GONE
-                        lblMensaje_fprograma.visibility = View.VISIBLE
-                        lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
                     }
-                } else if(error.networkResponse.statusCode == 401) {
+                },
+                { error ->
+                    if(error is TimeoutError || error.networkResponse == null) {
+                        if(view != null) {
+                            swPrograma_fprograma.isRefreshing = false
+                            prbCargando_fprograma.visibility = View.GONE
+                            lblMensaje_fprograma.visibility = View.VISIBLE
+                            lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+                        }
+                    } else if(error.networkResponse.statusCode == 401) {
 
-                    requireActivity().renewToken { token ->
-                        if(!token.isNullOrEmpty()){
-                            onProgramas(url, request)
-                        } else {
-                            if(view != null) {
-                                swPrograma_fprograma.isRefreshing = false
-                                prbCargando_fprograma.visibility = View.GONE
-                                lblMensaje_fprograma.visibility = View.VISIBLE
-                                lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+                        requireActivity().renewToken { token ->
+                            if(!token.isNullOrEmpty()){
+                                onProgramas(url, request)
+                            } else {
+                                if(view != null) {
+                                    swPrograma_fprograma.isRefreshing = false
+                                    prbCargando_fprograma.visibility = View.GONE
+                                    lblMensaje_fprograma.visibility = View.VISIBLE
+                                    lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+                                }
                             }
                         }
+                    } else {
+                        if(view != null) {
+                            swPrograma_fprograma.isRefreshing = false
+                            prbCargando_fprograma.visibility = View.GONE
+                            lblMensaje_fprograma.visibility = View.VISIBLE
+                            lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+                        }
                     }
-                } else {
-                    if(view != null) {
-                        swPrograma_fprograma.isRefreshing = false
-                        prbCargando_fprograma.visibility = View.GONE
-                        lblMensaje_fprograma.visibility = View.VISIBLE
-                        lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
-                    }
-                }
 
+                }
+            )
+            //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
+            {
+                override fun getHeaders(): MutableMap<String, String> {
+                    return requireActivity().getHeaderForJWT()
+                }
             }
-        )
-        //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)
-        {
-            override fun getHeaders(): MutableMap<String, String> {
-                return requireActivity().getHeaderForJWT()
-            }
+            jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            jsObjectRequest.tag = TAG
+            requestQueue?.add(jsObjectRequest)
         }
-        jsObjectRequest.retryPolicy = DefaultRetryPolicy(15000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
-        jsObjectRequest.tag = TAG
-        requestQueue?.add(jsObjectRequest)
+
     }
 
     override fun onRefresh() {

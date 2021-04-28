@@ -229,9 +229,9 @@ class EncuestaActivity : AppCompatActivity() {
                         Log.e(LOG,"An error occurred")
                     }
                 } catch (jex: JSONException) {
-
+                    Log.e(LOG, "JSONException error")
                 } catch (ccex: ClassCastException) {
-
+                    Log.e(LOG, "ClassCastException error")
                 }
             },
             { error ->

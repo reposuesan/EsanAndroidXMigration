@@ -215,7 +215,7 @@ class Utilitarios {
                 URL.PREGUNTAS_ENCUESTA ->           return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/api/encuesta/GestionAcademica/ListarEncuestaPregunta"
                 URL.CARGA_ACADEMICA ->              return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/api/carga/GestionAcademica/ListarCargaAcademica"
                 URL.DIRECTORIO ->                   return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/api/directorio/GestionAcademica/ListaDirectorioAlumno"
-                URL.REGISTRAR_ENCUESTA ->           return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/api/encuesta/GestionAcademica/RegistrarEncuestaRespuestaByAlumno"
+                URL.REGISTRAR_ENCUESTA ->           return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/api/encuesta/GestionAcademica/RegistrarEncuesta"
                 URL.RECOR_ASISTENCIA_ALUMNO ->      return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/api/asistencia/GestionAsistencia/ListarRecordAsistenciaAlumno"
                 URL.RECOR_ASISTENCIA_PROFESOR ->    return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/api/asistencia/GestionAsistencia/ListarRecordAsistenciaDocente"
                 URL.HISTORICO_NOTAS_PRE ->          return (if (ReleasePortal) DominioPortal else DominioPortalTest) + "/api/notas/GestionAcademica/ListarHistoricoNotasAlumnoPre"

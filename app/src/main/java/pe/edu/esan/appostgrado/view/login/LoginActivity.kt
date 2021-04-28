@@ -1043,6 +1043,8 @@ class LoginActivity : AppCompatActivity(),
                                     null
                                 )
                                 iniciandoSesion = false
+                                enableLoginOption(true)
+                                enableGuestOption(true)
                             }
 
                         } else {
@@ -1053,6 +1055,8 @@ class LoginActivity : AppCompatActivity(),
                                 null
                             )
                             iniciandoSesion = false
+                            enableLoginOption(true)
+                            enableGuestOption(true)
                         }
                     } catch (jex: JSONException) {
                         val showAlertHelper = ShowAlertHelper(this)
@@ -1062,6 +1066,8 @@ class LoginActivity : AppCompatActivity(),
                             null
                         )
                         iniciandoSesion = false
+                        enableLoginOption(true)
+                        enableGuestOption(true)
                     }
                     dismissDialog()
                 },
@@ -1076,6 +1082,7 @@ class LoginActivity : AppCompatActivity(),
                                     getString(R.string.error_login_uno),
                                     null
                                 )
+
                         } else {
                                 val showAlertHelper = ShowAlertHelper(this)
                                 showAlertHelper.showAlertError(getString(R.string.error),
@@ -1094,6 +1101,8 @@ class LoginActivity : AppCompatActivity(),
 
                     dismissDialog()
                     iniciandoSesion = false
+                    enableLoginOption(true)
+                    enableGuestOption(true)
                 }
             )
             //IMPLEMENTACIÓN DE JWT (JSON WEB TOKEN)

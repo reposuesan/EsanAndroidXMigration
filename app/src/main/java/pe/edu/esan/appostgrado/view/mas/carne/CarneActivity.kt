@@ -17,6 +17,7 @@ import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 
 import kotlinx.android.synthetic.main.activity_carne.*
@@ -248,17 +249,22 @@ class CarneActivity : AppCompatActivity() {
                 toolbar.toolbar_title.text = resources.getString(R.string.carne_virtual_title) + " - " + resources.getString(R.string.pregrado_titulo)
             }
 
+            val requestOptions = RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.NONE) //because file name is always same
+                .skipMemoryCache(true)
+                .timeout(60000)
+
             if(!userIsOut){
                 Glide.with(this)
                     .load(Utilitarios.getUrlFoto(extras["KEY_CODIGO"] as String, 140))
-                    .apply(RequestOptions.timeoutOf(60000))
+                    .apply(requestOptions)
                     .into(imgUsuario_carnealumno)
             }
 
             if(!userIsOut){
                 Glide.with(this)
                     .load(Utilitarios.getCodeBarUrl(extras["KEY_CODIGO"] as String))
-                    .apply(RequestOptions.timeoutOf(60000))
+                    .apply(requestOptions)
                     .into(imgCodeBar_carnealumno)
             }
         }

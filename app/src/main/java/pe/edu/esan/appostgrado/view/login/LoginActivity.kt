@@ -25,7 +25,9 @@ import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.TextView
 
 import com.android.volley.DefaultRetryPolicy
@@ -182,6 +184,17 @@ class LoginActivity : AppCompatActivity(),
             }
             false
         }
+
+        //TODO: TEST CRASH IN CRASHLYTICS
+       /* val crashButton = Button(this)
+        crashButton.text = "Crash!"
+        crashButton.setOnClickListener {
+            throw RuntimeException("Test Crash") // Force a crash
+        }
+
+        addContentView(crashButton, ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT))*/
 
     }
 
@@ -357,7 +370,7 @@ class LoginActivity : AppCompatActivity(),
                                 val codAlumnoPost = jsObjDatosPostgrado?.getString("CodAlumno") ?: ""
                                 //ONLY FOR DEBUGGING POSTGRADO
                                 /*val codAlumnoPost = txtUsuario_login.text.toString()*/
-                                /*val codAlumnoPost = "1302177"*/
+                                /*val codAlumnoPost = "2012629"*/
 
                                 crashlytics.setUserId(codAlumnoPost)
 

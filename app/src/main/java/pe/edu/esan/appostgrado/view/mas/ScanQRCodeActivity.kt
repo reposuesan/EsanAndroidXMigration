@@ -32,7 +32,7 @@ class ScanQRCodeActivity : AppCompatActivity() {
 
     private var requestQueue : RequestQueue? = null
 
-    private val LOG = ScanQRCodeActivity::class.simpleName
+    //private val LOG = ScanQRCodeActivity::class.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +51,8 @@ class ScanQRCodeActivity : AppCompatActivity() {
         my_toolbar_lectura_qr.setTitleTextColor(ContextCompat.getColor(this, R.color.md_white_1000))
 
         read_qr_code_button.setOnClickListener {
-            IntentIntegrator(this@ScanQRCodeActivity).initiateScan()
+            //TODO: REVIEW LATER
+            //IntentIntegrator(this@ScanQRCodeActivity).initiateScan()
         }
     }
 

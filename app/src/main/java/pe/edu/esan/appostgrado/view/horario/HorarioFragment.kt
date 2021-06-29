@@ -60,10 +60,6 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
-        infoDayPlist = requireActivity().resources.getStringArray(R.array.dias_semana)
-        fechaActual = Date()
-
     }
 
 
@@ -100,6 +96,9 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         view.rvHorario_fhorario.adapter = null
         view.lblMensaje_fhorario.typeface = Utilitarios.getFontRoboto(requireActivity(), Utilitarios.TypeFont.THIN)
 
+        infoDayPlist = requireActivity().resources.getStringArray(R.array.dias_semana)
+        fechaActual = Date()
+        semanaActual = 1
         horarioCambio = false
     }
 

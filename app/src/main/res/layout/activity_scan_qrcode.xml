@@ -3,8 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="pe.edu.esan.appostgrado.view.mas.ScanQRCodeActivity">
+        android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/my_toolbar_lectura_qr"
@@ -15,8 +14,7 @@
 
     <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context="pe.edu.esan.appostgrado.view.mas.GenerateQRCodeActivity">
+            android:layout_height="match_parent">
 
         <Button
                 android:id="@+id/read_qr_code_button"

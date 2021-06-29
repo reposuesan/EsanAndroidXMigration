@@ -13,7 +13,7 @@ import pe.edu.esan.appostgrado.util.Utilitarios
 /**
  * Created by lventura on 27/04/18.
  */
-class PagoPreAdapter (val listaPagoPre: ArrayList<PagoPre>, val clickListener: (PagoPre) -> Unit): androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
+class PagoPreAdapter (val listaPagoPre: ArrayList<PagoPre>, val clickListener: (PagoPre) -> Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int {
         when (listaPagoPre[position].tipo) {
@@ -22,12 +22,12 @@ class PagoPreAdapter (val listaPagoPre: ArrayList<PagoPre>, val clickListener: (
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
-        return if (viewType == 1) CabeceraPagoPreHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_pagopre_cabecera, parent, false))
-            else DetallePagoPreHolder(LayoutInflater.from(parent?.context).inflate(R.layout.item_pagopre_detalle, parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == 1) CabeceraPagoPreHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_pagopre_cabecera, parent, false))
+            else DetallePagoPreHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_pagopre_detalle, parent, false))
     }
 
-    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is CabeceraPagoPreHolder -> holder.setValores(listaPagoPre[position])
             is DetallePagoPreHolder -> holder.setValores(listaPagoPre[position], clickListener)
@@ -38,7 +38,7 @@ class PagoPreAdapter (val listaPagoPre: ArrayList<PagoPre>, val clickListener: (
         return listaPagoPre.size
     }
 
-    class CabeceraPagoPreHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+    class CabeceraPagoPreHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun setValores(pago: PagoPre) {
             itemView.lblMatricula_ipagopre.typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.MEDIUM)
             itemView.lblConceptoT_ipagopre.typeface = Utilitarios.getFontRoboto(itemView.context, Utilitarios.TypeFont.REGULAR)

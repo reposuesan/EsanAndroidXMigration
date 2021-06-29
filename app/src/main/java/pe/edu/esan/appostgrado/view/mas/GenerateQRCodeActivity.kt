@@ -16,7 +16,7 @@ import pe.edu.esan.appostgrado.control.ControlUsuario
 
 class GenerateQRCodeActivity : AppCompatActivity() {
 
-    private val LOG = GenerateQRCodeActivity::class.simpleName
+    //private val LOG = GenerateQRCodeActivity::class.simpleName
 
     private lateinit var controlViewModel: ControlViewModel
 

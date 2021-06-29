@@ -21,10 +21,11 @@
             android:supportsRtl="true"
             android:theme="@style/AppThemeNoActionBar"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".view.mas.ScanQRCodeActivity" />
+        <!--<activity android:name=".view.mas.ScanQRCodeActivity"
+                android:screenOrientation="portrait"/>
         <activity
                 android:name=".view.mas.GenerateQRCodeActivity"
-                android:screenOrientation="portrait" />
+                android:screenOrientation="portrait" />-->
         <activity
                 android:name=".view.mas.laboratorios.ignore.TYCPregradoLabsActivity"
                 android:screenOrientation="portrait" />

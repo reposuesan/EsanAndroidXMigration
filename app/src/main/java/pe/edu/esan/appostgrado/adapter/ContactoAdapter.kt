@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.item_contacto.view.*
 import pe.edu.esan.appostgrado.R
 import pe.edu.esan.appostgrado.entidades.Alumno
@@ -52,8 +54,14 @@ class ContactoAdapter (val listaAlumnos: List<Alumno>): androidx.recyclerview.wi
                 itemView.lblCorreo_idirectorio.text = alumno.correo
             }
 
+            val requestOptions = RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.NONE) //because file name is always same
+                .skipMemoryCache(true)
+                .timeout(60000)
+
             Glide.with(itemView.context)
                     .load(Utilitarios.getUrlFoto(alumno.codigo, 90))
+                    .apply(requestOptions)
                     .into(itemView.imgFoto_idirectorio)
 
             itemView.btnCorreo_idirectorio.setOnClickListener { view ->

@@ -53,7 +53,6 @@ public class InternationalScheduleFragment extends Fragment {
 
 
     private void getLoadHorario(){
-        //final String url = "http://172.59.1.17/internationalweek/service.svc/getHorario.php";
         final String url = "http://wssi.ue.edu.pe/internationalweek/service.svc/getHorario.php";
         //final String url = Configuracion.urlServicio2 + Configuracion.method_menucomedor + "1";
 

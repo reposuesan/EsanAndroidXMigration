@@ -61,7 +61,6 @@ public class InternationalCourseFragment extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        //final String urlWs = "http://172.59.1.17/internationalweek/service.svc/getCursos.php";
         final String urlWs = "http://wssi.ue.edu.pe/internationalweek/service.svc/getCursos.php";
 
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());

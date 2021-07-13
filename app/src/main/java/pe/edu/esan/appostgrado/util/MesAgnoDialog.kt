@@ -29,9 +29,9 @@ class MesAgnoDialog : androidx.fragment.app.DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val buider = AlertDialog.Builder(activity!!)
+        val buider = AlertDialog.Builder(requireActivity())
 
-        val infalter = activity!!.layoutInflater
+        val infalter = requireActivity().layoutInflater
         val calendar = Calendar.getInstance()
 
         val dialog = infalter.inflate(R.layout.dialog_mesagno, null)
@@ -58,6 +58,6 @@ class MesAgnoDialog : androidx.fragment.app.DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(context!!, R.color.esan_rojo))
+        (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(requireContext(), R.color.esan_rojo))
     }
 }

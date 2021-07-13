@@ -20,23 +20,23 @@ class PerfilUsuarioDialog : androidx.fragment.app.DialogFragment() {
     var click : (opcion: String) -> Unit by Delegates.notNull()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity!!)
-        val inflater = activity!!.layoutInflater
+        val builder = AlertDialog.Builder(requireActivity())
+        val inflater = requireActivity().layoutInflater
 
         val viewDialog = inflater.inflate(R.layout.dialog_perfil_usuario, null, false)
 
         viewDialog.lblTitulo_login.text = resources.getString(R.string.elegir_perfil)
-        viewDialog.lblTitulo_login.typeface = Utilitarios.getFontRoboto(context!!, Utilitarios.TypeFont.LIGHT)
+        viewDialog.lblTitulo_login.typeface = Utilitarios.getFontRoboto(requireContext(), Utilitarios.TypeFont.LIGHT)
 
         val perfil = resources.getStringArray(R.array.perfiles)
 
         viewDialog.btnAlumnoOPre_login.text = perfil[0]
         viewDialog.btnDocenteOPost_login.text = perfil[1]
 
-        viewDialog.btnAlumnoOPre_login.background = ContextCompat.getDrawable(context!!, R.drawable.btn_login_blanco)
-        viewDialog.btnDocenteOPost_login.background = ContextCompat.getDrawable(context!!, R.drawable.btn_login_blanco)
-        viewDialog.btnAlumnoOPre_login.setTextColor(ContextCompat.getColor(context!!, R.color.esan_rojo))
-        viewDialog.btnDocenteOPost_login.setTextColor(ContextCompat.getColor(context!!, R.color.esan_rojo))
+        viewDialog.btnAlumnoOPre_login.background = ContextCompat.getDrawable(requireContext(), R.drawable.btn_login_blanco)
+        viewDialog.btnDocenteOPost_login.background = ContextCompat.getDrawable(requireContext(), R.drawable.btn_login_blanco)
+        viewDialog.btnAlumnoOPre_login.setTextColor(ContextCompat.getColor(requireContext(), R.color.esan_rojo))
+        viewDialog.btnDocenteOPost_login.setTextColor(ContextCompat.getColor(requireContext(), R.color.esan_rojo))
 
         viewDialog.btnAlumnoOPre_login.setOnClickListener {
             click(Utilitarios.ALU)

@@ -75,14 +75,14 @@ class InternationalInstructiveActivity : AppCompatActivity() {
 
             val rootView = inflater.inflate(R.layout.fragment_international_instructive, container, false)
 
-            rootView.imgInstructive.setImageResource(arguments!!.getInt(ARG_SECTION_NUMBER))
+            rootView.imgInstructive.setImageResource(requireArguments().getInt(ARG_SECTION_NUMBER))
             //rootView.imgInstructive.setImageResource(R.drawable.instructivo_uno)
             //val imgView = rootView.findViewById<ImageView>(R.id.imgInstructive)
             //imgView.setImageResource(R.drawable.instructivo_uno)
 
             rootView.img_intenational_close.setOnClickListener {
                 //startActivity(Intent().setClass(getActivity()!!, InternationalMainActivity::class.java))
-                activity!!.onBackPressed()
+                requireActivity().onBackPressed()
             }
 
             return rootView

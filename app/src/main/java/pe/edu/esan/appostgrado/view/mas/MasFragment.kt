@@ -507,9 +507,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     MasOpcion(
                         1,
                         Intent(requireActivity(), MensajeActivity::class.java),
-                        context!!.resources.getString(R.string.mensajes),
-                        context!!.resources.getString(R.string.mensajes_detalle),
-                        context!!.resources.getDrawable(R.drawable.icon_mail),
+                        requireContext().resources.getString(R.string.mensajes),
+                        requireContext().resources.getString(R.string.mensajes_detalle),
+                        requireContext().resources.getDrawable(R.drawable.icon_mail),
                         false,
                         0
                     )
@@ -519,9 +519,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
                         MasOpcion(
                             5,
                             Intent(requireActivity(), MallaCurricularActivity::class.java),
-                            context!!.resources.getString(R.string.malla_curricular),
-                            context!!.resources.getString(R.string.malla_curricular_detalle),
-                            context!!.resources.getDrawable(R.drawable.icon_malla),
+                            requireContext().resources.getString(R.string.malla_curricular),
+                            requireContext().resources.getString(R.string.malla_curricular_detalle),
+                            requireContext().resources.getDrawable(R.drawable.icon_malla),
                             false,
                             0
                         )
@@ -530,9 +530,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
                         MasOpcion(
                             8,
                             Intent(requireActivity(), PregradoLabsPrincipalActivity::class.java),
-                            context!!.resources.getString(R.string.laboratorios_title),
-                            context!!.resources.getString(R.string.laboratorios_detalle),
-                            ContextCompat.getDrawable(context!!, R.drawable.tab_laboratorio),
+                            requireContext().resources.getString(R.string.laboratorios_title),
+                            requireContext().resources.getString(R.string.laboratorios_detalle),
+                            ContextCompat.getDrawable(requireContext(), R.drawable.tab_laboratorio),
                             false,
                             0
                         )
@@ -550,7 +550,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                             MasOpcion(
                                 9,
                                 carneIntent,
-                                context!!.getString(R.string.carne_virtual_title),
+                                requireContext().getString(R.string.carne_virtual_title),
                                 getString(R.string.generar_carne_virtual_subtitle),
                                 requireContext().resources.getDrawable(R.drawable.tab_carnet),
                                 false,
@@ -569,7 +569,7 @@ class MasFragment : androidx.fragment.app.Fragment() {
                             MasOpcion(
                                 9,
                                 carneIntent,
-                                context!!.getString(R.string.carne_virtual_title),
+                                requireContext().getString(R.string.carne_virtual_title),
                                 getString(R.string.generar_carne_virtual_subtitle),
                                 requireContext().resources.getDrawable(R.drawable.tab_carnet),
                                 false,
@@ -588,9 +588,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
                             MasOpcion(
                                 9,
                                 carneIntent,
-                                context!!.getString(R.string.carne_virtual_title),
+                                requireContext().getString(R.string.carne_virtual_title),
                                 getString(R.string.generar_carne_virtual_subtitle),
-                                context!!.resources.getDrawable(R.drawable.tab_carnet),
+                                requireContext().resources.getDrawable(R.drawable.tab_carnet),
                                 false,
                                 0
                             )
@@ -611,9 +611,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
                         MasOpcion(
                             9,
                             carneIntent,
-                            context!!.getString(R.string.carne_virtual_title),
+                            requireContext().getString(R.string.carne_virtual_title),
                             getString(R.string.generar_carne_virtual_subtitle),
-                            context!!.resources.getDrawable(R.drawable.tab_carnet),
+                            requireContext().resources.getDrawable(R.drawable.tab_carnet),
                             false,
                             0
                         )
@@ -624,9 +624,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     MasOpcion(
                         6,
                         Intent(requireActivity(), ConfiguracionActivity::class.java),
-                        context!!.resources.getString(R.string.configuracion),
-                        context!!.resources.getString(R.string.configuracion_detalle),
-                        context!!.resources.getDrawable(R.drawable.ico_config),
+                        requireContext().resources.getString(R.string.configuracion),
+                        requireContext().resources.getString(R.string.configuracion_detalle),
+                        requireContext().resources.getDrawable(R.drawable.ico_config),
                         false,
                         0
                     )
@@ -654,9 +654,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     MasOpcion(
                         1,
                         Intent(requireActivity(), MensajeActivity::class.java),
-                        context!!.resources.getString(R.string.mensajes),
-                        context!!.resources.getString(R.string.mensajes_detalle),
-                        context!!.resources.getDrawable(R.drawable.icon_mail),
+                        requireContext().resources.getString(R.string.mensajes),
+                        requireContext().resources.getString(R.string.mensajes_detalle),
+                        requireContext().resources.getDrawable(R.drawable.icon_mail),
                         false,
                         0
                     )
@@ -666,9 +666,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
                         MasOpcion(
                             4,
                             Intent(requireActivity(), CargaAcademicaActivity::class.java),
-                            context!!.resources.getString(R.string.carga_academica),
-                            context!!.resources.getString(R.string.carga_academica_detalle),
-                            context!!.resources.getDrawable(R.drawable.tab_clock),
+                            requireContext().resources.getString(R.string.carga_academica),
+                            requireContext().resources.getString(R.string.carga_academica_detalle),
+                            requireContext().resources.getDrawable(R.drawable.tab_clock),
                             false,
                             0
                         )
@@ -678,9 +678,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
                     MasOpcion(
                         5,
                         Intent(requireActivity(), ConfiguracionActivity::class.java),
-                        context!!.resources.getString(R.string.configuracion),
-                        context!!.resources.getString(R.string.configuracion_detalle),
-                        context!!.resources.getDrawable(R.drawable.ico_config),
+                        requireContext().resources.getString(R.string.configuracion),
+                        requireContext().resources.getString(R.string.configuracion_detalle),
+                        requireContext().resources.getDrawable(R.drawable.ico_config),
                         false,
                         0
                     )
@@ -727,9 +727,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 MasOpcion(
                     2,
                     Intent(requireActivity(), PrincipalRAActivity::class.java).putExtra("accion", "busqueda"),
-                    context!!.resources.getString(R.string.ra),
-                    context!!.resources.getString(R.string.ra_detalle),
-                    context!!.resources.getDrawable(R.drawable.tab_ra),
+                    requireContext().resources.getString(R.string.ra),
+                    requireContext().resources.getString(R.string.ra_detalle),
+                    requireContext().resources.getDrawable(R.drawable.tab_ra),
                     false,
                     0
                 )
@@ -739,9 +739,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
                 MasOpcion(
                     2,
                     null,
-                    context!!.resources.getString(R.string.ra),
-                    context!!.resources.getString(R.string.ra_detalle),
-                    context!!.resources.getDrawable(R.drawable.tab_ra_unselect),
+                    requireContext().resources.getString(R.string.ra),
+                    requireContext().resources.getString(R.string.ra_detalle),
+                    requireContext().resources.getDrawable(R.drawable.tab_ra_unselect),
                     false,
                     0
                 )
@@ -752,9 +752,9 @@ class MasFragment : androidx.fragment.app.Fragment() {
             MasOpcion(
                 7,
                 Intent(requireActivity(), ComedorActivity::class.java),
-                context!!.resources.getString(R.string.comedor),
-                context!!.resources.getString(R.string.comedor_detalle),
-                context!!.resources.getDrawable(R.drawable.tab_restaurant),
+                requireContext().resources.getString(R.string.comedor),
+                requireContext().resources.getString(R.string.comedor_detalle),
+                requireContext().resources.getDrawable(R.drawable.tab_restaurant),
                 false,
                 0
             )
@@ -764,8 +764,8 @@ class MasFragment : androidx.fragment.app.Fragment() {
             MasOpcion(
                 3,
                 Intent(requireActivity(), LinkInteresActivity::class.java),
-                context!!.resources.getString(R.string.link_interes),
-                context!!.resources.getString(R.string.link_interes_detalle),
+                requireContext().resources.getString(R.string.link_interes),
+                requireContext().resources.getString(R.string.link_interes_detalle),
                 requireContext().resources.getDrawable(R.drawable.tab_link),
                 false,
                 0

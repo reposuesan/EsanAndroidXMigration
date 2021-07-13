@@ -221,8 +221,8 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
     fun setCheckboxTextClickable(url: String){
         val checkBoxText = getString(R.string.acepto_politicas_uso_checkbox_text_href, url)
 
-        view!!.tv_for_checkbox_tyc_cubs.text = Html.fromHtml(checkBoxText)
-        view!!.tv_for_checkbox_tyc_cubs.movementMethod = LinkMovementMethod.getInstance()
+        requireView().tv_for_checkbox_tyc_cubs.text = Html.fromHtml(checkBoxText)
+        requireView().tv_for_checkbox_tyc_cubs.movementMethod = LinkMovementMethod.getInstance()
 
     }
 
@@ -341,9 +341,9 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
 
                                     if (indicadorError.toInt() == 0) {
                                         if (view != null) {
-                                            view!!.linear_layout_container.visibility = View.VISIBLE
-                                            view!!.empty_text_view.visibility = View.GONE
-                                            view!!.progress_bar_pp_pregrado.visibility = View.GONE
+                                            requireView().linear_layout_container.visibility = View.VISIBLE
+                                            requireView().empty_text_view.visibility = View.GONE
+                                            requireView().progress_bar_pp_pregrado.visibility = View.GONE
                                         }
 
                                         val requestTYC = JSONObject()
@@ -366,19 +366,19 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                         }
                                     } else {
                                         if (view != null) {
-                                            view!!.linear_layout_container.visibility = View.GONE
-                                            view!!.empty_text_view.visibility = View.VISIBLE
-                                            view!!.empty_text_view.text = mensaje
-                                            view!!.progress_bar_pp_pregrado.visibility = View.GONE
+                                            requireView().linear_layout_container.visibility = View.GONE
+                                            requireView().empty_text_view.visibility = View.VISIBLE
+                                            requireView().empty_text_view.text = mensaje
+                                            requireView().progress_bar_pp_pregrado.visibility = View.GONE
 
                                             val language = Locale.getDefault().displayLanguage
 
                                             if (language.equals("English")) {
                                                 if (mensaje.contains("no se encuentra matr")) {
-                                                    view!!.empty_text_view.text =
+                                                    requireView().empty_text_view.text =
                                                         "You are not enrolled in the current semester or these services will be available at the beginning of the semester."
                                                 } else {
-                                                    view!!.empty_text_view.text =
+                                                    requireView().empty_text_view.text =
                                                         "An error occurred, please contact ServiceDesk."
                                                 }
                                             }
@@ -389,20 +389,20 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                     e.printStackTrace()
 
                                     if (view != null) {
-                                        view!!.linear_layout_container.visibility = View.GONE
-                                        view!!.empty_text_view.text =
+                                        requireView().linear_layout_container.visibility = View.GONE
+                                        requireView().empty_text_view.text =
                                             getString(R.string.usted_no_tiene_permiso_mensaje)
-                                        view!!.empty_text_view.visibility = View.VISIBLE
-                                        view!!.progress_bar_pp_pregrado.visibility = View.GONE
+                                        requireView().empty_text_view.visibility = View.VISIBLE
+                                        requireView().progress_bar_pp_pregrado.visibility = View.GONE
                                     }
                                 }
                             } else {
                                 if (view != null) {
-                                    view!!.linear_layout_container.visibility = View.GONE
-                                    view!!.empty_text_view.text =
+                                    requireView().linear_layout_container.visibility = View.GONE
+                                    requireView().empty_text_view.text =
                                         getString(R.string.no_respuesta_desde_servidor)
-                                    view!!.empty_text_view.visibility = View.VISIBLE
-                                    view!!.progress_bar_pp_pregrado.visibility = View.GONE
+                                    requireView().empty_text_view.visibility = View.VISIBLE
+                                    requireView().progress_bar_pp_pregrado.visibility = View.GONE
                                 }
                             }
                         }
@@ -410,10 +410,10 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                     { error ->
                         if(error is TimeoutError || error.networkResponse == null) {
                             if(view != null) {
-                                view!!.linear_layout_container.visibility = View.GONE
-                                view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
-                                view!!.empty_text_view.visibility = View.VISIBLE
-                                view!!.progress_bar_pp_pregrado.visibility = View.GONE
+                                requireView().linear_layout_container.visibility = View.GONE
+                                requireView().empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
+                                requireView().empty_text_view.visibility = View.VISIBLE
+                                requireView().progress_bar_pp_pregrado.visibility = View.GONE
                             }
                         } else if(error.networkResponse.statusCode == 401) {
 
@@ -422,19 +422,19 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                     obtenerConfiguracionIdServicio(url, request)
                                 } else {
                                     if(view != null) {
-                                        view!!.linear_layout_container.visibility = View.GONE
-                                        view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
-                                        view!!.empty_text_view.visibility = View.VISIBLE
-                                        view!!.progress_bar_pp_pregrado.visibility = View.GONE
+                                        requireView().linear_layout_container.visibility = View.GONE
+                                        requireView().empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
+                                        requireView().empty_text_view.visibility = View.VISIBLE
+                                        requireView().progress_bar_pp_pregrado.visibility = View.GONE
                                     }
                                 }
                             }
                         } else {
                             if(view != null) {
-                                view!!.linear_layout_container.visibility = View.GONE
-                                view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
-                                view!!.empty_text_view.visibility = View.VISIBLE
-                                view!!.progress_bar_pp_pregrado.visibility = View.GONE
+                                requireView().linear_layout_container.visibility = View.GONE
+                                requireView().empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
+                                requireView().empty_text_view.visibility = View.VISIBLE
+                                requireView().progress_bar_pp_pregrado.visibility = View.GONE
                             }
                         }
                     }
@@ -496,17 +496,17 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                         terminosCondicionesChecked = true
 
                                         if (view != null) {
-                                            view!!.linear_layout_container.visibility = View.VISIBLE
-                                            view!!.empty_text_view.visibility = View.GONE
+                                            requireView().linear_layout_container.visibility = View.VISIBLE
+                                            requireView().empty_text_view.visibility = View.GONE
 
-                                            view!!.checkbox_terminos_condiciones_pr.visibility =
+                                            requireView().checkbox_terminos_condiciones_pr.visibility =
                                                 View.VISIBLE
-                                            view!!.checkbox_terminos_condiciones_pr.isChecked = true
-                                            view!!.checkbox_terminos_condiciones_pr.isEnabled =
+                                            requireView().checkbox_terminos_condiciones_pr.isChecked = true
+                                            requireView().checkbox_terminos_condiciones_pr.isEnabled =
                                                 false
 
                                             CompoundButtonCompat.setButtonTintList(
-                                                view!!.checkbox_terminos_condiciones_pr,
+                                                requireView().checkbox_terminos_condiciones_pr,
                                                 ColorStateList.valueOf(
                                                     Color.parseColor("#757575")
                                                 )
@@ -518,33 +518,33 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                         terminosCondicionesChecked = false
 
                                         if (view != null) {
-                                            view!!.linear_layout_container.visibility = View.VISIBLE
-                                            view!!.empty_text_view.visibility = View.GONE
-                                            view!!.checkbox_terminos_condiciones_pr.visibility =
+                                            requireView().linear_layout_container.visibility = View.VISIBLE
+                                            requireView().empty_text_view.visibility = View.GONE
+                                            requireView().checkbox_terminos_condiciones_pr.visibility =
                                                 View.VISIBLE
-                                            view!!.checkbox_terminos_condiciones_pr.isChecked =
+                                            requireView().checkbox_terminos_condiciones_pr.isChecked =
                                                 false
-                                            view!!.checkbox_terminos_condiciones_pr.isEnabled = true
+                                            requireView().checkbox_terminos_condiciones_pr.isEnabled = true
                                         }
                                     }
 
                                 } catch (e: Exception) {
                                     if (view != null) {
-                                        view!!.linear_layout_container.visibility = View.GONE
-                                        view!!.empty_text_view.text =
+                                        requireView().linear_layout_container.visibility = View.GONE
+                                        requireView().empty_text_view.text =
                                             getString(R.string.error_recuperacion_datos)
-                                        view!!.empty_text_view.visibility = View.VISIBLE
-                                        view!!.checkbox_terminos_condiciones_pr.visibility =
+                                        requireView().empty_text_view.visibility = View.VISIBLE
+                                        requireView().checkbox_terminos_condiciones_pr.visibility =
                                             View.GONE
                                     }
                                 }
                             } else {
                                 if (view != null) {
-                                    view!!.linear_layout_container.visibility = View.GONE
-                                    view!!.empty_text_view.text =
+                                    requireView().linear_layout_container.visibility = View.GONE
+                                    requireView().empty_text_view.text =
                                         getString(R.string.no_respuesta_desde_servidor)
-                                    view!!.empty_text_view.visibility = View.VISIBLE
-                                    view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                                    requireView().empty_text_view.visibility = View.VISIBLE
+                                    requireView().checkbox_terminos_condiciones_pr.visibility = View.GONE
                                 }
                             }
                         }
@@ -552,10 +552,10 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                     { error ->
                         if(error is TimeoutError || error.networkResponse == null) {
                             if (view != null) {
-                                view!!.linear_layout_container.visibility = View.GONE
-                                view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
-                                view!!.empty_text_view.visibility = View.VISIBLE
-                                view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                                requireView().linear_layout_container.visibility = View.GONE
+                                requireView().empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
+                                requireView().empty_text_view.visibility = View.VISIBLE
+                                requireView().checkbox_terminos_condiciones_pr.visibility = View.GONE
                             }
                         } else if(error.networkResponse.statusCode == 401) {
 
@@ -564,19 +564,19 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                     verificarTipoPoliticaPortal(url, request)
                                 } else {
                                     if (view != null) {
-                                        view!!.linear_layout_container.visibility = View.GONE
-                                        view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
-                                        view!!.empty_text_view.visibility = View.VISIBLE
-                                        view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                                        requireView().linear_layout_container.visibility = View.GONE
+                                        requireView().empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
+                                        requireView().empty_text_view.visibility = View.VISIBLE
+                                        requireView().checkbox_terminos_condiciones_pr.visibility = View.GONE
                                     }
                                 }
                             }
                         } else {
                             if (view != null) {
-                                view!!.linear_layout_container.visibility = View.GONE
-                                view!!.empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
-                                view!!.empty_text_view.visibility = View.VISIBLE
-                                view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                                requireView().linear_layout_container.visibility = View.GONE
+                                requireView().empty_text_view.text = getString(R.string.no_respuesta_desde_servidor)
+                                requireView().empty_text_view.visibility = View.VISIBLE
+                                requireView().checkbox_terminos_condiciones_pr.visibility = View.GONE
                             }
                         }
 
@@ -634,15 +634,15 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                     if (rpta.toInt() > 0) {
                                         terminosCondicionesChecked = true
                                         if (view != null) {
-                                            view!!.linear_layout_container.visibility = View.VISIBLE
-                                            view!!.empty_text_view.visibility = View.GONE
-                                            view!!.checkbox_terminos_condiciones_pr.visibility =
+                                            requireView().linear_layout_container.visibility = View.VISIBLE
+                                            requireView().empty_text_view.visibility = View.GONE
+                                            requireView().checkbox_terminos_condiciones_pr.visibility =
                                                 View.VISIBLE
-                                            view!!.checkbox_terminos_condiciones_pr.isChecked = true
-                                            view!!.checkbox_terminos_condiciones_pr.isEnabled =
+                                            requireView().checkbox_terminos_condiciones_pr.isChecked = true
+                                            requireView().checkbox_terminos_condiciones_pr.isEnabled =
                                                 false
                                             CompoundButtonCompat.setButtonTintList(
-                                                view!!.checkbox_terminos_condiciones_pr,
+                                                requireView().checkbox_terminos_condiciones_pr,
                                                 ColorStateList.valueOf(Color.parseColor("#757575"))
                                             )
                                         }
@@ -656,14 +656,14 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                             )
                                             snack.view.setBackgroundColor(
                                                 ContextCompat.getColor(
-                                                    view!!.context,
+                                                    requireView().context,
                                                     R.color.success
                                                 )
                                             )
                                             snack.view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
                                                 .setTextColor(
                                                     ContextCompat.getColor(
-                                                        view!!.context,
+                                                        requireView().context,
                                                         R.color.success_text
                                                     )
                                                 )
@@ -672,30 +672,30 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                     } else {
                                         terminosCondicionesChecked = false
                                         if (view != null) {
-                                            view!!.linear_layout_container.visibility = View.GONE
-                                            view!!.empty_text_view.visibility = View.VISIBLE
-                                            view!!.empty_text_view.text =
+                                            requireView().linear_layout_container.visibility = View.GONE
+                                            requireView().empty_text_view.visibility = View.VISIBLE
+                                            requireView().empty_text_view.text =
                                                 getString(R.string.error_recuperacion_datos)
                                         }
                                     }
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                     if (view != null) {
-                                        view!!.linear_layout_container.visibility = View.GONE
-                                        view!!.empty_text_view.text =
+                                        requireView().linear_layout_container.visibility = View.GONE
+                                        requireView().empty_text_view.text =
                                             getString(R.string.error_recuperacion_datos)
-                                        view!!.empty_text_view.visibility = View.VISIBLE
-                                        view!!.checkbox_terminos_condiciones_pr.visibility =
+                                        requireView().empty_text_view.visibility = View.VISIBLE
+                                        requireView().checkbox_terminos_condiciones_pr.visibility =
                                             View.GONE
                                     }
                                 }
                             } else {
                                 if (view != null) {
-                                    view!!.linear_layout_container.visibility = View.GONE
-                                    view!!.empty_text_view.text =
+                                    requireView().linear_layout_container.visibility = View.GONE
+                                    requireView().empty_text_view.text =
                                         getString(R.string.no_respuesta_desde_servidor)
-                                    view!!.empty_text_view.visibility = View.VISIBLE
-                                    view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                                    requireView().empty_text_view.visibility = View.VISIBLE
+                                    requireView().checkbox_terminos_condiciones_pr.visibility = View.GONE
                                 }
                             }
                         }
@@ -703,11 +703,11 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                     { error ->
                         if(error is TimeoutError || error.networkResponse == null) {
                             if (view != null) {
-                                view!!.linear_layout_container.visibility = View.GONE
-                                view!!.empty_text_view.text =
+                                requireView().linear_layout_container.visibility = View.GONE
+                                requireView().empty_text_view.text =
                                     getString(R.string.no_respuesta_desde_servidor)
-                                view!!.empty_text_view.visibility = View.VISIBLE
-                                view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                                requireView().empty_text_view.visibility = View.VISIBLE
+                                requireView().checkbox_terminos_condiciones_pr.visibility = View.GONE
                             }
                         } else if(error.networkResponse.statusCode == 401) {
 
@@ -716,21 +716,21 @@ class PuntosReunionPregradoFragment : androidx.fragment.app.Fragment() {
                                     aceptarTipoPolitica(url, request)
                                 } else {
                                     if (view != null) {
-                                        view!!.linear_layout_container.visibility = View.GONE
-                                        view!!.empty_text_view.text =
+                                        requireView().linear_layout_container.visibility = View.GONE
+                                        requireView().empty_text_view.text =
                                             getString(R.string.no_respuesta_desde_servidor)
-                                        view!!.empty_text_view.visibility = View.VISIBLE
-                                        view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                                        requireView().empty_text_view.visibility = View.VISIBLE
+                                        requireView().checkbox_terminos_condiciones_pr.visibility = View.GONE
                                     }
                                 }
                             }
                         } else {
                             if (view != null) {
-                                view!!.linear_layout_container.visibility = View.GONE
-                                view!!.empty_text_view.text =
+                                requireView().linear_layout_container.visibility = View.GONE
+                                requireView().empty_text_view.text =
                                     getString(R.string.no_respuesta_desde_servidor)
-                                view!!.empty_text_view.visibility = View.VISIBLE
-                                view!!.checkbox_terminos_condiciones_pr.visibility = View.GONE
+                                requireView().empty_text_view.visibility = View.VISIBLE
+                                requireView().checkbox_terminos_condiciones_pr.visibility = View.GONE
                             }
                         }
 

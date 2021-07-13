@@ -10,7 +10,7 @@ def VUFORIA_SDK_DIR = '/Users/danielbedoya/Work/Android/vuforia-sdk-android-8-1-
 //def VUFORIA_SDK_DIR = '/Users/danielbedoya/Work/Android/vuforia-sdk-android-9-8-5/'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     sourceSets.main {
         jni.srcDirs = []
@@ -19,7 +19,7 @@ android {
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

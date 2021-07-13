@@ -51,7 +51,7 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
 
-        view.lblMensaje_fpagopost.typeface = Utilitarios.getFontRoboto(context!!, Utilitarios.TypeFont.REGULAR)
+        view.lblMensaje_fpagopost.typeface = Utilitarios.getFontRoboto(requireContext(), Utilitarios.TypeFont.REGULAR)
 
         view.swPago_fpagopost.setOnRefreshListener(this)
         view.swPago_fpagopost.setColorSchemeResources(
@@ -158,21 +158,21 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
                             } else {
                                 rvPago_fpagopost.visibility = View.GONE
                                 lblMensaje_fpagopost.visibility = View.VISIBLE
-                                lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_pago_no)
+                                lblMensaje_fpagopost.text = requireContext().resources.getText(R.string.error_pago_no)
                             }
                         } else {
                             rvPago_fpagopost.visibility = View.GONE
                             lblMensaje_fpagopost.visibility = View.VISIBLE
-                            lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
+                            lblMensaje_fpagopost.text = requireContext().resources.getText(R.string.error_respuesta_server)
                         }
                     } catch (jex: JSONException) {
                         rvPago_fpagopost.visibility = View.GONE
                         lblMensaje_fpagopost.visibility = View.VISIBLE
-                        lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_fpagopost.text = requireContext().resources.getText(R.string.error_respuesta_server)
                     } catch (ccax: ClassCastException) {
                         rvPago_fpagopost.visibility = View.GONE
                         lblMensaje_fpagopost.visibility = View.VISIBLE
-                        lblMensaje_fpagopost.text = context!!.resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_fpagopost.text = requireContext().resources.getText(R.string.error_respuesta_server)
                     }
 
                     prbCargando_fpagopost.visibility = View.GONE
@@ -185,7 +185,7 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
                             rvPago_fpagopost.visibility = View.GONE
                             swPago_fpagopost.isRefreshing = false
                             lblMensaje_fpagopost.visibility = View.VISIBLE
-                            lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default)
+                            lblMensaje_fpagopost.text =  requireContext().resources.getString(R.string.error_default)
                         }
                     } else if(error.networkResponse.statusCode == 401) {
                         requireActivity().renewToken { token ->
@@ -197,7 +197,7 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
                                     rvPago_fpagopost.visibility = View.GONE
                                     swPago_fpagopost.isRefreshing = false
                                     lblMensaje_fpagopost.visibility = View.VISIBLE
-                                    lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default)
+                                    lblMensaje_fpagopost.text =  requireContext().resources.getString(R.string.error_default)
                                 }
                             }
                         }
@@ -207,7 +207,7 @@ class PagoPostFragment : androidx.fragment.app.Fragment(), androidx.swiperefresh
                             rvPago_fpagopost.visibility = View.GONE
                             swPago_fpagopost.isRefreshing = false
                             lblMensaje_fpagopost.visibility = View.VISIBLE
-                            lblMensaje_fpagopost.text =  context!!.resources.getString(R.string.error_default)
+                            lblMensaje_fpagopost.text =  requireContext().resources.getString(R.string.error_default)
                         }
                     }
 

@@ -154,18 +154,18 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                                 lblMensaje_fseccion.visibility = View.GONE
                             } else {
                                 lblMensaje_fseccion.visibility = View.VISIBLE
-                                lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_seccion_no)
+                                lblMensaje_fseccion.text = requireContext().resources.getText(R.string.error_seccion_no)
                             }
                         } else {
                             lblMensaje_fseccion.visibility = View.VISIBLE
-                            lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_desencriptar)
+                            lblMensaje_fseccion.text = requireContext().resources.getText(R.string.error_desencriptar)
                         }
                     } catch (jex: JSONException) {
                         lblMensaje_fseccion.visibility = View.VISIBLE
-                        lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_fseccion.text = requireContext().resources.getText(R.string.error_respuesta_server)
                     } catch (ccex: ClassCastException) {
                         lblMensaje_fseccion.visibility = View.VISIBLE
-                        lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_fseccion.text = requireContext().resources.getText(R.string.error_respuesta_server)
                     }
 
                     swCurso_fseccion.isRefreshing = false
@@ -177,7 +177,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                             swCurso_fseccion.isRefreshing = false
                             prbCargando_fseccion.visibility = View.GONE
                             lblMensaje_fseccion.visibility = View.VISIBLE
-                            lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_no_conexion)
+                            lblMensaje_fseccion.text = requireContext().resources.getText(R.string.error_no_conexion)
                         }
                     } else if(error.networkResponse.statusCode == 401) {
 
@@ -189,7 +189,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                                     swCurso_fseccion.isRefreshing = false
                                     prbCargando_fseccion.visibility = View.GONE
                                     lblMensaje_fseccion.visibility = View.VISIBLE
-                                    lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_no_conexion)
+                                    lblMensaje_fseccion.text = requireContext().resources.getText(R.string.error_no_conexion)
                                 }
                             }
                         }
@@ -198,7 +198,7 @@ class SeccionesFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                             swCurso_fseccion.isRefreshing = false
                             prbCargando_fseccion.visibility = View.GONE
                             lblMensaje_fseccion.visibility = View.VISIBLE
-                            lblMensaje_fseccion.text = context!!.resources.getText(R.string.error_no_conexion)
+                            lblMensaje_fseccion.text = requireContext().resources.getText(R.string.error_no_conexion)
                         }
                     }
 

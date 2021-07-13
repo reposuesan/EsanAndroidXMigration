@@ -25,18 +25,18 @@ class AsistenciaPostDialog: AppCompatDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         if (arguments != null) {
-            curso = arguments!!["Curso"] as String
-            porcInasistencia = arguments!!["PorcxInasistencia"] as Int
-            faltas = arguments!!["CantFalta"] as Int
-            asistencias = arguments!!["CantAsistencias"] as Int
-            tardanzas = arguments!!["CantTardanzas"] as Int
-            totalsesiones = arguments!!["CantidadSesiones"] as Int
-            anchoPantalla = arguments!!["AnchoPantalla"] as Int
-            densidad = arguments!!["Densidad"] as Float
+            curso = requireArguments()["Curso"] as String
+            porcInasistencia = requireArguments()["PorcxInasistencia"] as Int
+            faltas = requireArguments()["CantFalta"] as Int
+            asistencias = requireArguments()["CantAsistencias"] as Int
+            tardanzas = requireArguments()["CantTardanzas"] as Int
+            totalsesiones = requireArguments()["CantidadSesiones"] as Int
+            anchoPantalla = requireArguments()["AnchoPantalla"] as Int
+            densidad = requireArguments()["Densidad"] as Float
         }
         val builder = AlertDialog.Builder(activity)
 
-        val inflater = activity!!.layoutInflater
+        val inflater = requireActivity().layoutInflater
         val view = inflater.inflate(R.layout.activity_asistencia_post, null)
 
         builder.setView(view)

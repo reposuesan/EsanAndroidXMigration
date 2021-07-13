@@ -143,7 +143,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 { response ->
                     try {
                         if (!response.isNull("ListarPromocionxAlumnoResult")) {
-                            val promocionJArray = Utilitarios.jsArrayDesencriptar(response["ListarPromocionxAlumnoResult"] as String, context!!)
+                            val promocionJArray = Utilitarios.jsArrayDesencriptar(response["ListarPromocionxAlumnoResult"] as String, requireContext())
 
                             if (promocionJArray != null) {
                                 if (promocionJArray.length() > 0) {
@@ -195,7 +195,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                     } catch (ccex: ClassCastException) {
                         rvOpciones_fpuntosreunion.visibility = View.GONE
                         lblMensaje_fpuntosreunion.visibility = View.VISIBLE
-                        lblMensaje_fpuntosreunion.text = context!!.resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_fpuntosreunion.text = requireContext().resources.getText(R.string.error_respuesta_server)
                     }
                     prbCargando_fpuntosreunion.visibility = View.GONE
                 },
@@ -250,7 +250,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
         request.put("IdPromocion", promocion.id)
         request.put("IdGrupo", promocion.idgrupo)
 
-        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, context!!)
+        val requestEncriptado = Utilitarios.jsObjectEncrypted(request, requireContext())
 
         if (requestEncriptado != null)
             onTipoGrupo(Utilitarios.getUrl(Utilitarios.URL.PR_CONFIGURACION), requestEncriptado, promocion.id, promocion.idgrupo)
@@ -278,7 +278,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                     try {
                         if (!response.isNull("ListarConfiguracionPromocionxAlumnoResult")) {
 
-                            val tipogrupoJArray = Utilitarios.jsArrayDesencriptar(response["ListarConfiguracionPromocionxAlumnoResult"] as String, context!!)
+                            val tipogrupoJArray = Utilitarios.jsArrayDesencriptar(response["ListarConfiguracionPromocionxAlumnoResult"] as String, requireContext())
 
                             if (tipogrupoJArray != null) {
                                 if (tipogrupoJArray.length() > 0) {
@@ -293,7 +293,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                                         listaTipoGrupo.add(TipoGrupo(idConfiguracion, idPromocion, idGrupo, creagrupos, tipoGrupo, cantMaxAlumno))
                                     }
 
-                                    val tipogrupoAdapter = TipoGrupoArrayAdapter(context!!, listaTipoGrupo)
+                                    val tipogrupoAdapter = TipoGrupoArrayAdapter(requireContext(), listaTipoGrupo)
                                     cmbTipoGrupo_fpuntosreunion.adapter = tipogrupoAdapter
                                     cmbTipoGrupo_fpuntosreunion.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
                                         override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
@@ -331,7 +331,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                                             val listaOpciones = ArrayList<MasOpcion>()
 
                                             ControlUsuario.instance.prPromocionConfig = listaTipoGrupo[0]
-                                            listaOpciones.add(MasOpcion(1, Intent(requireActivity(), PRMiGrupoActivity::class.java), context!!.resources.getString(R.string.grupos), context!!.resources.getString(R.string.sub_grupos), requireActivity().resources.getDrawable( R.drawable.tab_grupo)))
+                                            listaOpciones.add(MasOpcion(1, Intent(requireActivity(), PRMiGrupoActivity::class.java), requireContext().resources.getString(R.string.grupos), requireContext().resources.getString(R.string.sub_grupos), requireActivity().resources.getDrawable( R.drawable.tab_grupo)))
 
                                             val puntosAdapter = PuntosReunionOpcionAdapter(listaOpciones) { masOpcion ->
                                                 masOpcion.intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -414,7 +414,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
             request.put("IdConfiguracion", idConfiguracion)
             request.put("Fecha", "0")
 
-            val requestEncriptar = Utilitarios.jsObjectEncrypted(request, context!!)
+            val requestEncriptar = Utilitarios.jsObjectEncrypted(request, requireContext())
             if (requestEncriptar != null)
                 onDetalleAlumno(Utilitarios.getUrl(Utilitarios.URL.PR_DETALLEGRUPO), idConfiguracion, requestEncriptar)
             else {
@@ -444,7 +444,7 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                 { response ->
                     try {
                         if (!response.isNull("ListarHorasxAlumnoResult")) {
-                            val detalleJArray = Utilitarios.jsArrayDesencriptar(response["ListarHorasxAlumnoResult"] as String, context!!)
+                            val detalleJArray = Utilitarios.jsArrayDesencriptar(response["ListarHorasxAlumnoResult"] as String, requireContext())
                             if (detalleJArray != null) {
                                 if (detalleJArray.length() == 1) {
                                     val detalleJObject = detalleJArray[0] as JSONObject
@@ -457,9 +457,9 @@ class PuntosReunionPosgradoFragment : androidx.fragment.app.Fragment() {
                                     ControlUsuario.instance.prconfiguracion = PRConfiguracion(idConfiguracion, grupo, cantHorasAntici, cantHorasReserv, cantHorasRestan)
 
                                     val listaOpciones = ArrayList<MasOpcion>()
-                                    listaOpciones.add(MasOpcion(1, Intent(requireActivity(), PRReservaPrimeraActivity::class.java), context!!.resources.getString(R.string.reservar), context!!.resources.getString(R.string.sub_reservar), requireActivity().resources.getDrawable( R.drawable.tab_clock)))
-                                    listaOpciones.add(MasOpcion(2, Intent(requireActivity(), PRConfirmarActivity::class.java), context!!.resources.getString(R.string.confirmar_reserva), context!!.resources.getString(R.string.sub_confirmar_reserva), requireActivity().resources.getDrawable( R.drawable.tab_check)))
-                                    listaOpciones.add(MasOpcion(3, Intent(requireActivity(), PRMisReservasActivity::class.java), context!!.resources.getString(R.string.mis_reservas), context!!.resources.getString(R.string.sub_mis_reservas), requireActivity().resources.getDrawable( R.drawable.tab_note)))
+                                    listaOpciones.add(MasOpcion(1, Intent(requireActivity(), PRReservaPrimeraActivity::class.java), requireContext().resources.getString(R.string.reservar), requireContext().resources.getString(R.string.sub_reservar), requireActivity().resources.getDrawable( R.drawable.tab_clock)))
+                                    listaOpciones.add(MasOpcion(2, Intent(requireActivity(), PRConfirmarActivity::class.java), requireContext().resources.getString(R.string.confirmar_reserva), requireContext().resources.getString(R.string.sub_confirmar_reserva), requireActivity().resources.getDrawable( R.drawable.tab_check)))
+                                    listaOpciones.add(MasOpcion(3, Intent(requireActivity(), PRMisReservasActivity::class.java), requireContext().resources.getString(R.string.mis_reservas), requireContext().resources.getString(R.string.sub_mis_reservas), requireActivity().resources.getDrawable( R.drawable.tab_note)))
                                     //listaOpciones.add(MasOpcion(3, Intent(), context!!.resources.getString(R.string.mis_reservas), context!!.resources.getString(R.string.sub_mis_reservas), ContextCompat.getDrawable(requireActivity(), R.drawable.tab_note)))
                                     //listaOpciones.add(MasOpcion(4, Intent(), context!!.resources.getString(R.string.disponibilidad_pr), context!!.resources.getString(R.string.sub_disponibilidad_pr), ContextCompat.getDrawable(requireActivity(), R.drawable.tab_grid)))
 

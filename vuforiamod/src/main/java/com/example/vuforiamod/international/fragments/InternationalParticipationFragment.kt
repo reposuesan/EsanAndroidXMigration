@@ -27,7 +27,7 @@ class InternationalParticipationFragment : androidx.fragment.app.Fragment() {
         view.findViewById<View>(R.id.viewRealidadAumentada_iwmas).setOnClickListener(
             object : View.OnClickListener {
                 override fun onClick(v: View) {
-                    val links = Intent().setClass(getActivity()!!, InternationalParticipationControllerActivity::class.java)
+                    val links = Intent().setClass(requireActivity(), InternationalParticipationControllerActivity::class.java)
                     startActivity(links)
                 }
             })

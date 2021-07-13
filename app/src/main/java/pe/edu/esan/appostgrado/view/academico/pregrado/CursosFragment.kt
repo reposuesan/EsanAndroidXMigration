@@ -254,7 +254,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                                                 if (listaNotas.size > 0)
                                                     cursoActual.listNotasPre = listaNotas
                                                 else
-                                                    cursoActual.fillCursoDefault(context!!)
+                                                    cursoActual.fillCursoDefault(requireContext())
 
                                                 listCursosPre.add(cursoActual)
                                             }
@@ -298,7 +298,7 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                                 if (listaNotas.size > 0)
                                     cursoActual.listNotasPre = listaNotas
                                 else
-                                    cursoActual.fillCursoDefault(context!!)
+                                    cursoActual.fillCursoDefault(requireContext())
 
                                 listCursosPre.add(cursoActual)
 
@@ -330,44 +330,44 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                                 }
 
                                 if(view != null) {
-                                    view!!.rvCurso_fcurso.visibility = View.VISIBLE
-                                    view!!.rvCurso_fcurso.adapter = adapter
-                                    view!!.lblMensaje_fcurso.visibility = View.GONE
+                                    requireView().rvCurso_fcurso.visibility = View.VISIBLE
+                                    requireView().rvCurso_fcurso.adapter = adapter
+                                    requireView().lblMensaje_fcurso.visibility = View.GONE
                                 }
                             } else {
                                 if(view != null) {
-                                    view!!.rvCurso_fcurso.visibility = View.GONE
-                                    view!!.lblMensaje_fcurso.visibility = View.VISIBLE
-                                    view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_curso_no)
+                                    requireView().rvCurso_fcurso.visibility = View.GONE
+                                    requireView().lblMensaje_fcurso.visibility = View.VISIBLE
+                                    requireView().lblMensaje_fcurso.text = requireContext().resources.getText(R.string.error_curso_no)
                                 }
                             }
                         } else {
                             if(view != null) {
-                                view!!.rvCurso_fcurso.visibility = View.GONE
-                                view!!.lblMensaje_fcurso.visibility = View.VISIBLE
-                                view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_desencriptar)
+                                requireView().rvCurso_fcurso.visibility = View.GONE
+                                requireView().lblMensaje_fcurso.visibility = View.VISIBLE
+                                requireView().lblMensaje_fcurso.text = requireContext().resources.getText(R.string.error_desencriptar)
                             }
                         }
                     } catch (jex: JSONException) {
                         if(view != null) {
-                            view!!.rvCurso_fcurso.visibility = View.GONE
-                            view!!.lblMensaje_fcurso.visibility = View.VISIBLE
-                            view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_default)
+                            requireView().rvCurso_fcurso.visibility = View.GONE
+                            requireView().lblMensaje_fcurso.visibility = View.VISIBLE
+                            requireView().lblMensaje_fcurso.text = requireContext().resources.getText(R.string.error_default)
                         }
                     }
                     if(view != null) {
-                        view!!.swCurso_fcurso.isRefreshing = false
-                        view!!.prbCargando_fcurso.visibility = View.GONE
+                        requireView().swCurso_fcurso.isRefreshing = false
+                        requireView().prbCargando_fcurso.visibility = View.GONE
                     }
                 },
                 { error ->
                     if(error is TimeoutError || error.networkResponse == null){
                         if(view != null){
-                            view!!.swCurso_fcurso.isRefreshing = false
-                            view!!.prbCargando_fcurso.visibility = View.GONE
-                            view!!.lblMensaje_fcurso.visibility = View.VISIBLE
-                            view!!.rvCurso_fcurso.visibility = View.GONE
-                            view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_default)
+                            requireView().swCurso_fcurso.isRefreshing = false
+                            requireView().prbCargando_fcurso.visibility = View.GONE
+                            requireView().lblMensaje_fcurso.visibility = View.VISIBLE
+                            requireView().rvCurso_fcurso.visibility = View.GONE
+                            requireView().lblMensaje_fcurso.text = requireContext().resources.getText(R.string.error_default)
                         }
                     } else if(error.networkResponse.statusCode == 401) {
                         requireActivity().renewToken { token ->
@@ -375,21 +375,21 @@ class CursosFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshla
                                 onCursos(url, request)
                             } else {
                                 if(view != null) {
-                                    view!!.swCurso_fcurso.isRefreshing = false
-                                    view!!.prbCargando_fcurso.visibility = View.GONE
-                                    view!!.lblMensaje_fcurso.visibility = View.VISIBLE
-                                    view!!.rvCurso_fcurso.visibility = View.GONE
-                                    view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_default)
+                                    requireView().swCurso_fcurso.isRefreshing = false
+                                    requireView().prbCargando_fcurso.visibility = View.GONE
+                                    requireView().lblMensaje_fcurso.visibility = View.VISIBLE
+                                    requireView().rvCurso_fcurso.visibility = View.GONE
+                                    requireView().lblMensaje_fcurso.text = requireContext().resources.getText(R.string.error_default)
                                 }
                             }
                         }
                     } else {
                         if(view != null) {
-                            view!!.swCurso_fcurso.isRefreshing = false
-                            view!!.prbCargando_fcurso.visibility = View.GONE
-                            view!!.lblMensaje_fcurso.visibility = View.VISIBLE
-                            view!!.rvCurso_fcurso.visibility = View.GONE
-                            view!!.lblMensaje_fcurso.text = context!!.resources.getText(R.string.error_default)
+                            requireView().swCurso_fcurso.isRefreshing = false
+                            requireView().prbCargando_fcurso.visibility = View.GONE
+                            requireView().lblMensaje_fcurso.visibility = View.VISIBLE
+                            requireView().rvCurso_fcurso.visibility = View.GONE
+                            requireView().lblMensaje_fcurso.text = requireContext().resources.getText(R.string.error_default)
                         }
                     }
                 }

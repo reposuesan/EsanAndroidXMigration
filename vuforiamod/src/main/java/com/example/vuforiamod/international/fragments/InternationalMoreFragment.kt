@@ -35,7 +35,7 @@ class InternationalMoreFragment : androidx.fragment.app.Fragment() {
 
         generateList()
 
-        val mSectionsPagerAdapter = SectionsPagerImagesAdapter(activity!!.supportFragmentManager)
+        val mSectionsPagerAdapter = SectionsPagerImagesAdapter(requireActivity().supportFragmentManager)
         view.vp_international_container.adapter = mSectionsPagerAdapter
         /*viewManager = LinearLayoutManager(activity!!, LinearLayoutManager.HORIZONTAL, false)
         viewAdapter = UniversitiesImagesAdapter(listImages)
@@ -58,7 +58,7 @@ class InternationalMoreFragment : androidx.fragment.app.Fragment() {
                 val loginIntent = Intent(activity, Class.forName("pe.edu.esan.appostgrado.view.login.LoginActivity"))
                 loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 startActivity(loginIntent)
-                activity!!.finish()
+                requireActivity().finish()
             } catch (e: ClassNotFoundException){
                 e.printStackTrace()
             }
@@ -120,7 +120,7 @@ class InternationalMoreFragment : androidx.fragment.app.Fragment() {
 
             val rootView = inflater.inflate(R.layout.fragment_international_image_scroll, container, false)
 
-            rootView.imgPhotoInternationalU.setImageResource(arguments!!.getInt(ARG_SECTION_NUMBER))
+            rootView.imgPhotoInternationalU.setImageResource(requireArguments().getInt(ARG_SECTION_NUMBER))
 
             return rootView
         }

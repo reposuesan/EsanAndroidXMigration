@@ -132,17 +132,18 @@ public class PrincipalRAActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case PERMISO_CAM_GPS: {
                 if (grantResults.length > 0) {
-                    if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                         ControlUsuario.Companion.getInstance().setAccesoCamara(true);
                     } else {
                         ControlUsuario.Companion.getInstance().setAccesoCamara(false);
                         Snackbar.make(findViewById(android.R.id.content), "No se podrá hacer uso de la cámara", Snackbar.LENGTH_LONG).show();
                     }
 
-                    if(grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                    if (grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                         ControlUsuario.Companion.getInstance().setAccesoGPS(true);
                     } else {
                         ControlUsuario.Companion.getInstance().setAccesoGPS(false);

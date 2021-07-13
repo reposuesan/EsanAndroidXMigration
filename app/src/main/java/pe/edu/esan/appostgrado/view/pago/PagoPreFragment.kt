@@ -57,7 +57,7 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
         controlViewModel = activity?.run {
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
-        view.lblMensaje_fpagopre.typeface = Utilitarios.getFontRoboto(context!!, Utilitarios.TypeFont.REGULAR)
+        view.lblMensaje_fpagopre.typeface = Utilitarios.getFontRoboto(requireContext(), Utilitarios.TypeFont.REGULAR)
 
         view.swPago_fpagopre.setOnRefreshListener(this)
         view.swPago_fpagopre.setColorSchemeResources(
@@ -178,19 +178,19 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                                 lblMensaje_fpagopre.visibility = View.GONE
                             } else {
                                 lblMensaje_fpagopre.visibility = View.VISIBLE
-                                lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_pago_no)
+                                lblMensaje_fpagopre.text = requireContext().resources.getText(R.string.error_pago_no)
                             }
                         } else {
                             lblMensaje_fpagopre.visibility = View.VISIBLE
-                            lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
+                            lblMensaje_fpagopre.text = requireContext().resources.getText(R.string.error_respuesta_server)
                         }
                     } catch (jex: JSONException) {
 
                         lblMensaje_fpagopre.visibility = View.VISIBLE
-                        lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_fpagopre.text = requireContext().resources.getText(R.string.error_respuesta_server)
                     } catch (ccax: ClassCastException) {
                         lblMensaje_fpagopre.visibility = View.VISIBLE
-                        lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_fpagopre.text = requireContext().resources.getText(R.string.error_respuesta_server)
                     }
 
                     prbCargando_fpagopre.visibility = View.GONE
@@ -203,7 +203,7 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                             prbCargando_fpagopre.visibility = View.GONE
                             swPago_fpagopre.isRefreshing = false
                             lblMensaje_fpagopre.visibility = View.VISIBLE
-                            lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                            lblMensaje_fpagopre.text = requireContext().resources.getText(R.string.error_default)
                         }
                     } else if(error.networkResponse.statusCode == 401) {
 
@@ -216,7 +216,7 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                                     prbCargando_fpagopre.visibility = View.GONE
                                     swPago_fpagopre.isRefreshing = false
                                     lblMensaje_fpagopre.visibility = View.VISIBLE
-                                    lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                                    lblMensaje_fpagopre.text = requireContext().resources.getText(R.string.error_default)
                                 }
                             }                        }
                     } else {
@@ -225,7 +225,7 @@ class PagoPreFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                             prbCargando_fpagopre.visibility = View.GONE
                             swPago_fpagopre.isRefreshing = false
                             lblMensaje_fpagopre.visibility = View.VISIBLE
-                            lblMensaje_fpagopre.text = context!!.resources.getText(R.string.error_default)
+                            lblMensaje_fpagopre.text = requireContext().resources.getText(R.string.error_default)
                         }
                     }
                 }

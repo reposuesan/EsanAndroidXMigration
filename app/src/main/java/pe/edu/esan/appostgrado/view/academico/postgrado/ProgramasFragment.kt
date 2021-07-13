@@ -148,17 +148,17 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                             } else {
                                 rvPrograma_fprograma.visibility = View.GONE
                                 lblMensaje_fprograma.visibility = View.VISIBLE
-                                lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_programa_no)
+                                lblMensaje_fprograma.text = requireContext().resources.getText(R.string.error_programa_no)
                             }
                         } else {
                             rvPrograma_fprograma.visibility = View.GONE
                             lblMensaje_fprograma.visibility = View.VISIBLE
-                            lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_desencriptar)
+                            lblMensaje_fprograma.text = requireContext().resources.getText(R.string.error_desencriptar)
                         }
                     } catch (jex: JSONException) {
                         rvPrograma_fprograma.visibility = View.GONE
                         lblMensaje_fprograma.visibility = View.VISIBLE
-                        lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_respuesta_server)
+                        lblMensaje_fprograma.text = requireContext().resources.getText(R.string.error_respuesta_server)
                     }
                     if(view != null){
                         swPrograma_fprograma.isRefreshing = false
@@ -171,7 +171,7 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                             swPrograma_fprograma.isRefreshing = false
                             prbCargando_fprograma.visibility = View.GONE
                             lblMensaje_fprograma.visibility = View.VISIBLE
-                            lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+                            lblMensaje_fprograma.text = requireContext().resources.getText(R.string.error_no_conexion)
                         }
                     } else if(error.networkResponse.statusCode == 401) {
 
@@ -183,7 +183,7 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                                     swPrograma_fprograma.isRefreshing = false
                                     prbCargando_fprograma.visibility = View.GONE
                                     lblMensaje_fprograma.visibility = View.VISIBLE
-                                    lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+                                    lblMensaje_fprograma.text = requireContext().resources.getText(R.string.error_no_conexion)
                                 }
                             }
                         }
@@ -192,7 +192,7 @@ class ProgramasFragment : androidx.fragment.app.Fragment(), androidx.swiperefres
                             swPrograma_fprograma.isRefreshing = false
                             prbCargando_fprograma.visibility = View.GONE
                             lblMensaje_fprograma.visibility = View.VISIBLE
-                            lblMensaje_fprograma.text = context!!.resources.getText(R.string.error_no_conexion)
+                            lblMensaje_fprograma.text = requireContext().resources.getText(R.string.error_no_conexion)
                         }
                     }
 

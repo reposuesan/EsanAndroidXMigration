@@ -81,7 +81,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             ViewModelProviders.of(this)[ControlViewModel::class.java]
         } ?: throw Exception("Invalid Activity")
 
-        view.lblMensaje_fhorario.typeface = Utilitarios.getFontRoboto(context!!, Utilitarios.TypeFont.REGULAR)
+        view.lblMensaje_fhorario.typeface = Utilitarios.getFontRoboto(requireContext(), Utilitarios.TypeFont.REGULAR)
 
         view.swHorario_fhorario.setOnRefreshListener(this)
         view.swHorario_fhorario.setColorSchemeResources(
@@ -329,47 +329,47 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                                 showHorarioWithoutAsyncTask(reformatHours(), true)
 
                                 if (view != null) {
-                                    view!!.rvHorario_fhorario.visibility = View.VISIBLE
-                                    view!!.lblMensaje_fhorario.visibility = View.GONE
+                                    requireView().rvHorario_fhorario.visibility = View.VISIBLE
+                                    requireView().lblMensaje_fhorario.visibility = View.GONE
                                 }
                             } else {
                                 if (view != null) {
-                                    view!!.rvHorario_fhorario.visibility = View.GONE
-                                    view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                                    view!!.lblMensaje_fhorario.text = context!!.resources.getText(R.string.error_horario_no)
+                                    requireView().rvHorario_fhorario.visibility = View.GONE
+                                    requireView().lblMensaje_fhorario.visibility = View.VISIBLE
+                                    requireView().lblMensaje_fhorario.text = requireContext().resources.getText(R.string.error_horario_no)
                                 }
                             }
 
                         } else {
                             if (view != null) {
-                                view!!.rvHorario_fhorario.visibility = View.GONE
-                                view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                                view!!.lblMensaje_fhorario.text = context!!.resources.getText(R.string.error_desencriptar)
+                                requireView().rvHorario_fhorario.visibility = View.GONE
+                                requireView().lblMensaje_fhorario.visibility = View.VISIBLE
+                                requireView().lblMensaje_fhorario.text = requireContext().resources.getText(R.string.error_desencriptar)
                             }
                         }
 
 
                     } catch (e: Exception) {
                         if (view != null) {
-                            view!!.rvHorario_fhorario.visibility = View.GONE
-                            view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                            view!!.lblMensaje_fhorario.text = context!!.resources.getText(R.string.error_default)
+                            requireView().rvHorario_fhorario.visibility = View.GONE
+                            requireView().lblMensaje_fhorario.visibility = View.VISIBLE
+                            requireView().lblMensaje_fhorario.text = requireContext().resources.getText(R.string.error_default)
                         }
                     }
 
                     if (view != null) {
-                        view!!.swHorario_fhorario.isRefreshing = false
-                        view!!.prbCargando_fhorario.visibility = View.GONE
+                        requireView().swHorario_fhorario.isRefreshing = false
+                        requireView().prbCargando_fhorario.visibility = View.GONE
                     }
                 },
                 { error ->
                     if(error is TimeoutError || error.networkResponse == null){
                         if (view != null) {
-                            view!!.rvHorario_fhorario.visibility = View.GONE
-                            view!!.prbCargando_fhorario.visibility = View.GONE
-                            view!!.swHorario_fhorario.isRefreshing = false
-                            view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                            view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+                            requireView().rvHorario_fhorario.visibility = View.GONE
+                            requireView().prbCargando_fhorario.visibility = View.GONE
+                            requireView().swHorario_fhorario.isRefreshing = false
+                            requireView().lblMensaje_fhorario.visibility = View.VISIBLE
+                            requireView().lblMensaje_fhorario.text = requireContext().resources.getString(R.string.error_default)
                         }
                     } else if(error.networkResponse.statusCode == 401) {
                         requireActivity().renewToken { token ->
@@ -377,20 +377,20 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                                 onHorario(url, request, currentUsuario)
                             } else {
                                 if (view != null) {
-                                    view!!.rvHorario_fhorario.visibility = View.GONE
-                                    view!!.prbCargando_fhorario.visibility = View.GONE
-                                    view!!.swHorario_fhorario.isRefreshing = false
-                                    view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                                    view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+                                    requireView().rvHorario_fhorario.visibility = View.GONE
+                                    requireView().prbCargando_fhorario.visibility = View.GONE
+                                    requireView().swHorario_fhorario.isRefreshing = false
+                                    requireView().lblMensaje_fhorario.visibility = View.VISIBLE
+                                    requireView().lblMensaje_fhorario.text = requireContext().resources.getString(R.string.error_default)
                                 }
                             }                        }
                     } else {
                         if (view != null) {
-                            view!!.rvHorario_fhorario.visibility = View.GONE
-                            view!!.prbCargando_fhorario.visibility = View.GONE
-                            view!!.swHorario_fhorario.isRefreshing = false
-                            view!!.lblMensaje_fhorario.visibility = View.VISIBLE
-                            view!!.lblMensaje_fhorario.text = context!!.resources.getString(R.string.error_default)
+                            requireView().rvHorario_fhorario.visibility = View.GONE
+                            requireView().prbCargando_fhorario.visibility = View.GONE
+                            requireView().swHorario_fhorario.isRefreshing = false
+                            requireView().lblMensaje_fhorario.visibility = View.VISIBLE
+                            requireView().lblMensaje_fhorario.text = requireContext().resources.getString(R.string.error_default)
                         }
                     }
                 }
@@ -411,8 +411,8 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
 
     private fun showCabecera(fecha: Date) {
-        lblSemanaActual_fhorario.typeface = Utilitarios.getFontRoboto(context!!, Utilitarios.TypeFont.REGULAR)
-        lblFecha_fhorario.typeface = Utilitarios.getFontRoboto(context!!, Utilitarios.TypeFont.LIGHT)
+        lblSemanaActual_fhorario.typeface = Utilitarios.getFontRoboto(requireContext(), Utilitarios.TypeFont.REGULAR)
+        lblFecha_fhorario.typeface = Utilitarios.getFontRoboto(requireContext(), Utilitarios.TypeFont.LIGHT)
 
 
         val hoy = Calendar.getInstance()
@@ -1020,7 +1020,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
                     rvHorario_fhorario.layoutManager =
                         androidx.recyclerview.widget.GridLayoutManager(
-                            context!!,
+                            requireContext(),
                             8
                         )
                     val adapter = HorarioGrillaAdapter(listaGrillaTwo)
@@ -1028,9 +1028,9 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
                     horarioCambio = true
                 } else {
                     rvHorario_fhorario.layoutManager =
-                        androidx.recyclerview.widget.LinearLayoutManager(context!!)
+                        androidx.recyclerview.widget.LinearLayoutManager(requireContext())
 
-                    val adapter = HorarioAdapter(listaHorarioDiasTwo, diaSemana, context!!) { position: Int ->
+                    val adapter = HorarioAdapter(listaHorarioDiasTwo, diaSemana, requireContext()) { position: Int ->
 
                         val diaClick = listaHorarioDiasTwo[position][0]
                         val horarioDia = getHorarioDiaEspecifico(diaClick, ControlUsuario.instance.currentListHorario)
@@ -1060,9 +1060,9 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
             } else {
                 if (horarioCambio) {
                     rvHorario_fhorario.layoutManager =
-                        androidx.recyclerview.widget.LinearLayoutManager(context!!)
+                        androidx.recyclerview.widget.LinearLayoutManager(requireContext())
 
-                    val adapter = HorarioAdapter(listaHorarioDiasTwo, diaSemana, context!!) { position: Int ->
+                    val adapter = HorarioAdapter(listaHorarioDiasTwo, diaSemana, requireContext()) { position: Int ->
 
                         val diaClick = listaHorarioDiasTwo[position][0]
                         val horarioDia = getHorarioDiaEspecifico(diaClick, ControlUsuario.instance.currentListHorario)
@@ -1114,7 +1114,7 @@ class HorarioFragment : androidx.fragment.app.Fragment(), androidx.swiperefreshl
 
                     rvHorario_fhorario.layoutManager =
                         androidx.recyclerview.widget.GridLayoutManager(
-                            context!!,
+                            requireContext(),
                             8
                         )
                     val adapter = HorarioGrillaAdapter(listaGrillaTwo)

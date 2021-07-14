@@ -10,8 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.vuforiamod.R
-import kotlinx.android.synthetic.main.activity_international_instructive.*
-import kotlinx.android.synthetic.main.fragment_international_instructive.view.*
+import kotlinx.android.synthetic.esanvuf.activity_international_instructive.*
+import kotlinx.android.synthetic.esanvuf.fragment_international_instructive.view.*
 
 
 class InternationalInstructiveActivity : AppCompatActivity() {

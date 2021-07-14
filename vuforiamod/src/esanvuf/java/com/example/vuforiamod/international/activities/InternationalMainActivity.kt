@@ -4,11 +4,10 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import com.example.vuforiamod.R
-import kotlinx.android.synthetic.main.activity_main_international.*
+import kotlinx.android.synthetic.esanvuf.activity_main_international.*
 
 import com.example.vuforiamod.international.fragments.*
 

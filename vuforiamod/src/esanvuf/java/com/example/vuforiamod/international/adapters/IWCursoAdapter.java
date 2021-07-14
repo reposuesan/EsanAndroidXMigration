@@ -3,7 +3,7 @@ package com.example.vuforiamod.international.adapters;
 import android.content.Intent;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

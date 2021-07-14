@@ -6,7 +6,6 @@ import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.core.content.ContextCompat
 
-import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
@@ -14,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.vuforiamod.R
 import com.example.vuforiamod.helpers.PermissionHelper
 import com.example.vuforiamod.util.Utilitarios
-import kotlinx.android.synthetic.main.activity_international_controller_participation.*
+import kotlinx.android.synthetic.esanvuf.activity_international_controller_participation.*
 
 
 class InternationalParticipationControllerActivity : AppCompatActivity() {

@@ -12,9 +12,11 @@ def VUFORIA_SDK_DIR = '/Users/danielbedoya/Work/Android/vuforia-sdk-android-8-1-
 android {
     compileSdkVersion 30
 
-    sourceSets.main {
-        jni.srcDirs = []
-        jniLibs.srcDir "$VUFORIA_SDK_DIR/build/lib/"
+    sourceSets{
+        esanvuf{
+            jni.srcDirs = []
+            jniLibs.srcDir "$VUFORIA_SDK_DIR/build/lib/"
+        }
     }
 
     defaultConfig {
@@ -35,6 +37,17 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "version"
+    productFlavors {
+        esan {
+            dimension "version"
+        }
+
+        esanvuf {
+            dimension "version"
         }
     }
 
@@ -76,7 +89,7 @@ dependencies {
 
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
-    implementation files("$VUFORIA_SDK_DIR/build/java/Vuforia/Vuforia.jar")
+    esanvufImplementation files("$VUFORIA_SDK_DIR/build/java/Vuforia/Vuforia.jar")
 
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

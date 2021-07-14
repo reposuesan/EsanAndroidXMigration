@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import com.example.vuforiamod.R
-import kotlinx.android.synthetic.main.activity_international_pisco.*
+import kotlinx.android.synthetic.esanvuf.activity_international_pisco.*
 
 class InternationalPiscoActivity : AppCompatActivity() {
 

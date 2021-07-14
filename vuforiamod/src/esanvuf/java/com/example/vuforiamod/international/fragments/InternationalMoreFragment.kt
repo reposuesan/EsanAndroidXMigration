@@ -11,8 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.vuforiamod.R
-import kotlinx.android.synthetic.main.fragment_international_image_scroll.view.*
-import kotlinx.android.synthetic.main.fragment_international_more.view.*
+import kotlinx.android.synthetic.esanvuf.fragment_international_image_scroll.view.*
+import kotlinx.android.synthetic.esanvuf.fragment_international_more.view.*
 import com.example.vuforiamod.international.activities.InternationalInstructiveActivity
 import com.example.vuforiamod.international.activities.InternationalPiscoActivity
 import kotlin.math.acos

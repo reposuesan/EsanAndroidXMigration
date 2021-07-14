@@ -48,7 +48,7 @@ import java.util.Vector;
 public class VideoPlayback extends Activity implements
         SampleApplicationControl, SampleAppMenuInterface
 {
-    private static final String LOGTAG = "VideoPlayback";
+    private static final String LOGTAG = "esanvuf VideoPlayback";
 
     private SampleApplicationSession vuforiaAppSession;
 

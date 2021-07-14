@@ -25,9 +25,7 @@ import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
 import android.widget.TextView
 
 import com.android.volley.DefaultRetryPolicy
@@ -36,18 +34,18 @@ import com.android.volley.RequestQueue
 import com.android.volley.TimeoutError
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.vuforiamod.international.activities.InternationalMainActivity
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 /*import com.crashlytics.android.Crashlytics*/
 import kotlinx.android.synthetic.main.activity_login.*
 import org.json.JSONException
 import org.json.JSONObject
+import pe.edu.esan.appostgrado.BuildConfig
 import pe.edu.esan.appostgrado.R
 import pe.edu.esan.appostgrado.control.ControlUsuario
 import pe.edu.esan.appostgrado.control.CustomDialog
 import pe.edu.esan.appostgrado.entidades.*
 import pe.edu.esan.appostgrado.helpers.ShowAlertHelper
-//UNCOMMENT THIS FOR THE INTERNATIONAL WEEK
-/*import com.example.vuforiamod.international.activities.InternationalMainActivity*/
 import pe.edu.esan.appostgrado.util.Utilitarios
 import pe.edu.esan.appostgrado.util.isOnlineUtils
 import pe.edu.esan.appostgrado.view.MenuPrincipalActivity
@@ -127,13 +125,9 @@ class LoginActivity : AppCompatActivity(),
             lblVersion_login.text = ""
         }
 
-        //CHANGE THIS TO VISIBLE FOR THE INTERNATIONAL WEEK
-        imgInternationalWeek.visibility = View.GONE
-        //CHANGE THIS TO VISIBLE FOR CMUDE
+        //CMUDE
         img_cmude.visibility = View.GONE
-
-        //Cmude Imagen
-        //UNCOMMENT THIS FOR CMUDE
+        //CMUDE
         /*img_cmude.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(URL_CMUDE)
@@ -143,15 +137,22 @@ class LoginActivity : AppCompatActivity(),
             //executeSubscription()
         }*/
 
-        //Semana Internacional
-        //UNCOMMENT THIS FOR THE INTERNATIONAL WEEK
-        /*imgInternationalWeek.setOnClickListener {
-            val intent = Intent(this@LoginActivity,  InternationalMainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent)
-            finish()
-            //executeUnsubscription()
-        }*/
+        //INTERNATIONAL WEEK
+        if(BuildConfig.FLAVOR == "esanvuf") {
+            imgInternationalWeek.visibility = View.VISIBLE
+        } else {
+            imgInternationalWeek.visibility = View.GONE
+        }
+
+        //INTERNATIONAL WEEK
+        if(BuildConfig.FLAVOR == "esanvuf") {
+            imgInternationalWeek.setOnClickListener {
+                val intent = Intent(this@LoginActivity, InternationalMainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent)
+                finish()
+            }
+        }
 
 
         //Login Button

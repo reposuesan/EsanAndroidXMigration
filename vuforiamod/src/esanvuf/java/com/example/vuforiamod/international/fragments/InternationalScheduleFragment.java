@@ -4,6 +4,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,8 +54,8 @@ public class InternationalScheduleFragment extends Fragment {
 
 
     private void getLoadHorario(){
-        final String url = "http://wssi.ue.edu.pe/internationalweek/service.svc/getHorario.php";
-        //final String url = Configuracion.urlServicio2 + Configuracion.method_menucomedor + "1";
+        final String url = "https://wssi.ue.edu.pe/internationalweek/service.svc/getHorario.php";
+        //final String url = "https://tempwssi.ue.edu.pe/internationalweek/service.svc/getHorario.php";
 
         RequestQueue requestEncuestaPos = Volley.newRequestQueue(getActivity());
         JsonObjectRequest jsonRequest = new JsonObjectRequest(
@@ -91,13 +92,14 @@ public class InternationalScheduleFragment extends Fragment {
                             listaHorario.setAdapter(adapter);
 
                         }catch (JSONException e) {
-
+                            Log.e("Schedule","There was an error when retrieving response");
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        Log.e("Schedule", error.toString());
                     }
                 }
         );

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,8 @@ public class InternationalCourseFragment extends Fragment {
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
 
-        final String urlWs = "http://wssi.ue.edu.pe/internationalweek/service.svc/getCursos.php";
+        final String urlWs = "https://wssi.ue.edu.pe/internationalweek/service.svc/getCursos.php";
+        //final String urlWs = "https://tempwssi.ue.edu.pe/internationalweek/service.svc/getCursos.php";
 
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -97,7 +99,7 @@ public class InternationalCourseFragment extends Fragment {
                             rvCursos.setAdapter(adapter);
 
                         }catch (JSONException ex) {
-
+                            Log.e("Course","There was an error when retrieving response");
                         }
                         progressDialog.dismiss();
                     }
@@ -106,6 +108,7 @@ public class InternationalCourseFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
+                        Log.e("Course", error.toString());
                     }
                 }
         );

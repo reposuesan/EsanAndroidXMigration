@@ -14,6 +14,5 @@
         <domain includeSubdomains="true">qasintranetmovil.esan.edu.pe</domain>
         <domain includeSubdomains="true">qasintranetmovil.ue.edu.pe</domain>
         <domain includeSubdomains="true">qasfotos.ue.edu.pe</domain>
-        <domain includeSubdomains="true">wssi.ue.edu.pe</domain>
     </domain-config>
 </network-security-config>

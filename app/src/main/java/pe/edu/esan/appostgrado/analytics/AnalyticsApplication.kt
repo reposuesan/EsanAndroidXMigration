@@ -22,6 +22,9 @@ import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.messaging.FirebaseMessaging
 import pe.edu.esan.appostgrado.R
 
 /**
@@ -37,6 +40,24 @@ class AnalyticsApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         sAnalytics = GoogleAnalytics.getInstance(this)
+
+        FirebaseMessaging.getInstance().isAutoInitEnabled = true
+        val analytics = FirebaseAnalytics.getInstance(this)
+        analytics.setAnalyticsCollectionEnabled(true)
+
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if(!task.isSuccessful){
+                    return@OnCompleteListener
+                }
+
+                val token = task.result
+
+                val misPreferencias = getSharedPreferences("PreferenciasUsuario", MODE_PRIVATE)
+                val editor = misPreferencias.edit()
+                editor.putString("tokenID", token ?: "")
+                editor.apply()
+            })
     }
 
     /**
@@ -46,9 +67,9 @@ class AnalyticsApplication : Application() {
     @Synchronized
     fun getDefaultTracker(): Tracker? {
         // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
-        if (sTracker == null) {
+        //if (sTracker == null) {
             //sTracker = sAnalytics?.newTracker(R.xml.global_tracker)
-        }
+        //}
 
         return sTracker
     }

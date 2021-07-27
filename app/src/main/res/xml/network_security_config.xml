@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config cleartextTrafficPermitted="false">
-        <domain includeSubdomains="true">restws.esan.edu.pe</domain>
         <domain includeSubdomains="true">movilrestws.esan.edu.pe</domain>
         <domain includeSubdomains="true">fotos.ue.edu.pe</domain>
         <domain includeSubdomains="true">recibos.ue.edu.pe</domain>

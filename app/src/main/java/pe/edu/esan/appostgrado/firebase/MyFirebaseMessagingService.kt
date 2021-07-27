@@ -11,7 +11,7 @@ import android.os.Build
 import android.os.Build.VERSION_CODES.O
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import pe.edu.esan.appostgrado.R
@@ -25,27 +25,19 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private val LOG = MyFirebaseMessagingService::class.simpleName
 
-    override fun onNewToken(p0: String) {
-        super.onNewToken(p0)
-        FirebaseInstanceId.getInstance().instanceId
-            .addOnCompleteListener(OnCompleteListener { task ->
-                if(!task.isSuccessful){
-                    return@OnCompleteListener
-                }
+    override fun onNewToken(token: String) {
+        super.onNewToken(token)
 
-                val token = task.result?.token
-
-                val misPreferencias = getSharedPreferences("PreferenciasUsuario", Context.MODE_PRIVATE)
-                val editor = misPreferencias.edit()
-                editor.putString("tokenID", token ?: "")
-                editor.apply()
-            })
+        val misPreferencias = getSharedPreferences("PreferenciasUsuario", MODE_PRIVATE)
+        val editor = misPreferencias.edit()
+        editor.putString("tokenID", token)
+        editor.apply()
     }
 
     override fun onMessageReceived(p0: RemoteMessage) {
         super.onMessageReceived(p0)
 
-        if (p0?.notification != null) {
+        if (p0.notification != null) {
             val titulo = p0.notification?.title
             val texto = p0.notification?.body
 
@@ -70,10 +62,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val icon = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher_foreground)
         var smallIcon = R.mipmap.ic_launcher_round
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            smallIcon = R.drawable.ic_stat_android
+        smallIcon = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            R.drawable.ic_stat_android
         } else {
-            smallIcon = R.mipmap.ic_launcher_round
+            R.mipmap.ic_launcher_round
         }
 
         val notificationBuilder = NotificationCompat.Builder(this,channelID)
